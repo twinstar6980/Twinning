@@ -1,6 +1,6 @@
 import '/common.dart';
 import '/utility/storage_path.dart';
-import 'dart:io';
+import 'dart:io' as lib;
 
 // ----------------
 
@@ -10,7 +10,7 @@ class ProcessHelper {
 
   static StoragePath getWorkspace(
   ) {
-    return .of(Directory.current.path);
+    return .of(lib.Directory.current.path);
   }
 
   // #endregion
@@ -19,7 +19,7 @@ class ProcessHelper {
 
   static Map<String, String> getEnvironment(
   ) {
-    return {...Platform.environment};
+    return {...lib.Platform.environment};
   }
 
   // ----------------
@@ -27,7 +27,7 @@ class ProcessHelper {
   static String? findEnvironment(
     String name,
   ) {
-    return Platform.environment[name];
+    return lib.Platform.environment[name];
   }
 
   // #endregion
@@ -46,7 +46,7 @@ class ProcessHelper {
     if (environment == null) {
       environment = ProcessHelper.getEnvironment();
     }
-    var process = await Process.run(
+    var process = await lib.Process.run(
       program.emitNative(),
       argument,
       workingDirectory: workspace.emitNative(),

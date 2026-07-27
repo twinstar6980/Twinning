@@ -12,6 +12,8 @@ namespace Twinning.Script {
 		thread_limit: bigint;
 		external_enable_android_termux: boolean;
 		external_program_path: Record<string, null | string>;
+		android_temporary_directory_for_data: string;
+		android_temporary_directory_for_sdcard: string;
 		console_basic_disable_virtual_terminal_sequence: boolean;
 		language: string;
 		executor_typical_method_disable_name_filter: boolean;
@@ -54,6 +56,12 @@ namespace Twinning.Script {
 			},
 			external_program_path: (value) => {
 				ExternalHelper.g_program_path_map = ConvertHelper.record_transform(value, (key, value) => [key, value === null ? null : new StoragePath(value)]);
+			},
+			android_temporary_directory_for_data: (value) => {
+				AndroidHelper.g_temporary_directory_for_data = new StoragePath(value);
+			},
+			android_temporary_directory_for_sdcard: (value) => {
+				AndroidHelper.g_temporary_directory_for_sdcard = new StoragePath(value);
 			},
 			console_basic_disable_virtual_terminal_sequence: (value) => {
 				Console.g_basic_disable_virtual_terminal_sequence = value;

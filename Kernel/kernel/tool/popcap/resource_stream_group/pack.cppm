@@ -78,9 +78,9 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 			information_structure.header.information_section_size = cast_box<IntegerU32>(data.position());
 			information_structure.header.resource_data_section_compression = packet_compression_to_data(definition.compression);
 			information_structure.resource_information.allocate_full(definition.resource.size());
+			auto resource_data_section_container = ByteArray{};
 			for (auto & current_resource_type : make_static_array<ResourceType>(ResourceType::Constant::general(), ResourceType::Constant::texture())) {
 				auto resource_data_section_view = VariableByteListView{};
-				auto resource_data_section_container = ByteArray{};
 				auto resource_data_section_offset = data.position();
 				auto resource_data_section_size_original = 0_sz;
 				for (auto & resource_index : SizeRange{definition.resource.size()}) {
@@ -88,8 +88,8 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 					if (resource_definition.additional.type() != current_resource_type) {
 						continue;
 					}
-					auto resource_path_full = resource_directory.push(resource_definition.path);
-					auto resource_size = Storage::size_file(resource_path_full);
+					auto resource_path = resource_directory.push(resource_definition.path);
+					auto resource_size = Storage::size_file(resource_path);
 					resource_data_section_size_original += Math::compute_padded_size(resource_size, k_padding_unit_size);
 				}
 				auto compress_resource_data_section = k_false;
@@ -108,8 +108,10 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 					resource_data_section_view = data.next_view(resource_data_section_size_original);
 				}
 				else {
-					resource_data_section_container.allocate(resource_data_section_size_original);
-					resource_data_section_view = resource_data_section_container.view();
+					if (resource_data_section_container.size() < resource_data_section_size_original) {
+						resource_data_section_container.allocate(resource_data_section_size_original);
+					}
+					resource_data_section_view = resource_data_section_container.head(resource_data_section_size_original);
 				}
 				auto resource_data_section_stream = OutputByteStreamView{resource_data_section_view};
 				for (auto & resource_index : SizeRange{definition.resource.size()}) {
@@ -118,10 +120,12 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 						continue;
 					}
 					auto & resource_information_structure = information_structure.resource_information.at(resource_index);
-					auto   resource_path_full = resource_directory.push(resource_definition.path);
+					auto   resource_path = resource_directory.push(resource_definition.path);
+					auto   resource_size = Storage::size_file(resource_path);
 					resource_information_structure.key = resource_definition.path.emit_windows();
 					resource_information_structure.value.offset = cast_box<IntegerU32>(resource_data_section_stream.position());
-					resource_information_structure.value.size = cast_box<IntegerU32>(Storage::read_file_stream(resource_path_full, resource_data_section_stream));
+					resource_information_structure.value.size = cast_box<IntegerU32>(resource_size);
+					Storage::read_file(resource_path, 0_sz, resource_data_section_stream.forward_view(resource_size));
 					switch (resource_definition.additional.type().value) {
 						case ResourceType::Constant::general().value: {
 							auto & resource_additional_definition = resource_definition.additional.template get_of_type<ResourceType::Constant::general()>();
@@ -166,6 +170,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 					default: throw UnreachableException{};
 				}
 			}
+			resource_data_section_container.reset();
 			information_structure.header.resource_information_section_offset = cast_box<IntegerU32>(information_data.resource_information_offset);
 			information_structure.header.resource_information_section_size = cast_box<IntegerU32>(information_data.resource_information.size());
 			CompiledMapData::adjust_sequence(information_structure.resource_information);

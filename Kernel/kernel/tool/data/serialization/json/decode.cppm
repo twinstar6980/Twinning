@@ -222,7 +222,6 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Json {
 					}
 					default: {
 						throw SyntaxException{data.position().value, make_std_string("invalid character '{:02X}h'"_sf(character))};
-						break;
 					}
 				}
 				break;

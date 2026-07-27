@@ -6,13 +6,12 @@ import '/utility/storage_helper.dart';
 import '/utility/process_helper.dart';
 import '/utility/vdf_helper.dart';
 import '/utility/platform_integration_manager.dart';
+import '/widget/export.dart';
 import '/view/core_task_worker/forward_helper.dart' as core_task_worker;
-import 'dart:ui';
-import 'dart:async';
-import 'dart:typed_data';
-import 'package:collection/collection.dart';
+import 'dart:ui' as lib;
+import 'dart:typed_data' as lib;
+import 'package:collection/collection.dart' as lib;
 import 'package:archive/archive_io.dart' as lib;
-import 'package:flutter/widgets.dart' show BuildContext;
 
 // ----------------
 
@@ -31,6 +30,7 @@ enum GameRecordState {
 
 enum GamePackageType {
   windowsSteam,
+  androidPlay,
 }
 
 class GameInformation {
@@ -39,9 +39,9 @@ class GameInformation {
   String           packageIdentifier;
   String           packageVersion;
   String           packageName;
-  Image?           packageIcon;
+  lib.Image?       packageIcon;
   String?          userIdentifier;
-  Uint8List?       userKey;
+  lib.Uint8List?   userKey;
   GameProgramState programState;
   GameRecordState  recordState;
   List<String>     recordBackup;
@@ -102,15 +102,18 @@ class GameRecordHelper {
           game.recordState = .invalid;
         }
         else {
-          var contentItemData = await StorageHelper.readFileLimited(originalDirectory.push(contentItemFile), 8);
-          if (contentItemData.length == 8) {
-            if (contentItemData.buffer.asUint32List().first == 0x00000000) {
-              game.recordState = .decrypted;
-            }
-            else if (game.userKey != null) {
-              GameRecordHelper._encryptData(contentItemData, game.userKey!);
+          if (await StorageHelper.sizeFile(originalDirectory.push(contentItemFile)) >= 8) {
+            var contentItemData = lib.Uint8List(8);
+            await StorageHelper.readFile(originalDirectory.push(contentItemFile), 0, contentItemData);
+            if (contentItemData.length == 8) {
               if (contentItemData.buffer.asUint32List().first == 0x00000000) {
-                game.recordState = .original;
+                game.recordState = .decrypted;
+              }
+              else if (game.userKey != null) {
+                GameRecordHelper._encryptData(contentItemData, game.userKey!);
+                if (contentItemData.buffer.asUint32List().first == 0x00000000) {
+                  game.recordState = .original;
+                }
               }
             }
           }
@@ -125,8 +128,8 @@ class GameRecordHelper {
   // #region encrypt
 
   static Void _encryptData(
-    Uint8List  data,
-    Uint8List? key,
+    lib.Uint8List  data,
+    lib.Uint8List? key,
   ) {
     if (key != null) {
       assertTest(!key.isEmpty);
@@ -138,22 +141,22 @@ class GameRecordHelper {
   }
 
   static Future<Void> _encryptFile(
-    StoragePath sourceFile,
-    StoragePath destinationFile,
-    Uint8List?  key,
+    StoragePath    sourceFile,
+    StoragePath    destinationFile,
+    lib.Uint8List? key,
   ) async {
-    var data = await StorageHelper.readFile(sourceFile);
+    var data = await StorageHelper.readFileData(sourceFile);
     GameRecordHelper._encryptData(data, key);
     if (!await StorageHelper.existFile(destinationFile)) {
       await StorageHelper.createFile(destinationFile);
     }
-    await StorageHelper.writeFile(destinationFile, data);
+    await StorageHelper.writeFileData(destinationFile, data);
     return;
   }
 
   static Future<Void> _encryptDirectory(
-    StoragePath targetDirectory,
-    Uint8List?  key,
+    StoragePath    targetDirectory,
+    lib.Uint8List? key,
   ) async {
     var contentItemList = await GameRecordHelper._listContent(targetDirectory);
     for (var contentItem in contentItemList) {
@@ -261,9 +264,9 @@ class GameRecordHelper {
   }
 
   static Future<Void> exportBackup(
-    StoragePath targetDirectory,
-    StoragePath archiveFile,
-    Uint8List?  key,
+    StoragePath    targetDirectory,
+    StoragePath    archiveFile,
+    lib.Uint8List? key,
   ) async {
     var (archiveDirectory, archiveDirectoryFinalizer) = await StorageHelper.temporary();
     await StorageHelper.createDirectory(archiveDirectory);
@@ -282,18 +285,18 @@ class GameRecordHelper {
     if (!await StorageHelper.existFile(archiveFile)) {
       await StorageHelper.createFile(archiveFile);
     }
-    await StorageHelper.writeFile(archiveFile, archiveData);
+    await StorageHelper.writeFileData(archiveFile, archiveData);
     await archiveDirectoryFinalizer.dispose();
     return;
   }
 
   static Future<Void> importBackup(
-    StoragePath targetDirectory,
-    StoragePath archiveFile,
-    Uint8List?  key,
+    StoragePath    targetDirectory,
+    StoragePath    archiveFile,
+    lib.Uint8List? key,
   ) async {
     var (archiveDirectory, archiveDirectoryFinalizer) = await StorageHelper.temporary();
-    var archiveData = await StorageHelper.readFile(archiveFile);
+    var archiveData = await StorageHelper.readFileData(archiveFile);
     var archive = lib.ZipDecoder().decodeBytes(archiveData);
     await lib.extractArchiveToDisk(archive, archiveDirectory.emit());
     if (await StorageHelper.exist(targetDirectory)) {
@@ -439,10 +442,10 @@ class GameRepositoryHelper {
       .join(game.packageName);
   }
 
-  static Future<Image?> extractWindowsProgramIcon(
+  static Future<lib.Image?> extractWindowsProgramIcon(
     StoragePath programFile,
   ) async {
-    var icon = await PlatformIntegrationManager.instance.invokeOnWindowsExtractAssociatedIcon(programFile.emitNative());
+    var icon = await PlatformIntegrationManager.instance.invokeOnWindowsExtractAssociatedIcon(programFile);
     return await ConvertHelper.parseImageFromData(icon.data, width: icon.width, height: icon.height, isRawBgra: true);
   }
 
@@ -450,11 +453,11 @@ class GameRepositoryHelper {
 
   // #region windows steam
 
-  static Uint8List makeKeyFromWindowsSteamUser(
+  static lib.Uint8List makeKeyFromWindowsSteamUser(
     String user,
   ) {
     var keyValue = Integer.parse(user);
-    var key = Uint64List.fromList([keyValue]).buffer.asUint8List();
+    var key = lib.Uint64List.fromList([keyValue]).buffer.asUint8List();
     return key;
   }
 
@@ -516,6 +519,32 @@ class GameRepositoryHelper {
     StoragePath repositoryDirectory,
   ) async {
     return await StorageHelper.existFile(repositoryDirectory.join('steam.exe'));
+  }
+
+  // #endregion
+
+  // #region android play
+
+  // TODO
+  static Future<List<GameInformation>> loadAndroidPlayRepository(
+  ) async {
+    var result = <GameInformation>[];
+    var applicationList = (await PlatformIntegrationManager.instance.invokeOnAndroidListApplication()).target;
+    for (var application in applicationList) { 
+      if (!application.startsWith('net.kairosoft.')) {
+        continue;
+      }
+      var applicationInformation = await PlatformIntegrationManager.instance.invokeOnAndroidQueryApplication(application);
+      var information = GameInformation();
+      information.packageType = .androidPlay;
+      information.packagePath = StoragePath.of('');
+      information.packageIdentifier = application;
+      information.packageVersion = applicationInformation.version;
+      information.packageName = applicationInformation.name;
+      information.packageIcon = await ConvertHelper.parseImageFromData(applicationInformation.iconData, width: applicationInformation.iconWidth, height: applicationInformation.iconHeight, isRawRgba: true);
+      result.add(information);
+    }
+    return result;
   }
 
   // #endregion

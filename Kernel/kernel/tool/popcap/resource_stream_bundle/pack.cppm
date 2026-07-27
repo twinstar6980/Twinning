@@ -472,28 +472,34 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 						++global_resource_index;
 					}
 					auto packet_data = OutputByteStreamView{data.reserve_view()};
-					auto use_legacy_packet = k_false;
 					auto packet_header_structure = ResourceStreamGroup::Structure::Header<packet_version>{};
+					auto use_legacy_packet = k_false;
 					if (packet_file.has()) {
-						if (Storage::exist_file(make_formatted_path(packet_file.get()))) {
-							auto legacy_packet_size = Storage::read_file_stream(make_formatted_path(packet_file.get()), packet_data);
-							auto legacy_packet_stream = InputByteStreamView{packet_data.previous_view(legacy_packet_size)};
-							legacy_packet_stream.read_constant(ResourceStreamGroup::Structure::k_magic_marker);
-							legacy_packet_stream.read_constant(cast_box<ResourceStreamGroup::Structure::VersionNumber>(packet_version.number));
-							legacy_packet_stream.read(packet_header_structure);
+						auto packet_path = make_formatted_path(packet_file.get());
+						if (Storage::exist_file(packet_path)) {
+							auto actual_packet_size = Storage::size_file(packet_path);
+							auto actual_packet_data = packet_data.forward_view(actual_packet_size);
+							Storage::read_file(packet_path, 0_sz, actual_packet_data);
+							auto packet_stream = InputByteStreamView{actual_packet_data};
+							packet_stream.read_constant(ResourceStreamGroup::Structure::k_magic_marker);
+							packet_stream.read_constant(cast_box<ResourceStreamGroup::Structure::VersionNumber>(packet_version.number));
+							packet_stream.read(packet_header_structure);
 							use_legacy_packet = k_true;
 						}
 					}
 					if (!use_legacy_packet) {
 						ResourceStreamGroup::Pack<packet_version>::process(packet_data, packet_package_definition, make_formatted_path(resource_directory));
+						auto actual_packet_data = packet_data.stream_view();
 						if (new_packet_file.has()) {
-							if (!Storage::exist_file(make_formatted_path(new_packet_file.get()))) {
-								Storage::create_file(make_formatted_path(new_packet_file.get()));
+							auto packet_path = make_formatted_path(new_packet_file.get());
+							if (!Storage::exist_file(packet_path)) {
+								Storage::create_file(packet_path);
 							}
-							Storage::write_file(make_formatted_path(new_packet_file.get()), packet_data.stream_view());
+							Storage::resize_file(packet_path, actual_packet_data.size());
+							Storage::write_file(packet_path, 0_sz, actual_packet_data);
 						}
-						auto legacy_packet_stream = InputByteStreamView{packet_data.stream_view(), bs_static_size<ResourceStreamGroup::Structure::MagicMarker>() + bs_static_size<ResourceStreamGroup::Structure::VersionNumber>()};
-						legacy_packet_stream.read(packet_header_structure);
+						auto packet_stream = InputByteStreamView{actual_packet_data, bs_static_size<ResourceStreamGroup::Structure::MagicMarker>() + bs_static_size<ResourceStreamGroup::Structure::VersionNumber>()};
+						packet_stream.read(packet_header_structure);
 					}
 					subgroup_information_structure.offset = cast_box<IntegerU32>(data.position());
 					subgroup_information_structure.size = cast_box<IntegerU32>(packet_data.position());

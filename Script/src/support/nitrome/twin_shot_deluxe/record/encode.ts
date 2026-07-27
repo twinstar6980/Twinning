@@ -11,10 +11,10 @@ namespace Twinning.Script.Support.Nitrome.TwinShotDeluxe.Record.Encode {
 		data.u32(BigInt(property_count));
 		for (let property_index = 0; property_index < property_count; property_index++) {
 			let property_name = property_list[property_index];
-			let property_name_size = property_name.length;
+			let property_name_size = ConvertHelper.compute_utf8_string_size(property_name);
+			assert_test(property_name_size < 0x100);
 			data.u8(BigInt(property_name_size));
-			// TODO: use utf-8
-			ConvertHelper.write_eascii_string(data, property_name);
+			ConvertHelper.write_utf8_string(data, property_name);
 			let property_value = definition[property_name];
 			switch (typeof property_value) {
 				case 'bigint': {
@@ -52,7 +52,7 @@ namespace Twinning.Script.Support.Nitrome.TwinShotDeluxe.Record.Encode {
 		let definition = JsonHelper.decode_file(definition_file) as Record<string, any>;
 		let data_stream = new ByteStreamView(data_buffer.view().value);
 		process(data_stream, definition);
-		StorageHelper.write_file(data_file, data_stream.sub(0, data_stream.p()));
+		StorageHelper.write_file_data(data_file, Kernel.ByteListView.value(data_stream.sub(0, data_stream.p())));
 		return;
 	}
 

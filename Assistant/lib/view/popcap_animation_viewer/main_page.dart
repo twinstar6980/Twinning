@@ -1,7 +1,5 @@
 import '/common.dart';
 import '/module.dart';
-import '/utility/command_line_reader.dart';
-import '/utility/command_line_writer.dart';
 import '/utility/storage_path.dart';
 import '/utility/storage_helper.dart';
 import '/utility/convert_helper.dart';
@@ -10,13 +8,13 @@ import '/widget/export.dart';
 import '/view/home/module_page.dart';
 import '/view/popcap_animation_viewer/setting.dart';
 import '/view/popcap_animation_viewer/configuration.dart';
+import '/view/popcap_animation_viewer/option.dart';
 import '/view/popcap_animation_viewer/model.dart' as model;
 import '/view/popcap_animation_viewer/visual_helper.dart';
 import 'dart:ui' as lib;
-import 'dart:math';
-import 'dart:async';
-import 'package:collection/collection.dart';
-import 'package:flutter/widgets.dart';
+import 'dart:math' as lib;
+import 'dart:async' as lib;
+import 'package:collection/collection.dart' as lib;
 
 // ----------------
 
@@ -33,7 +31,7 @@ class MainPage extends StatefulWidget {
 
   final Setting       setting;
   final Configuration configuration;
-  final List<String>  option;
+  final Option        option;
 
   // ----------------
 
@@ -42,7 +40,7 @@ class MainPage extends StatefulWidget {
 
 }
 
-class _MainPageState extends State<MainPage> with TickerProviderStateMixin implements ModulePageState {
+class _MainPageState extends State<MainPage> with TickerProviderStateMixin<MainPage> implements ModulePageState {
 
   late Boolean                                                          _immediateSelect;
   late Boolean                                                          _automaticPlay;
@@ -60,8 +58,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
   late List<({String name, Integer begin, Integer end})>?               _activeFrameLabel;
   late ({Integer begin, Integer end})?                                  _activeFrameRange;
   late Floater?                                                         _activeFrameSpeed;
-  late StreamController<Null>                                           _activeProgressIndexStream;
-  late StreamController<Null>                                           _activeProgressStateStream;
+  late lib.StreamController<Null>                                       _activeProgressIndexStream;
+  late lib.StreamController<Null>                                       _activeProgressStateStream;
   late Boolean                                                          _activeProgressChangingContinue;
   late AnimationController?                                             _animationController;
   late Animation<Floater>?                                              _animationDriver;
@@ -364,101 +362,36 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
   }
 
   @override
-  modulePageApplyOption(optionView) async {
-    var optionImmediateSelect = null as Boolean?;
-    var optionAutomaticPlay = null as Boolean?;
-    var optionRepeatPlay = null as Boolean?;
-    var optionReversePlay = null as Boolean?;
-    var optionKeepSpeed = null as Boolean?;
-    var optionShowBoundary = null as Boolean?;
-    var optionAnimationFile = null as StoragePath?;
-    var optionImageFilter = null as List<Integer>?;
-    var optionSpriteFilter = null as List<Integer>?;
-    var optionActiveTarget = null as ({Boolean type, Integer index})?;
-    var optionActiveFrameRange = null as ({Integer begin, Integer end})?;
-    var optionActiveFrameSpeed = null as Floater?;
-    var optionActiveProgressIndex = null as Integer?;
-    var optionActiveProgressState = null as Boolean?;
-    var option = CommandLineReader(optionView);
-    if (option.check('-immediate_select')) {
-      optionImmediateSelect = option.nextBoolean();
+  modulePageApplyOption(option) async {
+    option as Option;
+    if (option.immediateSelect != null) {
+      this._immediateSelect = option.immediateSelect!;
     }
-    if (option.check('-automatic_play')) {
-      optionAutomaticPlay = option.nextBoolean();
+    if (option.automaticPlay != null) {
+      this._automaticPlay = option.automaticPlay!;
     }
-    if (option.check('-repeat_play')) {
-      optionRepeatPlay = option.nextBoolean();
+    if (option.repeatPlay != null) {
+      this._repeatPlay = option.repeatPlay!;
     }
-    if (option.check('-reverse_play')) {
-      optionReversePlay = option.nextBoolean();
+    if (option.reversePlay != null) {
+      this._reversePlay = option.reversePlay!;
     }
-    if (option.check('-keep_speed')) {
-      optionKeepSpeed = option.nextBoolean();
+    if (option.keepSpeed != null) {
+      this._keepSpeed = option.keepSpeed!;
     }
-    if (option.check('-show_boundary')) {
-      optionShowBoundary = option.nextBoolean();
+    if (option.showBoundary != null) {
+      this._showBoundary = option.showBoundary!;
     }
-    if (option.check('-animation_file')) {
-      optionAnimationFile = option.nextString().selfLet(StoragePath.of);
-    }
-    if (option.check('-image_filter')) {
-      optionImageFilter = option.nextString().split(',').where((value) => !value.isEmpty).map(Integer.parse).toList();
-    }
-    if (option.check('-sprite_filter')) {
-      optionSpriteFilter = option.nextString().split(',').where((value) => !value.isEmpty).map(Integer.parse).toList();
-    }
-    if (option.check('-active_target')) {
-      optionActiveTarget = (
-        type: option.nextBoolean(),
-        index: option.nextInteger(),
-      );
-    }
-    if (option.check('-active_frame_range')) {
-      optionActiveFrameRange = (
-        begin: option.nextInteger(),
-        end: option.nextInteger(),
-      );
-    }
-    if (option.check('-active_frame_speed')) {
-      optionActiveFrameSpeed = option.nextFloater();
-    }
-    if (option.check('-active_progress_index')) {
-      optionActiveProgressIndex = option.nextInteger();
-    }
-    if (option.check('-active_progress_state')) {
-      optionActiveProgressState = option.nextBoolean();
-    }
-    if (!option.done()) {
-      throw Exception('too many option \'${option.nextStringList().join(' ')}\'');
-    }
-    if (optionImmediateSelect != null) {
-      this._immediateSelect = optionImmediateSelect;
-    }
-    if (optionAutomaticPlay != null) {
-      this._automaticPlay = optionAutomaticPlay;
-    }
-    if (optionReversePlay != null) {
-      this._reversePlay = optionReversePlay;
-    }
-    if (optionRepeatPlay != null) {
-      this._repeatPlay = optionRepeatPlay;
-    }
-    if (optionKeepSpeed != null) {
-      this._keepSpeed = optionKeepSpeed;
-    }
-    if (optionShowBoundary != null) {
-      this._showBoundary = optionShowBoundary;
-    }
-    if (optionAnimationFile != null) {
+    if (option.animationFile != null) {
       await this._applyLoad(
-        optionAnimationFile,
-        optionImageFilter,
-        optionSpriteFilter,
-        optionActiveTarget,
-        optionActiveFrameRange,
-        optionActiveFrameSpeed,
-        optionActiveProgressIndex,
-        optionActiveProgressState,
+        option.animationFile!,
+        option.imageFilter,
+        option.spriteFilter,
+        option.activeTarget,
+        option.activeFrameRange,
+        option.activeFrameSpeed,
+        option.activeProgressIndex,
+        option.activeProgressState,
       );
     }
     await refreshState(this.setState);
@@ -467,52 +400,26 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
 
   @override
   modulePageCollectOption() async {
-    var option = CommandLineWriter();
-    if (option.check('-immediate_select')) {
-      option.nextBoolean(this._immediateSelect);
+    var option = Option();
+    option.immediateSelect = this._immediateSelect;
+    option.automaticPlay = this._automaticPlay;
+    option.repeatPlay = this._repeatPlay;
+    option.reversePlay = this._reversePlay;
+    option.keepSpeed = this._keepSpeed;
+    option.showBoundary = this._showBoundary;
+    if (this._loaded) {
+      option.animationFile = this._animationFile!;
+      option.imageFilter = this._imageFilter!.mapIndexed((index, value) => value ? null : index).nonNulls.toList();
+      option.spriteFilter = this._spriteFilter!.mapIndexed((index, value) => value ? null : index).nonNulls.toList();
     }
-    if (option.check('-automatic_play')) {
-      option.nextBoolean(this._automaticPlay);
+    if (this._activated) {
+      option.activeTarget = this._activeTarget!;
+      option.activeFrameRange = this._activeFrameRange!;
+      option.activeFrameSpeed = this._activeFrameSpeed!;
+      option.activeProgressIndex = this._queryProgressIndex();
+      option.activeProgressState = this._queryProgressState();
     }
-    if (option.check('-repeat_play')) {
-      option.nextBoolean(this._repeatPlay);
-    }
-    if (option.check('-reverse_play')) {
-      option.nextBoolean(this._reversePlay);
-    }
-    if (option.check('-keep_speed')) {
-      option.nextBoolean(this._keepSpeed);
-    }
-    if (option.check('-show_boundary')) {
-      option.nextBoolean(this._showBoundary);
-    }
-    if (option.check('-animation_file', state: this._loaded)) {
-      option.nextString(this._animationFile!.emit());
-    }
-    if (option.check('-image_filter', state: this._loaded)) {
-      option.nextString(this._imageFilter!.mapIndexed((index, value) => value ? null : ConvertHelper.makeIntegerToString(index)).nonNulls.join(','));
-    }
-    if (option.check('-sprite_filter', state: this._loaded)) {
-      option.nextString(this._spriteFilter!.mapIndexed((index, value) => value ? null : ConvertHelper.makeIntegerToString(index)).nonNulls.join(','));
-    }
-    if (option.check('-active_target', state: this._activated)) {
-      option.nextBoolean(this._activeTarget!.type);
-      option.nextInteger(this._activeTarget!.index);
-    }
-    if (option.check('-active_frame_range', state: this._activated)) {
-      option.nextInteger(this._activeFrameRange!.begin);
-      option.nextInteger(this._activeFrameRange!.end);
-    }
-    if (option.check('-active_frame_speed', state: this._activated)) {
-      option.nextFloater(this._activeFrameSpeed!);
-    }
-    if (option.check('-active_progress_index', state: this._activated)) {
-      option.nextInteger(this._queryProgressIndex());
-    }
-    if (option.check('-active_progress_state', state: this._activated)) {
-      option.nextBoolean(this._queryProgressState());
-    }
-    return option.done();
+    return option;
   }
 
   @override
@@ -582,7 +489,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
     return ModulePageRegion(
       onStorageDrop: (item) async {
         if (item.length != 1) {
-          await StyledSnackExtension.show(context, 'source is multiply.');
+          await StyledSnackExtension.show(context, 'the source is multiply.');
           return;
         }
         var animationFile = null as StoragePath?;
@@ -593,7 +500,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
           animationFile = await VisualHelper.checkAnimationDirectoryPath(item.first);
         }
         if (animationFile == null) {
-          await StyledSnackExtension.show(context, 'source is invalid.');
+          await StyledSnackExtension.show(context, 'the source is invalid.');
           return;
         }
         await this._applyLoad(animationFile, null, null, null, null, null, null, null);
@@ -608,8 +515,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
               child: LayoutBuilder(
                 builder: (context, constraints) => BoxContainer.of(
                   margin: .symmetric(
-                    horizontal: max(0, (constraints.maxWidth - (this._animation?.size.$1 ?? 0.0)) / 2.0),
-                    vertical: max(0, (constraints.maxHeight - (this._animation?.size.$2 ?? 0.0)) / 2.0),
+                    horizontal: lib.max(0, (constraints.maxWidth - (this._animation?.size.$1 ?? 0.0)) / 2.0),
+                    vertical: lib.max(0, (constraints.maxHeight - (this._animation?.size.$2 ?? 0.0)) / 2.0),
                   ),
                   child: StackContainer.of(fit: .passthrough, [
                     this._animation == null
@@ -716,7 +623,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
                               if (value != null) {
                                 var selectedValue = value;
                                 selectedValue -= 1;
-                                currentValue = (begin: selectedValue, end: max(selectedValue, currentValue.end));
+                                currentValue = (begin: selectedValue, end: lib.max(selectedValue, currentValue.end));
                                 await refreshState(setStateForPanel);
                               }
                             },
@@ -727,7 +634,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
                           var parsedValue = Integer.tryParse(value);
                           if (parsedValue != null && parsedValue >= 1 && parsedValue <= this._activeSprite!.frame.length) {
                             parsedValue -= 1;
-                            currentValue = (begin: parsedValue, end: max(parsedValue, currentValue.end));
+                            currentValue = (begin: parsedValue, end: lib.max(parsedValue, currentValue.end));
                           }
                           await refreshState(setStateForPanel);
                         },
@@ -758,7 +665,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
                               if (value != null) {
                                 var selectedValue = value;
                                 selectedValue -= 1;
-                                currentValue = (begin: min(selectedValue, currentValue.begin), end: selectedValue);
+                                currentValue = (begin: lib.min(selectedValue, currentValue.begin), end: selectedValue);
                                 await refreshState(setStateForPanel);
                               }
                             },
@@ -769,7 +676,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
                           var parsedValue = Integer.tryParse(value);
                           if (parsedValue != null && parsedValue >= 1 && parsedValue <= this._activeSprite!.frame.length) {
                             parsedValue -= 1;
-                            currentValue = (begin: min(parsedValue, currentValue.begin), end: parsedValue);
+                            currentValue = (begin: lib.min(parsedValue, currentValue.begin), end: parsedValue);
                           }
                           await refreshState(setStateForPanel);
                         },
@@ -787,7 +694,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
                 selected: true,
                 icon: IconView.of(IconSet.arrow_back),
                 onPressed: (context) async {
-                  await this._changeProgressIndex(max(this._queryProgressIndex() - 1, this._activeFrameRange!.begin));
+                  await this._changeProgressIndex(lib.max(this._queryProgressIndex() - 1, this._activeFrameRange!.begin));
                 },
               ),
               Gap.horizontal(8),
@@ -813,7 +720,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
                 selected: true,
                 icon: IconView.of(IconSet.arrow_forward),
                 onPressed: (context) async {
-                  await this._changeProgressIndex(min(this._queryProgressIndex() + 1, this._activeFrameRange!.end));
+                  await this._changeProgressIndex(lib.min(this._queryProgressIndex() + 1, this._activeFrameRange!.end));
                 },
               ),
               Gap.horizontal(12),

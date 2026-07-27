@@ -142,9 +142,7 @@ namespace Twinning.Script.Console {
 	export function error_of(
 		exception: any,
 	): void {
-		let [title, description] = ConvertHelper.generate_exception_message(exception);
-		error(title, description);
-		return;
+		return error(`exception occurred`, ConvertHelper.generate_exception_message(exception));
 	}
 
 	// #endregion
@@ -172,6 +170,9 @@ namespace Twinning.Script.Console {
 			}
 			else {
 				let macro = representation.substring(1);
+				if (macro === 'terminate') {
+					TerminateHelper.trigger();
+				}
 				result = converter([macro]);
 			}
 			return result;
@@ -271,16 +272,45 @@ namespace Twinning.Script.Console {
 
 	export function pause(
 	): void {
+		let result: null = undefined!;
 		let leading = 'Pause';
+		let converter = (representation: string | [string]): string | [null] => {
+			let value: null;
+			if (CheckHelper.is_string(representation)) {
+				value = null;
+			}
+			else {
+				switch (representation[0]) {
+					default: {
+						return los('console:input_macro_invalid');
+					}
+				}
+			}
+			return [value];
+		};
 		if (Shell.is_basic) {
-			basic_set_message_text_attribute('input');
-			basic_common_output(leading + ' ', true, 0, false);
-			basic_set_message_text_attribute('verbosity');
-			Shell.basic_input_text();
+			result = basic_common_input(
+				leading,
+				() => {
+					return;
+				},
+				converter,
+				true,
+				null,
+				undefined,
+			);
 		}
 		if (Shell.is_assistant) {
-			Shell.assistant_receive_submission('pause', []);
-			assistant_common_output('input', leading, []);
+			result = assistant_common_input(
+				leading,
+				() => {
+					return Shell.assistant_receive_submission('pause', []).value;
+				},
+				converter,
+				true,
+				null,
+				undefined,
+			);
 		}
 		return;
 	}

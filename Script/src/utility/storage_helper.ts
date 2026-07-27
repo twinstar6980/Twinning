@@ -101,42 +101,59 @@ namespace Twinning.Script.StorageHelper {
 		return KernelX.Storage.size_file(target);
 	}
 
+	export function resize_file(
+		target: StoragePath,
+		size: bigint,
+	): void {
+		return KernelX.Storage.resize_file(target, size);
+	}
+
 	// ----------------
 
 	export function read_file(
 		target: StoragePath,
-	): Kernel.ByteArray {
-		return KernelX.Storage.read_file(target);
+		offset: bigint,
+		data: Kernel.ByteListView,
+	): void {
+		return KernelX.Storage.read_file(target, offset, data);
 	}
 
-	// TODO: dont create
 	export function write_file(
 		target: StoragePath,
-		data: Kernel.ByteListView | Kernel.ByteArray | ArrayBuffer,
+		offset: bigint,
+		data: Kernel.ByteListView,
 	): void {
-		let data_view: Kernel.ByteListView;
-		if (data instanceof Kernel.ByteListView) {
-			data_view = data;
-		}
-		if (data instanceof Kernel.ByteArray) {
-			data_view = data.view();
-		}
-		if (data instanceof ArrayBuffer) {
-			data_view = Kernel.ByteListView.value(data);
-		}
-		let target_path = Kernel.Path.value(target.emit());
-		if (!Kernel.Storage.exist_file(target_path).value) {
-			Kernel.Storage.create_file(target_path);
-		}
-		return KernelX.Storage.write_file(target, data_view!);
+		return KernelX.Storage.write_file(target, offset, data);
 	}
 
 	// ----------------
 
+	export function read_file_data(
+		target: StoragePath,
+	): Kernel.ByteArray {
+		let size = size_file(target);
+		let data = Kernel.ByteArray.allocate(Kernel.Size.value(size));
+		read_file(target, 0n, data.view());
+		return data;
+	}
+
+	export function write_file_data(
+		target: StoragePath,
+		data: Kernel.ByteListView,
+	): void {
+		// TODO: dont create
+		if (!exist_file(target)) {
+			create_file(target);
+		}
+		resize_file(target, data.size().value);
+		write_file(target, 0n, data);
+		return;
+	}
+
 	export function read_file_text(
 		target: StoragePath,
 	): string {
-		let data = read_file(target);
+		let data = read_file_data(target);
 		let text = Kernel.Miscellaneous.cast_CharacterListView_to_JS_String(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(data.view()));
 		return text;
 	}
@@ -146,7 +163,7 @@ namespace Twinning.Script.StorageHelper {
 		text: string,
 	): void {
 		let data = Kernel.Miscellaneous.cast_moveable_String_to_ByteArray(Kernel.String.value(text));
-		write_file(target, data);
+		write_file_data(target, data.view());
 		return;
 	}
 
@@ -205,7 +222,7 @@ namespace Twinning.Script.StorageHelper {
 			// unavailable, silently fail
 		}
 		if (Shell.is_assistant) {
-			Shell.assistant_reveal_storage_item(target.emit());
+			Shell.assistant_reveal_storage_item(target);
 		}
 		return;
 	}
@@ -222,7 +239,13 @@ namespace Twinning.Script.StorageHelper {
 			target = [];
 		}
 		if (Shell.is_assistant) {
-			let target_value = Shell.assistant_pick_storage_item(type, multiply, location === null ? '' : location.emit(), name === null ? '' : name).target;
+			if (location === null || !exist_directory(location)) {
+				location = query_storage_item('user_home')!;
+			}
+			if (name === null) {
+				name = '';
+			}
+			let target_value = Shell.assistant_pick_storage_item(type, multiply, location, name).target;
 			target = target_value.map((it) => new StoragePath(it));
 		}
 		return target;
@@ -237,13 +260,13 @@ namespace Twinning.Script.StorageHelper {
 		if (use_cache && Shell.is_assistant) {
 			parent = query_storage_item('application_cache')!;
 		}
-		let name = ConvertHelper.make_date_to_string_simple(new Date());
-		let target = StorageHelper.generate_suffix_path(parent.join(name), null);
+		let name = ConvertHelper.make_date_to_string(new Date(), 'YY-MM-DD_hh-mm-ss_SSS');
+		let target = generate_suffix_path(parent.join(name), null);
 		{
-			StorageHelper.create_directory(target);
+			create_directory(target);
 		}
 		let target_finalizer = new Finalizer(() => {
-			StorageHelper.remove(target);
+			remove(target);
 		});
 		return [target, target_finalizer];
 	}
@@ -259,7 +282,7 @@ namespace Twinning.Script.StorageHelper {
 		infix = CheckHelper.not_null_or(infix, '.');
 		let result = path;
 		let suffix = 0;
-		while (StorageHelper.exist(result)) {
+		while (exist(result)) {
 			suffix += 1;
 			result = path.parent()!.join(path.name()! + `${infix}${suffix}`);
 		}
@@ -290,37 +313,6 @@ namespace Twinning.Script.StorageHelper {
 			}
 		}
 		return tree;
-	}
-
-	// ----------------
-
-	const k_dangerous_path_rule = [
-		/^\/((storage\/emulated\/[0-9]+)|(sdcard))\//,
-		/^\/$/,
-		/^\/(home)$/,
-		/^\/(Windows)/,
-		/^\/(Windows.old)/,
-		/^\/(Documents and Settings)$/,
-		/^\/(PerfLogs)$/,
-		/^\/(Program Files)$/,
-		/^\/(Program Files (x86))$/,
-		/^\/(ProgramData)$/,
-		/^\/(Recovery)$/,
-		/^\/(System Volume Information)$/,
-		/^\/(Users)$/,
-		/^\/(appverifUI.dll)$/,
-		/^\/(hiberfil.sys)$/,
-		/^\/(swapfile.sys)$/,
-		/^\/(pagefile.sys)$/,
-		/^\/(vfcompat.dll)$/,
-		/^\/()$/,
-	];
-
-	// TODO: safty
-	export function is_dangerous(
-		target: string,
-	): boolean {
-		return k_dangerous_path_rule.every((value) => (!value.test(target)));
 	}
 
 	// #endregion

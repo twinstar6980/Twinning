@@ -1,15 +1,15 @@
 import '/common.dart';
-import 'dart:ffi' as ffi;
+import 'dart:ffi' as lib;
 
 // ----------------
 
-final class Message extends ffi.Struct {
-  external ffi.Pointer<ffi.Uint8> data;
-  @ffi.Size()
+final class Message extends lib.Struct {
+  external lib.Pointer<lib.Uint8> data;
+  @lib.Size()
   external Integer                size;
 }
 
-final class Executor extends ffi.Struct {
-  external ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<Executor> self, ffi.Pointer<Executor> callback, ffi.Pointer<Message> argument, ffi.Pointer<Message> result, ffi.Pointer<Message> exception)>> invoke;
-  external ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<Executor> self, ffi.Pointer<Executor> callback, ffi.Pointer<Message> argument, ffi.Pointer<Message> result, ffi.Pointer<Message> exception)>> clear;
+final class Executor extends lib.Struct {
+  external lib.Pointer<lib.NativeFunction<lib.Void Function(lib.Pointer<Executor> self, lib.Pointer<Executor> callback, lib.Pointer<Message> argument, lib.Pointer<Message> result, lib.Pointer<Message> exception)>> invoke;
+  external lib.Pointer<lib.NativeFunction<lib.Void Function(lib.Pointer<Executor> self, lib.Pointer<Executor> callback, lib.Pointer<Message> argument, lib.Pointer<Message> result, lib.Pointer<Message> exception)>> clear;
 }

@@ -3,8 +3,9 @@ import '/utility/finalizer.dart';
 import '/utility/storage_path.dart';
 import '/utility/convert_helper.dart';
 import '/utility/platform_integration_manager.dart';
-import 'dart:io';
-import 'dart:typed_data';
+import 'dart:io' as lib;
+import 'dart:typed_data' as lib;
+import 'dart:convert' as lib;
 import 'package:ffi/ffi.dart' as lib;
 import 'package:win32/win32.dart' as lib;
 
@@ -37,7 +38,7 @@ class StorageHelper {
       return false;
     }
     var targetString = target.emitNative();
-    return await FileSystemEntity.type(targetString, followLinks: false) != .notFound;
+    return await lib.FileSystemEntity.type(targetString, followLinks: false) != .notFound;
   }
 
   static Future<Void> copy(
@@ -52,9 +53,9 @@ class StorageHelper {
       await StorageHelper.createDirectory(placementParent);
     }
     var targetString = target.emitNative();
-    var type = await FileSystemEntity.type(targetString, followLinks: false);
+    var type = await lib.FileSystemEntity.type(targetString, followLinks: false);
     if (followLink && type == .link) {
-      var referentType = await FileSystemEntity.type(targetString, followLinks: true);
+      var referentType = await lib.FileSystemEntity.type(targetString, followLinks: true);
       if (referentType != .notFound) {
         type = referentType;
       }
@@ -74,13 +75,13 @@ class StorageHelper {
       await StorageHelper.createLink(placement, referent, isDirectory);
     }
     else if (type == .file) {
-      var data = await StorageHelper.readFile(target);
+      var data = await StorageHelper.readFileData(target);
       await StorageHelper.createFile(placement);
-      await StorageHelper.writeFile(placement, data);
+      await StorageHelper.writeFileData(placement, data);
     }
     else if (type == .directory) {
       await StorageHelper.createDirectory(placement);
-      await for (var item in Directory(targetString).list(recursive: false, followLinks: false)) {
+      await for (var item in lib.Directory(targetString).list(recursive: false, followLinks: false)) {
         var itemName = item.path.substring(item.path.lastIndexOf(RegExp(r'[/\\]')) + 1);
         await StorageHelper.copy(target.join(itemName), placement.join(itemName), followLink);
       }
@@ -103,15 +104,15 @@ class StorageHelper {
     }
     var targetString = target.emitNative();
     var placementString = placement.emitNative();
-    var type = await FileSystemEntity.type(targetString, followLinks: false);
+    var type = await lib.FileSystemEntity.type(targetString, followLinks: false);
     if (type == .link) {
-      await Link(targetString).rename(placementString);
+      await lib.Link(targetString).rename(placementString);
     }
     else if (type == .file) {
-      await File(targetString).rename(placementString);
+      await lib.File(targetString).rename(placementString);
     }
     else if (type == .directory) {
-      await Directory(targetString).rename(placementString);
+      await lib.Directory(targetString).rename(placementString);
     }
     else {
       throw UnsupportedException();
@@ -124,15 +125,15 @@ class StorageHelper {
   ) async {
     assertTest(await StorageHelper.exist(target));
     var targetString = target.emitNative();
-    var type = await FileSystemEntity.type(targetString, followLinks: false);
+    var type = await lib.FileSystemEntity.type(targetString, followLinks: false);
     if (type == .link) {
-      await Link(targetString).delete();
+      await lib.Link(targetString).delete();
     }
     else if (type == .file) {
-      await File(targetString).delete();
+      await lib.File(targetString).delete();
     }
     else if (type == .directory) {
-      await Directory(targetString).delete(recursive: true);
+      await lib.Directory(targetString).delete(recursive: true);
     }
     else {
       throw UnsupportedException();
@@ -151,7 +152,7 @@ class StorageHelper {
       return false;
     }
     var targetString = target.emitNative();
-    return await FileSystemEntity.type(targetString, followLinks: false) == .link;
+    return await lib.FileSystemEntity.type(targetString, followLinks: false) == .link;
   }
 
   static Future<Void> createLink(
@@ -175,7 +176,7 @@ class StorageHelper {
       assertTest(result.value);
     }
     if (SystemChecker.isLinux || SystemChecker.isMacintosh || SystemChecker.isAndroid || SystemChecker.isIphone) {
-      await Link(targetString).create(referentString, recursive: false);
+      await lib.Link(targetString).create(referentString, recursive: false);
     }
     return;
   }
@@ -187,7 +188,7 @@ class StorageHelper {
   ) async {
     assertTest(await StorageHelper.existLink(target));
     var targetString = target.emitNative();
-    return .of(await Link(targetString).target());
+    return .of(await lib.Link(targetString).target());
   }
 
   // #endregion
@@ -201,7 +202,7 @@ class StorageHelper {
       return false;
     }
     var targetString = target.emitNative();
-    return await FileSystemEntity.type(targetString, followLinks: true) == .file;
+    return await lib.FileSystemEntity.type(targetString, followLinks: true) == .file;
   }
 
   static Future<Void> createFile(
@@ -213,7 +214,7 @@ class StorageHelper {
       await StorageHelper.createDirectory(targetParent);
     }
     var targetString = target.emitNative();
-    await File(targetString).create(recursive: false);
+    await lib.File(targetString).create(recursive: false);
     return;
   }
 
@@ -224,61 +225,104 @@ class StorageHelper {
   ) async {
     assertTest(await StorageHelper.existFile(target));
     var targetString = target.emitNative();
-    return await File(targetString).length();
+    return await lib.File(targetString).length();
   }
 
-  // ----------------
-
-  static Future<Uint8List> readFile(
+  static Future<Void> resizeFile(
     StoragePath target,
+    Integer     size,
   ) async {
     assertTest(await StorageHelper.existFile(target));
+    assertTest(size >= 0);
     var targetString = target.emitNative();
-    return await File(targetString).readAsBytes();
-  }
-
-  static Future<Void> writeFile(
-    StoragePath target,
-    Uint8List   data,
-  ) async {
-    assertTest(await StorageHelper.existFile(target));
-    var targetString = target.emitNative();
-    await File(targetString).writeAsBytes(data, mode: .writeOnly, flush: true);
+    var handler = await lib.File(targetString).open(mode: .writeOnlyAppend);
+    try {
+      await handler.truncate(size);
+    }
+    finally {
+      await handler.close();
+    }
     return;
   }
 
   // ----------------
 
+  static Future<Void> readFile(
+    StoragePath   target,
+    Integer       offset,
+    lib.Uint8List data,
+  ) async {
+    assertTest(await StorageHelper.existFile(target));
+    assertTest(offset >= 0);
+    var targetString = target.emitNative();
+    var handler = await lib.File(targetString).open(mode: .read);
+    try {
+      assertTest(await handler.length() >= offset + data.length);
+      await handler.setPosition(offset);
+      var count = await handler.readInto(data);
+      assertTest(count == data.length);
+    }
+    finally {
+      await handler.close();
+    }
+    return;
+  }
+
+  static Future<Void> writeFile(
+    StoragePath   target,
+    Integer       offset,
+    lib.Uint8List data,
+  ) async {
+    assertTest(await StorageHelper.existFile(target));
+    assertTest(offset >= 0);
+    var targetString = target.emitNative();
+    var handler = await lib.File(targetString).open(mode: .writeOnlyAppend);
+    try {
+      assertTest(await handler.length() >= offset + data.length);
+      await handler.setPosition(offset);
+      await handler.writeFrom(data);
+    }
+    finally {
+      await handler.close();
+    }
+    return;
+  }
+
+  // ----------------
+
+  static Future<lib.Uint8List> readFileData(
+    StoragePath target,
+  ) async {
+    var size = await StorageHelper.sizeFile(target);
+    var data = lib.Uint8List(size);
+    await StorageHelper.readFile(target, 0, data);
+    return data;
+  }
+
+  static Future<Void> writeFileData(
+    StoragePath   target,
+    lib.Uint8List data,
+  ) async {
+    await StorageHelper.resizeFile(target, data.length);
+    await StorageHelper.writeFile(target, 0, data);
+    return;
+  }
+
   static Future<String> readFileText(
     StoragePath target,
   ) async {
-    assertTest(await StorageHelper.existFile(target));
-    var targetString = target.emitNative();
-    return await File(targetString).readAsString();
+    var data = await StorageHelper.readFileData(target);
+    var text = lib.utf8.decode(data);
+    return text;
   }
 
   static Future<Void> writeFileText(
     StoragePath target,
     String      text,
   ) async {
-    assertTest(await StorageHelper.existFile(target));
-    var targetString = target.emitNative();
-    await File(targetString).writeAsString(text, mode: .writeOnly, flush: true);
+    var data = lib.utf8.encode(text);
+    await StorageHelper.writeFileData(target, data);
     return;
-  }
-
-  // ----------------
-
-  static Future<Uint8List> readFileLimited(
-    StoragePath target,
-    Integer     limit,
-  ) async {
-    assertTest(await StorageHelper.existFile(target));
-    var targetString = target.emitNative();
-    var handle = await File(targetString).open(mode: .read);
-    var result = await handle.read(8);
-    await handle.close();
-    return result;
   }
 
   // #endregion
@@ -292,7 +336,7 @@ class StorageHelper {
       return false;
     }
     var targetString = target.emitNative();
-    return await FileSystemEntity.type(targetString, followLinks: true) == .directory;
+    return await lib.FileSystemEntity.type(targetString, followLinks: true) == .directory;
   }
 
   static Future<Void> createDirectory(
@@ -300,7 +344,7 @@ class StorageHelper {
   ) async {
     assertTest(!await StorageHelper.exist(target));
     var targetString = target.emitNative();
-    await Directory(targetString).create(recursive: true);
+    await lib.Directory(targetString).create(recursive: true);
   }
 
   // ----------------
@@ -323,12 +367,12 @@ class StorageHelper {
     ) async {
       if (depth == null || currentDepth < depth) {
         var currentTargetString = currentTarget.emitNative();
-        await for (var item in Directory(currentTargetString).list(recursive: false, followLinks: false)) {
-          var itemType = await FileSystemEntity.type(item.path, followLinks: false);
+        await for (var item in lib.Directory(currentTargetString).list(recursive: false, followLinks: false)) {
+          var itemType = await lib.FileSystemEntity.type(item.path, followLinks: false);
           var itemName = item.path.substring(item.path.lastIndexOf(RegExp(r'[/\\]')) + 1);
           var itemPath = currentItem.join(itemName);
           if (followLink && itemType == .link) {
-            var referentType = await FileSystemEntity.type(item.path, followLinks: true);
+            var referentType = await lib.FileSystemEntity.type(item.path, followLinks: true);
             if (referentType != .notFound) {
               itemType = referentType;
             }
@@ -360,15 +404,14 @@ class StorageHelper {
   static Future<StoragePath> query(
     StorageQueryType type,
   ) async {
-    return .of((await PlatformIntegrationManager.instance.invokeQueryStorageItem(ConvertHelper.makeEnumerationToStringOfSnakeCase(type))).target);
+    return (await PlatformIntegrationManager.instance.invokeQueryStorageItem(ConvertHelper.makeEnumerationToStringOfSnakeCase(type))).target;
   }
 
   static Future<Void> reveal(
     StoragePath target,
   ) async {
     assertTest(await StorageHelper.exist(target));
-    var targetString = target.emitNative();
-    await PlatformIntegrationManager.instance.invokeRevealStorageItem(targetString);
+    await PlatformIntegrationManager.instance.invokeRevealStorageItem(target);
     return;
   }
 
@@ -384,8 +427,7 @@ class StorageHelper {
     if (name == null) {
       name = '';
     }
-    var targetString = (await PlatformIntegrationManager.instance.invokePickStorageItem(ConvertHelper.makeEnumerationToStringOfSnakeCase(type), multiply, location.emitNative(), name)).target;
-    var target = targetString.map((it) => StoragePath.of(it)).toList();
+    var target = (await PlatformIntegrationManager.instance.invokePickStorageItem(ConvertHelper.makeEnumerationToStringOfSnakeCase(type), multiply, location, name)).target;
     return target;
   }
 

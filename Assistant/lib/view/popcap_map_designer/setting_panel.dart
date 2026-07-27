@@ -1,7 +1,6 @@
 import '/common.dart';
 import '/widget/export.dart';
 import '/view/popcap_map_designer/setting.dart';
-import 'package:flutter/widgets.dart';
 
 // ----------------
 

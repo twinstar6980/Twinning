@@ -42,7 +42,7 @@ namespace Twinning.Script.Support.Nitrome.TwinShotDeluxe.Record.Decode {
 		data_file: StoragePath,
 		definition_file: StoragePath,
 	): void {
-		let data = StorageHelper.read_file(data_file);
+		let data = StorageHelper.read_file_data(data_file);
 		let definition = process(new ByteStreamView(data.view().value));
 		JsonHelper.encode_file(definition_file, definition);
 		return;

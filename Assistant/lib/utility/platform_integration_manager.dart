@@ -1,7 +1,9 @@
 import '/common.dart';
+import '/utility/storage_path.dart';
+import '/widget/common.dart';
 import '/widget/container.dart';
-import 'dart:async';
-import 'package:flutter/services.dart';
+import 'dart:async' as lib;
+import 'package:flutter/services.dart' as lib;
 
 // ----------------
 
@@ -15,9 +17,9 @@ class PlatformIntegrationManager {
 
   // #region constructor
 
-  MethodChannel _channel;
+  lib.MethodChannel _channel;
 
-  StreamController<String> _streamControllerForLink;
+  lib.StreamController<String> _streamControllerForLink;
 
   // ----------------
 
@@ -33,7 +35,7 @@ class PlatformIntegrationManager {
   // #region handle
 
   Future<Object?> _handle(
-    MethodCall call,
+    lib.MethodCall call,
   ) async {
     var rawArgument = call.arguments as Map<Object?, Object?>;
     var getArgument = (String name) {
@@ -46,6 +48,13 @@ class PlatformIntegrationManager {
       return null as Void;
     };
     switch (call.method) {
+      case 'receive_platform_exception': {
+        // ignore: unused_local_variable
+        var detail = await this._handleReceivePlatformException(
+          getArgument('message')!.as<String>(),
+        );
+        break;
+      }
       case 'receive_application_link': {
         // ignore: unused_local_variable
         var detail = await this._handleReceiveApplicationLink(
@@ -83,6 +92,18 @@ class PlatformIntegrationManager {
       default: throw Exception('invalid method');
     }
     return rawResult;
+  }
+
+  // ----------------
+
+  Future<()> _handleReceivePlatformException(
+    String message,
+  ) async {
+    postTask(() async {
+      throw Exception(message);
+    });
+    return (
+    );
   }
 
   // ----------------
@@ -191,42 +212,42 @@ class PlatformIntegrationManager {
 
   // ----------------
 
-  Future<({String target})> invokeQueryStorageItem(
+  Future<({StoragePath target})> invokeQueryStorageItem(
     String type,
   ) async {
     var detail = await this._invoke('query_storage_item', {
       'type': type,
     });
     return (
-      target: detail['target']!.as<String>(),
+      target: detail['target']!.as<String>().selfLet((it) => StoragePath.of(it)),
     );
   }
 
   Future<()> invokeRevealStorageItem(
-    String target,
+    StoragePath target,
   ) async {
     // ignore: unused_local_variable
     var detail = await this._invoke('reveal_storage_item', {
-      'target': target,
+      'target': target.emitNative(),
     });
     return (
     );
   }
 
-  Future<({List<String> target})> invokePickStorageItem(
-    String  type,
-    Boolean multiply,
-    String  location,
-    String  name,
+  Future<({List<StoragePath> target})> invokePickStorageItem(
+    String      type,
+    Boolean     multiply,
+    StoragePath location,
+    String      name,
   ) async {
     var detail = await this._invoke('pick_storage_item', {
       'type': type,
       'multiply': multiply,
-      'location': location,
+      'location': location.emitNative(),
       'name': name,
     });
     return (
-      target: detail['target']!.as<List<Object?>>().cast<String>(),
+      target: detail['target']!.as<List<Object?>>().cast<String>().map((it) => StoragePath.of(it)).toList(),
     );
   }
 
@@ -301,17 +322,45 @@ class PlatformIntegrationManager {
 
   // ----------------
 
-  Future<({Integer width, Integer height, Uint8List data})> invokeOnWindowsExtractAssociatedIcon(
-    String target,
+  Future<({Integer width, Integer height, lib.Uint8List data})> invokeOnWindowsExtractAssociatedIcon(
+    StoragePath target,
   ) async {
     assertTest(SystemChecker.isWindows);
     var detail = await this._invoke('on_windows_extract_associated_icon', {
-      'target': target,
+      'target': target.emitNative(),
     });
     return (
       width: detail['width']!.as<Integer>(),
       height: detail['height']!.as<Integer>(),
-      data: detail['data']!.as<Uint8List>(),
+      data: detail['data']!.as<lib.Uint8List>(),
+    );
+  }
+
+  // ----------------
+
+  Future<({List<String> target})> invokeOnAndroidListApplication(
+  ) async {
+    assertTest(SystemChecker.isAndroid);
+    var detail = await this._invoke('on_android_list_application', {
+    });
+    return (
+      target: detail['target']!.as<List<Object?>>().cast<String>(),
+    );
+  }
+
+  Future<({String name, String version, Integer iconWidth, Integer iconHeight, lib.Uint8List iconData})> invokeOnAndroidQueryApplication(
+    String target,
+  ) async {
+    assertTest(SystemChecker.isAndroid);
+    var detail = await this._invoke('on_android_query_application', {
+      'target': target,
+    });
+    return (
+      name: detail['name']!.as<String>(),
+      version: detail['version']!.as<String>(),
+      iconWidth: detail['icon_width']!.as<Integer>(),
+      iconHeight: detail['icon_height']!.as<Integer>(),
+      iconData: detail['icon_data']!.as<lib.Uint8List>(),
     );
   }
 

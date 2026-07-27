@@ -79,39 +79,35 @@ export namespace Twinning::Shell {
 			return;
 		}
 
-		// ----------------
+		#pragma endregion
 
-		virtual auto callback(
+		#pragma region handle
+
+		virtual auto handle(
 			std::vector<std::string> const & argument
 		) -> std::vector<std::string> override {
 			assert_test(thiz.m_running);
 			auto result = std::vector<std::string>{};
 			assert_test(argument.size() >= 1);
 			switch (hash_string(argument[0])) {
-				case hash_string("name"sv): {
-					assert_test(argument.size() == 1);
-					auto detail = thiz.callback_name(
-					);
-					result.emplace_back(std::move(std::get<0>(detail)));
-					break;
-				}
-				case hash_string("version"sv): {
-					assert_test(argument.size() == 1);
-					auto detail = thiz.callback_version(
+				case hash_string("query_context"sv): {
+					assert_test(argument.size() == 2);
+					auto detail = thiz.handle_query_context(
+						argument[1]
 					);
 					result.emplace_back(std::move(std::get<0>(detail)));
 					break;
 				}
 				case hash_string("output_text"sv): {
 					assert_test(argument.size() == 2);
-					auto detail = thiz.callback_output_text(
+					auto detail = thiz.handle_output_text(
 						argument[1]
 					);
 					break;
 				}
 				case hash_string("input_text"sv): {
 					assert_test(argument.size() == 1);
-					auto detail = thiz.callback_input_text(
+					auto detail = thiz.handle_input_text(
 					);
 					result.emplace_back(std::move(std::get<0>(detail)));
 					break;
@@ -121,26 +117,35 @@ export namespace Twinning::Shell {
 			return result;
 		}
 
-		auto callback_name(
+		// ----------------
+
+		auto handle_query_context(
+			std::string const & name
 		) -> std::tuple<std::string> {
-			auto name = std::string{"basic"};
-			return std::make_tuple(name);
+			assert_test(name == "name"sv || name == "version"sv || name == "terminate"sv);
+			auto value = std::string{};
+			if (name == "name"sv) {
+				value = "basic"sv;
+			}
+			if (name == "version"sv) {
+				value = M_version;
+			}
+			if (name == "terminate"sv) {
+				value = "false"sv;
+			}
+			return std::make_tuple(value);
 		}
 
-		auto callback_version(
-		) -> std::tuple<std::string> {
-			auto version = std::string{M_version};
-			return std::make_tuple(version);
-		}
+		// ----------------
 
-		auto callback_output_text(
+		auto handle_output_text(
 			std::string const & text
 		) -> std::tuple<> {
 			Interaction::output_text(text);
 			return std::make_tuple();
 		}
 
-		auto callback_input_text(
+		auto handle_input_text(
 		) -> std::tuple<std::string> {
 			auto text = Interaction::input_text();
 			return std::make_tuple(text);

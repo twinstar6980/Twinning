@@ -35,6 +35,7 @@
 #include <optional>
 #include <vector>
 #include <map>
+#include <functional>
 #include <filesystem>
 #include <utility>
 

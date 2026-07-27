@@ -14,8 +14,6 @@
 
 - [使用方法](./usage.md)
 
-- [功能列表](./method.md)
-
 - [常见问题](./question.md)
 
 - [高级应用](./advanced.md)

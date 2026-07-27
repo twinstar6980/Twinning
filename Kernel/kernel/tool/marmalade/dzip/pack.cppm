@@ -118,6 +118,7 @@ export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 			information_structure.archive_resource_information.allocate_full(0_sz);
 			information_structure.resource_directory.append(""_sv);
 			auto global_chunk_index = 0_sz;
+			auto chunk_data_container = ByteArray{};
 			for (auto & resource_index : SizeRange{definition.resource.size()}) {
 				auto & resource_definition = definition.resource[resource_index];
 				auto & resource_information_structure = information_structure.resource_information[resource_index];
@@ -173,16 +174,24 @@ export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 						throw UnimplementedException{};
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<t_version>::zlib)) {
-						auto chunk_data = Storage::read_file(resource_path);
+						chunk_size_uncompressed = Storage::size_file(resource_path);
+						if (chunk_data_container.size() < chunk_size_uncompressed) {
+							chunk_data_container.allocate(chunk_size_uncompressed);
+						}
+						auto chunk_data = chunk_data_container.head(chunk_size_uncompressed);
+						Storage::read_file(resource_path, 0_sz, chunk_data);
 						Data::Compression::Deflate::Compress::process(as_left(InputByteStreamView{chunk_data}), data, 9_i, 15_i, 9_i, Data::Compression::Deflate::StrategyMode::Constant::default_mode(), Data::Compression::Deflate::WrapperType::Constant::gzip());
 						data.backward(8_sz); // NOTE: EXPLAIN: overwrite gzip trail
-						chunk_size_uncompressed = chunk_data.size();
 						chunk_size_compressed = chunk_size_uncompressed;
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<t_version>::bzip2)) {
-						auto chunk_data = Storage::read_file(resource_path);
+						chunk_size_uncompressed = Storage::size_file(resource_path);
+						if (chunk_data_container.size() < chunk_size_uncompressed) {
+							chunk_data_container.allocate(chunk_size_uncompressed);
+						}
+						auto chunk_data = chunk_data_container.head(chunk_size_uncompressed);
+						Storage::read_file(resource_path, 0_sz, chunk_data);
 						Data::Compression::Bzip2::Compress::process(as_left(InputByteStreamView{chunk_data}), data, 9_i, 0_i);
-						chunk_size_uncompressed = chunk_data.size();
 						chunk_size_compressed = chunk_size_uncompressed;
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<t_version>::mp3)) {
@@ -198,13 +207,19 @@ export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 						// chunk_size_compressed = 0_sz;
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<t_version>::copy_coded)) {
-						chunk_size_uncompressed = Storage::read_file_stream(resource_path, data);
+						chunk_size_uncompressed = Storage::size_file(resource_path);
+						auto chunk_data = data.forward_view(chunk_size_uncompressed);
+						Storage::read_file(resource_path, 0_sz, chunk_data);
 						chunk_size_compressed = chunk_size_uncompressed;
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<t_version>::lzma)) {
-						auto chunk_data = Storage::read_file(resource_path);
+						chunk_size_uncompressed = Storage::size_file(resource_path);
+						if (chunk_data_container.size() < chunk_size_uncompressed) {
+							chunk_data_container.allocate(chunk_size_uncompressed);
+						}
+						auto chunk_data = chunk_data_container.head(chunk_size_uncompressed);
+						Storage::read_file(resource_path, 0_sz, chunk_data);
 						Data::Compression::Lzma::Compress::process(as_left(InputByteStreamView{chunk_data}), data, 9_i);
-						chunk_size_uncompressed = chunk_data.size();
 						chunk_size_compressed = chunk_size_uncompressed;
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<t_version>::random_access)) {
@@ -217,6 +232,7 @@ export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 					++global_chunk_index;
 				}
 			}
+			chunk_data_container.reset();
 			information_structure.chunk_setting.archive_resource_count = 1_iu16;
 			information_structure.chunk_setting.chunk_count = cast_box<IntegerU16>(global_chunk_index);
 			information_structure.archive_setting.resource_file_count = cast_box<IntegerU16>(information_structure.resource_file.size());

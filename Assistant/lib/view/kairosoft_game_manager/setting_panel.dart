@@ -3,7 +3,6 @@ import '/module.dart';
 import '/utility/storage_helper.dart';
 import '/widget/export.dart';
 import '/view/kairosoft_game_manager/setting.dart';
-import 'package:flutter/widgets.dart';
 
 // ----------------
 

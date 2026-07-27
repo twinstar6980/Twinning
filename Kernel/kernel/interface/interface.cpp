@@ -22,7 +22,9 @@ namespace Twinning::Kernel::Interface {
 			script_text = script.tail(script.size() - 1_sz);
 		}
 		else {
-			auto script_data = Storage::read_file(Path{script});
+			auto script_path = Path{script};
+			auto script_data = ByteArray{Storage::size_file(script_path)};
+			Storage::read_file(script_path, 0_sz, script_data.view());
 			script_text.bind(from_byte_view<Character>(script_data.view()));
 			script_data.unbind();
 		}
@@ -54,7 +56,6 @@ namespace Twinning::Kernel::Interface {
 			}
 			default: {
 				throw UnnamedException{make_std_string("invalid method"_sv)};
-				break;
 			}
 		}
 		return;

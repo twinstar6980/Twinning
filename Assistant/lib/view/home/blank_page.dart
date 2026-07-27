@@ -2,8 +2,6 @@ import '/common.dart'; // ignore: unused_import
 import '/setting.dart';
 import '/widget/export.dart';
 import '/view/home/module_page.dart';
-import 'package:flutter/widgets.dart';
-import 'package:provider/provider.dart';
 
 // ----------------
 
@@ -21,7 +19,7 @@ class BlankPage extends StatelessWidget {
   build(context) {
     return ModulePageRegion(
       onStorageDrop: (item) async {
-        var setting = Provider.of<SettingProvider>(context, listen: false);
+        var setting = SettingProvider.of(context, listen: false);
         await setting.state.handleForward!(item);
         return;
       },
@@ -34,7 +32,8 @@ class BlankPage extends StatelessWidget {
             tooltip: 'Launcher',
             icon: IconView.of(IconSet.widgets, size: 128),
             onPressed: (context) async {
-              Provider.of<SettingProvider>(context, listen: false).state.homeShowLauncher!();
+              var setting = SettingProvider.of(context, listen: false);
+              await setting.state.homeShowLauncher!();
             },
           ),
         ),

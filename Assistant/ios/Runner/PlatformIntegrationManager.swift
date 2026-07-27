@@ -36,17 +36,25 @@ class PlatformIntegrationManager: NSObject, UIDocumentPickerDelegate, UNUserNoti
     _ host: AppDelegate,
     _ with_engineBridge: FlutterImplicitEngineBridge,
   ) -> Void {
-    self.channel = FlutterMethodChannel(
-      name: "\(try! self.queryApplicationIdentifier())/PlatformIntegrationManager",
-      binaryMessenger: with_engineBridge.applicationRegistrar.messenger(),
+    return try! self.executePlatformTask(
+      false,
+      {
+        return
+      },
+      {
+        self.channel = FlutterMethodChannel(
+          name: "\(try! self.queryApplicationIdentifier())/PlatformIntegrationManager",
+          binaryMessenger: with_engineBridge.applicationRegistrar.messenger(),
+        )
+        self.channel!.setMethodCallHandler({ [weak self] (call, result) in
+          self.executePlatformBackgroundTask({
+            await self?.handle(call, result)
+          })
+          return
+        })
+        return
+      },
     )
-    self.channel!.setMethodCallHandler({ [weak self] (call, result) in
-      Task {
-        await self?.handle(call, result)
-      }
-      return
-    })
-    return
   }
 
   public func inject_SceneDelegate_scene(
@@ -55,13 +63,21 @@ class PlatformIntegrationManager: NSObject, UIDocumentPickerDelegate, UNUserNoti
     _ with_session: UISceneSession,
     _ with_connectionOptions: UIScene.ConnectionOptions,
   ) -> Void {
-    let link = with_connectionOptions.urlContexts.first?.url.absoluteString
-    if link != nil {
-      Task {
-        try await self.invokeReceiveApplicationLink(link!)
-      }
-    }
-    return
+    return try! self.executePlatformTask(
+      false,
+      {
+        return
+      },
+      {
+        let link = with_connectionOptions.urlContexts.first?.url.absoluteString
+        if link != nil {
+          self.executePlatformBackgroundTask({
+            try await self.invokeReceiveApplicationLink(link!)
+          })
+        }
+        return
+      },
+    )
   }
 
   public func inject_SceneDelegate_scene(
@@ -69,24 +85,40 @@ class PlatformIntegrationManager: NSObject, UIDocumentPickerDelegate, UNUserNoti
     _ with_scene: UIScene,
     _ with_URLContexts: Set<UIOpenURLContext>,
   ) -> Void {
-    let link = with_URLContexts.first?.url.absoluteString
-    if link != nil {
-      Task {
-        try await self.invokeReceiveApplicationLink(link!)
-      }
-    }
-    return
+    return try! self.executePlatformTask(
+      false,
+      {
+        return
+      },
+      {
+        let link = with_URLContexts.first?.url.absoluteString
+        if link != nil {
+          self.executePlatformBackgroundTask({
+            try await self.invokeReceiveApplicationLink(link!)
+          })
+        }
+        return
+      },
+    )
   }
 
   public func inject_SceneDelegate_sceneDidBecomeActive(
     _ host: SceneDelegate,
     _ with_scene: UIScene,
   ) -> Void {
-    Task {
-      try self.registerNotificationSupport()
-      try self.registerDragDropSupport()
-    }
-    return
+    return try! self.executePlatformTask(
+      false,
+      {
+        return
+      },
+      {
+        self.executePlatformBackgroundTask({
+          try await self.registerNotificationSupport()
+          try await self.registerDragDropSupport()
+        })
+        return
+      },
+    )
   }
 
   // MARK: - handle
@@ -382,6 +414,16 @@ class PlatformIntegrationManager: NSObject, UIDocumentPickerDelegate, UNUserNoti
 
   // ----------------
 
+  private func invokeReceivePlatformException(
+    _ message: String,
+  ) async throws -> Void {
+    return try await self.invoke("receive_platform_exception", [
+      "message": self.encodeFlutterValue(message),
+    ])
+  }
+
+  // ----------------
+
   private func invokeReceiveApplicationLink(
     _ target: String,
   ) async throws -> Void {
@@ -423,7 +465,7 @@ class PlatformIntegrationManager: NSObject, UIDocumentPickerDelegate, UNUserNoti
   // MARK: - support
 
   private func registerNotificationSupport(
-  ) throws -> Void {
+  ) async throws -> Void {
     let center = UNUserNotificationCenter.current()
     center.delegate = self
     center.requestAuthorization(options: [.sound, .alert], completionHandler: { _, _ in })
@@ -433,7 +475,7 @@ class PlatformIntegrationManager: NSObject, UIDocumentPickerDelegate, UNUserNoti
   // ----------------
 
   private func registerDragDropSupport(
-  ) throws -> Void {
+  ) async throws -> Void {
     let window = try self.getCurrentWindow()
     window.rootViewController!.view.isUserInteractionEnabled = true
     window.rootViewController!.view.addInteraction(UIDropInteraction(delegate: self))
@@ -441,6 +483,39 @@ class PlatformIntegrationManager: NSObject, UIDocumentPickerDelegate, UNUserNoti
   }
 
   // MARK: - utility
+
+  private func executePlatformTask<TResult>(
+    _ handleException: Bool,
+    _ fallbackAction: () -> TResult,
+    _ taskAction: () throws -> TResult,
+  ) throws -> TResult {
+    do {
+      return try taskAction()
+    } catch {
+      if !handleException {
+        throw error!
+      }
+      Task { @MainActor in
+        try await self.invokeReceivePlatformException("\(exception!.localizedDescription)")
+      }
+      return fallbackAction()
+    }
+  }
+
+  private func executePlatformBackgroundTask(
+    _ taskAction: () async throws -> Void,
+  ) -> Void {
+    Task { @MainActor in
+      do {
+        result = try await taskAction()
+      } catch {
+        try await self.invokeReceivePlatformException("\(error.localizedDescription)")
+      }
+    }
+    return
+  }
+
+  // ----------------
 
   private func encodeFlutterValue<TValue>(
     _ ripe: TValue,
@@ -546,17 +621,33 @@ class PlatformIntegrationManager: NSObject, UIDocumentPickerDelegate, UNUserNoti
     _ controller: UIDocumentPickerViewController,
     didPickDocumentsAt urls: [URL],
   ) -> Void {
-    controller.dismiss(animated: true)
-    self.continuation!.resume(returning: [URL](urls))
-    return
+    return try! self.executePlatformTask(
+      true,
+      {
+        return
+      },
+      {
+        controller.dismiss(animated: true)
+        self.continuation!.resume(returning: [URL](urls))
+        return
+      },
+    )
   }
 
   public func documentPickerWasCancelled(
     _ controller: UIDocumentPickerViewController,
   ) -> Void {
-    controller.dismiss(animated: true)
-    self.continuation!.resume(returning: [URL]())
-    return
+    return try! self.executePlatformTask(
+      true,
+      {
+        return
+      },
+      {
+        controller.dismiss(animated: true)
+        self.continuation!.resume(returning: [URL]())
+        return
+      },
+    )
   }
 
   // MARK: - implement UNUserNotificationCenterDelegate
@@ -565,7 +656,15 @@ class PlatformIntegrationManager: NSObject, UIDocumentPickerDelegate, UNUserNoti
     _ center: UNUserNotificationCenter,
     willPresent notification: UNNotification,
   ) async -> UNNotificationPresentationOptions {
-    return [.sound, .list, .banner]
+    return try! self.executePlatformTask(
+      true,
+      {
+        return [.sound, .list, .banner]
+      },
+      {
+        return [.sound, .list, .banner]
+      },
+    )
   }
 
   // MARK: - implement UIDropInteractionDelegate
@@ -574,63 +673,95 @@ class PlatformIntegrationManager: NSObject, UIDocumentPickerDelegate, UNUserNoti
     _ interaction: UIDropInteraction,
     sessionDidEnter session: any UIDropSession,
   ) -> Void {
-    let allow = session.canLoadObjects(ofClass: URL.self)
-    if allow {
-      Task {
-        try await self.invokeReceiveApplicationDragEnter()
-      }
-    }
-    return
+    return try! self.executePlatformTask(
+      true,
+      {
+        return
+      },
+      {
+        let allow = session.canLoadObjects(ofClass: URL.self)
+        if allow {
+          self.executePlatformBackgroundTask({
+            try await self.invokeReceiveApplicationDragEnter()
+          })
+        }
+        return
+      },
+    )
   }
 
   public func dropInteraction(
     _ interaction: UIDropInteraction,
     sessionDidUpdate session: any UIDropSession,
   ) -> UIDropProposal {
-    let allow = session.canLoadObjects(ofClass: URL.self)
-    if allow {
-      Task {
-        let point = session.location(in: interaction.view!)
-        let locationX = Int(point.x)
-        let locationY = Int(point.y)
-        try await self.invokeReceiveApplicationDragOver(locationX, locationY)
-      }
-    }
-    return UIDropProposal(operation: !allow ? .forbidden : .copy)
+    return try! self.executePlatformTask(
+      true,
+      {
+        return UIDropProposal(operation: .forbidden)
+      },
+      {
+        let allow = session.canLoadObjects(ofClass: URL.self)
+        if allow {
+          let point = session.location(in: interaction.view!)
+          let locationX = Int(point.x)
+          let locationY = Int(point.y)
+          self.executePlatformBackgroundTask({
+            try await self.invokeReceiveApplicationDragOver(locationX, locationY)
+          })
+        }
+        return UIDropProposal(operation: !allow ? .forbidden : .copy)
+      },
+    )
   }
 
   public func dropInteraction(
     _ interaction: UIDropInteraction,
     sessionDidExit session: any UIDropSession,
   ) -> Void {
-    let allow = session.canLoadObjects(ofClass: URL.self)
-    if allow {
-      Task {
-        try await self.invokeReceiveApplicationDragLeave()
-      }
-    }
-    return
+    return try! self.executePlatformTask(
+      true,
+      {
+        return
+      },
+      {
+        let allow = session.canLoadObjects(ofClass: URL.self)
+        if allow {
+          self.executePlatformBackgroundTask({
+            try await self.invokeReceiveApplicationDragLeave()
+          })
+        }
+        return
+      },
+    )
   }
 
   public func dropInteraction(
     _ interaction: UIDropInteraction,
     performDrop session: any UIDropSession,
   ) -> Void {
-    let allow = session.canLoadObjects(ofClass: URL.self)
-    if allow {
-      Task {
-        // TODO
-        // let targetUrl = try await withCheckedThrowingContinuation { continuation in
-        //   session.loadObjects(ofClass: URL.self, completion: { sessionObject in
-        //     continuation.resume(returning: sessionObject)
-        //   })
-        // } as! [URL]
-        let targetUrl = [URL]()
-        let target = try targetUrl.map({ (item) in try self.resolveFileUrl(item) })
-        try await self.invokeReceiveApplicationDragDrop(target)
-      }
-    }
-    return
+    return try! self.executePlatformTask(
+      true,
+      {
+        return
+      },
+      {
+        let allow = session.canLoadObjects(ofClass: URL.self)
+        if allow {
+          // TODO
+          // let targetUrl = try await withCheckedThrowingContinuation { continuation in
+          //   session.loadObjects(ofClass: URL.self, completion: { sessionObject in
+          //     continuation.resume(returning: sessionObject)
+          //   })
+          // } as! [URL]
+          let targetUrl = [URL]()
+          let target = try targetUrl.map({ (item) in try self.resolveFileUrl(item) })
+          self.executePlatformBackgroundTask({
+            try await self.invokeReceiveApplicationDragDrop(target)
+          })
+        }
+        return
+      },
+    )
   }
 
 }

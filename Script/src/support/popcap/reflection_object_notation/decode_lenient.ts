@@ -26,6 +26,18 @@ namespace Twinning.Script.Support.Popcap.ReflectionObjectNotation.DecodeLenient 
 		return (value >> 1n) ^ -(value & 0b1n);
 	}
 
+	function read_eascii_string(
+		stream: ByteStreamView,
+		length: bigint,
+	): string {
+		let value = ``;
+		for (let index = 0n; index < length; index++) {
+			let character = stream.u8();
+			value += String.fromCodePoint(Number(character));
+		}
+		return value;
+	}
+
 	// #endregion
 
 	// #region utility
@@ -149,7 +161,7 @@ namespace Twinning.Script.Support.Popcap.ReflectionObjectNotation.DecodeLenient 
 				let size = read_pb_varint_unsigned(data);
 				let content: string;
 				if (!version.native_string_encoding_use_utf8) {
-					content = ConvertHelper.read_eascii_string(data, size);
+					content = read_eascii_string(data, size);
 				}
 				else {
 					content = ConvertHelper.read_utf8_string_by_size(data, size);
@@ -161,7 +173,7 @@ namespace Twinning.Script.Support.Popcap.ReflectionObjectNotation.DecodeLenient 
 				let size = read_pb_varint_unsigned(data);
 				let content: string;
 				if (!version.native_string_encoding_use_utf8) {
-					content = ConvertHelper.read_eascii_string(data, size);
+					content = read_eascii_string(data, size);
 				}
 				else {
 					content = ConvertHelper.read_utf8_string_by_size(data, size);
@@ -249,7 +261,6 @@ namespace Twinning.Script.Support.Popcap.ReflectionObjectNotation.DecodeLenient 
 					}
 					default: {
 						throw new Error(`data@${data.p().toString(16)}h: invalid reference type identifier`);
-						break;
 					}
 				}
 				break;
@@ -293,7 +304,6 @@ namespace Twinning.Script.Support.Popcap.ReflectionObjectNotation.DecodeLenient 
 			}
 			default: {
 				throw new Error(`data@${data.p().toString(16)}h: invalid type identifier`);
-				break;
 			}
 		}
 		return value;
@@ -332,7 +342,7 @@ namespace Twinning.Script.Support.Popcap.ReflectionObjectNotation.DecodeLenient 
 		definition_file: StoragePath,
 		version: typeof Kernel.Tool.Popcap.ReflectionObjectNotation.Version.Value,
 	): void {
-		let data = StorageHelper.read_file(data_file);
+		let data = StorageHelper.read_file_data(data_file);
 		let definition = process(new ByteStreamView(data.view().value), version);
 		JsonHelper.encode_file(definition_file, definition);
 		return;

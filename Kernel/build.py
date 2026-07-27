@@ -13,7 +13,7 @@ def build(
 	platform: str,
 ) -> tuple[str, str] | None:
 	destination = None
-	if utility.check_platform(platform, ['windows.amd64']):
+	if utility.project_check_platform(platform, ['windows.amd64']):
 		utility.sh_execute_command(source, [
 			'xmake',
 			'config',
@@ -32,18 +32,16 @@ def build(
 			f'{source}/.build/windows/x64/release/kernel.dll',
 			f'{temporary}/artifact.dll',
 		)
-		utility.strip_windows_binary(
-			f'{temporary}/artifact.dll',
+		utility.ex_windows_strip_executable(
 			f'{temporary}/artifact.dll',
 		)
-		utility.sign_windows_executable(
+		utility.ex_windows_sign(
 			f'{temporary}/artifact.dll',
-			f'{temporary}/artifact.dll',
-			'dll',
 			keystore,
+			'pe',
 		)
 		destination = ('', f'{temporary}/artifact.dll')
-	if utility.check_platform(platform, ['linux.amd64']):
+	if utility.project_check_platform(platform, ['linux.amd64']):
 		utility.sh_execute_command(source, [
 			'xmake',
 			'config',
@@ -63,7 +61,7 @@ def build(
 			f'{temporary}/artifact.so',
 		)
 		destination = ('', f'{temporary}/artifact.so')
-	if utility.check_platform(platform, ['macintosh.arm64']):
+	if utility.project_check_platform(platform, ['macintosh.arm64']):
 		utility.sh_execute_command(source, [
 			'xmake',
 			'config',
@@ -84,17 +82,17 @@ def build(
 			f'{source}/.build/macosx/arm64/release/libkernel.dylib',
 			f'{temporary}/artifact.dylib',
 		)
-		utility.sign_macintosh_executable(
-			f'{temporary}/artifact.dylib',
+		utility.ex_macintosh_sign(
 			f'{temporary}/artifact.dylib',
 			keystore,
+			'macho',
 		)
 		utility.fs_copy(
 			f'{temporary}/artifact.dylib',
 			f'{destination}',
 		)
 		destination = ('', f'{temporary}/artifact.dylib')
-	if utility.check_platform(platform, ['android.arm64']):
+	if utility.project_check_platform(platform, ['android.arm64']):
 		utility.sh_execute_command(source, [
 			'xmake',
 			'config',
@@ -115,7 +113,7 @@ def build(
 			f'{temporary}/artifact.so',
 		)
 		destination = ('', f'{temporary}/artifact.so')
-	if utility.check_platform(platform, ['iphone.arm64']):
+	if utility.project_check_platform(platform, ['iphone.arm64']):
 		utility.sh_execute_command(source, [
 			'xmake',
 			'config',
@@ -136,13 +134,13 @@ def build(
 			f'{source}/.build/iphoneos/arm64/release/libkernel.dylib',
 			f'{temporary}/artifact.dylib',
 		)
-		utility.sign_iphone_executable(
-			f'{temporary}/artifact.dylib',
+		utility.ex_iphone_sign(
 			f'{temporary}/artifact.dylib',
 			keystore,
+			'macho',
 		)
 		destination = ('', f'{temporary}/artifact.dylib')
 	return destination
 
 if __name__ == '__main__':
-	utility.build_project_module(__file__, build, sys.argv[1])
+	utility.project_build_module(__file__, build, sys.argv[1])

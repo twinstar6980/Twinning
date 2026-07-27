@@ -2,8 +2,6 @@ import '/common.dart';
 import '/setting.dart';
 import '/widget/export.dart';
 import '/view/home/main_page.dart' as home;
-import 'package:flutter/widgets.dart';
-import 'package:provider/provider.dart';
 
 // ----------------
 

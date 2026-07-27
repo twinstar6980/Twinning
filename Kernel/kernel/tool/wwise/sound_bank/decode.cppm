@@ -4804,13 +4804,12 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 						else {
 							auto item_data = data_data.sub_view(data_offset, data_size);
 							if (embedded_media_directory.has()) {
-								if (!Storage::exist_directory(embedded_media_directory.get())) {
-									Storage::create_directory(embedded_media_directory.get());
+								auto item_path = embedded_media_directory.get().join("{}.wem"_sf(value));
+								if (!Storage::exist_file(item_path)) {
+									Storage::create_file(item_path);
 								}
-								if (!Storage::exist_file(embedded_media_directory.get().join("{}.wem"_sf(value)))) {
-									Storage::create_file(embedded_media_directory.get().join("{}.wem"_sf(value)));
-								}
-								Storage::write_file(embedded_media_directory.get().join("{}.wem"_sf(value)), item_data);
+								Storage::resize_file(item_path, item_data.size());
+								Storage::write_file(item_path, 0_sz, item_data);
 							}
 						}
 					}

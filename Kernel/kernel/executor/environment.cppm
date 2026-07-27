@@ -414,8 +414,8 @@ export namespace Twinning::Kernel::Executor::Environment {
 		define_generic_class<Byte>(s_Kernel, "Byte"_s);
 		// String
 		define_generic_class<String>(s_Kernel, "String"_s);
-		define_generic_class<Optional<String>>(s_Kernel, "StringOptional"_s);
 		define_generic_class<List<String>>(s_Kernel, "StringList"_s);
+		define_generic_class<Map<String, String>>(s_Kernel, "StringMap"_s);
 		// Path
 		define_generic_class<Path>(s_Kernel, "Path"_s);
 		define_generic_class<Optional<Path>>(s_Kernel, "PathOptional"_s);
@@ -512,10 +512,9 @@ export namespace Twinning::Kernel::Executor::Environment {
 				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::exist_file>>("exist_file"_s)
 				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::create_file>>("create_file"_s)
 				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::size_file>>("size_file"_s)
+				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::resize_file>>("resize_file"_s)
 				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::read_file>>("read_file"_s)
 				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::write_file>>("write_file"_s)
-				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::read_file_stream>>("read_file_stream"_s)
-				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::write_file_stream>>("write_file_stream"_s)
 				// directory
 				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::exist_directory>>("exist_directory"_s)
 				.add_function_proxy<&proxy_global_function_with_promotion<&Storage::create_directory>>("create_directory"_s)
@@ -525,13 +524,11 @@ export namespace Twinning::Kernel::Executor::Environment {
 		{
 			auto s_Process = s_Kernel.add_space("Process"_s);
 			s_Process
-				// workspace
+				// context
 				.add_function_proxy<&proxy_global_function_with_promotion<&Process::get_workspace>>("get_workspace"_s)
-				// environment
 				.add_function_proxy<&proxy_global_function_with_promotion<&Process::get_environment>>("get_environment"_s)
-				.add_function_proxy<&proxy_global_function_with_promotion<&Process::find_environment>>("find_environment"_s)
-				// process
-				.add_function_proxy<&proxy_global_function_with_promotion<&Process::run_process>>("run_process"_s);
+				// child
+				.add_function_proxy<&proxy_global_function_with_promotion<&Process::run_child>>("run_child"_s);
 		}
 		// Tool
 		{
@@ -1815,29 +1812,29 @@ export namespace Twinning::Kernel::Executor::Environment {
 				.add_function_proxy<
 					&normalized_lambda<
 						[](
-						VariableByteListView & it
+						VariableByteListView & target
 					) -> VariableCharacterListView {
-							return unsafe_cast<VariableCharacterListView>(it);
+							return unsafe_cast<VariableCharacterListView>(target);
 						}
 					>
 				>("cast_ByteListView_to_CharacterListView"_s)
 				.add_function_proxy<
 					&normalized_lambda<
 						[](
-						VariableCharacterListView & it
+						VariableCharacterListView & target
 					) -> VariableByteListView {
-							return unsafe_cast<VariableByteListView>(it);
+							return unsafe_cast<VariableByteListView>(target);
 						}
 					>
 				>("cast_CharacterListView_to_ByteListView"_s)
 				.add_function_proxy<
 					&normalized_lambda<
 						[](
-						ByteArray & it
+						ByteArray & target
 					) -> String {
 							auto result = String{};
-							result.bind(from_byte_view<Character>(it.view()));
-							it.unbind();
+							result.bind(from_byte_view<Character>(target.view()));
+							target.unbind();
 							return result;
 						}
 					>
@@ -1845,11 +1842,11 @@ export namespace Twinning::Kernel::Executor::Environment {
 				.add_function_proxy<
 					&normalized_lambda<
 						[](
-						String & it
+						String & target
 					) -> ByteArray {
 							auto result = ByteArray{};
-							result.bind(to_byte_view(it.view()));
-							it.unbind();
+							result.bind(to_byte_view(target.view()));
+							target.unbind();
 							return result;
 						}
 					>
@@ -1857,19 +1854,19 @@ export namespace Twinning::Kernel::Executor::Environment {
 				.add_function_proxy<
 					&normalized_lambda<
 						[](
-						String & it
+						String & target
 					) -> VariableCharacterListView {
-							return up_cast<VariableCharacterListView>(it.view());
+							return up_cast<VariableCharacterListView>(target.view());
 						}
 					>
 				>("cast_String_to_CharacterListView"_s)
 				.add_function<
 					&normalized_lambda<
 						[](
-						Script::JavaScript::NativeValueHandler<VariableCharacterListView> & it
+						Script::JavaScript::NativeValueHandler<VariableCharacterListView> & target
 					) -> VariableStringView & {
 							// NOTE: EXPLAIN: return StringView is cheap
-							return down_cast<VariableStringView>(it.value());
+							return down_cast<VariableStringView>(target.value());
 						}
 					>
 				>("cast_CharacterListView_to_JS_String"_s);

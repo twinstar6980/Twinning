@@ -115,10 +115,12 @@ export {
 		using ::std::int16_t;
 		using ::std::int32_t;
 		using ::std::int64_t;
+		using ::std::intmax_t;
 		using ::std::uint8_t;
 		using ::std::uint16_t;
 		using ::std::uint32_t;
 		using ::std::uint64_t;
+		using ::std::uintmax_t;
 		using ::std::size_t;
 		using ::std::intptr_t;
 		using ::std::ptrdiff_t;
@@ -182,6 +184,10 @@ export {
 		using ::std::fread;
 		using ::std::fwrite;
 	}
+	namespace stddef {
+		inline constexpr auto $SEEK_SET = int{SEEK_SET};
+		inline constexpr auto $SEEK_END = int{SEEK_END};
+	}
 	namespace std::filesystem {
 		using ::std::filesystem::filesystem_error;
 		using ::std::filesystem::path;
@@ -199,6 +205,7 @@ export {
 		using ::std::filesystem::create_directory_symlink;
 		using ::std::filesystem::read_symlink;
 		using ::std::filesystem::file_size;
+		using ::std::filesystem::resize_file;
 		using ::std::filesystem::create_directories;
 		using ::std::filesystem::current_path;
 		using ::std::filesystem::begin;

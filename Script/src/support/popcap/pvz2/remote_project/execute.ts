@@ -12,7 +12,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.RemoteProject {
 
 	export type Action = typeof ActionX[number];
 
-	export const ActionE = ActionX as unknown as Action[];
+	export const ActionE = [...ActionX];
 
 	// ----------------
 
@@ -25,7 +25,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.RemoteProject {
 
 	export type Target = typeof TargetX[number];
 
-	export const TargetE = TargetX as unknown as Target[];
+	export const TargetE = [...TargetX];
 
 	// ----------------
 
@@ -91,7 +91,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.RemoteProject {
 		};
 		switch (action) {
 			case 'launch': {
-				AndroidHelper.application_start(application.identifier, 'com.popcap.PvZ2.PvZ2GameActivity');
+				AndroidHelper.application_start(application.identifier, 'com.popcap.PvZ2.PvZ2GameActivity', null, {});
 				break;
 			}
 			case 'check': {

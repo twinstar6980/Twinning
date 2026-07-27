@@ -1,6 +1,7 @@
 import '/common.dart';
 import '/module.dart';
 import '/setting.dart';
+import '/utility/json_type.dart';
 import '/utility/json_helper.dart';
 import '/widget/export.dart';
 import '/view/home/blank_page.dart';
@@ -8,9 +9,7 @@ import '/view/home/launcher_panel.dart';
 import '/view/home/onboarding_panel.dart';
 import '/view/home/setting_panel.dart';
 import '/view/home/module_page.dart';
-import 'package:collection/collection.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter/widgets.dart';
+import 'package:collection/collection.dart' as lib;
 
 // ----------------
 
@@ -44,15 +43,15 @@ class _MainPageState extends State<MainPage> {
         Navigator.pop(this.context);
       }
     }
-    var setting = Provider.of<SettingProvider>(this.context, listen: false);
-    var moduleInformation = ModuleHelper.query(configuration.type);
-    var moduleSetting = moduleInformation.querySetting(context);
-    var moduleConfiguration = moduleInformation.parseConfiguration((await JsonHelper.decodeFile(setting.data.moduleConfigurationDirectory.join('${moduleInformation.identifier}.json')))!);
+    var setting = SettingProvider.of(this.context, listen: false);
+    var moduleDescriptor = ModuleHelper.query(configuration.type);
+    var moduleSetting = moduleDescriptor.querySetting(context);
+    var moduleConfiguration = moduleDescriptor.parseConfiguration((await JsonHelper.decodeFile(setting.data.moduleConfigurationDirectory.join('${moduleDescriptor.identifier}.json'))).jsonObject());
     this._pageList.add((
       key: key,
       title: configuration.title,
       type: configuration.type,
-      page: moduleInformation.buildMainPage(
+      page: moduleDescriptor.buildMainPage(
         key,
         moduleSetting,
         moduleConfiguration,
@@ -126,8 +125,8 @@ class _MainPageState extends State<MainPage> {
       type: this._pageList[index].type,
       option: await this._pageList[index].key.currentState!.as<ModulePageState>().modulePageCollectOption(),
     );
-    var setting = Provider.of<SettingProvider>(this.context, listen: false);
-    setting.data.moduleLauncher.pinned.add(configuration);
+    var setting = SettingProvider.of(this.context, listen: false);
+    setting.data.moduleLauncher[ModuleLauncherCategory.pinned]!.add(configuration);
     await setting.save();
     return;
   }
@@ -198,7 +197,7 @@ class _MainPageState extends State<MainPage> {
     this._pageList = [];
     this._pageIndex = -1;
     {
-      var setting = Provider.of<SettingProvider>(this.context, listen: false);
+      var setting = SettingProvider.of(this.context, listen: false);
       setting.state.homeShowOnboarding = this._showOnboarding;
       setting.state.homeShowLauncher = this._showLauncher;
       setting.state.homeInsertPage = this._insertPage;
@@ -224,7 +223,7 @@ class _MainPageState extends State<MainPage> {
     return StyledScaffold.standard(
       title: StorageDropRegion(
         onDrop: (item) async {
-          var setting = Provider.of<SettingProvider>(this.context, listen: false);
+          var setting = SettingProvider.of(this.context, listen: false);
           await setting.state.handleForward!(item);
         },
         child: StyledTitleBar.standard(

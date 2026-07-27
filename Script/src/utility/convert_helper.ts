@@ -4,29 +4,40 @@ namespace Twinning.Script.ConvertHelper {
 
 	export function generate_exception_message(
 		exception: any,
-	): [string, Array<string>] {
-		let title: string = '';
-		let description: Array<string> = [];
-		if (exception instanceof Error) {
-			if (exception.name === 'NativeError') {
-				title = `${exception.name}`;
-				description.push(...exception.message.split('\n'));
-			}
-			else {
-				title = `${exception.name}: ${exception.message}`;
-			}
-			if (exception.stack !== undefined) {
-				description.push(...exception.stack.split('\n').slice(0, -1)
-					.map((value) => (/^    at (.*) \((.*?)(?:\:(\d+)\:(\d+))?\)$/.exec(value)))
-					.filter((value) => (value !== null))
-					.map((value) => (`@ ${['native', 'missing', 'null'].includes(value[2]) ? `<${value[2]}>` : value[2]}:${value[3] === undefined ? '?' : value[3]}:${value[4] === undefined ? '?' : value[4]} ${value[1]}`))
-				);
-			}
+	): Array<string> {
+		let result: Array<string> = [];
+		if (!(exception instanceof Error)) {
+			result.push(`# <${typeof exception}>`);
+			result.push(`$ message: ${exception}`);
 		}
 		else {
-			title = `${exception}`;
+			result.push(`# ${exception.name}`);
+			if (exception.name === 'NativeException') {
+				result.push(...exception.message.split('\n'));
+			}
+			else {
+				result.push(`$ message: ${exception.message}`);
+				if (exception instanceof SuppressedError) {
+					result.push(...generate_exception_message(exception.error));
+				}
+			}
+			if (exception.stack !== undefined) {
+				for (let frame of exception.stack.split('\n').slice(0, -1)) {
+					let frame_match = /^    at (.*) \((.*?)(?:\:(\d+)\:(\d+))?\)$/.exec(frame);
+					if (frame_match === null) {
+						continue;
+					}
+					let frame_part = [
+						['native', 'missing', 'null'].includes(frame_match[2]) ? `<${frame_match[2]}>` : frame_match[2],
+						frame_match[3] === undefined ? '?' : frame_match[3],
+						frame_match[4] === undefined ? '?' : frame_match[4],
+						frame_match[1],
+					];
+					result.push(`@ ${frame_part[0]}:${frame_part[1]}:${frame_part[2]} ${frame_part[3]}`);
+				}
+			}
 		}
-		return [title, description];
+		return result;
 	}
 
 	// #endregion
@@ -92,6 +103,18 @@ namespace Twinning.Script.ConvertHelper {
 		value: boolean,
 	): string {
 		return !value ? 'false' : 'true';
+	}
+
+	export function parse_boolean_from_string(
+		text: string,
+	): boolean {
+		if (text === 'false') {
+			return false;
+		}
+		if (text === 'true') {
+			return true;
+		}
+		throw new Error(`invalid boolean string`);
 	}
 
 	// ----------------
@@ -362,60 +385,140 @@ namespace Twinning.Script.ConvertHelper {
 
 	// #region date
 
-	export function make_date_to_string_simple(
+	export function make_date_to_string(
 		value: Date,
+		format: string,
 	): string {
-		let pad = (source: number, maximum_length: number) => (source.toString().padStart(maximum_length, '0'));
-		return `${pad(value.getFullYear() % 100, 2)}-${pad(value.getMonth() + 1, 2)}-${pad(value.getDate(), 2)}_${pad(value.getHours(), 2)}-${pad(value.getMinutes(), 2)}-${pad(value.getSeconds(), 2)}_${pad(value.getMilliseconds(), 3)}`;
+		let value_map = {
+			'Y': value.getFullYear(),
+			'M': value.getMonth() + 1,
+			'D': value.getDate(),
+			'h': value.getHours(),
+			'm': value.getMinutes(),
+			's': value.getSeconds(),
+			'S': value.getMilliseconds(),
+		} as Record<string, number>;
+		return format.replaceAll(
+			/Y+|M+|D+|h+|m+|s+|S+/g,
+			(match) => {
+				let part = value_map[match[0]].toString();
+				return part.substring(Math.max(0, part.length - match.length)).padStart(match.length, '0');
+			},
+		);
 	}
 
 	// #endregion
 
 	// #region stream
 
-	export function read_utf8_character(
-		data: ByteStreamView,
-		size: {value: number},
+	export function write_utf8_character(
+		stream: ByteStreamView,
+		value: bigint,
 	): bigint {
-		let value = 0n;
-		let current = data.u8();
-		let extra_size: number;
-		if (current < 0b10000000n) {
-			value = current;
+		let extra_size = 0;
+		if (value < 0x80n) {
+			stream.u8(value);
 			extra_size = 0;
 		}
-		else if (current < 0b11000000n) {
-			throw new Error(`data@${data.p().toString(16)}h: invalid utf-8 first character`);
-		}
-		else if (current < 0b11100000n) {
-			value = current & 0b00011111n;
+		else if (value < 0x800n) {
+			stream.u8(0b11000000n | ((value >> (6n * 1n)) & ~(~0n << 6n)));
 			extra_size = 1;
 		}
-		else if (current < 0b11110000n) {
-			value = current & 0b00001111n;
+		else if (value < 0x10000n) {
+			stream.u8(0b11100000n | ((value >> (6n * 2n)) & ~(~0n << 6n)));
 			extra_size = 2;
 		}
-		else if (current < 0b11111000n) {
-			value = current & 0b00000111n;
+		else if (value < 0x110000) {
+			stream.u8(0b11110000n | ((value >> (6n * 3n)) & ~(~0n << 6n)));
 			extra_size = 3;
 		}
 		else {
-			throw new Error(`data@${data.p().toString(16)}h: invalid utf-8 first character`);
+			throw new Error(`invalid unicode character`);
 		}
-		size.value = 1 + extra_size;
 		while (extra_size > 0) {
 			--extra_size;
-			current = data.u8();
-			if ((current & 0b11000000n) !== 0b10000000n) {
-				throw new Error(`data@${data.p().toString(16)}h: invalid utf-8 extra character`);
-			}
-			value = value << 6n | (current & 0b00111111n);
+			stream.u8(0b10000000n | ((value >> (6n * BigInt(extra_size))) & ~(~0n << 6n)));
 		}
 		return value;
 	}
 
+	export function read_utf8_character(
+		stream: ByteStreamView,
+		size: {value: number},
+	): bigint {
+		let character = 0n;
+		let current = stream.u8();
+		let extra_size: number;
+		if (current < 0b10000000n) {
+			character = current;
+			extra_size = 0;
+		}
+		else if (current < 0b11000000n) {
+			throw new Error(`data@${stream.p().toString(16)}h: invalid utf-8 first character`);
+		}
+		else if (current < 0b11100000n) {
+			character = current & 0b00011111n;
+			extra_size = 1;
+		}
+		else if (current < 0b11110000n) {
+			character = current & 0b00001111n;
+			extra_size = 2;
+		}
+		else if (current < 0b11111000n) {
+			character = current & 0b00000111n;
+			extra_size = 3;
+		}
+		else {
+			throw new Error(`data@${stream.p().toString(16)}h: invalid utf-8 first character`);
+		}
+		size.value = 1 + extra_size;
+		while (extra_size > 0) {
+			--extra_size;
+			current = stream.u8();
+			if ((current & 0b11000000n) !== 0b10000000n) {
+				throw new Error(`data@${stream.p().toString(16)}h: invalid utf-8 extra character`);
+			}
+			character = character << 6n | (current & 0b00111111n);
+		}
+		return character;
+	}
+
+	export function compute_utf8_character_size(
+		value: bigint,
+	): number {
+		let extra_size = 0;
+		if (value < 0x80n) {
+			extra_size = 0;
+		}
+		else if (value < 0x800n) {
+			extra_size = 1;
+		}
+		else if (value < 0x10000n) {
+			extra_size = 2;
+		}
+		else if (value < 0x110000) {
+			extra_size = 3;
+		}
+		else {
+			throw new Error(`invalid unicode character`);
+		}
+		return 1 + extra_size;
+	}
+
+	// ----------------
+
+	export function write_utf8_string(
+		stream: ByteStreamView,
+		value: string,
+	): void {
+		for (let current of [...value]) {
+			write_utf8_character(stream, BigInt(current.codePointAt(0) ?? 0));
+		}
+		return;
+	}
+
 	export function read_utf8_string(
-		data: ByteStreamView,
+		stream: ByteStreamView,
 		length: bigint,
 		size: {value: number},
 	): string {
@@ -423,52 +526,39 @@ namespace Twinning.Script.ConvertHelper {
 		let character_size = {value: undefined!};
 		size.value = 0;
 		for (let index = 0n; index < length; index++) {
-			let character = read_utf8_character(data, character_size);
-			value += String.fromCodePoint(Number(character));
+			let current = read_utf8_character(stream, character_size);
+			value += String.fromCodePoint(Number(current));
 			size.value += character_size.value;
 		}
 		return value;
 	}
 
 	export function read_utf8_string_by_size(
-		data: ByteStreamView,
+		stream: ByteStreamView,
 		size: bigint,
 	): string {
 		let value = ``;
 		let character_size = {value: undefined!};
 		let count = 0;
 		while (count < Number(size)) {
-			let character = read_utf8_character(data, character_size);
-			value += String.fromCodePoint(Number(character));
+			let current = read_utf8_character(stream, character_size);
+			value += String.fromCodePoint(Number(current));
 			count += character_size.value;
 		}
 		if (count > Number(size)) {
-			throw new Error(`data@${data.p().toString(16)}h: utf-8 string too long`);
+			throw new Error(`data@${stream.p().toString(16)}h: utf-8 string too long`);
 		}
 		return value;
 	}
 
-	export function read_eascii_string(
-		data: ByteStreamView,
-		length: bigint,
-	): string {
-		let value = ``;
-		for (let index = 0n; index < length; index++) {
-			let character = data.u8();
-			value += String.fromCodePoint(Number(character));
-		}
-		return value;
-	}
-
-	export function write_eascii_string(
-		data: ByteStreamView,
+	export function compute_utf8_string_size(
 		value: string,
-	): void {
-		for (let index = 0; index < value.length; index++) {
-			let character = value.codePointAt(index)!;
-			data.u8(BigInt(character));
+	): number {
+		let size = 0;
+		for (let current of [...value]) {
+			size += compute_utf8_character_size(BigInt(current.codePointAt(0) ?? 0));
 		}
-		return;
+		return size;
 	}
 
 	// #endregion

@@ -10,7 +10,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.TextTable.Convert {
 
 	export type Version = typeof VersionX[number];
 
-	export const VersionE = VersionX as unknown as Version[];
+	export const VersionE = [...VersionX];
 
 	// ----------------
 
@@ -48,15 +48,15 @@ namespace Twinning.Script.Support.Popcap.Pvz2.TextTable.Convert {
 					throw new Error(`unsupported charset UTF-16`);
 				}
 				let source_text = Kernel.Miscellaneous.cast_CharacterListView_to_JS_String(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(Kernel.ByteListView.value(source_data)));
-				let key_regexp = /^\[.+\]$/gm;
-				let value_regexp = /(.|[\n\r])*?(?=[\n\r]*?(\[|$))/gy;
+				let key_rule = /^\[.+\]$/gm;
+				let value_rule = /(.|[\n\r])*?(?=[\n\r]*?(\[|$))/gy;
 				let key_match: null | RegExpExecArray;
 				let value_match: null | RegExpExecArray;
-				while ((key_match = key_regexp.exec(source_text)) !== null) {
-					value_regexp.lastIndex = key_regexp.lastIndex + 1;
-					value_match = value_regexp.exec(source_text)!;
+				while ((key_match = key_rule.exec(source_text)) !== null) {
+					value_rule.lastIndex = key_rule.lastIndex + 1;
+					value_match = value_rule.exec(source_text)!;
 					string_map[key_match[0].slice(1, -1)] = value_match[0];
-					key_regexp.lastIndex = value_regexp.lastIndex;
+					key_rule.lastIndex = value_rule.lastIndex;
 				}
 				break;
 			}
@@ -164,9 +164,9 @@ namespace Twinning.Script.Support.Popcap.Pvz2.TextTable.Convert {
 		source_version: Version | 'automatic',
 		destination_version: Version,
 	): void {
-		let source_data = StorageHelper.read_file(source_file);
+		let source_data = StorageHelper.read_file_data(source_file);
 		let destination_data = convert(source_data.value, source_version, destination_version);
-		StorageHelper.write_file(destination_file, destination_data);
+		StorageHelper.write_file_data(destination_file, Kernel.ByteListView.value(destination_data));
 		return;
 	}
 

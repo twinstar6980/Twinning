@@ -13,7 +13,7 @@ def build(
 	platform: str,
 ) -> tuple[str, str] | None:
 	destination = None
-	if utility.check_platform(platform, ['windows.amd64']):
+	if utility.project_check_platform(platform, ['windows.amd64']):
 		utility.sh_execute_command(source, [
 			'xmake',
 			'config',
@@ -32,23 +32,21 @@ def build(
 			f'{source}/.build/windows/x64/release/shell.exe',
 			f'{temporary}/artifact.exe',
 		)
-		utility.strip_windows_binary(
-			f'{temporary}/artifact.exe',
+		utility.ex_windows_strip_executable(
 			f'{temporary}/artifact.exe',
 		)
-		utility.apply_windows_manifest(
-			f'{temporary}/artifact.exe',
+		utility.ex_windows_import_manifest(
 			f'{temporary}/artifact.exe',
 			f'{source}/shell/resource/windows/application.manifest',
+			1,
 		)
-		utility.sign_windows_executable(
+		utility.ex_windows_sign(
 			f'{temporary}/artifact.exe',
-			f'{temporary}/artifact.exe',
-			'exe',
 			keystore,
+			'pe',
 		)
 		destination = ('.exe', f'{temporary}/artifact.exe')
-	if utility.check_platform(platform, ['linux.amd64']):
+	if utility.project_check_platform(platform, ['linux.amd64']):
 		utility.sh_execute_command(source, [
 			'xmake',
 			'config',
@@ -68,7 +66,7 @@ def build(
 			f'{temporary}/artifact',
 		)
 		destination = ('', f'{temporary}/artifact')
-	if utility.check_platform(platform, ['macintosh.arm64']):
+	if utility.project_check_platform(platform, ['macintosh.arm64']):
 		utility.sh_execute_command(source, [
 			'xmake',
 			'config',
@@ -89,13 +87,13 @@ def build(
 			f'{source}/.build/macosx/arm64/release/shell',
 			f'{temporary}/artifact',
 		)
-		utility.sign_macintosh_executable(
-			f'{temporary}/artifact',
+		utility.ex_macintosh_sign(
 			f'{temporary}/artifact',
 			keystore,
+			'macho',
 		)
 		destination = ('', f'{temporary}/artifact')
-	if utility.check_platform(platform, ['android.arm64']):
+	if utility.project_check_platform(platform, ['android.arm64']):
 		utility.sh_execute_command(source, [
 			'xmake',
 			'config',
@@ -116,7 +114,7 @@ def build(
 			f'{temporary}/artifact',
 		)
 		destination = ('', f'{temporary}/artifact')
-	if utility.check_platform(platform, ['iphone.arm64']):
+	if utility.project_check_platform(platform, ['iphone.arm64']):
 		utility.sh_execute_command(source, [
 			'xmake',
 			'config',
@@ -137,13 +135,13 @@ def build(
 			f'{source}/.build/iphoneos/arm64/release/shell',
 			f'{temporary}/artifact',
 		)
-		utility.sign_iphone_executable(
-			f'{temporary}/artifact',
+		utility.ex_iphone_sign(
 			f'{temporary}/artifact',
 			keystore,
+			'macho',
 		)
 		destination = ('', f'{temporary}/artifact')
 	return destination
 
 if __name__ == '__main__':
-	utility.build_project_module(__file__, build, sys.argv[1])
+	utility.project_build_module(__file__, build, sys.argv[1])

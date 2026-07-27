@@ -58,25 +58,32 @@ export namespace Twinning::Kernel::Tool::Popcap::Package {
 			}
 			auto information_structure = Structure::Information<t_version>{};
 			information_structure.resource_information.allocate_full(definition.resource.size());
+			auto resource_data_container = ByteArray{};
 			for (auto & resource_index : SizeRange{definition.resource.size()}) {
 				auto & resource_definition = definition.resource[resource_index];
 				auto & resource_information_structure = information_structure.resource_information[resource_index];
 				auto   resource_path = resource_directory.push(resource_definition.path);
 				resource_information_structure.path = StringBlock8{resource_definition.path.emit_windows()};
 				resource_information_structure.time = cast_box<IntegerU64>(resource_definition.time);
+				auto resource_size = Storage::size_file(resource_path);
 				if constexpr (check_version(t_version, {}, {false})) {
-					auto resource_size = Storage::read_file_stream(resource_path, data);
-					resource_information_structure.size = cast_box<IntegerU32>(resource_size);
+					auto resource_data = data.forward_view(resource_size);
+					Storage::read_file(resource_path, 0_sz, resource_data);
+					resource_information_structure.size = cast_box<IntegerU32>(resource_data.size());
 				}
 				if constexpr (check_version(t_version, {}, {true})) {
-					auto resource_data = Storage::read_file(resource_path);
-					auto resource_data_stream = InputByteStreamView{resource_data};
+					if (resource_data_container.size() < resource_size) {
+						resource_data_container.allocate(resource_size);
+					}
+					auto resource_data = resource_data_container.head(resource_size);
+					Storage::read_file(resource_path, 0_sz, resource_data);
 					auto resource_offset = data.position();
-					Data::Compression::Deflate::Compress::process(resource_data_stream, data, 9_i, 15_i, 9_i, Data::Compression::Deflate::StrategyMode::Constant::default_mode(), Data::Compression::Deflate::WrapperType::Constant::zlib());
+					Data::Compression::Deflate::Compress::process(as_left(InputByteStreamView{resource_data}), data, 9_i, 15_i, 9_i, Data::Compression::Deflate::StrategyMode::Constant::default_mode(), Data::Compression::Deflate::WrapperType::Constant::zlib());
 					resource_information_structure.size = cast_box<IntegerU32>(data.position() - resource_offset);
 					resource_information_structure.size_original = cast_box<IntegerU32>(resource_data.size());
 				}
 			}
+			resource_data_container.reset();
 			{
 				for (auto & element : information_structure.resource_information) {
 					information_data.resource_information.write(Structure::ResourceInformationListStateFlag<t_version>::next);

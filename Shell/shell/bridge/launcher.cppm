@@ -30,7 +30,7 @@ export namespace Twinning::Shell::Bridge {
 			{
 				auto executor_callback = ExecutorProxy{};
 				executor_callback.value = [&client](auto & callback_proxy, auto & argument_proxy, auto & result_proxy) -> auto {
-					result_proxy.value = client.callback(argument_proxy.value);
+					result_proxy.value = client.handle(argument_proxy.value);
 					return;
 				};
 				auto executor_argument = MessageProxy{};

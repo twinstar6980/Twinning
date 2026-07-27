@@ -6,14 +6,110 @@ namespace Twinning.Script {
 
 	// ----------------
 
+	export class UnreachableException extends Error {
+
+		// #region constructor
+
+		// ----------------
+
+		public constructor(
+		) {
+			super();
+			this.name = 'UnreachableException';
+			this.message = ``;
+			this.stack = this.stack!.substring(this.stack!.indexOf('\n') + 1);
+			return;
+		}
+
+		// #endregion
+
+	}
+
+	export class UnimplementedException extends Error {
+
+		// #region constructor
+
+		// ----------------
+
+		public constructor(
+		) {
+			super();
+			this.name = 'UnimplementedException';
+			this.message = ``;
+			this.stack = this.stack!.substring(this.stack!.indexOf('\n') + 1);
+			return;
+		}
+
+		// #endregion
+
+	}
+
+	export class UnsupportedException extends Error {
+
+		// #region constructor
+
+		// ----------------
+
+		public constructor(
+		) {
+			super();
+			this.name = 'UnsupportedException';
+			this.message = ``;
+			this.stack = this.stack!.substring(this.stack!.indexOf('\n') + 1);
+			return;
+		}
+
+		// #endregion
+
+	}
+
+	export class TerminateException extends Error {
+
+		// #region constructor
+
+		// ----------------
+
+		public constructor(
+		) {
+			super();
+			this.name = 'TerminateException';
+			this.message = ``;
+			this.stack = this.stack!.substring(this.stack!.indexOf('\n') + 1);
+			return;
+		}
+
+		// #endregion
+
+	}
+
+	export class AssertionException extends Error {
+
+		// #region constructor
+
+		// ----------------
+
+		public constructor(
+			expression: string,
+		) {
+			super();
+			this.name = 'AssertionException';
+			this.message = `${expression}`;
+			this.stack = this.stack!.substring(this.stack!.indexOf('\n') + 1);
+			return;
+		}
+
+		// #endregion
+
+	}
+
+	// ----------------
+
 	export function assert_test(
 		condition: boolean,
 		expression: string = '',
 	): asserts condition {
 		if (!condition) {
-			let error = new Error(expression);
-			error.name = 'AssertionError';
-			throw error;
+			throw new AssertionException(expression);
 		}
 		return;
 	}
@@ -26,7 +122,7 @@ namespace Twinning.Script {
 
 		// #region utility
 
-		function query_environment(
+		function query_context(
 			name: string,
 		): string {
 			let value = null as string | null;
@@ -34,10 +130,10 @@ namespace Twinning.Script {
 				value = Kernel.Miscellaneous.g_version.value;
 			}
 			if (name === 'shell_name') {
-				value = Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['name'])).value[0];
+				value = Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['query_context', 'name'])).value[0];
 			}
 			if (name === 'shell_version') {
-				value = Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['version'])).value[0];
+				value = Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['query_context', 'version'])).value[0];
 			}
 			if (name === 'script_version') {
 				value = k_version;
@@ -49,7 +145,7 @@ namespace Twinning.Script {
 				value = Kernel.Miscellaneous.g_architecture.value;
 			}
 			if (value === null) {
-				throw new Error(`information name invalid`);
+				throw new Error(`invalid name`);
 			}
 			return value;
 		}
@@ -74,7 +170,9 @@ namespace Twinning.Script {
 			path: string,
 			name: string,
 		): any {
-			let script = Kernel.Storage.read_file(Kernel.Path.value(path));
+			let script_path = Kernel.Path.value(path);
+			let script = Kernel.ByteArray.allocate(Kernel.Storage.size_file(script_path));
+			Kernel.Storage.read_file(script_path, Kernel.Size.value(0n), script.view());
 			return Kernel.Miscellaneous.g_context.evaluate(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(script.view()), Kernel.String.value(name), Kernel.Boolean.value(false));
 		}
 
@@ -84,7 +182,7 @@ namespace Twinning.Script {
 			title: string,
 			description: Array<string>,
 		): void {
-			let shell_name = query_environment('shell_name');
+			let shell_name = query_context('shell_name');
 			if (shell_name === 'basic') {
 				Kernel.Miscellaneous.g_context.callback(Kernel.StringList.value(['output_text', `● ${title}\n`]));
 				for (let description_item of description) {
@@ -115,17 +213,19 @@ namespace Twinning.Script {
 			`utility/byte_stream_view`,
 			`utility/kernel_x`,
 			`utility/shell`,
+			`utility/thread_manager`,
+			`utility/terminate_helper`,
 			`utility/storage_size`,
 			`utility/storage_path`,
 			`utility/storage_helper`,
-			`utility/thread_manager`,
 			`utility/process_helper`,
-			`utility/console`,
-			`utility/language`,
-			`utility/home_path`,
 			`utility/assembly_helper`,
 			`utility/external_helper`,
 			`utility/android_helper`,
+			`utility/developer_helper`,
+			`utility/console`,
+			`utility/language`,
+			`utility/home_path`,
 			`support/atlas/pack`,
 			`support/atlas/pack_automatic`,
 			`support/marmalade/dzip/pack_automatic`,
@@ -152,7 +252,6 @@ namespace Twinning.Script {
 			`support/popcap/pvz2/regular_resource_manifest/convert`,
 			`support/popcap/pvz2/package_project/common`,
 			`support/popcap/pvz2/package_project/setting`,
-			`support/popcap/pvz2/package_project/diagnose`,
 			`support/popcap/pvz2/package_project/transpile`,
 			`support/popcap/pvz2/package_project/compile`,
 			`support/popcap/pvz2/package_project/link`,
@@ -203,6 +302,7 @@ namespace Twinning.Script {
 			`executor/implementation/popcap.pvz2.remote_project`,
 			`executor/implementation/kairosoft.game`,
 			`executor/implementation/nitrome.twin_shot_deluxe`,
+			`executor/implementation/developer.utility`,
 			`executable/script_console`,
 			`executable/compare_language_file`,
 			`executable/compute_wwise_short_identifier`,
@@ -226,25 +326,24 @@ namespace Twinning.Script {
 		export async function run(
 			argument: Array<string>,
 		): Promise<Array<string>> {
-			if (!['basic', 'assistant'].includes(query_environment('shell_name'))) {
+			if (!['basic', 'assistant'].includes(query_context('shell_name'))) {
 				throw new Error(`shell client unsupported`);
 			}
 			console_output_text([
 				`Twinning`,
-				` ~ Kernel:${query_environment('kernel_version')}`,
-				` & Shell:${query_environment('shell_version')}.${query_environment('shell_name')}`,
-				` & Script:${query_environment('script_version')}`,
-				` ~ ${query_environment('platform_system')}.${query_environment('platform_architecture')}`,
+				` ~ Kernel:${query_context('kernel_version')}`,
+				` & Shell:${query_context('shell_version')}.${query_context('shell_name')}`,
+				` & Script:${query_context('script_version')}`,
+				` ~ ${query_context('platform_system')}.${query_context('platform_architecture')}`,
 			].join(''), argument);
 			if (argument.length < 1) {
 				throw new Error(`argument too few`);
 			}
 			let load_timer_begin = Date.now();
 			// parse home path
-			let home_path = argument[0].replaceAll(`\\`, `/`);
-			if (/^\.{1,2}[\/]/.test(home_path)) {
-				home_path = `${get_process_workspace()}/${home_path}`;
-			}
+			let home_path = argument[0]
+				.replaceAll(`\\`, `/`)
+				.replaceAll(/^(?=\.{1,2}(?:\/|$))/g, `${get_process_workspace()}/`);
 			// set module home
 			set_module_home(`${home_path}/script`);
 			// load partition
@@ -292,6 +391,7 @@ namespace Twinning.Script {
 				result = Runner.run(argument.slice(1));
 			}
 			catch (e) {
+				TerminateHelper.rethrow(e);
 				Console.error_of(e);
 			}
 			// check result

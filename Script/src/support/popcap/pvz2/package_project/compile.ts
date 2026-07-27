@@ -259,7 +259,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Compile {
 					}
 					let resource_data = Kernel.ByteStreamView.watch(buffer.view());
 					Support.Popcap.Texture.Encoding.encode(resource_data, atlas_view, conversion_setting.format, texture_encode_option);
-					StorageHelper.write_file(package_resource_file, resource_data.stream_view());
+					StorageHelper.write_file_data(package_resource_file, resource_data.stream_view());
 					resource_state.push({
 						category: resource_category,
 						definition: {
@@ -360,7 +360,6 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Compile {
 			}
 			default: {
 				throw new Error('unknown resource type');
-				break;
 			}
 		}
 		return;

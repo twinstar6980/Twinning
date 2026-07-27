@@ -5,8 +5,6 @@ import '/utility/convert_helper.dart';
 import '/utility/storage_path.dart';
 import '/utility/storage_helper.dart';
 import '/utility/system_notification_manager.dart';
-import '/utility/command_line_reader.dart';
-import '/utility/command_line_writer.dart';
 import '/bridge/library.dart' as bridge;
 import '/bridge/client.dart' as bridge;
 import '/bridge/launcher.dart' as bridge;
@@ -14,14 +12,13 @@ import '/widget/export.dart';
 import '/view/home/module_page.dart';
 import '/view/core_task_worker/setting.dart';
 import '/view/core_task_worker/configuration.dart';
+import '/view/core_task_worker/option.dart';
 import '/view/core_task_worker/message_type.dart';
 import '/view/core_task_worker/message_card.dart';
 import '/view/core_task_worker/submission_type.dart';
 import '/view/core_task_worker/submission_bar.dart';
 import '/view/core_task_worker/value_expression.dart';
-import 'dart:async';
-import 'package:flutter/widgets.dart';
-import 'package:provider/provider.dart';
+import 'dart:async' as lib;
 
 // ----------------
 
@@ -38,7 +35,7 @@ class MainPage extends StatefulWidget {
 
   final Setting       setting;
   final Configuration configuration;
-  final List<String>  option;
+  final Option        option;
 
   // ----------------
 
@@ -52,9 +49,10 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
   late List<String>          _additionalArgument;
   late List<Widget>          _messageList;
   late ScrollController      _messageListScrollController;
-  late SubmissionBar         _submissionBar;
+  late SubmissionBar?        _submissionBar;
   late _MainPageBridgeClient _sessionClient;
   late Boolean               _sessionRunning;
+  late Wrapper<Boolean>?     _sessionTerminating;
 
   Future<Void> _sendMessage(
     MessageType  type,
@@ -83,16 +81,20 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
     SubmissionType type,
     List<String>   option,
   ) async {
-    var setting = Provider.of<SettingProvider>(this.context, listen: false);
+    var setting = SettingProvider.of(this.context, listen: false);
     var history = setting.state.coreTaskWorkerSubmissionHistory[type.index];
-    var completer = Completer<Void>();
+    var completer = lib.Completer<Void>();
     var valueWrapper = Wrapper<ValueExpression?>();
     this._submissionBar = SubmissionBar(
       type: type,
       option: option,
       history: history,
       value: valueWrapper,
-      completer: completer,
+      onSubmit: () async {
+        completer.complete();
+      },
+      terminate: null,
+      onTerminate: null,
     );
     await refreshState(this.setState);
     await completer.future;
@@ -102,7 +104,11 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
       option: null,
       history: null,
       value: null,
-      completer: null,
+      onSubmit: null,
+      terminate: this._sessionTerminating,
+      onTerminate: () async {
+        this._sessionTerminating!.value = !this._sessionTerminating!.value;
+      },
     );
     await refreshState(this.setState);
     if (value != null) {
@@ -119,7 +125,19 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
     var result = null as List<String>?;
     var exception = null as ({Object exception, StackTrace stack})?;
     this._sessionRunning = true;
+    this._sessionTerminating = .of(false);
     this._messageList.clear();
+    this._submissionBar = SubmissionBar(
+      type: null,
+      option: null,
+      history: null,
+      value: null,
+      onSubmit: null,
+      terminate: this._sessionTerminating,
+      onTerminate: () async {
+        this._sessionTerminating!.value = !this._sessionTerminating!.value;
+      },
+    );
     await refreshState(this.setState);
     try {
       var (temporaryDirectory, temporaryDirectoryFinalizer) = await StorageHelper.temporary(useCache: true);
@@ -139,15 +157,17 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
       await temporaryDirectoryFinalizer.dispose();
     }
     catch (e, s) {
-        exception = (exception: e, stack: s);
+      exception = (exception: e, stack: s);
     }
     if (exception == null) {
       this._sendMessage(.success, 'SUCCEEDED', result!);
     }
     else {
-      this._sendMessage(.error, 'FAILED', [ConvertHelper.generateExceptionMessage(exception.exception, exception.stack)]);
+      this._sendMessage(.error, 'FAILED', ConvertHelper.generateExceptionMessage(exception.exception, exception.stack));
     }
     this._sessionRunning = false;
+    this._sessionTerminating = null;
+    this._submissionBar = null;
     await refreshState(this.setState);
     return exception != null ? null : result!;
   }
@@ -162,25 +182,32 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
   @override
   modulePageCloseView() async {
     if (this._sessionRunning) {
-      await StyledModalDialogExtension.show<Void>(context, StyledModalDialog.standard(
-        title: 'Session In Progress',
-        contentBuilder: (context, setStateForPanel) => [],
-        actionBuilder: null,
-      ));
-      return false;
+      this._sessionTerminating!.value = true;
+      this._submissionBar!.onSubmit?.call();
+      var dialogFinalizer = await MoreModalDialogExtension.showForWait(context, 'Closing ...');
+      try {
+        while (this._sessionRunning) {
+          await Future.delayed(.new(milliseconds: 100));
+        }
+      }
+      finally {
+        await dialogFinalizer.dispose();
+      }
     }
     return true;
   }
 
   @override
   modulePageEnterView() async {
-    if (this._submissionBar.type != null) {
+    if (this._submissionBar != null) {
       this._submissionBar = SubmissionBar(
-        type: this._submissionBar.type,
-        option: this._submissionBar.option,
-        history: this._submissionBar.history,
-        value: this._submissionBar.value,
-        completer: this._submissionBar.completer,
+        type: this._submissionBar!.type,
+        option: this._submissionBar!.option,
+        history: this._submissionBar!.history,
+        value: this._submissionBar!.value,
+        onSubmit: this._submissionBar!.onSubmit,
+        terminate: this._submissionBar!.terminate,
+        onTerminate: this._submissionBar!.onTerminate,
       );
       await refreshState(this.setState);
     }
@@ -193,26 +220,12 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
   }
 
   @override
-  modulePageApplyOption(optionView) async {
-    var optionImmediateLaunch = null as Boolean?;
-    var optionAdditionalArgument = null as List<String>?;
-    var option = CommandLineReader(optionView);
-    if (option.check('-immediate_launch')) {
-      optionImmediateLaunch = option.nextBoolean();
+  modulePageApplyOption(option) async {
+    option as Option;
+    if (option.additionalArgument != null) {
+      this._additionalArgument.addAll(option.additionalArgument!);
     }
-    else {
-      optionImmediateLaunch = this.widget.setting.immediateLaunch;
-    }
-    if (option.check('-additional_argument')) {
-      optionAdditionalArgument = option.nextStringList();
-    }
-    if (!option.done()) {
-      throw Exception('too many option \'${option.nextStringList().join(' ')}\'');
-    }
-    if (optionAdditionalArgument != null) {
-      this._additionalArgument.addAll(optionAdditionalArgument);
-    }
-    if (optionImmediateLaunch) {
+    if (option.immediateLaunch ?? this.widget.setting.immediateLaunch) {
       this._launchSession();
     }
     await refreshState(this.setState);
@@ -221,11 +234,10 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
 
   @override
   modulePageCollectOption() async {
-    var option = CommandLineWriter();
-    if (option.check('-additional_argument')) {
-      option.nextStringList(this._additionalArgument);
-    }
-    return option.done();
+    var option = Option();
+    option.immediateLaunch = null;
+    option.additionalArgument = this._additionalArgument.toList();
+    return option;
   }
 
   @override
@@ -252,15 +264,10 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
     this._additionalArgument = [];
     this._messageList = [];
     this._messageListScrollController = .new();
-    this._submissionBar = .new(
-      type: null,
-      option: null,
-      history: null,
-      value: null,
-      completer: null,
-    );
+    this._submissionBar = null;
     this._sessionClient = .new(this);
     this._sessionRunning = false;
+    this._sessionTerminating = null;
     postTask(() async {
       await this.modulePageOpenView();
       await this.modulePageApplyOption(this.widget.option);
@@ -296,13 +303,13 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
         ).withFlexExpanded(),
         FlexContainer.horizontal([
           StyledProgress.linear(
-            paused: !this._sessionRunning ? false : this._submissionBar.type != null,
+            paused: !this._sessionRunning ? false : this._submissionBar!.type != null,
             value: !this._sessionRunning ? 1.0 : null,
           ).withFlexExpanded(),
         ]),
       ]),
       bottom: this._sessionRunning
-        ? this._submissionBar
+        ? this._submissionBar!
         : StyledBottomBar.standard(
           primary: StyledFloatingButton.standard(
             tooltip: 'Launch',
@@ -385,32 +392,28 @@ class _MainPageBridgeClient extends bridge.Client {
     return;
   }
 
-  // ----------------
+  // #endregion
+
+  // #region handle
 
   @override
-  callback(argument) async {
+  handle(argument) async {
     assertTest(this._running);
     var result = <String>[];
     assertTest(argument.length >= 1);
     switch (argument[0]) {
-      case 'name': {
-        assertTest(argument.length == 1);
-        var detail = await this.callbackName(
+      case 'query_context': {
+        assertTest(argument.length == 2);
+        var detail = await this.handleQueryContext(
+          argument[1],
         );
-        result.add(detail.name);
-        break;
-      }
-      case 'version': {
-        assertTest(argument.length == 1);
-        var detail = await this.callbackVersion(
-        );
-        result.add(detail.version);
+        result.add(detail.value);
         break;
       }
       case 'send_message': {
         assertTest(argument.length >= 3);
         // ignore: unused_local_variable
-        var detail = await this.callbackSendMessage(
+        var detail = await this.handleSendMessage(
           argument[1],
           argument[2],
           argument.sublist(3),
@@ -419,7 +422,7 @@ class _MainPageBridgeClient extends bridge.Client {
       }
       case 'receive_submission': {
         assertTest(argument.length >= 2);
-        var detail = await this.callbackReceiveSubmission(
+        var detail = await this.handleReceiveSubmission(
           argument[1],
           argument.sublist(2),
         );
@@ -428,35 +431,35 @@ class _MainPageBridgeClient extends bridge.Client {
       }
       case 'query_storage_item': {
         assertTest(argument.length == 2);
-        var detail = await this.callbackQueryStorageItem(
+        var detail = await this.handleQueryStorageItem(
           argument[1],
         );
-        result.add(detail.target);
+        result.add(detail.target.emit());
         break;
       }
       case 'reveal_storage_item': {
         assertTest(argument.length == 2);
         // ignore: unused_local_variable
-        var detail = await this.callbackRevealStorageItem(
-          argument[1],
+        var detail = await this.handleRevealStorageItem(
+          argument[1].selfLet((it) => .of(it)),
         );
         break;
       }
       case 'pick_storage_item': {
         assertTest(argument.length == 5);
-        var detail = await this.callbackPickStorageItem(
+        var detail = await this.handlePickStorageItem(
           argument[1],
-          argument[2],
-          argument[3],
+          argument[2].selfLet((it) => .parse(it)),
+          argument[3].selfLet((it) => .of(it)),
           argument[4],
         );
-        result.addAll(detail.target);
+        result.addAll(detail.target.map((it) => it.emit()));
         break;
       }
       case 'push_system_notification': {
         assertTest(argument.length == 3);
         // ignore: unused_local_variable
-        var detail = await this.callbackPushSystemNotification(
+        var detail = await this.handlePushSystemNotification(
           argument[1],
           argument[2],
         );
@@ -467,29 +470,41 @@ class _MainPageBridgeClient extends bridge.Client {
     return result;
   }
 
-  Future<({String name})> callbackName(
+  // ----------------
+
+  Future<({String value})> handleQueryContext(
+    String name,
   ) async {
-    var name = 'assistant';
-    return (name: name);
+    assertTest(name == 'name' || name == 'version' || name == 'terminate');
+    var value = '';
+    if (name == 'name') {
+      value = 'assistant';
+    }
+    if (name == 'version') {
+      value = ApplicationInformation.version;
+    }
+    if (name == 'terminate') {
+      value = this._controller._sessionTerminating!.value.toString();
+    }
+    return (
+      value: value,
+    );
   }
 
-  Future<({String version})> callbackVersion(
-  ) async {
-    var version = ApplicationInformation.version;
-    return (version: version);
-  }
+  // ----------------
 
-  Future<()> callbackSendMessage(
+  Future<()> handleSendMessage(
     String       type,
     String       title,
     List<String> description,
   ) async {
     var typeValue = ConvertHelper.parseEnumerationFromStringOfSnakeCase(type, MessageType.values);
     this._controller._sendMessage(typeValue, title, description);
-    return ();
+    return (
+    );
   }
 
-  Future<({String value})> callbackReceiveSubmission(
+  Future<({String value})> handleReceiveSubmission(
     String       type,
     List<String> option,
   ) async {
@@ -502,47 +517,53 @@ class _MainPageBridgeClient extends bridge.Client {
         value = '??${value}';
       }
     }
-    return (value: value);
+    return (
+      value: value,
+    );
   }
 
-  Future<({String target})> callbackQueryStorageItem(
+  // ----------------
+
+  Future<({StoragePath target})> handleQueryStorageItem(
     String type,
   ) async {
     var typeValue = ConvertHelper.parseEnumerationFromStringOfSnakeCase(type, StorageQueryType.values);
-    var targetValue = await StorageHelper.query(typeValue);
-    var target = targetValue.emit();
-    return (target: target);
+    var target = await StorageHelper.query(typeValue);
+    return (
+      target: target,
+    );
   }
 
-  Future<()> callbackRevealStorageItem(
-    String target,
+  Future<()> handleRevealStorageItem(
+    StoragePath target,
   ) async {
-    var targetValue = StoragePath.of(target);
-    StorageHelper.reveal(targetValue);
-    return ();
+    StorageHelper.reveal(target);
+    return (
+    );
   }
 
-  Future<({List<String> target})> callbackPickStorageItem(
-    String type,
-    String multiply,
-    String location,
-    String name,
+  Future<({List<StoragePath> target})> handlePickStorageItem(
+    String      type,
+    Boolean     multiply,
+    StoragePath location,
+    String      name,
   ) async {
     var typeValue = ConvertHelper.parseEnumerationFromStringOfSnakeCase(type, StoragePickType.values);
-    var multiplyValue = Boolean.parse(multiply);
-    var locationValue = location.isEmpty ? null : StoragePath.of(location);
-    var nameValue = name.isEmpty ? null : name;
-    var targetValue = await StorageHelper.pick(typeValue, multiplyValue, locationValue, nameValue);
-    var target = targetValue.map((it) => it.emit()).toList();
-    return (target: target);
+    var target = await StorageHelper.pick(typeValue, multiply, location, name);
+    return (
+      target: target,
+    );
   }
 
-  Future<()> callbackPushSystemNotification(
+  // ----------------
+
+  Future<()> handlePushSystemNotification(
     String title,
     String description,
   ) async {
     await SystemNotificationManager.instance.push(title, description);
-    return ();
+    return (
+    );
   }
 
   // #endregion

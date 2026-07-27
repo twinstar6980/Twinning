@@ -2,9 +2,7 @@ import '/common.dart';
 import '/setting.dart';
 import '/utility/storage_path.dart';
 import '/utility/storage_helper.dart';
-import '/widget/control.dart';
-import 'package:flutter/widgets.dart';
-import 'package:provider/provider.dart';
+import '/widget/export.dart';
 
 // ----------------
 
@@ -20,7 +18,7 @@ class MiscellaneousHelper {
     StoragePath?          location,
     String?               name,
   ) async {
-    var setting = Provider.of<SettingProvider>(context, listen: false);
+    var setting = SettingProvider.of(context, listen: false);
     var actualType = null as StoragePickType?;
     assertTest(!type.isEmpty);
     if (type.length == 1) {

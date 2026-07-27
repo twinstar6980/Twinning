@@ -81,7 +81,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 				// object
 				object_begin,
 				object_end,
-				// TODO: never appeared in known rton file
+				// NOTE: EXPLAIN: never appeared in known rton file
 				_string_literal_star,
 				_string_binary_blob,
 				_string_native_x1,
@@ -150,7 +150,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 				// object
 				object_begin = 0x85,
 				object_end   = 0xFF,
-				// TODO: never appeared in known rton file
+				// NOTE: EXPLAIN: never appeared in known rton file
 				_string_literal_star         = 0x02,
 				_string_binary_blob          = 0x87,
 				_string_native_x1            = 0xB0,

@@ -10,7 +10,7 @@ namespace Twinning.Script.Support.Popcap.ResourceStreamBundle {
 
 	export type LayoutMode = typeof LayoutModeX[number];
 
-	export const LayoutModeE = LayoutModeX as unknown as LayoutMode[];
+	export const LayoutModeE = [...LayoutModeX];
 
 	// ----------------
 

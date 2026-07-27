@@ -1,8 +1,9 @@
 {
 	"compilerOptions": {
-		"target": "es2024",
+		"target": "es2025",
 		"lib": [
-			"ESNext",
+			"ES2025",
+			"ESNext.Disposable",
 		],
 		"module": "es2022",
 		"paths": {
@@ -15,7 +16,6 @@
 		"declaration": false,
 		"esModuleInterop": true,
 		"forceConsistentCasingInFileNames": true,
-		"strict": true,
 		"skipLibCheck": false,
 		"newLine": "lf",
 		"plugins": [
@@ -26,6 +26,25 @@
 				"transform": "./transformer/assert_test.ts",
 			},
 		],
+		"allowUnreachableCode": false,
+		"allowUnusedLabels": false,
+		"alwaysStrict": true,
+		"exactOptionalPropertyTypes": false,
+		"noFallthroughCasesInSwitch": true,
+		"noImplicitAny": true,
+		"noImplicitOverride": true,
+		"noImplicitReturns": true,
+		"noImplicitThis": true,
+		"noPropertyAccessFromIndexSignature": true,
+		"noUncheckedIndexedAccess": false,
+		"noUnusedLocals": false,
+		"noUnusedParameters": false,
+		"strict": true,
+		"strictBindCallApply": true,
+		"strictFunctionTypes": true,
+		"strictNullChecks": true,
+		"strictPropertyInitialization": true,
+		"useUnknownInCatchVariables": true,
 	},
 	"include": [
 		"src",

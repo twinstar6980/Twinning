@@ -1,5 +1,4 @@
 import os
-import sys
 import re
 import pathlib
 import glob
@@ -89,7 +88,7 @@ def sh_execute_command(
 		actual_environment[environment_name] = environment_value
 	result = subprocess.run(
 		command,
-		shell=sys.platform == 'win32',
+		shell=True,
 		cwd=location,
 		env=actual_environment,
 		check=ensure_ok,
@@ -101,53 +100,7 @@ def sh_execute_command(
 
 # ----------------
 
-def generate_keystore(
-	target: str,
-	password: str,
-	subject: str,
-	time: tuple[str, str],
-) -> None:
-	with fs_temporary() as temporary:
-		sh_execute_command(temporary, [
-			'openssl',
-			'genrsa',
-			'-out', f'{temporary}/file.key',
-			f'2048',
-		])
-		sh_execute_command(temporary, [
-			'openssl',
-			'req',
-			'-new',
-			'-x509',
-			'-key', f'{temporary}/file.key',
-			'-out', f'{temporary}/file.crt',
-			'-utf8',
-			'-not_before', f'{time[0]}',
-			'-not_after', f'{time[1]}',
-			'-subj', f'{subject}',
-			'-addext', f'basicConstraints=CA:FALSE',
-			'-addext', f'keyUsage=digitalSignature',
-			'-addext', f'extendedKeyUsage=codeSigning',
-		])
-		sh_execute_command(temporary, [
-			'openssl',
-			'pkcs12',
-			'-export',
-			'-inkey', f'{temporary}/file.key',
-			'-in', f'{temporary}/file.crt',
-			'-out', f'{temporary}/file.p12',
-			'-passout', f'pass:{password}',
-			'-keypbe', f'PBE-SHA1-3DES',
-			'-certpbe', f'PBE-SHA1-3DES',
-			'-macalg', f'SHA1',
-		])
-		fs_copy(
-			f'{temporary}/file.p12',
-			f'{target}',
-		)
-	return
-
-def verify_keystore(
+def ex_keystore_verify(
 	target: str,
 	password: str,
 ) -> bool:
@@ -161,10 +114,10 @@ def verify_keystore(
 		], ensure_ok=False)
 	return openssl_result == 0
 
-def query_keystore(
+def ex_keystore_query(
 	target: str,
 	password: str,
-) -> str:
+) -> tuple[str]:
 	with fs_temporary() as temporary:
 		sh_execute_command(temporary, [
 			'openssl',
@@ -192,121 +145,74 @@ def query_keystore(
 		)
 		if result_subject == None:
 			raise RuntimeError(f'unable to get subject')
-	return result_subject.group(1)
+	return (result_subject.group(1),)
 
 # ----------------
 
-def pack_zip(
-	source: str,
-	destination: str,
-	name: str | None,
+def ex_archive_pack_zip(
+	package: str,
+	content: str,
+	root: str | None,
 	follow_link: bool = False,
 ) -> None:
 	with fs_temporary() as temporary:
 		fs_copy(
-			f'{source}',
-			f'{temporary}/package{'' if name == None else f'/{name}'}',
+			f'{content}',
+			f'{temporary}/content{'' if root == None else f'/{root}'}',
 			follow_link=follow_link,
 		)
 		shutil.make_archive(
 			f'{temporary}/package',
 			'zip',
-			f'{temporary}/package',
-			f'{'.' if name == None else f'{name}'}',
+			f'{temporary}/content',
+			f'{'.' if root == None else f'{root}'}',
 		)
 		fs_copy(
 			f'{temporary}/package.zip',
-			f'{destination}',
+			f'{package}',
 		)
 	return
 
-def unpack_zip(
-	source: str,
-	destination: str,
-	name: str | None,
+def ex_archive_unpack_zip(
+	package: str,
+	content: str,
+	root: str | None,
 ) -> None:
 	with fs_temporary() as temporary:
 		fs_copy(
-			f'{source}',
+			f'{package}',
 			f'{temporary}/package.zip',
 		)
 		shutil.unpack_archive(
 			f'{temporary}/package.zip',
-			f'{temporary}/package',
+			f'{temporary}/content',
 			'zip',
 		)
 		fs_copy(
-			f'{temporary}/package{'' if name == None else f'/{name}'}',
-			f'{destination}',
+			f'{temporary}/content{'' if root == None else f'/{root}'}',
+			f'{content}',
 			follow_link=True,
 		)
 	return
 
 # ----------------
 
-def strip_windows_binary(
-	source: str,
-	destination: str,
-) -> None:
-	with fs_temporary() as temporary:
-		fs_copy(
-			f'{source}',
-			f'{temporary}/target',
-		)
-		sh_execute_command(temporary, [
-			'llvm-strip',
-			'--strip-all',
-			f'{temporary}/target',
-		])
-		fs_copy(
-			f'{temporary}/target',
-			f'{destination}',
-		)
-	return
-
-def apply_windows_manifest(
-	source: str,
-	destination: str,
-	manifest: str,
-) -> None:
-	with fs_temporary() as temporary:
-		fs_copy(
-			f'{source}',
-			f'{temporary}/target',
-		)
-		fs_copy(
-			f'{manifest}',
-			f'{temporary}/manifest',
-		)
-		sh_execute_command(temporary, [
-			'mt',
-			'-manifest', f'{temporary}/manifest',
-			f'-outputresource:{temporary}/target;#1',
-			'-verbose',
-		])
-		fs_copy(
-			f'{temporary}/target',
-			f'{destination}',
-		)
-	return
-
-def sign_windows_executable(
-	source: str,
-	destination: str,
-	type: str,
+def ex_windows_sign(
+	target: str,
 	keystore: tuple[str, str] | None,
+	type: str,
 ) -> None:
 	with fs_temporary() as temporary:
 		if keystore == None:
 			return
 		keystore_file, keystore_password = keystore
 		fs_copy(
-			f'{source}',
+			f'{target}',
 			f'{temporary}/target.{type}',
 		)
 		if type == 'msix':
-			keystore_subject = query_keystore(keystore_file, keystore_password)
-			unpack_windows_msix(
+			keystore_subject = ex_keystore_query(keystore_file, keystore_password)[0]
+			ex_windows_unpack_msix(
 				f'{temporary}/target.{type}',
 				f'{temporary}/package',
 			)
@@ -315,7 +221,7 @@ def sign_windows_executable(
 			)
 			manifest_content = re.sub(
 				r'(<Identity\s.*Publisher\s*=\s*")([^"]*)("\s.*/>)',
-				rf'\1{keystore_subject}\3',
+				rf'\1{keystore_subject.replace('\\', '\\\\')}\3',
 				manifest_content,
 				re.RegexFlag.MULTILINE,
 			)
@@ -323,10 +229,9 @@ def sign_windows_executable(
 				f'{temporary}/package/AppxManifest.xml',
 				manifest_content,
 			)
-			pack_windows_msix(
-				f'{temporary}/package',
+			ex_windows_pack_msix(
 				f'{temporary}/target.{type}',
-				False,
+				f'{temporary}/package',
 			)
 		sh_execute_command(temporary, [
 			'signtool',
@@ -338,58 +243,41 @@ def sign_windows_executable(
 		])
 		fs_copy(
 			f'{temporary}/target.{type}',
-			f'{destination}',
+			f'{target}',
 		)
 	return
 
-def pack_windows_msix(
-	source: str,
-	destination: str,
-	generate_pri: bool,
+def ex_windows_pack_msix(
+	package: str,
+	content: str,
 ) -> None:
 	with fs_temporary() as temporary:
 		fs_copy(
-			f'{source}',
-			f'{temporary}/package',
+			f'{content}',
+			f'{temporary}/content',
 			follow_link=True,
 		)
-		if generate_pri:
-			sh_execute_command(temporary, [
-				'makepri',
-				'createconfig',
-				'/cf', f'{temporary}/priconfig.xml',
-				'/dq', f'en-US',
-				'/o',
-			])
-			sh_execute_command(temporary, [
-				'makepri',
-				'new',
-				'/cf', f'{temporary}/priconfig.xml',
-				'/pr', f'{temporary}/package',
-				'/of', f'{temporary}/package/resources.pri',
-				'/o',
-			])
 		sh_execute_command(temporary, [
 			'makeappx',
 			'pack',
 			'/o',
 			'/h', f'SHA256',
-			'/d', f'{temporary}/package',
+			'/d', f'{temporary}/content',
 			'/p', f'{temporary}/package.msix',
 		])
 		fs_copy(
 			f'{temporary}/package.msix',
-			f'{destination}',
+			f'{package}',
 		)
 	return
 
-def unpack_windows_msix(
-	source: str,
-	destination: str,
+def ex_windows_unpack_msix(
+	package: str,
+	content: str,
 ) -> None:
 	with fs_temporary() as temporary:
 		fs_copy(
-			f'{source}',
+			f'{package}',
 			f'{temporary}/package.msix',
 		)
 		sh_execute_command(temporary, [
@@ -397,45 +285,111 @@ def unpack_windows_msix(
 			'unpack',
 			'/o',
 			'/p', f'{temporary}/package.msix',
-			'/d', f'{temporary}/package',
+			'/d', f'{temporary}/content',
 		])
 		fs_copy(
-			f'{temporary}/package',
-			f'{destination}',
+			f'{temporary}/content',
+			f'{content}',
 			follow_link=True,
 		)
 	return
 
-# ----------------
-
-def pack_linux_appimage(
-	source: str,
-	destination: str,
+def ex_windows_strip_executable(
+	executable: str,
 ) -> None:
 	with fs_temporary() as temporary:
 		fs_copy(
-			f'{source}',
-			f'{temporary}/package.AppDir',
+			f'{executable}',
+			f'{temporary}/executable',
+		)
+		sh_execute_command(temporary, [
+			'llvm-strip',
+			'--strip-all',
+			f'{temporary}/executable',
+		])
+		fs_copy(
+			f'{temporary}/executable',
+			f'{executable}',
+		)
+	return
+
+def ex_windows_import_manifest(
+	executable: str,
+	manifest: str,
+	resource_identifier: int,
+) -> None:
+	with fs_temporary() as temporary:
+		fs_copy(
+			f'{executable}',
+			f'{temporary}/executable',
+		)
+		fs_copy(
+			f'{manifest}',
+			f'{temporary}/manifest',
+		)
+		sh_execute_command(temporary, [
+			'mt',
+			'-manifest', f'{temporary}/manifest',
+			f'-outputresource:{temporary}/executable;#{resource_identifier}',
+			'-verbose',
+		])
+		fs_copy(
+			f'{temporary}/executable',
+			f'{executable}',
+		)
+	return
+
+def ex_windows_create_pri_resource(
+	package: str,
+) -> None:
+	with fs_temporary() as temporary:
+		sh_execute_command(temporary, [
+			'makepri',
+			'createconfig',
+			'/o',
+			'/cf', f'{temporary}/priconfig.xml',
+			'/dq', f'en-US',
+		])
+		sh_execute_command(temporary, [
+			'makepri',
+			'new',
+			'/o',
+			'/cf', f'{temporary}/priconfig.xml',
+			'/pr', f'{package}',
+			'/of', f'{package}/resources.pri',
+		])
+	return
+
+# ----------------
+
+def ex_linux_pack_appimage(
+	package: str,
+	content: str,
+) -> None:
+	with fs_temporary() as temporary:
+		fs_copy(
+			f'{content}',
+			f'{temporary}/content.AppDir',
 			follow_link=True,
 		)
 		sh_execute_command(temporary, [
 			'appimagetool',
 			'--no-appstream',
-			f'{temporary}/package.AppDir',
+			f'{temporary}/content.AppDir',
 			f'{temporary}/package.AppImage',
 		])
 		fs_copy(
 			f'{temporary}/package.AppImage',
-			f'{destination}',
+			f'{package}',
 		)
 	return
 
 # ----------------
 
-def sign_macintosh_executable(
-	source: str,
-	destination: str,
+def ex_macintosh_sign(
+	target: str,
 	keystore: tuple[str, str] | None,
+	type: str,
 ) -> None:
 	with fs_temporary() as temporary:
 		keystore_name = '-'
@@ -495,7 +449,7 @@ def sign_macintosh_executable(
 			'<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"><plist version="1.0"><dict></dict></plist>',
 		)
 		fs_copy(
-			f'{source}',
+			f'{target}',
 			f'{temporary}/target',
 			follow_link=True,
 		)
@@ -531,20 +485,20 @@ def sign_macintosh_executable(
 			])
 		fs_copy(
 			f'{temporary}/target',
-			f'{destination}',
+			f'{target}',
 			follow_link=True,
 		)
 	return
 
-def pack_macintosh_dmg(
-	source: str,
-	destination: str,
+def ex_macintosh_pack_dmg(
+	package: str,
+	content: str,
 	name: str,
 ) -> None:
 	with fs_temporary() as temporary:
 		fs_copy(
-			f'{source}',
-			f'{temporary}/package/{name}.app',
+			f'{content}',
+			f'{temporary}/content/{name}.app',
 			follow_link=True,
 		)
 		sh_execute_command(temporary, [
@@ -559,35 +513,36 @@ def pack_macintosh_dmg(
 			'--format', f'UDZO',
 			'--filesystem', f'APFS',
 			f'{temporary}/package.dmg',
-			f'{temporary}/package/{name}.app',
+			f'{temporary}/content/{name}.app',
 		])
 		fs_copy(
 			f'{temporary}/package.dmg',
-			f'{destination}',
+			f'{package}',
 		)
 	return
 
 # ----------------
 
-def sign_android_apk(
-	source: str,
-	destination: str,
+def ex_android_sign(
+	target: str,
 	keystore: tuple[str, str] | None,
+	type: str,
+	signature_version: tuple[bool, bool, bool],
 ) -> None:
 	with fs_temporary() as temporary:
 		if keystore == None:
 			return
 		keystore_file, keystore_password = keystore
 		fs_copy(
-			f'{source}',
+			f'{target}',
 			f'{temporary}/target.apk',
 		)
 		sh_execute_command(temporary, [
 			'apksigner',
 			'sign',
-			'--v1-signing-enabled', f'false',
-			'--v2-signing-enabled', f'false',
-			'--v3-signing-enabled', f'true',
+			'--v1-signing-enabled', f'{str(signature_version[0]).lower()}',
+			'--v2-signing-enabled', f'{str(signature_version[1]).lower()}',
+			'--v3-signing-enabled', f'{str(signature_version[2]).lower()}',
 			'--v4-signing-enabled', f'false',
 			'--ks', f'{keystore_file}',
 			'--ks-pass', f'pass:{keystore_password}',
@@ -595,93 +550,93 @@ def sign_android_apk(
 		])
 		fs_copy(
 			f'{temporary}/target.apk',
-			f'{destination}',
+			f'{target}',
 		)
 	return
 
 # ----------------
 
-def sign_iphone_executable(
-	source: str,
-	destination: str,
+def ex_iphone_sign(
+	target: str,
 	keystore: tuple[str, str] | None,
+	type: str,
 ) -> None:
-	return sign_macintosh_executable(source, destination, keystore)
+	return ex_macintosh_sign(target, keystore, type)
 
-def pack_iphone_ipa(
-	source: str,
-	destination: str,
+def ex_iphone_pack_ipa(
+	package: str,
+	content: str,
 	name: str,
 ) -> None:
 	with fs_temporary() as temporary:
 		fs_copy(
-			f'{source}',
-			f'{temporary}/package/Payload/{name}.app',
+			f'{content}',
+			f'{temporary}/content/Payload/{name}.app',
 			follow_link=True,
 		)
 		shutil.make_archive(
 			f'{temporary}/package',
 			'zip',
-			f'{temporary}/package',
+			f'{temporary}/content',
 			f'',
 		)
 		fs_copy(
 			f'{temporary}/package.zip',
-			f'{destination}',
+			f'{package}',
 		)
 	return
 
 # ----------------
 
-def check_platform(
+def project_check_platform(
 	value: str,
 	expect: list[str],
 ) -> bool:
 	return value in expect
 
-def ensure_platform(
+def project_ensure_platform(
 	value: str,
 	expect: list[str],
 ) -> None:
-	if not check_platform(value, expect):
+	if not project_check_platform(value, expect):
 		raise RuntimeError(f'unsupported platform \'{value}\'')
 	return
 
 # ----------------
 
-def locate_project(
+def project_locate_root(
 	name: str | None = None,
 ) -> str:
 	return f'{pathlib.Path(__file__).absolute().parent.parent.parent.as_posix()}{'' if name is None else f'/{name}'}'
 
-def locate_project_local(
+def project_locate_local(
 	name: str | None = None,
 ) -> str:
-	return f'{locate_project()}/.local{'' if name is None else f'/{name}'}'
+	return f'{project_locate_root()}/.local{'' if name is None else f'/{name}'}'
 
-def locate_project_distribution(
+def project_locate_distribution(
 	name: str | None = None,
 ) -> str:
-	return f'{locate_project_local('distribution')}{'' if name is None else f'/{name}'}'
+	return f'{project_locate_local('distribution')}{'' if name is None else f'/{name}'}'
 
-def locate_project_keystore(
+def project_locate_keystore(
 ) -> tuple[str, str] | None:
-	file = f'{locate_project_local('keystore')}/file.p12'
+	file = f'{project_locate_local('keystore')}/file.p12'
 	if not pathlib.Path(file).is_file():
 		return None
-	password = fs_read_file(f'{locate_project_local('keystore')}/password.txt')
-	if not verify_keystore(file, password):
+	password = fs_read_file(f'{project_locate_local('keystore')}/password.txt')
+	if not ex_keystore_verify(file, password):
 		raise RuntimeError('invaild keystore password')
 	return (file, password)
 
 # ----------------
 
-def setup_project_library(
+def project_setup_library(
 	platform: str,
 ) -> None:
 	library_directory = None
 	library_file_list = None
-	if check_platform(platform, ['windows.amd64']):
+	if project_check_platform(platform, ['windows.amd64']):
 		clang_file = shutil.which('clang')
 		if clang_file == None:
 			raise RuntimeError(f'could not found clang path')
@@ -690,7 +645,7 @@ def setup_project_library(
 			raise RuntimeError(f'could not found library directory')
 		library_directory = library_directory_list[0]
 		library_file_list = ['libc++.dll', 'libunwind.dll']
-	if check_platform(platform, ['android.arm64']):
+	if project_check_platform(platform, ['android.arm64']):
 		ndk_home = os.environ.get('ANDROID_NDK_HOME')
 		if ndk_home == None:
 			raise RuntimeError(f'could not found ndk path')
@@ -699,7 +654,7 @@ def setup_project_library(
 			raise RuntimeError(f'could not found library directory')
 		library_directory = library_directory_list[0]
 		library_file_list = ['libc++_shared.so']
-	destination = f'{locate_project_local('library')}/{platform}'
+	destination = f'{project_locate_local('library')}/{platform}'
 	fs_create_directory(
 		destination,
 	)
@@ -711,24 +666,23 @@ def setup_project_library(
 			)
 	return
 
-def build_project_module(
+def project_build_module(
 	path: str,
 	build: typing.Callable[[str, tuple[str, str] | None, str, str], tuple[str, str] | None],
 	platform: str,
-	is_single: bool = False,
 ) -> None:
 	with fs_temporary() as temporary:
 		module_name_original = pathlib.Path(path).parent.name
-		module_name_regularized = 'application' if is_single else '_'.join([item.lower() for item in re.split(r'(?=[A-Z])', module_name_original)[1:]])
+		module_name_regularized = '_'.join([item.lower() for item in re.split(r'(?=[A-Z])', module_name_original)[1:]])
 		build_result = build(
-			locate_project(module_name_original),
-			locate_project_keystore(),
+			project_locate_root(module_name_original),
+			project_locate_keystore(),
 			temporary,
 			platform,
 		)
 		if build_result == None:
 			raise RuntimeError(f'unsupported platform \'{platform}\'')
-		distribution_file = locate_project_distribution(f'{platform}.{module_name_regularized}{build_result[0]}')
+		distribution_file = project_locate_distribution(f'{platform}.{module_name_regularized}{build_result[0]}')
 		fs_copy(
 			build_result[1],
 			distribution_file,
@@ -736,30 +690,26 @@ def build_project_module(
 		print(f'>> BUILD MODULE >> {distribution_file}')
 	return
 
-def build_project_bundle(
+def project_build_bundle(
 	path: str,
 	build: typing.Callable[[str, str, str, tuple[str, str] | None, str, str], tuple[str, str] | None],
 	platform: str,
-	is_single: bool = False,
 ) -> None:
 	with fs_temporary() as temporary:
 		build_result = build(
-			locate_project(),
-			locate_project_local(),
-			locate_project_distribution(),
-			locate_project_keystore(),
+			project_locate_root(),
+			project_locate_local(),
+			project_locate_distribution(),
+			project_locate_keystore(),
 			temporary,
 			platform,
 		)
 		if build_result == None:
 			raise RuntimeError(f'unsupported platform \'{platform}\'')
-		if is_single:
-			distribution_file = build_result[1]
-		else:
-			distribution_file = locate_project_distribution(f'{platform}.bundle{build_result[0]}')
-			fs_copy(
-				build_result[1],
-				distribution_file,
-			)
+		distribution_file = project_locate_distribution(f'{platform}.bundle{build_result[0]}')
+		fs_copy(
+			build_result[1],
+			distribution_file,
+		)
 		print(f'>> BUILD BUNDLE >> {distribution_file}')
 	return

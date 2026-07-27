@@ -37,8 +37,8 @@ namespace Twinning.Script.Support.Popcap.Pvz2.ResourceManifest.NewTypeObjectNota
 	function read_string(
 		data: ByteStreamView,
 	): string {
-		let length = data.u32();
-		return ConvertHelper.read_utf8_string_by_size(data, length);
+		let size = data.u32();
+		return ConvertHelper.read_utf8_string_by_size(data, size);
 	}
 
 	// ----------------
@@ -175,7 +175,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.ResourceManifest.NewTypeObjectNota
 		data_file: StoragePath,
 		definition_file: StoragePath,
 	): void {
-		let data = StorageHelper.read_file(data_file);
+		let data = StorageHelper.read_file_data(data_file);
 		let definition = process(new ByteStreamView(data.view().value));
 		JsonHelper.encode_file(definition_file, definition);
 		return;

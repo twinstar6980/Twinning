@@ -47,6 +47,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Package {
 				}
 			}
 			definition.resource.allocate_full(information_structure.resource_information.size());
+			auto resource_data_container = ByteArray{};
 			for (auto & resource_index : SizeRange{information_structure.resource_information.size()}) {
 				auto & resource_information_structure = information_structure.resource_information[resource_index];
 				auto & resource_definition = definition.resource[resource_index];
@@ -56,32 +57,35 @@ export namespace Twinning::Kernel::Tool::Popcap::Package {
 				auto resource_data = data.forward_view(cast_box<Size>(resource_information_structure.size));
 				if constexpr (check_version(t_version, {}, {false})) {
 					if (resource_directory.has()) {
-						if (!Storage::exist_directory(resource_directory.get())) {
-							Storage::create_directory(resource_directory.get());
+						auto resource_path = resource_directory.get().push(resource_definition.path);
+						if (!Storage::exist_file(resource_path)) {
+							Storage::create_file(resource_path);
 						}
-						if (!Storage::exist_file(resource_directory.get().push(resource_definition.path))) {
-							Storage::create_file(resource_directory.get().push(resource_definition.path));
-						}
-						Storage::write_file(resource_directory.get().push(resource_definition.path), resource_data);
+						Storage::resize_file(resource_path, resource_data.size());
+						Storage::write_file(resource_path, 0_sz, resource_data);
 					}
 				}
 				if constexpr (check_version(t_version, {}, {true})) {
-					auto resource_data_original = ByteArray{cast_box<Size>(resource_information_structure.size_original)};
+					auto resource_size_original = cast_box<Size>(resource_information_structure.size_original);
+					if (resource_data_container.size() < resource_size_original) {
+						resource_data_container.allocate(resource_size_original);
+					}
+					auto resource_data_original = resource_data_container.head(resource_size_original);
 					auto resource_data_stream = InputByteStreamView{resource_data};
 					auto resource_data_original_stream = OutputByteStreamView{resource_data_original};
 					Data::Compression::Deflate::Uncompress::process(resource_data_original_stream, resource_data_stream, 15_i, Data::Compression::Deflate::WrapperType::Constant::zlib());
 					assert_test(resource_data_stream.full() && resource_data_original_stream.full());
 					if (resource_directory.has()) {
-						if (!Storage::exist_directory(resource_directory.get())) {
-							Storage::create_directory(resource_directory.get());
+						auto resource_path = resource_directory.get().push(resource_definition.path);
+						if (!Storage::exist_file(resource_path)) {
+							Storage::create_file(resource_path);
 						}
-						if (!Storage::exist_file(resource_directory.get().push(resource_definition.path))) {
-							Storage::create_file(resource_directory.get().push(resource_definition.path));
-						}
-						Storage::write_file(resource_directory.get().push(resource_definition.path), resource_data_original);
+						Storage::resize_file(resource_path, resource_data_original.size());
+						Storage::write_file(resource_path, 0_sz, resource_data_original);
 					}
 				}
 			}
+			resource_data_container.reset();
 			return;
 		}
 

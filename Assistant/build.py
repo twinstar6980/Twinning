@@ -13,8 +13,8 @@ def build(
 	platform: str,
 ) -> tuple[str, str] | None:
 	destination = None
-	if utility.check_platform(platform, ['windows.amd64']):
-		utility.setup_project_library(
+	if utility.project_check_platform(platform, ['windows.amd64']):
+		utility.project_setup_library(
 			platform,
 		)
 		utility.sh_execute_command(source, [
@@ -28,20 +28,21 @@ def build(
 			f'{source}/build/windows/x64/runner/Release',
 			f'{temporary}/artifact',
 		)
-		utility.pack_windows_msix(
+		utility.ex_windows_create_pri_resource(
 			f'{temporary}/artifact',
-			f'{temporary}/artifact.msix',
-			True,
 		)
-		utility.sign_windows_executable(
+		utility.ex_windows_pack_msix(
 			f'{temporary}/artifact.msix',
+			f'{temporary}/artifact',
+		)
+		utility.ex_windows_sign(
 			f'{temporary}/artifact.msix',
-			'msix',
 			keystore,
+			'msix',
 		)
 		destination = ('.msix', f'{temporary}/artifact.msix')
-	if utility.check_platform(platform, ['linux.amd64']):
-		utility.setup_project_library(
+	if utility.project_check_platform(platform, ['linux.amd64']):
+		utility.project_setup_library(
 			platform,
 		)
 		utility.sh_execute_command(source, [
@@ -59,13 +60,13 @@ def build(
 			f'{temporary}/artifact',
 			follow_link=True,
 		)
-		utility.pack_linux_appimage(
-			f'{temporary}/artifact',
+		utility.ex_linux_pack_appimage(
 			f'{temporary}/artifact.AppImage',
+			f'{temporary}/artifact',
 		)
 		destination = ('.AppImage', f'{temporary}/artifact.AppImage')
-	if utility.check_platform(platform, ['macintosh.arm64']):
-		utility.setup_project_library(
+	if utility.project_check_platform(platform, ['macintosh.arm64']):
+		utility.project_setup_library(
 			platform,
 		)
 		utility.sh_execute_command(source, [
@@ -80,24 +81,19 @@ def build(
 			f'{temporary}/artifact.app',
 			follow_link=True,
 		)
-		utility.sign_macintosh_executable(
-			f'{temporary}/artifact.app',
+		utility.ex_macintosh_sign(
 			f'{temporary}/artifact.app',
 			keystore,
+			'app',
 		)
-		utility.pack_macintosh_dmg(
-			f'{temporary}/artifact.app',
+		utility.ex_macintosh_pack_dmg(
 			f'{temporary}/artifact.dmg',
+			f'{temporary}/artifact.app',
 			'Twinning Assistant',
 		)
-		utility.sign_macintosh_executable(
-			f'{temporary}/artifact.dmg',
-			f'{temporary}/artifact.dmg',
-			keystore,
-		)
 		destination = ('.dmg', f'{temporary}/artifact.dmg')
-	if utility.check_platform(platform, ['android.arm64']):
-		utility.setup_project_library(
+	if utility.project_check_platform(platform, ['android.arm64']):
+		utility.project_setup_library(
 			platform,
 		)
 		utility.sh_execute_command(source, [
@@ -113,14 +109,15 @@ def build(
 			f'{source}/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk',
 			f'{temporary}/artifact.apk',
 		)
-		utility.sign_android_apk(
-			f'{temporary}/artifact.apk',
+		utility.ex_android_sign(
 			f'{temporary}/artifact.apk',
 			keystore,
+			'apk',
+			(False, False, True),
 		)
 		destination = ('.apk', f'{temporary}/artifact.apk')
-	if utility.check_platform(platform, ['iphone.arm64']):
-		utility.setup_project_library(
+	if utility.project_check_platform(platform, ['iphone.arm64']):
+		utility.project_setup_library(
 			platform,
 		)
 		utility.sh_execute_command(source, [
@@ -136,18 +133,18 @@ def build(
 			f'{temporary}/artifact.app',
 			follow_link=True,
 		)
-		utility.sign_iphone_executable(
-			f'{temporary}/artifact.app',
+		utility.ex_iphone_sign(
 			f'{temporary}/artifact.app',
 			keystore,
+			'app',
 		)
-		utility.pack_iphone_ipa(
-			f'{temporary}/artifact.app',
+		utility.ex_iphone_pack_ipa(
 			f'{temporary}/artifact.ipa',
+			f'{temporary}/artifact.app',
 			'Twinning Assistant',
 		)
 		destination = ('.ipa', f'{temporary}/artifact.ipa')
 	return destination
 
 if __name__ == '__main__':
-	utility.build_project_module(__file__, build, sys.argv[1])
+	utility.project_build_module(__file__, build, sys.argv[1])

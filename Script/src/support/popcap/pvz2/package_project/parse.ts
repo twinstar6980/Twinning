@@ -78,7 +78,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Parse {
 			resource_path = resource_path_list.find((value) => (value.endsWith('.newton')));
 			if (resource_path !== undefined) {
 				package_setting.manifest.type = 'external_newton';
-				let resource_data = StorageHelper.read_file(package_resource_directory.push(new StoragePath(resource_path)));
+				let resource_data = StorageHelper.read_file_data(package_resource_directory.push(new StoragePath(resource_path)));
 				let resource_data_stream = new ByteStreamView(resource_data.view().value);
 				package_manifest_official = ResourceManifest.NewTypeObjectNotation.Decode.process(resource_data_stream);
 				break;
@@ -86,7 +86,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Parse {
 			resource_path = resource_path_list.find((value) => (value.endsWith('.rton')));
 			if (resource_path !== undefined) {
 				package_setting.manifest.type = 'external_rton_with_string_path';
-				let resource_data = StorageHelper.read_file(package_resource_directory.push(new StoragePath(resource_path)));
+				let resource_data = StorageHelper.read_file_data(package_resource_directory.push(new StoragePath(resource_path)));
 				let resource_data_stream = Kernel.ByteStreamView.watch(resource_data.view());
 				let resource_definition = Kernel.Notation.Json.Value.default<Kernel.Tool.Popcap.ReflectionObjectNotation.JS_ValidValue>();
 				Kernel.Tool.Popcap.ReflectionObjectNotation.Decode.process(resource_data_stream, resource_definition, Kernel.Tool.Popcap.ReflectionObjectNotation.Version.value({number: 1n, native_string_encoding_use_utf8: true}));

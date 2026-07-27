@@ -1,6 +1,5 @@
 import 'dart:core' as lib;
-import 'dart:core' show Exception, override;
-import 'dart:io';
+import 'dart:io' as lib;
 
 // ----------------
 
@@ -20,13 +19,15 @@ typedef List<E> = lib.List<E>;
 
 typedef Map<K, V> = lib.Map<K, V>;
 
+typedef Exception = lib.Exception;
+
 // ----------------
 
 final class ApplicationInformation {
 
   static const String identifier = 'com.twinstar.twinning.assistant';
 
-  static const String version = '207';
+  static const String version = '208';
 
   static const String name = 'Twinning Assistant';
 
@@ -38,15 +39,15 @@ final class ApplicationInformation {
 
 final class SystemChecker {
 
-  static final Boolean isWindows = Platform.isWindows;
+  static final Boolean isWindows = lib.Platform.isWindows;
 
-  static final Boolean isLinux = Platform.isLinux;
+  static final Boolean isLinux = lib.Platform.isLinux;
 
-  static final Boolean isMacintosh = Platform.isMacOS;
+  static final Boolean isMacintosh = lib.Platform.isMacOS;
 
-  static final Boolean isAndroid = Platform.isAndroid;
+  static final Boolean isAndroid = lib.Platform.isAndroid;
 
-  static final Boolean isIphone = Platform.isIOS;
+  static final Boolean isIphone = lib.Platform.isIOS;
 
 }
 
@@ -65,9 +66,8 @@ class UnreachableException implements Exception {
 
   // #region string
 
-  @override
-  toString(
-  ) {
+  @lib.override
+  toString() {
     return 'UnreachableException';
   }
 
@@ -88,9 +88,8 @@ class UnimplementedException implements Exception {
 
   // #region string
 
-  @override
-  toString(
-  ) {
+  @lib.override
+  toString() {
     return 'UnimplementedException';
   }
 
@@ -111,9 +110,8 @@ class UnsupportedException implements Exception {
 
   // #region string
 
-  @override
-  toString(
-  ) {
+  @lib.override
+  toString() {
     return 'UnsupportedException';
   }
 
@@ -138,9 +136,8 @@ class AssertionException implements Exception {
 
   // #region string
 
-  @override
-  toString(
-  ) {
+  @lib.override
+  toString() {
     return 'AssertionException${this.expression == null ? '' : ': ${this.expression}'}';
   }
 

@@ -10,7 +10,7 @@ namespace Twinning.Script.Support.Kairosoft.Game.Program.Modify {
 
 	export type PlatformType = typeof PlatformTypeX[number];
 
-	export const PlatformTypeE = PlatformTypeX as unknown as PlatformType[];
+	export const PlatformTypeE = [...PlatformTypeX];
 
 	// ----------------
 
@@ -75,7 +75,7 @@ namespace Twinning.Script.Support.Kairosoft.Game.Program.Modify {
 
 	export type PackageType = typeof PackageTypeX[number];
 
-	export const PackageTypeE = PackageTypeX as unknown as PackageType[];
+	export const PackageTypeE = [...PackageTypeX];
 
 	// #endregion
 
@@ -157,7 +157,7 @@ namespace Twinning.Script.Support.Kairosoft.Game.Program.Modify {
 			);
 		}
 		Console.information(`phase: load original program`, []);
-		let program_data = StorageHelper.read_file(program_file);
+		let program_data = StorageHelper.read_file_data(program_file);
 		let program_stream = new ByteStreamView(program_data.view().value);
 		if (disable_record_encryption) {
 			Console.information(`phase: modify method 'RecordStore.ReadRecord'`, []);
@@ -271,7 +271,7 @@ namespace Twinning.Script.Support.Kairosoft.Game.Program.Modify {
 			Console.warning(`warning: the STR instruction for 'MyConfig.DEBUG'+4 was found at ${(program_stream.p() - 4).toString(16).padStart(8, '0')}, but this modification may cause error`, []);
 		}
 		Console.information(`phase: save modified program`, []);
-		StorageHelper.write_file(program_file, program_data);
+		StorageHelper.write_file_data(program_file, program_data.view());
 		return;
 	}
 
@@ -313,7 +313,7 @@ namespace Twinning.Script.Support.Kairosoft.Game.Program.Modify {
 			Console.information(`phase: load package file`, []);
 			let package_file = temporary_directory.join('package.zip');
 			StorageHelper.copy(target, package_file, false);
-			let package_content = ExternalHelper.run_7z_list_content(package_file);
+			let package_content = DeveloperHelper.archive_list(package_file);
 			package_state = {
 				bundle: null,
 				part: [],
@@ -328,24 +328,18 @@ namespace Twinning.Script.Support.Kairosoft.Game.Program.Modify {
 			}
 			if (package_type === 'apks') {
 				package_state.bundle = package_file;
-				for (let package_content_item of package_content) {
-					if (!package_content_item.name()!.toLowerCase().endsWith('.apk')) {
-						continue;
-					}
-					let package_part_file = temporary_directory.join('part').join(package_content_item.name()!);
-					ExternalHelper.run_7z_extract_content(
-						package_file,
-						[
-							{
-								location: package_content_item,
-								placement: package_part_file,
-							},
-						],
-					);
+				let package_content_list: DeveloperHelper.ArchiveContentDescriptor = DeveloperHelper.archive_list(package_file)
+					.filter((it) => it.extension()?.toLowerCase() === 'apk')
+					.map((it) => ({
+						location: it,
+						placement: temporary_directory.join('part').join(it.name()!),
+					}));
+				DeveloperHelper.archive_extract(package_file, package_content_list);
+				for (let package_content_item of package_content_list) {
 					package_state.part.push({
-						path: package_part_file,
-						location: package_content_item,
-						content: ExternalHelper.run_7z_list_content(package_part_file),
+						path: package_content_item.placement,
+						location: package_content_item.location,
+						content: DeveloperHelper.archive_list(package_content_item.placement),
 						platform: [],
 					});
 				}
@@ -372,36 +366,30 @@ namespace Twinning.Script.Support.Kairosoft.Game.Program.Modify {
 		else {
 			for (let package_part of package_state.part) {
 				for (let platform_type of PlatformTypeE) {
+					let package_part_content_list: DeveloperHelper.ArchiveContentDescriptor = [];
 					let metadata_file = get_metadata_file_path(platform_type);
 					if (!StorageHelper.exist_file(target_directory.push(metadata_file))) {
 						let metadata_file_in_package = package_part.content.find((it) => it.emit() === metadata_file.emit());
 						if (metadata_file_in_package !== undefined) {
-							ExternalHelper.run_7z_extract_content(
-								package_part.path,
-								[
-									{
-										location: metadata_file_in_package,
-										placement: target_directory.push(metadata_file),
-									},
-								],
-							);
+							package_part_content_list.push({
+								location: metadata_file_in_package,
+								placement: target_directory.push(metadata_file),
+							});
 						}
 					}
 					let program_file = get_program_file_path(platform_type);
 					if (!StorageHelper.exist_file(target_directory.push(program_file))) {
 						let program_file_in_package = package_part.content.find((it) => it.emit() === program_file.emit());
 						if (program_file_in_package !== undefined) {
-							ExternalHelper.run_7z_extract_content(
-								package_part.path,
-								[
-									{
-										location: program_file_in_package,
-										placement: target_directory.push(program_file),
-									},
-								],
-							);
+							package_part_content_list.push({
+								location: program_file_in_package,
+								placement: target_directory.push(program_file),
+							});
 							package_part.platform.push(platform_type);
 						}
+					}
+					if (package_part_content_list.length !== 0) {
+						DeveloperHelper.archive_extract(package_part.path, package_part_content_list);
 					}
 				}
 			}
@@ -426,7 +414,7 @@ namespace Twinning.Script.Support.Kairosoft.Game.Program.Modify {
 				if (package_part.platform.length === 0) {
 					continue;
 				}
-				ExternalHelper.run_7z_append_content(
+				DeveloperHelper.archive_modify(
 					package_part.path,
 					package_part.platform
 						.map((it) => ({
@@ -439,16 +427,8 @@ namespace Twinning.Script.Support.Kairosoft.Game.Program.Modify {
 		if (package_type === 'apk' || package_type === 'apks') {
 			Console.information(`phase: post-processing apk file`, []);
 			assert_test(package_state !== null);
-			let enable_align = true;
-			let enable_sign = false;
-			// TODO
 			for (let package_part of package_state.part) {
-				if (enable_align) {
-					ExternalHelper.run_zipalign_align(package_part.path);
-				}
-				if (enable_sign) {
-					ExternalHelper.run_apksigner_sign(package_part.path, new StoragePath(), '');
-				}
+				DeveloperHelper.android_align_package(package_part.path, 'apk');
 			}
 		}
 		Console.information(`phase: generate result`, []);
@@ -464,7 +444,7 @@ namespace Twinning.Script.Support.Kairosoft.Game.Program.Modify {
 			StorageHelper.copy(package_state.part[0].path, target, false);
 		}
 		else {
-			ExternalHelper.run_7z_append_content(
+			DeveloperHelper.archive_modify(
 				package_state.bundle,
 				package_state.part
 					.filter((it) => it.platform.length !== 0)

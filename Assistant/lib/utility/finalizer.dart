@@ -8,12 +8,15 @@ class Finalizer {
 
   Future<Void> Function() _action;
 
+  Boolean _disposed;
+
   // ----------------
 
   Finalizer(
     Future<Void> Function() action,
   ) :
-    this._action = action;
+    this._action = action,
+    this._disposed = false;
 
   // #endregion
 
@@ -21,6 +24,8 @@ class Finalizer {
 
   Future<Void> dispose(
   ) async {
+    assertTest(!this._disposed);
+    this._disposed = true;
     await this._action();
     return;
   }

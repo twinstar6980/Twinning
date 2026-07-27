@@ -1,4 +1,5 @@
 import '/common.dart';
+import '/utility/finalizer.dart';
 import '/utility/storage_path.dart';
 import '/utility/storage_helper.dart';
 import '/utility/convert_helper.dart';
@@ -6,7 +7,6 @@ import '/utility/miscellaneous_helper.dart';
 import '/widget/common.dart';
 import '/widget/container.dart';
 import '/widget/control.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart' as material;
 
 // ----------------
@@ -479,6 +479,28 @@ extension MoreModalDialogExtension on StyledModalDialog {
   }
 
   // ----------------
+
+  static Future<Finalizer> showForWait(
+    BuildContext context,
+    String       title,
+  ) async {
+    var isClosed = false;
+    (() async {
+      await StyledModalDialogExtension.showAsFixed<Boolean>(context, StyledModalDialog.standard(
+        title: title,
+        contentBuilder: (context, setStateForPanel) => [],
+        actionBuilder: (context) => createButton(context, []),
+      ));
+      isClosed = true;
+    })();
+    return .new(() async {
+      if (!isClosed) {
+        Navigator.pop(context, false);
+      }
+      await refreshState(null);
+      return;
+    });
+  }
 
   static Future<Boolean> showForConfirm(
     BuildContext context,

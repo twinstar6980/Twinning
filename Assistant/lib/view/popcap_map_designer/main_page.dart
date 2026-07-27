@@ -1,11 +1,9 @@
 import '/common.dart';
-import '/utility/command_line_reader.dart';
-import '/utility/command_line_writer.dart';
 import '/widget/export.dart';
 import '/view/home/module_page.dart';
 import '/view/popcap_map_designer/setting.dart';
 import '/view/popcap_map_designer/configuration.dart';
-import 'package:flutter/widgets.dart';
+import '/view/popcap_map_designer/option.dart';
 
 // ----------------
 
@@ -22,7 +20,7 @@ class MainPage extends StatefulWidget {
 
   final Setting       setting;
   final Configuration configuration;
-  final List<String>  option;
+  final Option        option;
 
   // ----------------
 
@@ -31,7 +29,7 @@ class MainPage extends StatefulWidget {
 
 }
 
-class _MainPageState extends State<MainPage> with TickerProviderStateMixin implements ModulePageState {
+class _MainPageState extends State<MainPage> implements ModulePageState {
 
   // ----------------
 
@@ -56,19 +54,16 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin imple
   }
 
   @override
-  modulePageApplyOption(optionView) async {
-    var option = CommandLineReader(optionView);
-    if (!option.done()) {
-      throw Exception('too many option \'${option.nextStringList().join(' ')}\'');
-    }
+  modulePageApplyOption(option) async {
+    option as Option;
     await refreshState(this.setState);
     return;
   }
 
   @override
   modulePageCollectOption() async {
-    var option = CommandLineWriter();
-    return option.done();
+    var option = Option();
+    return option;
   }
 
   @override

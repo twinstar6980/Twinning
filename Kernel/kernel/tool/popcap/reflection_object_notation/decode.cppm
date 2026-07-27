@@ -224,7 +224,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 							auto sheet_content = ConstantStringView{};
 							StringParser::read_utf8_string(unsafe_cast<InputCharacterStreamView>(data), sheet_content, sheet_length);
 							assert_test(sheet_content.size() == sheet_size);
-							// TODO: unknown type of identifier value, define them be 'int-var-u32'
+							// NOTE: EXPLAIN: unknown type of identifier value, define them be 'int-var-u32'
 							auto identifier_middle = ProtocolBufferVariableLengthInteger::decode_u32(data);
 							auto identifier_first = ProtocolBufferVariableLengthInteger::decode_u32(data);
 							auto identifier_last = data.read_of<IntegerU32>();

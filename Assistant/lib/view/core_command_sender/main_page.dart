@@ -1,18 +1,16 @@
 import '/common.dart';
 import '/utility/wrapper.dart';
-import '/utility/json_helper.dart';
-import '/utility/command_line_reader.dart';
-import '/utility/command_line_writer.dart';
+import '/utility/json_type.dart';
 import '/widget/export.dart';
 import '/view/home/module_page.dart';
 import '/view/core_command_sender/setting.dart';
 import '/view/core_command_sender/configuration.dart';
+import '/view/core_command_sender/option.dart';
 import '/view/core_command_sender/value_expression.dart';
 import '/view/core_command_sender/method_item.dart';
 import '/view/core_command_sender/command_panel.dart';
 import '/view/core_task_worker/forward_helper.dart' as core_task_worker;
-import 'package:collection/collection.dart';
-import 'package:flutter/widgets.dart';
+import 'package:collection/collection.dart' as lib;
 
 // ----------------
 
@@ -29,7 +27,7 @@ class MainPage extends StatefulWidget {
 
   final Setting       setting;
   final Configuration configuration;
-  final List<String>  option;
+  final Option        option;
 
   // ----------------
 
@@ -46,10 +44,10 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
   late ScrollController                                                                                                                                                                          _commandListScrollController;
 
   Future<Void> _appendCommand(
-    String              method,
-    Boolean             batch,
-    Map<String, Object> argument,
-    Boolean             expanded,
+    String     method,
+    Boolean    batch,
+    JsonObject argument,
+    Boolean    expanded,
   ) async {
     var groupConfiguration = this.widget.configuration.method.firstWhere((value) => method.startsWith('${value.identifier}.'));
     var itemConfiguration = groupConfiguration.item.firstWhere((value) => method == value.identifier);
@@ -57,7 +55,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
       groupConfiguration: groupConfiguration,
       itemConfiguration: itemConfiguration,
       batch: .of(batch),
-      argument: ConfigurationHelper.parseArgumentValueListJson(itemConfiguration.argument, argument),
+      argument: ValueExpressionHelper.parseArgumentValueListJson(itemConfiguration.argument, argument),
       expanded: .of(expanded),
     ));
     await refreshState(this.setState);
@@ -80,7 +78,7 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
     for (var itemIndex in index) {
       var item = this._command[itemIndex];
       var method = core_task_worker.ForwardHelper.makeMethodMaybeBatch(item.itemConfiguration.identifier, item.batch.value);
-      var argument = ConfigurationHelper.makeArgumentValueListJson(item.itemConfiguration.argument, item.argument);
+      var argument = ValueExpressionHelper.makeArgumentValueListJson(item.itemConfiguration.argument, item.argument);
       actualCommand.add(core_task_worker.ForwardHelper.makeArgumentForCommand(null, method, argument));
     }
     await core_task_worker.ForwardHelper.forwardMany(this.context, actualCommand, this._parallelForward);
@@ -111,32 +109,13 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
   }
 
   @override
-  modulePageApplyOption(optionView) async {
-    var optionParallelForward = null as Boolean?;
-    var optionCommand = null as List<({String method, Boolean batch, Map<String, Object> argument, Boolean expanded})>?;
-    var option = CommandLineReader(optionView);
-    if (option.check('-parallel_forward')) {
-      optionParallelForward = option.nextBoolean();
+  modulePageApplyOption(option) async {
+    option as Option;
+    if (option.parallelForward != null) {
+      this._parallelForward = option.parallelForward!;
     }
-    if (option.check('-command')) {
-      optionCommand = [];
-      while (!option.done()) {
-        optionCommand.add((
-          method: option.nextString(),
-          batch: option.nextBoolean(),
-          argument: option.nextString().selfLet((it) => JsonHelper.decodeText(it)!.as<Map<dynamic, dynamic>>().cast<String, Object>()),
-          expanded: option.nextBoolean(),
-        ));
-      }
-    }
-    if (!option.done()) {
-      throw Exception('too many option \'${option.nextStringList().join(' ')}\'');
-    }
-    if (optionParallelForward != null) {
-      this._parallelForward = optionParallelForward;
-    }
-    if (optionCommand != null) {
-      for (var item in optionCommand) {
+    if (option.command != null) {
+      for (var item in option.command!) {
         await this._appendCommand(item.method, item.batch, item.argument, item.expanded);
       }
     }
@@ -146,19 +125,18 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
 
   @override
   modulePageCollectOption() async {
-    var option = CommandLineWriter();
-    if (option.check('-parallel_forward')) {
-      option.nextBoolean(this._parallelForward);
+    var option = Option();
+    option.parallelForward = this._parallelForward;
+    option.command = [];
+    for (var item in this._command) {
+      option.command!.add((
+        method: item.itemConfiguration.identifier,
+        batch: item.batch.value,
+        argument: item.argument.selfLet((it) => ValueExpressionHelper.makeArgumentValueListJson(item.itemConfiguration.argument, it)),
+        expanded: item.expanded.value,
+      ));
     }
-    if (option.check('-command')) {
-      for (var item in this._command) {
-        option.nextString(item.itemConfiguration.identifier);
-        option.nextBoolean(item.batch.value);
-        option.nextString(item.argument.selfLet((it) => JsonHelper.encodeText(ConfigurationHelper.makeArgumentValueListJson(item.itemConfiguration.argument, it), indented: false)));
-        option.nextBoolean(item.expanded.value);
-      }
-    }
-    return option.done();
+    return option;
   }
 
   @override

@@ -1,7 +1,7 @@
 import '/common.dart';
 import '/widget/export.dart';
 import '/utility/platform_integration_manager.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter/services.dart' as lib;
 import 'package:flutter/material.dart' as lib;
 
 // ----------------
@@ -11,9 +11,9 @@ class SystemUiHelper {
   // #region mode
 
   static Future<Void> applyMode(
-    SystemUiMode mode,
+    lib.SystemUiMode mode,
   ) async {
-    await SystemChrome.setEnabledSystemUIMode(mode);
+    await lib.SystemChrome.setEnabledSystemUIMode(mode);
     return;
   }
 
@@ -21,7 +21,7 @@ class SystemUiHelper {
 
   // #region overlay
 
-  static final SystemUiOverlayStyle _overlayStyleForLight = .new(
+  static final lib.SystemUiOverlayStyle _overlayStyleForLight = .new(
     systemNavigationBarColor: ColorSet.transparent,
     systemNavigationBarDividerColor: ColorSet.transparent,
     systemNavigationBarIconBrightness: .dark,
@@ -32,7 +32,7 @@ class SystemUiHelper {
     systemStatusBarContrastEnforced: false,
   );
 
-  static final SystemUiOverlayStyle _overlayStyleForDark = .new(
+  static final lib.SystemUiOverlayStyle _overlayStyleForDark = .new(
     systemNavigationBarColor: ColorSet.transparent,
     systemNavigationBarDividerColor: ColorSet.transparent,
     systemNavigationBarIconBrightness: .light,
@@ -45,17 +45,17 @@ class SystemUiHelper {
 
   // ----------------
 
-  static SystemUiOverlayStyle queryOverlayStyle(
-    Brightness brightness,
+  static lib.SystemUiOverlayStyle queryOverlayStyle(
+    lib.Brightness brightness,
   ) {
     return brightness == .light ? SystemUiHelper._overlayStyleForLight : SystemUiHelper._overlayStyleForDark;
   }
 
   static Future<Void> applyOverlayStyle(
-    Brightness brightness,
+    lib.Brightness brightness,
   ) async {
-    await SystemChrome.restoreSystemUIOverlays();
-    SystemChrome.setSystemUIOverlayStyle(SystemUiHelper.queryOverlayStyle(brightness));
+    await lib.SystemChrome.restoreSystemUIOverlays();
+    lib.SystemChrome.setSystemUIOverlayStyle(SystemUiHelper.queryOverlayStyle(brightness));
     return;
   }
 

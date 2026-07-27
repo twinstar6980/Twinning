@@ -4,15 +4,13 @@ import '/utility/convert_helper.dart';
 import '/utility/storage_path.dart';
 import '/utility/storage_helper.dart';
 import '/utility/miscellaneous_helper.dart';
-import '/utility/command_line_reader.dart';
-import '/utility/command_line_writer.dart';
 import '/widget/export.dart';
 import '/view/home/module_page.dart';
 import '/view/core_resource_shipper/setting.dart';
 import '/view/core_resource_shipper/configuration.dart';
+import '/view/core_resource_shipper/option.dart';
 import '/view/core_resource_shipper/option_item.dart';
 import '/view/core_task_worker/forward_helper.dart' as core_task_worker;
-import 'package:flutter/widgets.dart';
 
 // ----------------
 
@@ -29,7 +27,7 @@ class MainPage extends StatefulWidget {
 
   final Setting       setting;
   final Configuration configuration;
-  final List<String>  option;
+  final Option        option;
 
   // ----------------
 
@@ -155,43 +153,19 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
   }
 
   @override
-  modulePageApplyOption(optionView) async {
-    var optionParallelForward = null as Boolean?;
-    var optionEnableFilter = null as Boolean?;
-    var optionEnableBatch = null as Boolean?;
-    var optionResource = null as List<({StoragePath path})>?;
-    var option = CommandLineReader(optionView);
-    if (option.check('-parallel_forward')) {
-      optionParallelForward = option.nextBoolean();
+  modulePageApplyOption(option) async {
+    option as Option;
+    if (option.parallelForward != null) {
+      this._parallelForward = option.parallelForward!;
     }
-    if (option.check('-enable_filter')) {
-      optionEnableFilter = option.nextBoolean();
+    if (option.enableFilter != null) {
+      this._enableFilter = option.enableFilter!;
     }
-    if (option.check('-enable_batch')) {
-      optionEnableBatch = option.nextBoolean();
+    if (option.enableBatch != null) {
+      this._enableBatch = option.enableBatch!;
     }
-    if (option.check('-resource')) {
-      optionResource = [];
-      while (!option.done()) {
-        optionResource.add((
-          path: option.nextString().selfLet(StoragePath.of),
-        ));
-      }
-    }
-    if (!option.done()) {
-      throw Exception('too many option \'${option.nextStringList().join(' ')}\'');
-    }
-    if (optionParallelForward != null) {
-      this._parallelForward = optionParallelForward;
-    }
-    if (optionEnableFilter != null) {
-      this._enableFilter = optionEnableFilter;
-    }
-    if (optionEnableBatch != null) {
-      this._enableBatch = optionEnableBatch;
-    }
-    if (optionResource != null) {
-      await this._appendResource(optionResource.map((item) => item.path).toList());
+    if (option.resource != null) {
+      await this._appendResource(option.resource!.map((item) => item.path).toList());
     }
     await refreshState(this.setState);
     return;
@@ -199,22 +173,12 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
 
   @override
   modulePageCollectOption() async {
-    var option = CommandLineWriter();
-    if (option.check('-parallel_forward')) {
-      option.nextBoolean(this._parallelForward);
-    }
-    if (option.check('-enable_filter')) {
-      option.nextBoolean(this._enableFilter);
-    }
-    if (option.check('-enable_batch')) {
-      option.nextBoolean(this._enableBatch);
-    }
-    if (option.check('-resource')) {
-      for (var item in this._resource) {
-        option.nextString(item.path.emit());
-      }
-    }
-    return option.done();
+    var option = Option();
+    option.parallelForward = this._parallelForward;
+    option.enableFilter = this._enableFilter;
+    option.enableBatch = this._enableBatch;
+    option.resource = this._resource.map((item) => (path: item.path)).toList();
+    return option;
   }
 
   @override

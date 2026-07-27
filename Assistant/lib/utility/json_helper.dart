@@ -1,7 +1,8 @@
 import '/common.dart';
+import '/utility/json_type.dart';
 import '/utility/storage_path.dart';
 import '/utility/storage_helper.dart';
-import 'dart:convert';
+import 'dart:convert' as lib;
 import 'package:json5/json5.dart' as lib;
 
 // ----------------
@@ -10,20 +11,20 @@ class JsonHelper {
 
   // #region encoding
 
-  static final JsonEncoder _encoder = .withIndent('\t');
+  static final lib.JsonEncoder _encoder = .withIndent('\t');
 
-  static final JsonEncoder _encoderCompact = .new();
+  static final lib.JsonEncoder _encoderCompact = .new();
 
   // ----------------
 
   static String encodeText(
-    Object? value, {
-    Boolean indented = true,
+    JsonNode value, {
+    Boolean  indented = true,
   }) {
     return (indented ? JsonHelper._encoder : JsonHelper._encoderCompact).convert(value);
   }
 
-  static Object? decodeText(
+  static JsonNode decodeText(
     String target,
   ) {
     return lib.json5Decode(target);
@@ -33,13 +34,13 @@ class JsonHelper {
 
   static Future<Void> encodeFile(
     StoragePath target,
-    Object?     value, {
+    JsonNode    value, {
     Boolean     indented = true,
   }) async {
     return await StorageHelper.writeFileText(target, JsonHelper.encodeText(value, indented: indented));
   }
 
-  static Future<Object?> decodeFile(
+  static Future<JsonNode> decodeFile(
     StoragePath target,
   ) async {
     return JsonHelper.decodeText(await StorageHelper.readFileText(target));

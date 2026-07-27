@@ -1,7 +1,6 @@
 import '/common.dart';
 import '/widget/export.dart';
 import '/view/popcap_animation_viewer/setting.dart';
-import 'package:flutter/widgets.dart';
 
 // ----------------
 

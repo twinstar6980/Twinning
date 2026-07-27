@@ -19,13 +19,13 @@ def build(
 	platform: str,
 ) -> tuple[str, str] | None:
 	destination = None
-	if not utility.check_platform(platform, ['windows.amd64', 'linux.amd64', 'macintosh.arm64', 'android.arm64', 'iphone.arm64']):
+	if not utility.project_check_platform(platform, ['windows.amd64', 'linux.amd64', 'macintosh.arm64', 'android.arm64', 'iphone.arm64']):
 		return destination
 	# build
-	utility.build_project_module(build_kernel.__file__, build_kernel.build, platform)
-	utility.build_project_module(build_script.__file__, build_script.build, platform)
-	utility.build_project_module(build_shell.__file__, build_shell.build, platform)
-	utility.build_project_module(build_assistant.__file__, build_assistant.build, platform)
+	utility.project_build_module(build_kernel.__file__, build_kernel.build, platform)
+	utility.project_build_module(build_script.__file__, build_script.build, platform)
+	utility.project_build_module(build_shell.__file__, build_shell.build, platform)
+	utility.project_build_module(build_assistant.__file__, build_assistant.build, platform)
 	# root
 	utility.fs_create_directory(
 		f'{temporary}/artifact',
@@ -66,7 +66,7 @@ def build(
 		if module_distribution_extension == None:
 			continue
 		if module_distribution_extension == '!.zip':
-			utility.unpack_zip(
+			utility.ex_archive_unpack_zip(
 				f'{distribution}/{platform}.{module_name}{'.zip'}',
 				f'{temporary}/artifact/{module_name}',
 				f'{module_name}',
@@ -77,17 +77,17 @@ def build(
 				f'{temporary}/artifact/{module_name}{module_distribution.get(platform)}',
 			)
 	# unembedded
-	if utility.check_platform(platform, ['windows.amd64', 'linux.amd64', 'macintosh.arm64', 'android.arm64', 'iphone.arm64']):
+	if utility.project_check_platform(platform, ['windows.amd64', 'linux.amd64', 'macintosh.arm64', 'android.arm64', 'iphone.arm64']):
 		utility.fs_copy(
 			f'{source}/common/unembedded/assistant',
 			f'{temporary}/artifact/assistant',
 		)
-	if utility.check_platform(platform, ['windows.amd64']):
+	if utility.project_check_platform(platform, ['windows.amd64']):
 		utility.fs_copy(
 			f'{source}/common/unembedded/launch.cmd',
 			f'{temporary}/artifact/launch.cmd',
 		)
-	if utility.check_platform(platform, ['linux.amd64', 'macintosh.arm64', 'android.arm64', 'iphone.arm64']):
+	if utility.project_check_platform(platform, ['linux.amd64', 'macintosh.arm64', 'android.arm64', 'iphone.arm64']):
 		utility.fs_copy(
 			f'{source}/common/unembedded/launch.sh',
 			f'{temporary}/artifact/launch.sh',
@@ -104,13 +104,13 @@ def build(
 		f'{temporary}/artifact/temporary',
 	)
 	# bundle
-	utility.pack_zip(
-		f'{temporary}/artifact',
+	utility.ex_archive_pack_zip(
 		f'{temporary}/artifact.zip',
+		f'{temporary}/artifact',
 		'Twinning',
 	)
 	destination = ('.zip', f'{temporary}/artifact.zip')
 	return destination
 
 if __name__ == '__main__':
-	utility.build_project_bundle(__file__, build, sys.argv[1])
+	utility.project_build_bundle(__file__, build, sys.argv[1])

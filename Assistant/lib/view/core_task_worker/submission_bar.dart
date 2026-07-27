@@ -6,9 +6,7 @@ import '/utility/miscellaneous_helper.dart';
 import '/widget/export.dart';
 import '/view/core_task_worker/submission_type.dart';
 import '/view/core_task_worker/value_expression.dart';
-import 'dart:async';
-import 'package:collection/collection.dart';
-import 'package:flutter/widgets.dart';
+import 'package:collection/collection.dart' as lib;
 
 // ----------------
 
@@ -16,11 +14,13 @@ class _BasicSubmissionBar extends StatelessWidget {
 
   const _BasicSubmissionBar({
     super.key, // ignore: unused_element_parameter
-    required this.completer,
+    required this.terminate,
+    required this.onTerminate,
+    required this.onSubmit,
     required this.history,
     required this.macro,
     required this.value,
-    required this.onSelect,
+    required this.onHistory,
     required this.onMacro,
     required this.icon,
     required this.content,
@@ -28,11 +28,13 @@ class _BasicSubmissionBar extends StatelessWidget {
 
   // ----------------
 
-  final Completer<Void>?                                  completer;
-  final List<({ValueExpression value, Boolean enabled})>? history;
-  final List<({String value, String name})>?              macro;
+  final Boolean?                                          terminate;
+  final Void Function()?                                  onTerminate;
   final ValueExpression?                                  value;
-  final Void Function(ValueExpression value)?             onSelect;
+  final Void Function()?                                  onSubmit;
+  final List<({ValueExpression value, Boolean enabled})>? history;
+  final Void Function(ValueExpression value)?             onHistory;
+  final List<({String value, String name})>?              macro;
   final Void Function(String? value)?                     onMacro;
   final IconData                                          icon;
   final Widget                                            content;
@@ -43,13 +45,15 @@ class _BasicSubmissionBar extends StatelessWidget {
   build(context) {
     return StyledBottomBar.standard(
       primary: StyledFloatingButton.standard(
-        enabled: this.completer != null,
         tooltip: 'Submit',
-        icon: this.completer == null
-          ? StyledProgress.circular()
-          : IconView.of(IconSet.send),
+        icon: IconView.of(this.onSubmit != null ? IconSet.play_circle : !this.terminate! ? IconSet.stop_circle : IconSet.play_circle),
         onPressed: (context) async {
-          this.completer!.complete();
+          if (this.onSubmit != null) {
+            this.onSubmit!();
+          }
+          else {
+            this.onTerminate!();
+          }
         },
       ),
       secondary: [
@@ -76,7 +80,7 @@ class _BasicSubmissionBar extends StatelessWidget {
                 )),
               ));
               if (value != null) {
-                this.onSelect!(value);
+                this.onHistory!(value);
               }
             },
           ),
@@ -86,29 +90,10 @@ class _BasicSubmissionBar extends StatelessWidget {
           this.content.withFlexExpanded(),
         ],
         if (this.value?.macro != null) ...[
-          StyledInput.underlined(
-            type: .text,
-            format: null,
-            hint: 'Macro',
+          StyledInputCombo.underlined(
+            hint: null,
             prefix: null,
             suffix: [
-              StyledIconButton.standard(
-                tooltip: 'Preset',
-                icon: IconView.of(IconSet.flash_on),
-                onPressed: (context) async {
-                  var value = await StyledMenuExtension.show<String>(context, StyledMenu.standard(
-                    position: .under,
-                    content: this.macro!.mapIndexed((index, value) => StyledMenuItem.standard(
-                      value: value.value,
-                      content: StyledText.inherit(tooltip: true, value.name),
-                    )),
-                  ));
-                  if (value != null) {
-                    this.onMacro!(value);
-                  }
-                },
-              ),
-              Gap.horizontal(4),
               StyledIconButton.standard(
                 tooltip: 'Reset',
                 icon: IconView.of(IconSet.adjust, fill: 1),
@@ -117,8 +102,13 @@ class _BasicSubmissionBar extends StatelessWidget {
                 },
               ),
             ],
+            option: [
+              (value: 'terminate', name: 'Terminate'),
+              ...this.macro!,
+            ],
             value: this.value!.macro!,
             onChanged: (context, value) async {
+              value as String;
               this.onMacro!(value);
             },
           ).withFlexExpanded(),
@@ -135,32 +125,44 @@ class _IdleSubmissionBar extends StatelessWidget {
 
   const _IdleSubmissionBar({
     super.key, // ignore: unused_element_parameter
+    required this.terminate,
+    required this.onTerminate,
   });
 
   // ----------------
+
+  final Wrapper<Boolean> terminate;
+  final Void Function()  onTerminate;
 
   // ----------------
 
   @override
   build(context) {
-    return _BasicSubmissionBar(
-      completer: null,
-      history: null,
-      macro: null,
-      value: null,
-      onSelect: null,
-      onMacro: null,
-      icon: IconSet.more_horiz,
-      content: StyledInput.underlined(
-        enabled: false,
-        type: .none,
-        format: null,
-        hint: null,
-        prefix: null,
-        suffix: null,
-        value: '',
-        onChanged: (context, value) async {
+    return StatefulBuilder(
+      builder: (context, setState) => _BasicSubmissionBar(
+        terminate: this.terminate.value,
+        onTerminate: () async {
+          this.onTerminate();
+          await refreshState(setState);
         },
+        value: null,
+        onSubmit: null,
+        history: null,
+        onHistory: null,
+        macro: null,
+        onMacro: null,
+        icon: IconSet.more_horiz,
+        content: StyledInput.underlined(
+          enabled: false,
+          type: .none,
+          format: null,
+          hint: null,
+          prefix: null,
+          suffix: null,
+          value: '',
+          onChanged: (context, value) async {
+          },
+        ),
       ),
     );
   }
@@ -171,16 +173,16 @@ class _PauseSubmissionBar extends StatelessWidget {
 
   const _PauseSubmissionBar({
     super.key, // ignore: unused_element_parameter
-    required this.completer,
     required this.history,
     required this.value,
+    required this.onSubmit,
   });
 
   // ----------------
 
-  final Completer<Void>           completer;
   final List<PauseExpression>     history;
   final Wrapper<PauseExpression?> value;
+  final Void Function()           onSubmit;
 
   // ----------------
 
@@ -188,16 +190,17 @@ class _PauseSubmissionBar extends StatelessWidget {
   build(context) {
     return StatefulBuilder(
       builder: (context, setState) => _BasicSubmissionBar(
-        completer: this.completer,
-        history: this.history.map((item) => (value: item, enabled: true)).toList(),
-        macro: [
-        ],
+        terminate: null,
+        onTerminate: null,
         value: this.value.value,
-        onSelect: (value) async {
-          value as PauseExpression;
-          this.value.value = value;
+        onSubmit: this.onSubmit,
+        history: this.history.map((item) => (value: item, enabled: true)).toList(),
+        onHistory: (value) async {
+          this.value.value = value.as();
           await refreshState(setState);
         },
+        macro: [
+        ],
         onMacro: (value) async {
           this.value.value = value == null ? null : .new(value);
           await refreshState(setState);
@@ -210,11 +213,10 @@ class _PauseSubmissionBar extends StatelessWidget {
           prefix: null,
           suffix: [
             StyledIconButton.standard(
-              enabled: false,
               tooltip: 'Macro',
-              icon: IconView.of(IconSet.adjust, color: StyledColor.disabled.query(context)),
+              icon: IconView.of(IconSet.adjust),
               onPressed: (context) async {
-                this.value.value = .new('');
+                this.value.value = .new('terminate');
                 await refreshState(setState);
               },
             ),
@@ -233,16 +235,17 @@ class _BooleanSubmissionBar extends StatelessWidget {
 
   const _BooleanSubmissionBar({
     super.key, // ignore: unused_element_parameter
-    required this.completer,
     required this.history,
     required this.value,
+    required this.onSubmit,
   });
 
   // ----------------
 
-  final Completer<Void>             completer;
+
   final List<BooleanExpression>     history;
   final Wrapper<BooleanExpression?> value;
+  final Void Function()             onSubmit;
 
   // ----------------
 
@@ -250,16 +253,17 @@ class _BooleanSubmissionBar extends StatelessWidget {
   build(context) {
     return StatefulBuilder(
       builder: (context, setState) => _BasicSubmissionBar(
-        completer: this.completer,
-        history: this.history.map((item) => (value: item, enabled: true)).toList(),
-        macro: [
-        ],
+        terminate: null,
+        onTerminate: null,
         value: this.value.value,
-        onSelect: (value) async {
-          value as BooleanExpression;
-          this.value.value = value;
+        onSubmit: this.onSubmit,
+        history: this.history.map((item) => (value: item, enabled: true)).toList(),
+        onHistory: (value) async {
+          this.value.value = value.as();
           await refreshState(setState);
         },
+        macro: [
+        ],
         onMacro: (value) async {
           this.value.value = value == null ? null : .new(value, false);
           await refreshState(setState);
@@ -297,7 +301,7 @@ class _BooleanSubmissionBar extends StatelessWidget {
               tooltip: 'Macro',
               icon: IconView.of(IconSet.adjust),
               onPressed: (context) async {
-                this.value.value = .new('', false);
+                this.value.value = .new('terminate', false);
                 await refreshState(setState);
               },
             ),
@@ -325,16 +329,16 @@ class _IntegerSubmissionBar extends StatelessWidget {
 
   const _IntegerSubmissionBar({
     super.key, // ignore: unused_element_parameter
-    required this.completer,
     required this.history,
     required this.value,
+    required this.onSubmit,
   });
 
   // ----------------
 
-  final Completer<Void>             completer;
   final List<IntegerExpression>     history;
   final Wrapper<IntegerExpression?> value;
+  final Void Function()             onSubmit;
 
   // ----------------
 
@@ -342,16 +346,17 @@ class _IntegerSubmissionBar extends StatelessWidget {
   build(context) {
     return StatefulBuilder(
       builder: (context, setState) => _BasicSubmissionBar(
-        completer: this.completer,
-        history: this.history.map((item) => (value: item, enabled: true)).toList(),
-        macro: [
-        ],
+        terminate: null,
+        onTerminate: null,
         value: this.value.value,
-        onSelect: (value) async {
-          value as IntegerExpression;
-          this.value.value = value;
+        onSubmit: this.onSubmit,
+        history: this.history.map((item) => (value: item, enabled: true)).toList(),
+        onHistory: (value) async {
+          this.value.value = value.as();
           await refreshState(setState);
         },
+        macro: [
+        ],
         onMacro: (value) async {
           this.value.value = value == null ? null : .new(value, 0);
           await refreshState(setState);
@@ -367,7 +372,7 @@ class _IntegerSubmissionBar extends StatelessWidget {
               tooltip: 'Macro',
               icon: IconView.of(IconSet.adjust),
               onPressed: (context) async {
-                this.value.value = .new('', 0);
+                this.value.value = .new('terminate', 0);
                 await refreshState(setState);
               },
             ),
@@ -396,16 +401,16 @@ class _FloaterSubmissionBar extends StatelessWidget {
 
   const _FloaterSubmissionBar({
     super.key, // ignore: unused_element_parameter
-    required this.completer,
     required this.history,
     required this.value,
+    required this.onSubmit,
   });
 
   // ----------------
 
-  final Completer<Void>             completer;
   final List<FloaterExpression>     history;
   final Wrapper<FloaterExpression?> value;
+  final Void Function()             onSubmit;
 
   // ----------------
 
@@ -413,16 +418,17 @@ class _FloaterSubmissionBar extends StatelessWidget {
   build(context) {
     return StatefulBuilder(
       builder: (context, setState) => _BasicSubmissionBar(
-        completer: this.completer,
-        history: this.history.map((item) => (value: item, enabled: true)).toList(),
-        macro: [
-        ],
+        terminate: null,
+        onTerminate: null,
         value: this.value.value,
-        onSelect: (value) async {
-          value as FloaterExpression;
-          this.value.value = value;
+        onSubmit: this.onSubmit,
+        history: this.history.map((item) => (value: item, enabled: true)).toList(),
+        onHistory: (value) async {
+          this.value.value = value.as();
           await refreshState(setState);
         },
+        macro: [
+        ],
         onMacro: (value) async {
           this.value.value = value == null ? null : .new(value, 0.0);
           await refreshState(setState);
@@ -438,7 +444,7 @@ class _FloaterSubmissionBar extends StatelessWidget {
               tooltip: 'Macro',
               icon: IconView.of(IconSet.adjust),
               onPressed: (context) async {
-                this.value.value = .new('', 0.0);
+                this.value.value = .new('terminate', 0.0);
                 await refreshState(setState);
               },
             ),
@@ -467,16 +473,16 @@ class _StringSubmissionBar extends StatelessWidget {
 
   const _StringSubmissionBar({
     super.key, // ignore: unused_element_parameter
-    required this.completer,
     required this.history,
     required this.value,
+    required this.onSubmit,
   });
 
   // ----------------
 
-  final Completer<Void>            completer;
   final List<StringExpression>     history;
   final Wrapper<StringExpression?> value;
+  final Void Function()            onSubmit;
 
   // ----------------
 
@@ -484,17 +490,18 @@ class _StringSubmissionBar extends StatelessWidget {
   build(context) {
     return StatefulBuilder(
       builder: (context, setState) => _BasicSubmissionBar(
-        completer: this.completer,
+        terminate: null,
+        onTerminate: null,
+        value: this.value.value,
+        onSubmit: this.onSubmit,
         history: this.history.map((item) => (value: item, enabled: true)).toList(),
+        onHistory: (value) async {
+          this.value.value = value.as();
+          await refreshState(setState);
+        },
         macro: [
           (value: 'empty', name: 'Empty'),
         ],
-        value: this.value.value,
-        onSelect: (value) async {
-          value as StringExpression;
-          this.value.value = value;
-          await refreshState(setState);
-        },
         onMacro: (value) async {
           this.value.value = value == null ? null : .new(value, '');
           await refreshState(setState);
@@ -510,7 +517,7 @@ class _StringSubmissionBar extends StatelessWidget {
               tooltip: 'Macro',
               icon: IconView.of(IconSet.adjust),
               onPressed: (context) async {
-                this.value.value = .new('', '');
+                this.value.value = .new('terminate', '');
                 await refreshState(setState);
               },
             ),
@@ -536,16 +543,16 @@ class _SizeSubmissionBar extends StatelessWidget {
 
   const _SizeSubmissionBar({
     super.key, // ignore: unused_element_parameter
-    required this.completer,
     required this.history,
     required this.value,
+    required this.onSubmit,
   });
 
   // ----------------
 
-  final Completer<Void>          completer;
   final List<SizeExpression>     history;
   final Wrapper<SizeExpression?> value;
+  final Void Function()          onSubmit;
 
   // ----------------
 
@@ -553,16 +560,17 @@ class _SizeSubmissionBar extends StatelessWidget {
   build(context) {
     return StatefulBuilder(
       builder: (context, setState) => _BasicSubmissionBar(
-        completer: this.completer,
-        history: this.history.map((item) => (value: item, enabled: true)).toList(),
-        macro: [
-        ],
+        terminate: null,
+        onTerminate: null,
         value: this.value.value,
-        onSelect: (value) async {
-          value as SizeExpression;
-          this.value.value = value;
+        onSubmit: this.onSubmit,
+        history: this.history.map((item) => (value: item, enabled: true)).toList(),
+        onHistory: (value) async {
+          this.value.value = value.as();
           await refreshState(setState);
         },
+        macro: [
+        ],
         onMacro: (value) async {
           this.value.value = value == null ? null : .new(value, 0.0, 0);
           await refreshState(setState);
@@ -602,7 +610,7 @@ class _SizeSubmissionBar extends StatelessWidget {
               tooltip: 'Macro',
               icon: IconView.of(IconSet.adjust),
               onPressed: (context) async {
-                this.value.value = .new('', 0.0, 0);
+                this.value.value = .new('terminate', 0.0, 0);
                 await refreshState(setState);
               },
             ),
@@ -631,16 +639,16 @@ class _PathSubmissionBar extends StatelessWidget {
 
   const _PathSubmissionBar({
     super.key, // ignore: unused_element_parameter
-    required this.completer,
     required this.history,
     required this.value,
+    required this.onSubmit,
   });
 
   // ----------------
 
-  final Completer<Void>          completer;
   final List<PathExpression>     history;
   final Wrapper<PathExpression?> value;
+  final Void Function()          onSubmit;
 
   // ----------------
 
@@ -648,20 +656,21 @@ class _PathSubmissionBar extends StatelessWidget {
   build(context) {
     return StatefulBuilder(
       builder: (context, setState) => _BasicSubmissionBar(
-        completer: this.completer,
+        terminate: null,
+        onTerminate: null,
+        value: this.value.value,
+        onSubmit: this.onSubmit,
         history: this.history.map((item) => (value: item, enabled: true)).toList(),
+        onHistory: (value) async {
+          this.value.value = value.as();
+          await refreshState(setState);
+        },
         macro: [
           (value: 'generate', name: 'Generate'),
           (value: 'move', name: 'Move'),
           (value: 'delete', name: 'Delete'),
           (value: 'overwrite', name: 'Overwrite'),
         ],
-        value: this.value.value,
-        onSelect: (value) async {
-          value as PathExpression;
-          this.value.value = value;
-          await refreshState(setState);
-        },
         onMacro: (value) async {
           this.value.value = value == null ? null : .new(value, .new());
           await refreshState(setState);
@@ -689,7 +698,7 @@ class _PathSubmissionBar extends StatelessWidget {
               tooltip: 'Macro',
               icon: IconView.of(IconSet.adjust),
               onPressed: (context) async {
-                this.value.value = .new('', .new());
+                this.value.value = .new('terminate', .new());
                 await refreshState(setState);
               },
             ),
@@ -720,18 +729,18 @@ class _EnumerationSubmissionBar extends StatelessWidget {
 
   const _EnumerationSubmissionBar({
     super.key, // ignore: unused_element_parameter
-    required this.completer,
     required this.option,
     required this.history,
     required this.value,
+    required this.onSubmit,
   });
 
   // ----------------
 
-  final Completer<Void>                 completer;
   final List<String>                    option;
   final List<EnumerationExpression>     history;
   final Wrapper<EnumerationExpression?> value;
+  final Void Function()                 onSubmit;
 
   // ----------------
 
@@ -739,16 +748,17 @@ class _EnumerationSubmissionBar extends StatelessWidget {
   build(context) {
     return StatefulBuilder(
       builder: (context, setState) => _BasicSubmissionBar(
-        completer: this.completer,
-        history: this.history.map((item) => (value: item, enabled: this.option.contains(item.item))).toList(),
-        macro: [
-        ],
+        terminate: null,
+        onTerminate: null,
         value: this.value.value,
-        onSelect: (value) async {
-          value as EnumerationExpression;
-          this.value.value = value;
+        onSubmit: this.onSubmit,
+        history: this.history.map((item) => (value: item, enabled: this.option.contains(item.item))).toList(),
+        onHistory: (value) async {
+          this.value.value = value.as();
           await refreshState(setState);
         },
+        macro: [
+        ],
         onMacro: (value) async {
           this.value.value = value == null ? null : .new(value, '');
           await refreshState(setState);
@@ -771,7 +781,7 @@ class _EnumerationSubmissionBar extends StatelessWidget {
               tooltip: 'Macro',
               icon: IconView.of(IconSet.adjust),
               onPressed: (context) async {
-                this.value.value = .new('', '');
+                this.value.value = .new('terminate', '');
                 await refreshState(setState);
               },
             ),
@@ -800,7 +810,9 @@ class SubmissionBar extends StatelessWidget {
     required this.option,
     required this.history,
     required this.value,
-    required this.completer,
+    required this.onSubmit,
+    required this.terminate,
+    required this.onTerminate,
   });
 
   // ----------------
@@ -809,59 +821,64 @@ class SubmissionBar extends StatelessWidget {
   final List<String>?              option;
   final List<ValueExpression>?     history;
   final Wrapper<ValueExpression?>? value;
-  final Completer<Void>?           completer;
+  final Void Function()?           onSubmit;
+  final Wrapper<Boolean>?          terminate;
+  final Void Function()?           onTerminate;
 
   // ----------------
 
   @override
   build(context) {
     if (this.type == null) {
-      assertTest(this.option == null && this.history == null && this.value == null && this.completer == null);
-      return _IdleSubmissionBar();
+      assertTest(this.option == null && this.history == null && this.value == null && this.onSubmit == null && this.terminate != null && this.onTerminate != null);
+      return _IdleSubmissionBar(
+        terminate: this.terminate!,
+        onTerminate: this.onTerminate!,
+      );
     }
     else {
-      assertTest(this.option != null && this.history != null && this.value != null && this.completer != null);
+      assertTest(this.option != null && this.history != null && this.value != null && this.onSubmit != null && this.terminate == null && this.onTerminate == null);
       return switch (this.type!) {
         .pause => _PauseSubmissionBar(
-          completer: this.completer!,
           history: this.history!.cast(),
           value: this.value!.cast(),
+          onSubmit: this.onSubmit!,
         ),
         .boolean => _BooleanSubmissionBar(
-          completer: this.completer!,
           history: this.history!.cast(),
           value: this.value!.cast(),
+          onSubmit: this.onSubmit!,
         ),
         .integer => _IntegerSubmissionBar(
-          completer: this.completer!,
           history: this.history!.cast(),
           value: this.value!.cast(),
+          onSubmit: this.onSubmit!,
         ),
         .floater => _FloaterSubmissionBar(
-          completer: this.completer!,
           history: this.history!.cast(),
           value: this.value!.cast(),
+          onSubmit: this.onSubmit!,
         ),
         .string => _StringSubmissionBar(
-          completer: this.completer!,
           history: this.history!.cast(),
           value: this.value!.cast(),
+          onSubmit: this.onSubmit!,
         ),
         .size => _SizeSubmissionBar(
-          completer: this.completer!,
           history: this.history!.cast(),
           value: this.value!.cast(),
+          onSubmit: this.onSubmit!,
         ),
         .path => _PathSubmissionBar(
-          completer: this.completer!,
           history: this.history!.cast(),
           value: this.value!.cast(),
+          onSubmit: this.onSubmit!,
         ),
         .enumeration => _EnumerationSubmissionBar(
-          completer: this.completer!,
           option: this.option!,
           history: this.history!.cast(),
           value: this.value!.cast(),
+          onSubmit: this.onSubmit!,
         ),
       };
     }

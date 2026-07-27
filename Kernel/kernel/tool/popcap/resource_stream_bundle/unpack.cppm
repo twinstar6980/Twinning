@@ -250,10 +250,12 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 					ResourceStreamGroup::Unpack<packet_version>::process(packet_stream, packet_package_definition, !resource_directory.has() ? (k_null_optional) : (make_optional_of(make_formatted_path(resource_directory.get()))));
 					assert_test(packet_stream.full());
 					if (packet_file.has()) {
-						if (!Storage::exist_file(make_formatted_path(packet_file.get()))) {
-							Storage::create_file(make_formatted_path(packet_file.get()));
+						auto packet_path = make_formatted_path(packet_file.get());
+						if (!Storage::exist_file(packet_path)) {
+							Storage::create_file(packet_path);
 						}
-						Storage::write_file(make_formatted_path(packet_file.get()), packet_data);
+						Storage::resize_file(packet_path, packet_data.size());
+						Storage::write_file(packet_path, 0_sz, packet_data);
 					}
 					subgroup_definition.compression = packet_package_definition.compression;
 					subgroup_definition.resource.allocate_full(packet_package_definition.resource.size());

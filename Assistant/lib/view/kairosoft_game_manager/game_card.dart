@@ -2,7 +2,6 @@ import '/common.dart';
 import '/widget/export.dart';
 import '/view/kairosoft_game_manager/game_helper.dart';
 import '/view/kairosoft_game_manager/game_record_panel.dart';
-import 'package:flutter/widgets.dart';
 
 // ----------------
 

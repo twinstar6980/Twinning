@@ -333,6 +333,19 @@
 
 #pragma endregion
 
+#pragma region string
+
+#define M_use_nts_n_of(_value)\
+	make_null_terminated_string(_value)
+
+#define M_use_ntsp_n_of(_value)\
+	unmake_pointer_unsafe<char>(make_null_terminated_string(_value).begin())
+
+#define M_use_ntsp_w_of(_value)\
+	unmake_pointer_unsafe<wchar_t>(make_null_terminated_string(SystemNativeString::wide_from_utf8(unsafe_cast<BasicString<CharacterN>>(_value))).begin())
+
+#pragma endregion
+
 #pragma region stream
 
 #define M_use_zps(_name, _source)\

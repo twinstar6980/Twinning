@@ -9,17 +9,17 @@ import common.script.utility as utility
 def test(
 	platform: str,
 ) -> None:
-	utility.ensure_platform(platform, ['windows.amd64', 'linux.amd64', 'macintosh.arm64'])
-	source = utility.locate_project()
-	local = utility.locate_project_local()
-	test = utility.locate_project_local('test')
+	utility.project_ensure_platform(platform, ['windows.amd64', 'linux.amd64', 'macintosh.arm64'])
+	source = utility.project_locate_root()
+	local = utility.project_locate_local()
+	test = utility.project_locate_local('test')
 	utility.fs_remove(
 		f'{test}',
 	)
 	utility.fs_create_directory(
 		f'{test}',
 	)
-	if utility.check_platform(platform, ['windows.amd64']):
+	if utility.project_check_platform(platform, ['windows.amd64']):
 		utility.fs_create_link(
 			f'{test}/kernel',
 			f'{source}/Kernel/.build/windows/x64/release/kernel.dll',
@@ -45,7 +45,7 @@ def test(
 			f'{source}/common/unembedded/launch.cmd',
 			False,
 		)
-	if utility.check_platform(platform, ['linux.amd64']):
+	if utility.project_check_platform(platform, ['linux.amd64']):
 		utility.fs_create_link(
 			f'{test}/kernel',
 			f'{source}/Kernel/.build/linux/x86_64/release/kernel.so',
@@ -71,7 +71,7 @@ def test(
 			f'{source}/common/unembedded/launch.sh',
 			False,
 		)
-	if utility.check_platform(platform, ['macintosh.arm64']):
+	if utility.project_check_platform(platform, ['macintosh.arm64']):
 		utility.fs_create_link(
 			f'{test}/kernel',
 			f'{source}/Kernel/.build/macosx/arm64/release/libkernel.dylib',

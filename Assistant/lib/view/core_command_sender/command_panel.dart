@@ -4,8 +4,7 @@ import '/widget/export.dart';
 import '/view/core_command_sender/configuration.dart';
 import '/view/core_command_sender/value_expression.dart';
 import '/view/core_command_sender/argument_bar.dart';
-import 'package:collection/collection.dart';
-import 'package:flutter/widgets.dart';
+import 'package:collection/collection.dart' as lib;
 
 // ----------------
 
@@ -85,7 +84,7 @@ class CommandPanel extends StatelessWidget {
             child: ArgumentBar(
               name: argumentConfiguration.name,
               type: argumentConfiguration.type,
-              option: argumentConfiguration.option?.map((value) => ConfigurationHelper.parseArgumentValueJson(argumentConfiguration.type, value)).toList(),
+              option: argumentConfiguration.option?.map((value) => ValueExpressionHelper.parseArgumentValueJson(argumentConfiguration.type, value)).toList(),
               value: this.argument[argumentIndex],
               batch: this.batch.value && (this.itemConfiguration.batch?.contains(argumentConfiguration.identifier) ?? false),
               expanded: this.expanded.value,
@@ -117,7 +116,7 @@ class CommandPanel extends StatelessWidget {
                     for (var argument in preset.argument.entries) {
                       var argumentIndex = this.itemConfiguration.argument.indexWhere((value) => value.identifier == argument.key);
                       assertTest(argumentIndex != -1);
-                      this.argument[argumentIndex] = .of(ConfigurationHelper.parseArgumentValueJson(this.itemConfiguration.argument[argumentIndex].type, argument.value));
+                      this.argument[argumentIndex] = .of(ValueExpressionHelper.parseArgumentValueJson(this.itemConfiguration.argument[argumentIndex].type, argument.value));
                     }
                     await refreshState(setState);
                   }

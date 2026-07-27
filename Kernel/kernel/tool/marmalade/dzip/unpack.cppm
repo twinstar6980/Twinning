@@ -149,13 +149,12 @@ export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 				}
 				assert_test(!chunk_data_list.empty() && Range::all_of(chunk_data_list.tail(chunk_data_list.size() - 1_sz), [&](auto & element) -> auto { return element == chunk_data_list.first(); }));
 				if (resource_directory.has()) {
-					if (!Storage::exist_directory(resource_directory.get())) {
-						Storage::create_directory(resource_directory.get());
+					auto resource_path = resource_directory.get().push(resource_definition.path);
+					if (!Storage::exist_file(resource_path)) {
+						Storage::create_file(resource_path);
 					}
-					if (!Storage::exist_file(resource_directory.get().push(resource_definition.path))) {
-						Storage::create_file(resource_directory.get().push(resource_definition.path));
-					}
-					Storage::write_file(resource_directory.get().push(resource_definition.path), chunk_data_list.first());
+					Storage::resize_file(resource_path, chunk_data_list.first().size());
+					Storage::write_file(resource_path, 0_sz, chunk_data_list.first());
 				}
 			}
 			data.set_position(package_data_end_position);

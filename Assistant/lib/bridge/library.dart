@@ -1,7 +1,7 @@
 import '/common.dart';
 import '/utility/storage_path.dart';
 import '/bridge/service.dart';
-import 'dart:ffi' as ffi;
+import 'dart:ffi' as lib;
 
 // ----------------
 
@@ -9,9 +9,9 @@ class Library {
 
   // #region constructor
 
-  ffi.DynamicLibrary? _handle;
+  lib.DynamicLibrary? _handle;
 
-  ffi.Pointer<Service>? _symbol;
+  lib.Pointer<Service>? _symbol;
 
   // ----------------
 
@@ -39,8 +39,8 @@ class Library {
     if (SystemChecker.isWindows) {
       pathString += '.';
     }
-    var handle = ffi.DynamicLibrary.open(pathString);
-    var symbol = null as ffi.Pointer<Service>?;
+    var handle = lib.DynamicLibrary.open(pathString);
+    var symbol = null as lib.Pointer<Service>?;
     try {
       symbol = handle.lookup<Service>('_ZN8Twinning6Kernel9Interface7serviceE');
     }
@@ -58,7 +58,7 @@ class Library {
   ) {
     assertTest(this.state());
     this._symbol!.ref.finalize.asFunction<Void Function()>()();
-    this._symbol = ffi.nullptr;
+    this._symbol = lib.nullptr;
     this._handle!.close();
     this._handle = null;
     return;

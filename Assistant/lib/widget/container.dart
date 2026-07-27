@@ -1,8 +1,9 @@
 import '/common.dart';
+import '/widget/common.dart';
 import 'dart:ui' as lib;
-import 'package:flutter/gestures.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/gestures.dart' as lib;
+import 'package:flutter/rendering.dart' as lib;
+import 'package:flutter/widgets.dart' as widgets;
 import 'package:flutter/material.dart' as material;
 import 'package:single_child_two_dimensional_scroll_view/single_child_two_dimensional_scroll_view.dart' as lib;
 
@@ -59,10 +60,10 @@ class Gap extends StatelessWidget {
 
   @override
   build(context) {
-    return SizedBox(
+    return widgets.SizedBox(
       width: this.width,
       height: this.height,
-    ).selfLet((it) => this.weight == null ? it : Expanded(
+    ).selfLet((it) => this.weight == null ? it : widgets.Expanded(
       flex: this.weight!,
       child: it,
     ));
@@ -72,7 +73,9 @@ class Gap extends StatelessWidget {
 
 // ----------------
 
-typedef BoxContainerAlign = Alignment;
+typedef BoxContainerAlign = lib.Alignment;
+
+typedef BoxContainerTransformAlign = lib.AlignmentGeometry;
 
 class BoxContainer extends StatelessWidget {
 
@@ -92,18 +95,18 @@ class BoxContainer extends StatelessWidget {
   });
 
   const BoxContainer.of({
-    Key?                  key = null,
-    BoxConstraints?       constraints = null,
-    EdgeInsetsGeometry?   margin = null,
-    EdgeInsetsGeometry?   padding = null,
-    BoxContainerAlign?    align = null,
-    Matrix4?              transform = null,
-    AlignmentGeometry?    transformAlign = null,
-    Color?                color = null,
-    ColorFilter?          colorFilter = null,
-    Floater?              opacity = null,
-    BorderRadiusGeometry? borderRadius = null,
-    required Widget?      child,
+    Key?                        key = null,
+    BoxConstraints?             constraints = null,
+    EdgeInsetsGeometry?         margin = null,
+    EdgeInsetsGeometry?         padding = null,
+    BoxContainerAlign?          align = null,
+    Matrix4?                    transform = null,
+    BoxContainerTransformAlign? transformAlign = null,
+    Color?                      color = null,
+    ColorFilter?                colorFilter = null,
+    Floater?                    opacity = null,
+    BorderRadiusGeometry?       borderRadius = null,
+    required Widget?            child,
   }) : this._(
     key: key,
     constraints: constraints,
@@ -138,23 +141,23 @@ class BoxContainer extends StatelessWidget {
 
   // ----------------
 
-  final BoxConstraints?       constraints;
-  final EdgeInsetsGeometry?   margin;
-  final EdgeInsetsGeometry?   padding;
-  final BoxContainerAlign?    align;
-  final Matrix4?              transform;
-  final AlignmentGeometry?    transformAlign;
-  final Color?                color;
-  final ColorFilter?          colorFilter;
-  final Floater?              opacity;
-  final BorderRadiusGeometry? borderRadius;
-  final Widget?               child;
+  final BoxConstraints?             constraints;
+  final EdgeInsetsGeometry?         margin;
+  final EdgeInsetsGeometry?         padding;
+  final BoxContainerAlign?          align;
+  final Matrix4?                    transform;
+  final BoxContainerTransformAlign? transformAlign;
+  final Color?                      color;
+  final ColorFilter?                colorFilter;
+  final Floater?                    opacity;
+  final BorderRadiusGeometry?       borderRadius;
+  final Widget?                     child;
 
   // ----------------
 
   @override
   build(context) {
-    return Container(
+    return widgets.Container(
       constraints: this.constraints,
       margin: this.margin,
       padding: this.padding,
@@ -163,13 +166,13 @@ class BoxContainer extends StatelessWidget {
       transformAlignment: this.transformAlign,
       color: this.color,
       child: this.child,
-    ).selfLet((it) => this.colorFilter == null ? it : ColorFiltered(
+    ).selfLet((it) => this.colorFilter == null ? it : widgets.ColorFiltered(
       colorFilter: this.colorFilter!,
       child: it,
-    )).selfLet((it) => this.opacity == null ? it : Opacity(
+    )).selfLet((it) => this.opacity == null ? it : widgets.Opacity(
       opacity: this.opacity!,
       child: it,
-    )).selfLet((it) => this.borderRadius == null ? it : ClipRRect(
+    )).selfLet((it) => this.borderRadius == null ? it : widgets.ClipRRect(
       borderRadius: this.borderRadius!,
       child: it,
     ));
@@ -179,35 +182,42 @@ class BoxContainer extends StatelessWidget {
 
 // ----------------
 
-typedef StackContainerFit = StackFit;
+typedef StackContainerAlign = lib.AlignmentGeometry;
+
+typedef StackContainerFit = lib.StackFit;
 
 class StackContainer extends StatelessWidget {
 
   const StackContainer._({
     super.key,
+    required this.align,
     required this.fit,
     required this.index,
     required this.children,
   });
 
   const StackContainer.of(
-    Iterable<Widget>  children, {
-    Key?              key = null,
-    StackContainerFit fit = .loose,
+    Iterable<Widget>    children, {
+    Key?                key = null,
+    StackContainerAlign align = .topStart,
+    StackContainerFit   fit = .loose,
   }) : this._(
     key: key,
+    align: align,
     fit: fit,
     index: null,
     children: children,
   );
 
   const StackContainer.at(
-    Integer           index,
-    Iterable<Widget>  children, {
-    Key?              key = null,
-    StackContainerFit fit = .loose,
+    Integer             index,
+    Iterable<Widget>    children, {
+    Key?                key = null,
+    StackContainerAlign align = .topStart,
+    StackContainerFit   fit = .loose,
   }) : this._(
     key: key,
+    align: align,
     fit: fit,
     index: index,
     children: children,
@@ -215,19 +225,24 @@ class StackContainer extends StatelessWidget {
 
   // ----------------
 
-  final StackContainerFit fit;
-  final Integer?          index;
-  final Iterable<Widget>  children;
+  final StackContainerAlign align;
+  final StackContainerFit   fit;
+  final Integer?            index;
+  final Iterable<Widget>    children;
 
   // ----------------
 
   @override
   build(context) {
     return this.index == null
-      ? Stack(
+      ? widgets.Stack(
+        alignment: this.align,
+        fit: this.fit,
         children: this.children.toList(),
       )
-      : IndexedStack(
+      : widgets.IndexedStack(
+        alignment: this.align,
+        sizing: this.fit,
         index: this.index!,
         children: this.children.toList(),
       );
@@ -264,7 +279,7 @@ class FlexExpanded extends StatelessWidget {
 
   @override
   build(context) {
-    return Expanded(
+    return widgets.Expanded(
       flex: this.weight,
       child: this.child,
     );
@@ -288,9 +303,9 @@ extension FlexExpandedWidgetExtension on Widget {
 
 // ----------------
 
-typedef FlexContainerDirection = Axis;
+typedef FlexContainerDirection = lib.Axis;
 
-typedef FlexContainerCrossAlign = CrossAxisAlignment;
+typedef FlexContainerCrossAlign = lib.CrossAxisAlignment;
 
 class FlexContainer extends StatelessWidget {
 
@@ -345,7 +360,7 @@ class FlexContainer extends StatelessWidget {
 
   @override
   build(context) {
-    return Flex(
+    return widgets.Flex(
       direction: this.direction,
       mainAxisSize: !this.mainStretch ? .min : .max,
       mainAxisAlignment: .start,
@@ -388,7 +403,7 @@ class VisibilityArea extends StatelessWidget {
 
   @override
   build(context) {
-    return Visibility(
+    return widgets.Visibility(
       visible: this.enabled,
       child: this.child,
     );
@@ -435,7 +450,7 @@ class ImpenetrableArea extends StatelessWidget {
 
   @override
   build(context) {
-    return IgnorePointer(
+    return widgets.IgnorePointer(
       ignoring: true,
       child: this.child,
     );
@@ -535,14 +550,14 @@ class ScrollableArea extends StatelessWidget {
       return this.child;
     }
     if (this.horizontal != null && this.vertical == null) {
-      return SingleChildScrollView(
+      return widgets.SingleChildScrollView(
         scrollDirection: .horizontal,
         controller: this.horizontal,
         child: this.child,
       );
     }
     if (this.horizontal == null && this.vertical != null) {
-      return SingleChildScrollView(
+      return widgets.SingleChildScrollView(
         scrollDirection: .vertical,
         controller: this.vertical,
         child: this.child,
@@ -647,7 +662,7 @@ class TextStyleInheritedArea extends StatelessWidget {
 
   @override
   build(context) {
-    return DefaultTextStyle(
+    return widgets.DefaultTextStyle(
       style: this.style,
       textAlign: this.align,
       child: this.child,
@@ -704,17 +719,17 @@ class ListContainer extends StatelessWidget {
   @override
   build(context) {
     return this.onReorder == null
-      ? ListView.builder(
+      ? widgets.ListView.builder(
         shrinkWrap: this.shrink,
-        physics: !this.shrink ? null : NeverScrollableScrollPhysics(),
+        physics: !this.shrink ? null : widgets.NeverScrollableScrollPhysics(),
         padding: this.padding,
         controller: this.controller,
         itemCount: this.itemCount,
         itemBuilder: this.itemBuilder,
       )
-      : ReorderableList(
+      : widgets.ReorderableList(
         shrinkWrap: this.shrink,
-        physics: !this.shrink ? null : NeverScrollableScrollPhysics(),
+        physics: !this.shrink ? null : widgets.NeverScrollableScrollPhysics(),
         padding: this.padding,
         controller: this.controller,
         itemCount: this.itemCount,
@@ -752,7 +767,7 @@ class ReorderableItemContainer extends StatelessWidget {
 
   @override
   build(context) {
-    return ReorderableDragStartListener(
+    return widgets.ReorderableDragStartListener(
       index: this.index,
       child: this.child,
     );
@@ -810,7 +825,7 @@ class IconView extends StatelessWidget {
 
   @override
   build(context) {
-    return Icon(
+    return widgets.Icon(
       this.icon,
       size: this.size,
       fill: this.fill,
@@ -819,6 +834,8 @@ class IconView extends StatelessWidget {
   }
 
 }
+
+typedef ImageViewFit = lib.BoxFit;
 
 class ImageView extends StatelessWidget {
 
@@ -832,7 +849,7 @@ class ImageView extends StatelessWidget {
 
   const ImageView.of({
     Key?               key = null,
-    BoxFit?            fit = null,
+    ImageViewFit?      fit = null,
     Floater?           width = null,
     Floater?           height = null,
     required lib.Image source,
@@ -846,16 +863,16 @@ class ImageView extends StatelessWidget {
 
   // ----------------
 
-  final BoxFit?   fit;
-  final Floater?  width;
-  final Floater?  height;
-  final lib.Image source;
+  final ImageViewFit? fit;
+  final Floater?      width;
+  final Floater?      height;
+  final lib.Image     source;
 
   // ----------------
 
   @override
   build(context) {
-    return RawImage(
+    return widgets.RawImage(
       fit: this.fit,
       width: this.width,
       height: this.height,
@@ -869,7 +886,7 @@ class ImageView extends StatelessWidget {
 
 // #region drop
 
-class DropRegionRenderBox extends RenderProxyBoxWithHitTestBehavior {
+class DropRegionRenderBox extends lib.RenderProxyBoxWithHitTestBehavior {
 
   DropRegionRenderBox({
     required this.enabled,
@@ -889,7 +906,7 @@ class DropRegionRenderBox extends RenderProxyBoxWithHitTestBehavior {
 
 }
 
-class DropRegion extends SingleChildRenderObjectWidget {
+class DropRegion extends widgets.SingleChildRenderObjectWidget {
 
   const DropRegion({
     super.key,
@@ -947,13 +964,32 @@ class DropRegionManager {
 
   // #region constructor
 
+  Boolean _initialized;
+
+  Void Function(String message)? _onException;
+
   DropRegionRenderBox? _currentRegion;
 
   // ----------------
 
   DropRegionManager._(
   ) :
+    this._initialized = false,
+    this._onException = null,
     this._currentRegion = null;
+
+  // #endregion
+
+  // #region utility
+
+  Future<Void> initialize(
+    Void Function(String message) onException,
+  ) async {
+    assertTest(!this._initialized);
+    this._onException = onException;
+    this._initialized = true;
+    return;
+  }
 
   // #endregion
 
@@ -961,14 +997,16 @@ class DropRegionManager {
 
   Future<Void> onEnter(
   ) async {
+    assertTest(this._initialized);
     return;
   }
 
   Future<Void> onOver(
     Offset location,
   ) async {
-    var hitTestResult = HitTestResult();
-    GestureBinding.instance.hitTestInView(hitTestResult, location, GestureBinding.instance.platformDispatcher.implicitView!.viewId);
+    assertTest(this._initialized);
+    var hitTestResult = lib.HitTestResult();
+    lib.GestureBinding.instance.hitTestInView(hitTestResult, location, lib.GestureBinding.instance.platformDispatcher.implicitView!.viewId);
     var targetRegion = null as DropRegionRenderBox?;
     for (var hitItem in hitTestResult.path) {
       var hitTarget = hitItem.target;
@@ -988,6 +1026,7 @@ class DropRegionManager {
 
   Future<Void> onLeave(
   ) async {
+    assertTest(this._initialized);
     if (this._currentRegion != null) {
       await this._currentRegion!.onLeave();
       this._currentRegion = null;
@@ -998,10 +1037,17 @@ class DropRegionManager {
   Future<Void> onDrop(
     List<String> target,
   ) async {
-    if (this._currentRegion != null) {
-      await this._currentRegion!.onDrop(target);
-      this._currentRegion = null;
+    assertTest(this._initialized);
+    if (target.isEmpty) {
+      this._onException?.call('the drag source is unsupported.');
     }
+    else if (this._currentRegion == null) {
+      this._onException?.call('the drag source is not placed on the drop region.');
+    }
+    else {
+      await this._currentRegion!.onDrop(target);
+    }
+    this._currentRegion = null;
     return;
   }
 

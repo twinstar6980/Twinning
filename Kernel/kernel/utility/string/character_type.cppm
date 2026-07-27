@@ -33,15 +33,15 @@ export namespace Twinning::Kernel::CharacterType {
 	#pragma region basic
 
 	inline constexpr auto is_ascii(
-		Character const & character
+		Character const & value
 	) -> Boolean {
-		return (character & 0b10000000_c) == 0xb00000000_c;
+		return (value & 0b10000000_c) == 0xb00000000_c;
 	}
 
 	inline constexpr auto is_control(
-		Character const & character
+		Character const & value
 	) -> Boolean {
-		return (0x00_c <= character && character <= 0x1F_c) || character == 0x7F_c;
+		return (0x00_c <= value && value <= 0x1F_c) || value == 0x7F_c;
 	}
 
 	#pragma endregion
@@ -49,15 +49,15 @@ export namespace Twinning::Kernel::CharacterType {
 	#pragma region special
 
 	inline constexpr auto is_null(
-		Character const & character
+		Character const & value
 	) -> Boolean {
-		return character == k_null;
+		return value == k_null;
 	}
 
 	inline constexpr auto is_escape_slash(
-		Character const & character
+		Character const & value
 	) -> Boolean {
-		return character == k_escape_slash;
+		return value == k_escape_slash;
 	}
 
 	#pragma endregion
@@ -65,41 +65,41 @@ export namespace Twinning::Kernel::CharacterType {
 	#pragma region letter
 
 	inline constexpr auto is_letter_lower(
-		Character const & character
+		Character const & value
 	) -> Boolean {
-		return Math::between(character, 'a'_c, 'z'_c);
+		return Math::between(value, 'a'_c, 'z'_c);
 	}
 
 	inline constexpr auto is_letter_upper(
-		Character const & character
+		Character const & value
 	) -> Boolean {
-		return Math::between(character, 'A'_c, 'Z'_c);
+		return Math::between(value, 'A'_c, 'Z'_c);
 	}
 
 	inline constexpr auto is_letter(
-		Character const & character
+		Character const & value
 	) -> Boolean {
-		return is_letter_lower(character) || is_letter_upper(character);
+		return is_letter_lower(value) || is_letter_upper(value);
 	}
 
 	// ----------------
 
 	inline constexpr auto is_letter_hexadecimal_lower(
-		Character const & character
+		Character const & value
 	) -> Boolean {
-		return Math::between(character, 'a'_c, 'f'_c);
+		return Math::between(value, 'a'_c, 'f'_c);
 	}
 
 	inline constexpr auto is_letter_hexadecimal_upper(
-		Character const & character
+		Character const & value
 	) -> Boolean {
-		return Math::between(character, 'A'_c, 'F'_c);
+		return Math::between(value, 'A'_c, 'F'_c);
 	}
 
 	inline constexpr auto is_letter_hexadecimal(
-		Character const & character
+		Character const & value
 	) -> Boolean {
-		return is_letter_hexadecimal_lower(character) || is_letter_hexadecimal_upper(character);
+		return is_letter_hexadecimal_lower(value) || is_letter_hexadecimal_upper(value);
 	}
 
 	#pragma endregion
@@ -107,39 +107,39 @@ export namespace Twinning::Kernel::CharacterType {
 	#pragma region number
 
 	inline constexpr auto is_number_binary(
-		Character const & character
+		Character const & value
 	) -> Boolean {
-		return Math::between(character, '0'_c, '1'_c);
+		return Math::between(value, '0'_c, '1'_c);
 	}
 
 	inline constexpr auto is_number_octal(
-		Character const & character
+		Character const & value
 	) -> Boolean {
-		return Math::between(character, '0'_c, '7'_c);
+		return Math::between(value, '0'_c, '7'_c);
 	}
 
 	inline constexpr auto is_number_decimal(
-		Character const & character
+		Character const & value
 	) -> Boolean {
-		return Math::between(character, '0'_c, '9'_c);
+		return Math::between(value, '0'_c, '9'_c);
 	}
 
 	inline constexpr auto is_number_hexadecimal_lower(
-		Character const & character
+		Character const & value
 	) -> Boolean {
-		return is_number_decimal(character) || is_letter_hexadecimal_lower(character);
+		return is_number_decimal(value) || is_letter_hexadecimal_lower(value);
 	}
 
 	inline constexpr auto is_number_hexadecimal_upper(
-		Character const & character
+		Character const & value
 	) -> Boolean {
-		return is_number_decimal(character) || is_letter_hexadecimal_upper(character);
+		return is_number_decimal(value) || is_letter_hexadecimal_upper(value);
 	}
 
 	inline constexpr auto is_number_hexadecimal(
-		Character const & character
+		Character const & value
 	) -> Boolean {
-		return is_number_decimal(character) || is_letter_hexadecimal_lower(character) || is_letter_hexadecimal_upper(character);
+		return is_number_decimal(value) || is_letter_hexadecimal_lower(value) || is_letter_hexadecimal_upper(value);
 	}
 
 	#pragma endregion
@@ -147,19 +147,19 @@ export namespace Twinning::Kernel::CharacterType {
 	#pragma region letter convert
 
 	inline constexpr auto as_letter_lower(
-		Character & character
+		Character & value
 	) -> Void {
-		if (is_letter_upper(character)) {
-			character += k_letter_case_offset;
+		if (is_letter_upper(value)) {
+			value += k_letter_case_offset;
 		}
 		return;
 	}
 
 	inline constexpr auto as_letter_upper(
-		Character & character
+		Character & value
 	) -> Void {
-		if (is_letter_lower(character)) {
-			character -= k_letter_case_offset;
+		if (is_letter_lower(value)) {
+			value -= k_letter_case_offset;
 		}
 		return;
 	}
@@ -167,15 +167,15 @@ export namespace Twinning::Kernel::CharacterType {
 	// ----------------
 
 	inline constexpr auto to_letter_lower(
-		Character const & character
+		Character const & value
 	) -> Character {
-		return is_letter_upper(character) ? (character + k_letter_case_offset) : (character);
+		return is_letter_upper(value) ? (value + k_letter_case_offset) : (value);
 	}
 
 	inline constexpr auto to_letter_upper(
-		Character const & character
+		Character const & value
 	) -> Character {
-		return is_letter_upper(character) ? (character - k_letter_case_offset) : (character);
+		return is_letter_upper(value) ? (value - k_letter_case_offset) : (value);
 	}
 
 	#pragma endregion
@@ -183,10 +183,10 @@ export namespace Twinning::Kernel::CharacterType {
 	#pragma region number convert
 
 	inline constexpr auto from_number_octal(
-		Character const & character
+		Character const & value
 	) -> IntegerU8 {
-		assert_test(is_number_octal(character));
-		return cast_box<IntegerU8>(character - '0'_c);
+		assert_test(is_number_octal(value));
+		return cast_box<IntegerU8>(value - '0'_c);
 	}
 
 	inline constexpr auto to_number_octal(
@@ -199,16 +199,16 @@ export namespace Twinning::Kernel::CharacterType {
 	// ----------------
 
 	inline constexpr auto from_number_hexadecimal(
-		Character const & character
+		Character const & value
 	) -> IntegerU8 {
-		if (is_letter_hexadecimal_lower(character)) {
-			return 0xa_iu8 + cast_box<IntegerU8>(character - 'a'_c);
+		if (is_letter_hexadecimal_lower(value)) {
+			return 0xa_iu8 + cast_box<IntegerU8>(value - 'a'_c);
 		}
-		else if (is_letter_hexadecimal_upper(character)) {
-			return 0xA_iu8 + cast_box<IntegerU8>(character - 'A'_c);
+		else if (is_letter_hexadecimal_upper(value)) {
+			return 0xA_iu8 + cast_box<IntegerU8>(value - 'A'_c);
 		}
-		else if (is_number_decimal(character)) {
-			return 0x0_iu8 + cast_box<IntegerU8>(character - '0'_c);
+		else if (is_number_decimal(value)) {
+			return 0x0_iu8 + cast_box<IntegerU8>(value - '0'_c);
 		}
 		else {
 			assert_fail(R"(/* number is valid */)");
@@ -244,21 +244,21 @@ export namespace Twinning::Kernel::CharacterType {
 	#pragma region path
 
 	inline constexpr auto is_path_dot(
-		Character const & character
+		Character const & value
 	) -> Boolean {
-		return character == k_path_dot;
+		return value == k_path_dot;
 	}
 
 	inline constexpr auto is_path_directory_separator(
-		Character const & character
+		Character const & value
 	) -> Boolean {
-		return character == k_path_directory_separator_poisx || character == k_path_directory_separator_windows;
+		return value == k_path_directory_separator_poisx || value == k_path_directory_separator_windows;
 	}
 
 	inline constexpr auto is_path_volume_separator(
-		Character const & character
+		Character const & value
 	) -> Boolean {
-		return character == k_path_volume_separator_windows;
+		return value == k_path_volume_separator_windows;
 	}
 
 	#pragma endregion

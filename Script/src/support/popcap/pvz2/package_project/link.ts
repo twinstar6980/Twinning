@@ -110,7 +110,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Link {
 				}
 				let package_bundle_directory = make_build_package_bundle_path(project_directory, package_setting.name);
 				if (package_setting.manifest.type === 'internal') {
-					throw new Error('not implemented');
+					throw new UnimplementedException();
 				}
 				if (package_setting.manifest.type === 'external_rton_with_array_path' || package_setting.manifest.type === 'external_rton_with_string_path' || package_setting.manifest.type === 'external_newton') {
 					JsonHelper.encode_file(package_bundle_directory.join('manifest.json'), null);
@@ -122,14 +122,14 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Link {
 						let version_c = Kernel.Tool.Popcap.ReflectionObjectNotation.Version.value({number: 1n, native_string_encoding_use_utf8: true});
 						let stream = Kernel.ByteStreamView.watch(buffer.view());
 						Kernel.Tool.Popcap.ReflectionObjectNotation.Encode.process(stream, Kernel.Notation.Json.Value.value(manifest as any), Kernel.Boolean.value(true), Kernel.Boolean.value(true), version_c);
-						StorageHelper.write_file(package_bundle_directory.join('resource').push(new StoragePath(manifest_resource_path)), stream.stream_view());
+						StorageHelper.write_file_data(package_bundle_directory.join('resource').push(new StoragePath(manifest_resource_path)), stream.stream_view());
 					}
 					if (package_setting.manifest.type === 'external_newton') {
 						manifest_resource_path += '.newton';
 						let manifest = RegularResourceManifest.Convert.to_official(package_manifest, false);
 						let stream = new ByteStreamView(buffer.view().value);
 						ResourceManifest.NewTypeObjectNotation.Encode.process(stream, manifest);
-						StorageHelper.write_file(package_bundle_directory.join('resource').push(new StoragePath(manifest_resource_path)), stream.sub(0, stream.p()));
+						StorageHelper.write_file_data(package_bundle_directory.join('resource').push(new StoragePath(manifest_resource_path)), Kernel.ByteListView.value(stream.sub(0, stream.p())));
 					}
 					StorageHelper.remove_if(package_bundle_directory.join('packet').join(`${manifest_group_name}.rsg`));
 					package_definition.group.push({

@@ -4261,5 +4261,302 @@
 				},
 			],
 		},
+		{
+			"name": "Developer Utility",
+			"icon": "frame_bug",
+			"item": [
+				{
+					"name": "Keystore Generate",
+					"icon": "license",
+					"filter": null,
+					"batch": false,
+					"method": "developer.utility.keystore.generate",
+					"preset": [
+					],
+				},
+				{
+					"name": "Keystore Query",
+					"icon": "fact_check",
+					"filter": {
+						"type": "file",
+						"name": "(\\.(p12|pfx))$",
+					},
+					"batch": true,
+					"method": "developer.utility.keystore.query",
+					"preset": [
+					],
+				},
+				{
+					"name": "Windows Sign Program",
+					"icon": "approval",
+					"filter": {
+						"type": "any",
+						"name": "()$",
+					},
+					"batch": true,
+					"method": "developer.utility.windows.sign_program",
+					"preset": [
+						{
+							"name": "PE",
+							"argument": {
+								"type": "pe",
+							},
+						},
+						{
+							"name": "MSIX",
+							"argument": {
+								"type": "msix",
+							},
+						},
+					],
+				},
+				{
+					"name": "Windows Pack Program",
+					"icon": "package_2",
+					"filter": {
+						"type": "directory",
+						"name": "()$",
+					},
+					"batch": false,
+					"method": "developer.utility.windows.pack_program",
+					"preset": [
+						{
+							"name": "MSIX",
+							"argument": {
+								"type": "msix",
+							},
+						},
+					],
+				},
+				{
+					"name": "Windows Import Manifest",
+					"icon": "download",
+					"filter": {
+						"type": "file",
+						"name": "(\\.(exe|dll))$",
+					},
+					"batch": false,
+					"method": "developer.utility.windows.import_manifest",
+					"preset": [
+					],
+				},
+				{
+					"name": "Windows Export Manifest",
+					"icon": "upload",
+					"filter": {
+						"type": "file",
+						"name": "(\\.(exe|dll))$",
+					},
+					"batch": false,
+					"method": "developer.utility.windows.export_manifest",
+					"preset": [
+					],
+				},
+				{
+					"name": "Windows Create Pri Resource",
+					"icon": "library_books",
+					"filter": {
+						"type": "directory",
+						"name": "()$",
+					},
+					"batch": false,
+					"method": "developer.utility.windows.create_pri_resource",
+					"preset": [
+					],
+				},
+				{
+					"name": "Linux Sign Program",
+					"icon": "approval",
+					"filter": {
+						"type": "any",
+						"name": "()$",
+					},
+					"batch": true,
+					"method": "developer.utility.linux.sign_program",
+					"preset": [
+						{
+							"name": "ELF",
+							"argument": {
+								"type": "elf",
+							},
+						},
+					],
+				},
+				{
+					"name": "Linux Pack Program",
+					"icon": "package_2",
+					"filter": {
+						"type": "directory",
+						"name": "()$",
+					},
+					"batch": false,
+					"method": "developer.utility.linux.pack_program",
+					"preset": [
+						{
+							"name": "APPIMAGE",
+							"argument": {
+								"type": "appimage",
+							},
+						},
+					],
+				},
+				{
+					"name": "Macintosh Sign Program",
+					"icon": "approval",
+					"filter": {
+						"type": "any",
+						"name": "()$",
+					},
+					"batch": true,
+					"method": "developer.utility.macintosh.sign_program",
+					"preset": [
+						{
+							"name": "MACHO",
+							"argument": {
+								"type": "macho",
+							},
+						},
+						{
+							"name": "APP",
+							"argument": {
+								"type": "app",
+							},
+						},
+					],
+				},
+				{
+					"name": "Macintosh Pack Program",
+					"icon": "package_2",
+					"filter": {
+						"type": "directory",
+						"name": "()$",
+					},
+					"batch": false,
+					"method": "developer.utility.macintosh.pack_program",
+					"preset": [
+						{
+							"name": "DMG",
+							"argument": {
+								"type": "dmg",
+							},
+						},
+					],
+				},
+				{
+					"name": "Android Sign Program",
+					"icon": "approval",
+					"filter": {
+						"type": "any",
+						"name": "()$",
+					},
+					"batch": true,
+					"method": "developer.utility.android.sign_program",
+					"preset": [
+						{
+							"name": "APK",
+							"argument": {
+								"type": "apk",
+							},
+						},
+						{
+							"name": "APKS",
+							"argument": {
+								"type": "apks",
+							},
+						},
+					],
+				},
+				{
+					"name": "Android Pack Program",
+					"icon": "package_2",
+					"filter": {
+						"type": "directory",
+						"name": "()$",
+					},
+					"batch": false,
+					"method": "developer.utility.android.pack_program",
+					"preset": [
+						{
+							"name": "APK",
+							"argument": {
+								"type": "apk",
+							},
+						},
+						{
+							"name": "APKS",
+							"argument": {
+								"type": "apks",
+							},
+						},
+					],
+				},
+				{
+					"name": "Android Align Package",
+					"icon": "align_justify_space_even",
+					"filter": {
+						"type": "file",
+						"name": "(\\.(apk|apks))$",
+					},
+					"batch": true,
+					"method": "developer.utility.android.align_package",
+					"preset": [
+						{
+							"name": "APK",
+							"argument": {
+								"type": "apk",
+							},
+						},
+						{
+							"name": "APKS",
+							"argument": {
+								"type": "apks",
+							},
+						},
+					],
+				},
+				{
+					"name": "Iphone Sign Program",
+					"icon": "approval",
+					"filter": {
+						"type": "any",
+						"name": "()$",
+					},
+					"batch": true,
+					"method": "developer.utility.iphone.sign_program",
+					"preset": [
+						{
+							"name": "MACHO",
+							"argument": {
+								"type": "macho",
+							},
+						},
+						{
+							"name": "APP",
+							"argument": {
+								"type": "app",
+							},
+						},
+					],
+				},
+				{
+					"name": "Iphone Pack Program",
+					"icon": "package_2",
+					"filter": {
+						"type": "directory",
+						"name": "()$",
+					},
+					"batch": false,
+					"method": "developer.utility.iphone.pack_program",
+					"preset": [
+						{
+							"name": "IPA",
+							"argument": {
+								"type": "ipa",
+							},
+						},
+					],
+				},
+			],
+		},
 	],
 }

@@ -6,8 +6,7 @@ import '/utility/miscellaneous_helper.dart';
 import '/widget/export.dart';
 import '/view/core_command_sender/configuration.dart';
 import '/view/core_command_sender/value_expression.dart';
-import 'package:collection/collection.dart';
-import 'package:flutter/widgets.dart';
+import 'package:collection/collection.dart' as lib;
 
 // ----------------
 

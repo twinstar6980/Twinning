@@ -1,5 +1,7 @@
 module;
 
+#pragma warning(disable: 4100)
+
 #include <ShlObj_core.h>
 #include <Windows.h>
 #include <appmodel.h>
@@ -35,7 +37,7 @@ export {
 
 	public:
 
-		#pragma region construct
+		#pragma region constructor
 
 		~PlatformIntegrationManager(
 		) = default;
@@ -69,7 +71,7 @@ export {
 
 	private:
 
-		#pragma region construct
+		#pragma region constructor
 
 		explicit PlatformIntegrationManager(
 			std::nullptr_t _
@@ -96,6 +98,19 @@ export {
 				result *= prime;
 			}
 			return result;
+		}
+
+		// ----------------
+
+		template <typename TFinalizer>
+		static constexpr auto make_finalizer(
+			TFinalizer const & finalizer
+		) -> auto {
+			auto finalizer_wrapper = [&](auto it) {
+				delete it;
+				finalizer();
+			};
+			return std::unique_ptr<std::uint8_t, decltype(finalizer_wrapper)>{new std::uint8_t{}, std::move(finalizer_wrapper)};
 		}
 
 		#pragma endregion
@@ -125,7 +140,7 @@ export {
 		#pragma region inject
 
 		// ReSharper disable once CppInconsistentNaming
-		auto inject_wWinMain(
+		auto inject_wWinMain_begin(
 			std::nullptr_t host,
 			HINSTANCE &    with_instance,
 			HINSTANCE &    with_prev,
@@ -133,23 +148,52 @@ export {
 			int &          with_show_command,
 			bool &         also_exit
 		) -> void {
-			also_exit = false;
-			auto argument = GetCommandLineArguments();
-			if (argument.size() == 1 && std::regex_search(argument.front(), std::regex{R"(^([a-z][a-z0-9\+\-\.]+):)", std::regex_constants::icase})) {
-				auto window = FindWindowW(L"FLUTTER_RUNNER_WIN32_WINDOW", thiz.exposed_application_name().data());
-				if (window != nullptr) {
-					auto data = COPYDATASTRUCT{};
-					data.dwData = WM_USER + 1;
-					data.cbData = static_cast<DWORD>(argument.front().size() * sizeof(std::string::value_type));
-					data.lpData = argument.front().data();
-					SendMessageW(window, WM_COPYDATA, reinterpret_cast<WPARAM>(window), reinterpret_cast<LPARAM>(&data));
-					also_exit = true;
+			return thiz.execute_platform_task(
+				false,
+				std::function{[] {
 					return;
-				}
-			}
-			SetProcessPreferredUILanguages(MUI_LANGUAGE_NAME, L"en-US\0\0", nullptr);
-			std::locale::global(std::locale::classic());
-			return;
+				}},
+				std::function{[&] {
+					also_exit = false;
+					auto argument = GetCommandLineArguments();
+					if (argument.size() == 1 && std::regex_search(argument.front(), std::regex{R"(^([a-z][a-z0-9\+\-\.]+):)", std::regex_constants::icase})) {
+						auto window = FindWindowW(L"FLUTTER_RUNNER_WIN32_WINDOW", thiz.exposed_application_name().data());
+						if (window != nullptr) {
+							auto data = COPYDATASTRUCT{};
+							data.dwData = WM_USER + 1;
+							data.cbData = static_cast<DWORD>(argument.front().size() * sizeof(std::string::value_type));
+							data.lpData = argument.front().data();
+							SendMessageW(window, WM_COPYDATA, reinterpret_cast<WPARAM>(window), reinterpret_cast<LPARAM>(&data));
+							also_exit = true;
+							return;
+						}
+					}
+					OleInitialize(nullptr);
+					SetProcessPreferredUILanguages(MUI_LANGUAGE_NAME, L"en-US\0\0", nullptr);
+					std::locale::global(std::locale::classic());
+					return;
+				}}
+			);
+		}
+
+		// ReSharper disable once CppInconsistentNaming
+		auto inject_wWinMain_end(
+			std::nullptr_t host,
+			HINSTANCE &    with_instance,
+			HINSTANCE &    with_prev,
+			wchar_t * &    with_command_line,
+			int &          with_show_command
+		) -> void {
+			return thiz.execute_platform_task(
+				false,
+				std::function{[] {
+					return;
+				}},
+				std::function{[&] {
+					OleUninitialize();
+					return;
+				}}
+			);
 		}
 
 		// ReSharper disable once CppInconsistentNaming
@@ -160,15 +204,23 @@ export {
 			WPARAM const &  with_wparam,
 			LPARAM const &  with_lparam
 		) -> void {
-			if (with_message == WM_COPYDATA) {
-				auto & data = *reinterpret_cast<COPYDATASTRUCT *>(with_lparam);
-				if (data.dwData == WM_USER + 1) {
-					auto link = std::string{static_cast<std::string::value_type *>(data.lpData), static_cast<std::size_t>(data.cbData)};
-					thiz.bring_window_to_foreground(with_window);
-					thiz.invoke_receive_application_link(link);
-				}
-			}
-			return;
+			return thiz.execute_platform_task(
+				true,
+				std::function{[] {
+					return;
+				}},
+				std::function{[&] {
+					if (with_message == WM_COPYDATA) {
+						auto & data = *reinterpret_cast<COPYDATASTRUCT *>(with_lparam);
+						if (data.dwData == WM_USER + 1) {
+							auto link = std::string{static_cast<std::string::value_type *>(data.lpData), static_cast<std::size_t>(data.cbData)};
+							thiz.bring_window_to_foreground(with_window);
+							thiz.invoke_receive_application_link(link);
+						}
+					}
+					return;
+				}}
+			);
 		}
 
 		// ReSharper disable once CppInconsistentNaming
@@ -176,43 +228,61 @@ export {
 			FlutterWindow &                                   host,
 			std::unique_ptr<flutter::FlutterViewController> & also_flutter_controller
 		) -> void {
-			thiz.m_window = host.GetHandle();
-			thiz.m_channel = std::make_unique<flutter::MethodChannel<flutter::EncodableValue>>(
-				also_flutter_controller->engine()->messenger(),
-				std::format("{}/PlatformIntegrationManager", thiz.query_application_identifier()),
-				&flutter::StandardMethodCodec::GetInstance()
-			);
-			thiz.m_channel->SetMethodCallHandler(
-				[&](
-				flutter::MethodCall<flutter::EncodableValue> const &            call,
-				std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result
-			) -> void {
-					thiz.handle(call, result);
+			return thiz.execute_platform_task(
+				false,
+				std::function{[] {
 					return;
-				}
+				}},
+				std::function{[&] {
+					thiz.m_window = host.GetHandle();
+					thiz.m_channel = std::make_unique<flutter::MethodChannel<flutter::EncodableValue>>(
+						also_flutter_controller->engine()->messenger(),
+						std::format("{}/PlatformIntegrationManager", thiz.query_application_identifier()),
+						&flutter::StandardMethodCodec::GetInstance()
+					);
+					thiz.m_channel->SetMethodCallHandler(
+						[&](
+						flutter::MethodCall<flutter::EncodableValue> const &            call,
+						std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result
+					) -> void {
+							thiz.execute_platform_background_task(
+								[&] {
+									thiz.handle(call, result);
+								}
+							);
+							return;
+						}
+					);
+					thiz.register_notification_support();
+					thiz.register_drag_drop_support();
+					auto argument = GetCommandLineArguments();
+					if (argument.size() == 1 && std::regex_search(argument.front(), std::regex{R"(^([a-z][a-z0-9\+\-\.]+):)", std::regex_constants::icase})) {
+						thiz.invoke_receive_application_link(argument.front());
+					}
+					return;
+				}}
 			);
-			OleInitialize(nullptr);
-			thiz.register_notification_support();
-			thiz.register_drag_drop_support();
-			auto argument = GetCommandLineArguments();
-			if (argument.size() == 1 && std::regex_search(argument.front(), std::regex{R"(^([a-z][a-z0-9\+\-\.]+):)", std::regex_constants::icase})) {
-				thiz.invoke_receive_application_link(argument.front());
-			}
-			return;
 		}
 
 		// ReSharper disable once CppInconsistentNaming
 		auto inject_FlutterWindow_OnDestroy(
 			FlutterWindow & host
 		) -> void {
-			if (thiz.m_window == nullptr) {
-				return;
-			}
-			thiz.unregister_notification_support();
-			thiz.unregister_drag_drop_support();
-			OleUninitialize();
-			thiz.m_window = nullptr;
-			return;
+			return thiz.execute_platform_task(
+				false,
+				std::function{[] {
+					return;
+				}},
+				std::function{[&] {
+					if (thiz.m_window == nullptr) {
+						return;
+					}
+					thiz.unregister_notification_support();
+					thiz.unregister_drag_drop_support();
+					thiz.m_window = nullptr;
+					return;
+				}}
+			);
 		}
 
 		#pragma endregion
@@ -572,8 +642,16 @@ export {
 				winrt::Windows::UI::Notifications::ToastNotification const & sender,
 				winrt::Windows::Foundation::IInspectable const &             args
 			) -> auto {
-					thiz.bring_window_to_foreground(thiz.get_current_window());
-					return;
+					return thiz.execute_platform_task(
+						true,
+						std::function{[] {
+							return;
+						}},
+						std::function{[&] {
+							thiz.bring_window_to_foreground(thiz.get_current_window());
+							return;
+						}}
+					);
 				}
 			);
 			auto notifier = winrt::Windows::UI::Notifications::ToastNotificationManager::CreateToastNotifier();
@@ -661,7 +739,7 @@ export {
 			auto icon_index = WORD{};
 			auto icon = ExtractAssociatedIconW(nullptr, target_h.data(), &icon_index);
 			winrt::check_pointer(icon);
-			auto icon_finalizer = thiz.make_finalizer(
+			auto icon_finalizer = make_finalizer(
 				[&] {
 					DestroyIcon(icon);
 				}
@@ -669,7 +747,7 @@ export {
 			auto icon_info = ICONINFO{};
 			state_b = GetIconInfo(icon, &icon_info);
 			winrt::check_bool(state_b);
-			auto icon_info_finalizer = thiz.make_finalizer(
+			auto icon_info_finalizer = make_finalizer(
 				[&] {
 					DeleteObject(icon_info.hbmColor);
 					DeleteObject(icon_info.hbmMask);
@@ -687,7 +765,7 @@ export {
 			bitmap_info.bmiHeader.biCompression = BI_RGB;
 			auto device_context = GetDC(nullptr);
 			winrt::check_pointer(device_context);
-			auto device_context_finalizer = thiz.make_finalizer(
+			auto device_context_finalizer = make_finalizer(
 				[&] {
 					ReleaseDC(nullptr, device_context);
 				}
@@ -716,6 +794,19 @@ export {
 			}
 			thiz.m_channel->InvokeMethod(method, std::move(raw_argument), nullptr);
 			return;
+		}
+
+		// ----------------
+
+		auto invoke_receive_platform_exception(
+			std::string const & message
+		) -> void {
+			return thiz.invoke(
+				"receive_platform_exception",
+				std::map<std::string, flutter::EncodableValue>{{
+					std::make_pair("message", thiz.encode_flutter_value(auto{message})),
+				}}
+			);
 		}
 
 		// ----------------
@@ -908,11 +999,11 @@ export {
 
 		private:
 
+			std::add_pointer_t<PlatformIntegrationManager> m_host;
+
 			winrt::com_ptr<IDropTargetHelper> m_helper;
 
 			bool m_allow;
-
-			std::add_pointer_t<PlatformIntegrationManager> m_host;
 
 		public:
 
@@ -922,9 +1013,9 @@ export {
 				PlatformIntegrationManager * const& host
 			) :
 				winrt::implements<DropTarget, IDropTarget>{},
+				m_host{host},
 				m_helper{},
-				m_allow{false},
-				m_host{host} {
+				m_allow{false} {
 				winrt::check_hresult(CoCreateInstance(CLSID_DragDropHelper, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(thiz.m_helper.put())));
 				return;
 			}
@@ -941,33 +1032,35 @@ export {
 				POINTL        pt,
 				DWORD *       pdwEffect
 			) override {
-				try {
-					auto state_h = HRESULT{};
-					auto window = thiz.m_host->get_current_window();
-					auto point = POINT{
-						.x = pt.x,
-						.y = pt.y,
-					};
-					*pdwEffect = DROPEFFECT_NONE;
-					state_h = thiz.m_helper->DragEnter(window, pDataObj, &point, *pdwEffect);
-					winrt::check_hresult(state_h);
-					auto drop_format = FORMATETC{
-						.cfFormat = CF_HDROP,
-						.ptd = nullptr,
-						.dwAspect = DVASPECT_CONTENT,
-						.lindex = -1,
-						.tymed = TYMED_HGLOBAL,
-					};
-					state_h = pDataObj->QueryGetData(&drop_format);
-					thiz.m_allow = state_h == S_OK;
-					if (thiz.m_allow) {
-						thiz.m_host->invoke_receive_application_drag_enter();
-					}
-					return S_OK;
-				}
-				catch (...) {
-					return winrt::to_hresult();
-				}
+				return thiz.m_host->execute_platform_task(
+					true,
+					std::function{[] {
+						return S_FALSE;
+					}},
+					std::function{[&] {
+						auto state_h = HRESULT{};
+						auto window = thiz.m_host->get_current_window();
+						auto point = POINT{
+							.x = pt.x,
+							.y = pt.y,
+						};
+						*pdwEffect = DROPEFFECT_NONE;
+						thiz.m_helper->DragEnter(window, pDataObj, &point, *pdwEffect);
+						auto drop_format = FORMATETC{
+							.cfFormat = CF_HDROP,
+							.ptd = nullptr,
+							.dwAspect = DVASPECT_CONTENT,
+							.lindex = -1,
+							.tymed = TYMED_HGLOBAL,
+						};
+						state_h = pDataObj->QueryGetData(&drop_format);
+						thiz.m_allow = state_h == S_OK;
+						if (thiz.m_allow) {
+							thiz.m_host->invoke_receive_application_drag_enter();
+						}
+						return S_OK;
+					}}
+				);
 			}
 
 			virtual IFACEMETHODIMP DragOver(
@@ -975,47 +1068,49 @@ export {
 				POINTL  pt,
 				DWORD * pdwEffect
 			) override {
-				try {
-					auto state_b = BOOL{};
-					auto state_h = HRESULT{};
-					auto window = thiz.m_host->get_current_window();
-					auto point = POINT{
-						.x = pt.x,
-						.y = pt.y,
-					};
-					*pdwEffect = !thiz.m_allow ? DROPEFFECT_NONE : DROPEFFECT_LINK;
-					state_h = thiz.m_helper->DragOver(&point, *pdwEffect);
-					winrt::check_hresult(state_h);
-					if (thiz.m_allow) {
-						state_b = ScreenToClient(window, &point);
-						winrt::check_bool(state_b);
-						auto display_density = thiz.m_host->query_display_density();
-						auto location_x = static_cast<std::int64_t>(std::llround(point.x / display_density));
-						auto location_y = static_cast<std::int64_t>(std::llround(point.y / display_density));
-						thiz.m_host->invoke_receive_application_drag_over(location_x, location_y);
-					}
-					return S_OK;
-				}
-				catch (...) {
-					return winrt::to_hresult();
-				}
+				return thiz.m_host->execute_platform_task(
+					true,
+					std::function{[] {
+						return S_FALSE;
+					}},
+					std::function{[&] {
+						auto state_b = BOOL{};
+						auto window = thiz.m_host->get_current_window();
+						auto point = POINT{
+							.x = pt.x,
+							.y = pt.y,
+						};
+						*pdwEffect = !thiz.m_allow ? DROPEFFECT_NONE : DROPEFFECT_LINK;
+						thiz.m_helper->DragOver(&point, *pdwEffect);
+						if (thiz.m_allow) {
+							state_b = ScreenToClient(window, &point);
+							winrt::check_bool(state_b);
+							auto display_density = thiz.m_host->query_display_density();
+							auto location_x = static_cast<std::int64_t>(std::llround(point.x / display_density));
+							auto location_y = static_cast<std::int64_t>(std::llround(point.y / display_density));
+							thiz.m_host->invoke_receive_application_drag_over(location_x, location_y);
+						}
+						return S_OK;
+					}}
+				);
 			}
 
 			virtual IFACEMETHODIMP DragLeave(
 			) override {
-				try {
-					auto state_h = HRESULT{};
-					state_h = thiz.m_helper->DragLeave();
-					winrt::check_hresult(state_h);
-					if (thiz.m_allow) {
-						thiz.m_allow = false;
-						thiz.m_host->invoke_receive_application_drag_leave();
-					}
-					return S_OK;
-				}
-				catch (...) {
-					return winrt::to_hresult();
-				}
+				return thiz.m_host->execute_platform_task(
+					true,
+					std::function{[] {
+						return S_FALSE;
+					}},
+					std::function{[&] {
+						thiz.m_helper->DragLeave();
+						if (thiz.m_allow) {
+							thiz.m_allow = false;
+							thiz.m_host->invoke_receive_application_drag_leave();
+						}
+						return S_OK;
+					}}
+				);
 			}
 
 			virtual IFACEMETHODIMP Drop(
@@ -1024,58 +1119,60 @@ export {
 				POINTL        pt,
 				DWORD *       pdwEffect
 			) override {
-				try {
-					auto state_h = HRESULT{};
-					auto point = POINT{
-						.x = pt.x,
-						.y = pt.y,
-					};
-					*pdwEffect = DROPEFFECT_NONE;
-					state_h = thiz.m_helper->Drop(pDataObj, &point, *pdwEffect);
-					winrt::check_hresult(state_h);
-					if (thiz.m_allow) {
-						thiz.m_allow = false;
-						auto drop_format = FORMATETC{
-							.cfFormat = CF_HDROP,
-							.ptd = nullptr,
-							.dwAspect = DVASPECT_CONTENT,
-							.lindex = -1,
-							.tymed = TYMED_HGLOBAL,
+				return thiz.m_host->execute_platform_task(
+					true,
+					std::function{[] {
+						return S_FALSE;
+					}},
+					std::function{[&] {
+						auto state_h = HRESULT{};
+						auto point = POINT{
+							.x = pt.x,
+							.y = pt.y,
 						};
-						auto drop_storage = STGMEDIUM{};
-						state_h = pDataObj->GetData(&drop_format, &drop_storage);
-						winrt::check_hresult(state_h);
-						auto drop_storage_finalizer = thiz.m_host->make_finalizer(
-							[&] {
-								ReleaseStgMedium(&drop_storage);
+						*pdwEffect = DROPEFFECT_NONE;
+						thiz.m_helper->Drop(pDataObj, &point, *pdwEffect);
+						if (thiz.m_allow) {
+							thiz.m_allow = false;
+							auto drop_format = FORMATETC{
+								.cfFormat = CF_HDROP,
+								.ptd = nullptr,
+								.dwAspect = DVASPECT_CONTENT,
+								.lindex = -1,
+								.tymed = TYMED_HGLOBAL,
+							};
+							auto drop_storage = STGMEDIUM{};
+							state_h = pDataObj->GetData(&drop_format, &drop_storage);
+							winrt::check_hresult(state_h);
+							auto drop_storage_finalizer = make_finalizer(
+								[&] {
+									ReleaseStgMedium(&drop_storage);
+								}
+							);
+							auto drop_handle = static_cast<HDROP>(GlobalLock(drop_storage.hGlobal));
+							winrt::check_pointer(drop_handle);
+							auto drop_handle_finalizer = make_finalizer(
+								[&] {
+									GlobalUnlock(drop_storage.hGlobal);
+								}
+							);
+							auto drop_count = DragQueryFileW(drop_handle, 0xFFFFFFFF, nullptr, 0);
+							auto target = std::vector<std::string>{};
+							for (auto target_index = UINT{0}; target_index < drop_count; ++target_index) {
+								auto target_item_path_length = DragQueryFileW(drop_handle, target_index, nullptr, 0);
+								auto target_item_path_data = std::vector<WCHAR>{};
+								target_item_path_data.resize(static_cast<std::size_t>(target_item_path_length + 1));
+								target_item_path_length = DragQueryFileW(drop_handle, target_index, target_item_path_data.data(), static_cast<UINT>(target_item_path_data.size()));
+								assert_test(target_item_path_length == static_cast<UINT>(target_item_path_data.size() - 1));
+								auto target_item_path = winrt::to_string(std::wstring_view{target_item_path_data.data(), static_cast<std::size_t>(target_item_path_length)});
+								auto target_item_path_long = thiz.m_host->query_storage_long_path(target_item_path);
+								target.emplace_back(target_item_path_long);
 							}
-						);
-						auto drop_handle = static_cast<HDROP>(GlobalLock(drop_storage.hGlobal));
-						winrt::check_pointer(drop_handle);
-						auto drop_handle_finalizer = thiz.m_host->make_finalizer(
-							[&] {
-								GlobalUnlock(drop_storage.hGlobal);
-							}
-						);
-						auto drop_count = DragQueryFileW(drop_handle, 0xFFFFFFFF, nullptr, 0);
-						auto target = std::vector<std::string>{};
-						for (auto target_index = UINT{0}; target_index < drop_count; ++target_index) {
-							auto target_item_path_length = DragQueryFileW(drop_handle, target_index, nullptr, 0);
-							auto target_item_path_data = std::vector<WCHAR>{};
-							target_item_path_data.resize(static_cast<std::size_t>(target_item_path_length + 1));
-							target_item_path_length = DragQueryFileW(drop_handle, target_index, target_item_path_data.data(), static_cast<UINT>(target_item_path_data.size()));
-							assert_test(target_item_path_length == static_cast<UINT>(target_item_path_data.size() - 1));
-							auto target_item_path = winrt::to_string(std::wstring_view{target_item_path_data.data(), static_cast<std::size_t>(target_item_path_length)});
-							auto target_item_path_long = thiz.m_host->query_storage_long_path(target_item_path);
-							target.emplace_back(target_item_path_long);
+							thiz.m_host->invoke_receive_application_drag_drop(target);
 						}
-						thiz.m_host->invoke_receive_application_drag_drop(target);
-					}
-					return S_OK;
-				}
-				catch (...) {
-					return winrt::to_hresult();
-				}
+						return S_OK;
+					}}
+				);
 			}
 
 			// ReSharper restore CppInconsistentNaming CppEnforceFunctionDeclarationStyle
@@ -1088,15 +1185,34 @@ export {
 
 		#pragma region utility
 
-		template <typename TFinalizer>
-		auto make_finalizer(
-			TFinalizer const & finalizer
-		) -> auto {
-			auto finalizer_wrapper = [&](auto it) {
-				delete it;
-				finalizer();
-			};
-			return std::unique_ptr<std::uint8_t, decltype(finalizer_wrapper)>{new std::uint8_t{}, std::move(finalizer_wrapper)};
+		template <typename TResult>
+		auto execute_platform_task(
+			bool const &                      handle_exception,
+			std::function<TResult ()> const & fallback_action,
+			std::function<TResult ()> const & task_action
+		) -> TResult {
+			try {
+				return task_action();
+			}
+			catch (...) {
+				if (!handle_exception) {
+					throw;
+				}
+				thiz.invoke_receive_platform_exception(thiz.parse_current_exception());
+				return fallback_action();
+			}
+		}
+
+		auto execute_platform_background_task(
+			std::function<void ()> const & task_action
+		) -> void {
+			try {
+				task_action();
+			}
+			catch (...) {
+				thiz.invoke_receive_platform_exception(thiz.parse_current_exception());
+			}
+			return;
 		}
 
 		// ----------------

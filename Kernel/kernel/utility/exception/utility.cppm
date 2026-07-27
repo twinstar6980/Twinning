@@ -19,7 +19,8 @@ export namespace Twinning::Kernel {
 		explicit UnknownException(
 			std::source_location const & location = std::source_location::current()
 		) :
-			Exception{"Unknown", {}, location} {
+			Exception{"UnknownException", {}, location} {
+			return;
 		}
 
 	};
@@ -33,8 +34,9 @@ export namespace Twinning::Kernel {
 			std::string const &          message,
 			std::source_location const & location = std::source_location::current()
 		) :
-			Exception{"Unnamed", {}, location} {
+			Exception{"UnnamedException", {}, location} {
 			thiz.m_description.emplace_back(std::format("message: {}", message));
+			return;
 		}
 
 	};
@@ -49,7 +51,8 @@ export namespace Twinning::Kernel {
 		explicit UnreachableException(
 			std::source_location const & location = std::source_location::current()
 		) :
-			Exception{"Unreachable", {}, location} {
+			Exception{"UnreachableException", {}, location} {
+			return;
 		}
 
 	};
@@ -62,7 +65,8 @@ export namespace Twinning::Kernel {
 		explicit UnimplementedException(
 			std::source_location const & location = std::source_location::current()
 		) :
-			Exception{"Unimplemented", {}, location} {
+			Exception{"UnimplementedException", {}, location} {
+			return;
 		}
 
 	};
@@ -75,7 +79,8 @@ export namespace Twinning::Kernel {
 		explicit UnsupportedException(
 			std::source_location const & location = std::source_location::current()
 		) :
-			Exception{"Unsupported", {}, location} {
+			Exception{"UnsupportedException", {}, location} {
+			return;
 		}
 
 	};
@@ -91,8 +96,9 @@ export namespace Twinning::Kernel {
 			std::string const &          expression,
 			std::source_location const & location = std::source_location::current()
 		) :
-			Exception{"Assertion", {}, location} {
+			Exception{"AssertionException", {}, location} {
 			thiz.m_description.emplace_back(std::format("expression: {}", expression));
+			return;
 		}
 
 	};
@@ -109,9 +115,10 @@ export namespace Twinning::Kernel {
 			std::type_info const &       destination,
 			std::source_location const & location = std::source_location::current()
 		) :
-			Exception{"Conversion", {}, location} {
+			Exception{"ConversionException", {}, location} {
 			thiz.m_description.emplace_back(std::format("source: {}", LowLevel::Compiler::parse_mangled_name(std::string_view{source.name()})));
 			thiz.m_description.emplace_back(std::format("destination: {}", LowLevel::Compiler::parse_mangled_name(std::string_view{destination.name()})));
+			return;
 		}
 
 	};
@@ -128,9 +135,10 @@ export namespace Twinning::Kernel {
 			std::string const &          message,
 			std::source_location const & location = std::source_location::current()
 		) :
-			Exception{"Invocation", {}, location} {
+			Exception{"InvocationException", {}, location} {
 			thiz.m_description.emplace_back(std::format("target: {}", target));
 			thiz.m_description.emplace_back(std::format("message: {}", message));
+			return;
 		}
 
 	};
@@ -147,9 +155,10 @@ export namespace Twinning::Kernel {
 			std::string const &          message,
 			std::source_location const & location = std::source_location::current()
 		) :
-			Exception{"Syntax", {}, location} {
+			Exception{"SyntaxException", {}, location} {
 			thiz.m_description.emplace_back(std::format("position: {:X}h", position));
 			thiz.m_description.emplace_back(std::format("message: {}", message));
+			return;
 		}
 
 	};
@@ -165,9 +174,10 @@ export namespace Twinning::Kernel {
 			std::exception const &       exception,
 			std::source_location const & location = std::source_location::current()
 		) :
-			Exception{"Standard", {}, location} {
+			Exception{"StandardException", {}, location} {
 			thiz.m_description.emplace_back(std::format("type: {}", LowLevel::Compiler::parse_mangled_name(std::string_view{typeid(exception).name()})));
 			thiz.m_description.emplace_back(std::format("message: {}", exception.what()));
+			return;
 		}
 
 	};
@@ -181,9 +191,10 @@ export namespace Twinning::Kernel {
 			std::system_error const &    exception,
 			std::source_location const & location = std::source_location::current()
 		) :
-			Exception{"Standard.System", {}, location} {
+			Exception{"StandardSystemException", {}, location} {
 			thiz.m_description.emplace_back(std::format("type: {}", LowLevel::Compiler::parse_mangled_name(std::string_view{typeid(exception).name()})));
 			thiz.m_description.emplace_back(std::format("message: {}", LowLevel::SystemNativeString::utf8_from_native(exception.code().message())));
+			return;
 		}
 
 	};
@@ -197,13 +208,14 @@ export namespace Twinning::Kernel {
 			std::filesystem::filesystem_error const & exception,
 			std::source_location const &              location = std::source_location::current()
 		) :
-			Exception{"Standard.FileSystem", {}, location} {
+			Exception{"StandardFileSystemException", {}, location} {
 			auto path_1 = exception.path1().generic_u8string();
 			auto path_2 = exception.path2().generic_u8string();
 			thiz.m_description.emplace_back(std::format("type: {}", LowLevel::Compiler::parse_mangled_name(std::string_view{typeid(exception).name()})));
 			thiz.m_description.emplace_back(std::format("message: {}", LowLevel::SystemNativeString::utf8_from_native(exception.code().message())));
 			thiz.m_description.emplace_back(std::format("path_1: {}", reinterpret_cast<std::string &>(path_1)));
 			thiz.m_description.emplace_back(std::format("path_2: {}", reinterpret_cast<std::string &>(path_2)));
+			return;
 		}
 
 	};

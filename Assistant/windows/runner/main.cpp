@@ -10,7 +10,7 @@ import platform_integration_manager;
 int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
                       _In_ wchar_t *command_line, _In_ int show_command) {
   auto inject_exit = false;
-  PlatformIntegrationManager::instance().inject_wWinMain(nullptr, instance, prev, command_line, show_command, inject_exit);
+  PlatformIntegrationManager::instance().inject_wWinMain_begin(nullptr, instance, prev, command_line, show_command, inject_exit);
   if (inject_exit) {
     return EXIT_SUCCESS;
   }
@@ -45,6 +45,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
     ::TranslateMessage(&msg);
     ::DispatchMessage(&msg);
   }
+
+  PlatformIntegrationManager::instance().inject_wWinMain_end(nullptr, instance, prev, command_line, show_command);
 
   ::CoUninitialize();
   return EXIT_SUCCESS;

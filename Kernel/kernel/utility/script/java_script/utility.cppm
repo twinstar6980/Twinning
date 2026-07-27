@@ -173,6 +173,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 			Value &       object,
 			List<Value> & argument
 		) -> CallableTraitOf<t_function>::Result {
+			assert_test(argument.size() == make_box<Size>(CallableTraitOf<t_function>::Argument::size - (!t_forward_object ? (0) : (1))));
 			return [&]<auto ... t_index>(ValuePackage<t_index ...>) -> CallableTraitOf<t_function>::Result {
 				if constexpr (!t_forward_object) {
 					using Argument = CallableTraitOf<t_function>::Argument;

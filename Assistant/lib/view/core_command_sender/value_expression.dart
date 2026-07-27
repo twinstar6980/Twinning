@@ -1,6 +1,9 @@
 import '/common.dart';
+import '/utility/json_type.dart';
+import '/utility/wrapper.dart';
 import '/utility/convert_helper.dart';
 import '/utility/storage_path.dart';
+import '/view/core_command_sender/configuration.dart';
 
 // ----------------
 
@@ -101,6 +104,80 @@ class ValueExpressionHelper {
       PathExpression    _ => '${value.content.emit()}',
       _                   => throw UnreachableException(),
     };
+  }
+
+  // ----------------
+
+  static JsonNode makeArgumentValueJson(
+    ValueExpression value,
+  ) {
+    return switch (value) {
+      BooleanExpression _ => value.value,
+      IntegerExpression _ => value.value,
+      FloaterExpression _ => value.value,
+      StringExpression  _ => value.value,
+      SizeExpression    _ => '${ConvertHelper.makeFloaterToString(value.count)}${['b', 'k', 'm', 'g'][value.exponent]}',
+      PathExpression    _ => '${value.content.emit()}',
+      _                   => throw UnreachableException(),
+    };
+  }
+
+  static ValueExpression parseArgumentValueJson(
+    ArgumentType type,
+    JsonNode     json,
+  ) {
+    return switch (type) {
+      .boolean => BooleanExpression(
+        json.jsonBoolean(),
+      ),
+      .integer => IntegerExpression(
+        json.jsonInteger(),
+      ),
+      .floater => FloaterExpression(
+        json.jsonFloater(),
+      ),
+      .string => StringExpression(
+        json.jsonString(),
+      ),
+      .size => SizeExpression(
+        json.jsonString().selfLet((it) => Floater.parse(it.substring(0, it.length - 1))),
+        json.jsonString().selfLet((it) => ['b', 'k', 'm', 'g'].indexOf(it[it.length - 1])).selfAlso((it) => assertTest(it != -1)),
+      ),
+      .path => PathExpression(
+        json.jsonString().selfLet((it) => StoragePath.of(it)),
+      ),
+    };
+  }
+
+  // ----------------
+
+  static JsonObject makeArgumentValueListJson(
+    List<ArgumentConfiguration>     configuration,
+    List<Wrapper<ValueExpression?>> value,
+  ) {
+    assertTest(configuration.length == value.length);
+    var json = JsonObject();
+    for (var index = 0; index < configuration.length; index++) {
+      var itemConfiguration = configuration[index];
+      var itemValue = value[index];
+      if (itemValue.value != null) {
+        json[itemConfiguration.identifier] = ValueExpressionHelper.makeArgumentValueJson(itemValue.value!);
+      }
+    }
+    return json;
+  }
+
+  static List<Wrapper<ValueExpression?>> parseArgumentValueListJson(
+    List<ArgumentConfiguration> configuration,
+    JsonObject                  json,
+  ) {
+    var value = <Wrapper<ValueExpression?>>[];
+    for (var index = 0; index < configuration.length; index++) {
+      var itemConfiguration = configuration[index];
+      var itemJson = json[itemConfiguration.identifier];
+      value.add(.of(itemJson == null ? null : ValueExpressionHelper.parseArgumentValueJson(itemConfiguration.type, itemJson)));
+    }
+    return value;
   }
 
   // #endregion

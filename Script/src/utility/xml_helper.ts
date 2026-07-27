@@ -139,14 +139,14 @@ namespace Twinning.Script.XmlHelper {
 		let data = Kernel.String.default();
 		Kernel.Tool.Data.Serialization.Xml.Encode.process(data, Kernel.Notation.Xml.Node.value(value));
 		let data_byte = Kernel.Miscellaneous.cast_moveable_String_to_ByteArray(data);
-		StorageHelper.write_file(path, data_byte);
+		StorageHelper.write_file_data(path, data_byte.view());
 		return;
 	}
 
 	export function decode_file<TValue extends Kernel.Notation.Xml.JS_Node>(
 		path: StoragePath,
 	): TValue {
-		let data_byte = StorageHelper.read_file(path);
+		let data_byte = StorageHelper.read_file_data(path);
 		let data = Kernel.Miscellaneous.cast_moveable_ByteArray_to_String(data_byte);
 		let value = Kernel.Notation.Xml.Node.default<TValue>();
 		Kernel.Tool.Data.Serialization.Xml.Decode.process(data, value);

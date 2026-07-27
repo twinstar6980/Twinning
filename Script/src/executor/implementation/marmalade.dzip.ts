@@ -146,7 +146,7 @@ namespace Twinning.Script.Executor.Implementation.Marmalade.Dzip {
 				batch: null,
 				worker: ({resource_directory, data_file, version_number}, store: {}) => {
 					let [data, data_size] = Support.Marmalade.Dzip.PackAutomatic.pack(resource_directory, version_number as any);
-					StorageHelper.write_file(data_file, data.view().sub(Kernel.Size.value(0n), data_size));
+					StorageHelper.write_file_data(data_file, data.view().sub(Kernel.Size.value(0n), data_size));
 					return;
 				},
 			}),

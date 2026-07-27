@@ -2,6 +2,8 @@ import '/common.dart';
 import '/module.dart';
 import '/setting.dart';
 import '/application.dart';
+import '/utility/json_type.dart';
+import '/utility/json_helper.dart';
 import '/utility/convert_helper.dart';
 import '/utility/storage_path.dart';
 import '/utility/command_line_reader.dart';
@@ -9,11 +11,9 @@ import '/utility/window_helper.dart';
 import '/utility/application_exception_manager.dart';
 import '/utility/application_link_manager.dart';
 import '/utility/system_ui_helper.dart';
-import 'dart:async';
-import 'widget/export.dart';
-import 'package:collection/collection.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter/widgets.dart';
+import '/widget/export.dart';
+import 'package:collection/collection.dart' as lib;
+import 'package:flutter/widgets.dart' as lib;
 
 // ----------------
 
@@ -43,7 +43,7 @@ class MainApplication {
     List<String> argument,
   ) async {
     try {
-      WidgetsFlutterBinding.ensureInitialized();
+      lib.WidgetsFlutterBinding.ensureInitialized();
       await ApplicationExceptionManager.instance.initialize();
       await ApplicationExceptionManager.instance.listen((exception, stack) async {
         await this._handleException(exception, stack);
@@ -62,6 +62,14 @@ class MainApplication {
       this._setting.state.handleCommand = this._handleCommand;
       this._setting.state.handleLink = this._handleLink;
       await ApplicationLinkManager.instance.initialize();
+      await DropRegionManager.instance.initialize((message) async {
+        await postTask(() async {
+          if (this._setting.state.applicationNavigatorKey.currentContext != null) {
+            await StyledSnackExtension.show(this._setting.state.applicationNavigatorKey.currentContext!, message);
+          }
+        });
+        return;
+      });
       await SystemUiHelper.applyMode(.edgeToEdge);
       if (SystemChecker.isWindows || SystemChecker.isLinux || SystemChecker.isMacintosh) {
         await WindowHelper.bringToCenter(this._setting.data.windowSizeWidth, this._setting.data.windowSizeHeight);
@@ -87,7 +95,7 @@ class MainApplication {
     catch (e, s) {
       this._handleException(e, s);
     }
-    runApp(Application(setting: this._setting));
+    lib.runApp(Application(setting: this._setting));
     return;
   }
 
@@ -107,7 +115,7 @@ class MainApplication {
             contentBuilder: (context, setStateForPanel) => [
               FlexContainer.horizontal([
                 StyledText.custom(
-                  ConvertHelper.generateExceptionMessage(exception, stack),
+                  ConvertHelper.generateExceptionMessage(exception, stack).join('\n'),
                   overflow: .clip,
                 ).withSelectableArea(
                 ).withFlexExpanded(),
@@ -127,9 +135,9 @@ class MainApplication {
   // ----------------
 
   Future<Void> _handleLaunch(
-    String       title,
-    ModuleType   type,
-    List<String> option,
+    String     title,
+    ModuleType type,
+    Object     option,
   ) async {
     await this._setting.state.homeInsertPage!(.new(), .new(
       title: title,
@@ -142,8 +150,8 @@ class MainApplication {
   Future<Void> _handleForward(
     List<StoragePath> resource,
   ) async {
-    var setting = Provider.of<SettingProvider>(this._setting.state.applicationNavigatorKey.currentContext!, listen: false);
-    var forwardOption = await ModuleType.values.map((value) async => await ModuleHelper.query(value).generateForwardOption(resource)).wait;
+    var setting = SettingProvider.of(this._setting.state.applicationNavigatorKey.currentContext!, listen: false);
+    var forwardOption = await ModuleType.values.map((value) async => (await ModuleHelper.query(value).generateForwardOption(resource))).wait;
     var targetType = forwardOption[setting.data.forwarderDefaultTarget.index] != null ? setting.data.forwarderDefaultTarget : null;
     var canContinue = setting.data.forwarderImmediateJump && targetType != null;
     if (!canContinue) {
@@ -175,14 +183,14 @@ class MainApplication {
   Future<Void> _handleCommand(
     List<String> command,
   ) async {
-    var optionLaunch = null as ({String title, ModuleType type, List<String> option})?;
+    var optionLaunch = null as ({String title, ModuleType type, JsonObject option})?;
     var optionForward = null as ({List<StoragePath> resource})?;
     var option = CommandLineReader(command);
     if (option.check('-launch')) {
       optionLaunch = (
         title: option.nextString(),
         type: option.nextString().selfLet((it) => ConvertHelper.parseEnumerationFromStringOfSnakeCase(it, ModuleType.values)),
-        option: option.nextStringList(),
+        option: option.nextString().selfLet((it) => JsonHelper.decodeText(it).jsonObject()),
       );
     }
     if (option.check('-forward')) {

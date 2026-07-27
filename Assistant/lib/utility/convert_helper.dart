@@ -1,7 +1,7 @@
 import '/common.dart';
-import 'dart:async';
-import 'dart:typed_data';
-import 'dart:ui';
+import 'dart:async' as lib;
+import 'dart:typed_data' as lib;
+import 'dart:ui' as lib;
 import 'package:decimal/decimal.dart' as lib;
 import 'package:stack_trace/stack_trace.dart' as lib;
 
@@ -11,15 +11,22 @@ class ConvertHelper {
 
   // #region exception
 
-  static String generateExceptionMessage(
+  static List<String> generateExceptionMessage(
     Object      exception,
     StackTrace? stack,
   ) {
-    var result = '${exception}';
+    var result = <String>[];
+    result.add('# ${exception.runtimeType}');
+    result.add('\$ message: ${exception}');
     if (stack != null) {
-      var trace = lib.Trace.from(stack);
-      for (var frame in trace.frames) {
-        result += '\n@ ${frame.library.selfLet((it) => it.startsWith('package:assistant') ? it.substring('package:'.length) : it)}:${frame.line ?? '?'}:${frame.column ?? '?'} ${frame.member ?? '?'}';
+      for (var frame in lib.Trace.from(stack).frames) {
+        var framePart = [
+          frame.library.selfLet((it) => it.startsWith('package:assistant') ? it.substring('package:'.length) : it),
+          frame.line ?? '?',
+          frame.column ?? '?',
+          frame.member ?? '?',
+        ];
+        result.add('@ ${framePart[0]}:${framePart[1]}:${framePart[2]} ${framePart[3]}');
       }
     }
     return result;
@@ -197,29 +204,29 @@ class ConvertHelper {
 
   // #region image
 
-  static Future<Image> parseImageFromData(
-    Uint8List data, {
-    Integer?  width = null,
-    Integer?  height = null,
-    Boolean   isRawRgba = false,
-    Boolean   isRawBgra = false,
-    Boolean   isPng = false,
+  static Future<lib.Image> parseImageFromData(
+    lib.Uint8List data, {
+    Integer?      width = null,
+    Integer?      height = null,
+    Boolean       isRawRgba = false,
+    Boolean       isRawBgra = false,
+    Boolean       isPng = false,
   }) async {
     assertTest([isRawRgba, isRawBgra, isPng].where((it) => it).length == 1);
-    var value = null as Image?;
+    var value = null as lib.Image?;
     if (isPng) {
-      var codec = await instantiateImageCodec(data);
+      var codec = await lib.instantiateImageCodec(data);
       var frame = await codec.getNextFrame();
       value = frame.image;
     }
     if (isRawRgba) {
-      var completer = Completer<Image>();
-      decodeImageFromPixels(data, width!, height!, .rgba8888, (image) => completer.complete(image));
+      var completer = lib.Completer<lib.Image>();
+      lib.decodeImageFromPixels(data, width!, height!, .rgba8888, (image) => completer.complete(image));
       value = await completer.future;
     }
     if (isRawBgra) {
-      var completer = Completer<Image>();
-      decodeImageFromPixels(data, width!, height!, .bgra8888, (image) => completer.complete(image));
+      var completer = lib.Completer<lib.Image>();
+      lib.decodeImageFromPixels(data, width!, height!, .bgra8888, (image) => completer.complete(image));
       value = await completer.future;
     }
     return value!;

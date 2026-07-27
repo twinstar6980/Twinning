@@ -9,8 +9,6 @@ import '/utility/application_permission_manager.dart';
 import '/utility/application_extension_manager.dart';
 import '/widget/export.dart';
 import '/view/home/about_panel.dart';
-import 'package:flutter/widgets.dart';
-import 'package:provider/provider.dart';
 
 // ----------------
 
@@ -63,7 +61,7 @@ class _SettingPanelState extends State<SettingPanel> {
 
   @override
   build(context) {
-    var setting = Provider.of<SettingProvider>(context);
+    var setting = SettingProvider.of(context);
     return FlexContainer.vertical([
       Gap.vertical(4),
       SettingListLabel(

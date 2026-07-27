@@ -1,4 +1,5 @@
 import '/common.dart';
+import '/utility/vdf_type.dart';
 import '/utility/storage_path.dart';
 import '/utility/storage_helper.dart';
 import 'package:vdf/vdf.dart' as lib;
@@ -10,13 +11,12 @@ class VdfHelper {
   // #region encoding
 
   static String encodeText(
-    Map<String, Object?> value, {
-    Boolean              indented = true,
-  }) {
+    VdfNode value,
+  ) {
     return lib.vdfEncode(value);
   }
 
-  static Map<String, Object?> decodeText(
+  static VdfNode decodeText(
     String target,
   ) {
     return lib.vdfDecode(target);
@@ -25,14 +25,13 @@ class VdfHelper {
   // ----------------
 
   static Future<Void> encodeFile(
-    StoragePath          target,
-    Map<String, Object?> value, {
-    Boolean              indented = true,
-  }) async {
-    return await StorageHelper.writeFileText(target, VdfHelper.encodeText(value, indented: indented));
+    StoragePath target,
+    VdfNode     value,
+  ) async {
+    return await StorageHelper.writeFileText(target, VdfHelper.encodeText(value));
   }
 
-  static Future<Map<String, Object?>> decodeFile(
+  static Future<VdfNode> decodeFile(
     StoragePath target,
   ) async {
     return VdfHelper.decodeText(await StorageHelper.readFileText(target));

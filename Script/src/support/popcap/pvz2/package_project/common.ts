@@ -32,7 +32,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject {
 	): void {
 		try {
 			let version_file = make_scope_child_path(project_directory, 'version.txt');
-			let version_data = StorageHelper.read_file(version_file);
+			let version_data = StorageHelper.read_file_data(version_file);
 			let version_text = Kernel.Miscellaneous.cast_CharacterListView_to_JS_String(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(version_data.view()));
 			assert_test(version_text === k_version.toString());
 		}

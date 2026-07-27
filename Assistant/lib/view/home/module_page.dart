@@ -1,7 +1,6 @@
 import '/common.dart';
 import '/widget/export.dart';
 import '/utility/storage_path.dart';
-import 'package:flutter/widgets.dart';
 
 // ----------------
 
@@ -62,10 +61,10 @@ abstract class ModulePageState {
   // ----------------
 
   Future<Void> modulePageApplyOption(
-    List<String> optionView,
+    Object option,
   );
 
-  Future<List<String>> modulePageCollectOption(
+  Future<Object> modulePageCollectOption(
   );
 
   // ----------------

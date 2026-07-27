@@ -3,48 +3,32 @@ import '/module.dart';
 import '/utility/convert_helper.dart';
 import '/utility/storage_path.dart';
 import '/utility/storage_helper.dart';
+import '/utility/json_type.dart';
 import '/utility/json_helper.dart';
 import '/utility/application_font_manager.dart';
 import '/widget/export.dart';
 import '/view/core_task_worker/setting.dart' as core_task_worker;
 import '/view/core_task_worker/submission_type.dart' as core_task_worker;
 import '/view/core_task_worker/value_expression.dart' as core_task_worker;
-import '/view/core_command_sender/setting.dart' as core_command_sender;
-import '/view/core_resource_shipper/setting.dart' as core_resource_shipper;
-import '/view/popcap_reflection_descriptor/setting.dart' as popcap_reflection_descriptor;
-import '/view/popcap_animation_viewer/setting.dart' as popcap_animation_viewer;
-import '/view/popcap_map_designer/setting.dart' as popcap_map_designer;
-import '/view/popcap_package_previewer/setting.dart' as popcap_package_previewer;
-import '/view/popcap_package_builder/setting.dart' as popcap_package_builder;
-import '/view/kairosoft_game_manager/setting.dart' as kairosoft_game_manager;
-import 'package:flutter/widgets.dart';
 
 // ----------------
 
 class SettingData {
-  String                               version;
-  StyledThemeMode                      themeMode;
-  Boolean                              themeColorState;
-  Color                                themeColorLight;
-  Color                                themeColorDark;
-  Boolean                              themeFontState;
-  List<StoragePath>                    themeFontPath;
-  Integer                              windowSizeWidth;
-  Integer                              windowSizeHeight;
-  ModuleType                           forwarderDefaultTarget;
-  Boolean                              forwarderImmediateJump;
-  StoragePath                          moduleConfigurationDirectory;
-  Map<String, StoragePath>             storagePickerHistoryLocation;
-  ModuleLauncherSetting                moduleLauncher;
-  core_task_worker.Setting             coreTaskWorker;
-  core_command_sender.Setting          coreCommandSender;
-  core_resource_shipper.Setting        coreResourceShipper;
-  popcap_reflection_descriptor.Setting popcapReflectionDescriptor;
-  popcap_animation_viewer.Setting      popcapAnimationViewer;
-  popcap_map_designer.Setting          popcapMapDesigner;
-  popcap_package_previewer.Setting     popcapPackagePreviewer;
-  popcap_package_builder.Setting       popcapPackageBuilder;
-  kairosoft_game_manager.Setting       kairosoftGameManager;
+  String                                                         version;
+  StyledThemeMode                                                themeMode;
+  Boolean                                                        themeColorState;
+  Color                                                          themeColorLight;
+  Color                                                          themeColorDark;
+  Boolean                                                        themeFontState;
+  List<StoragePath>                                              themeFontPath;
+  Integer                                                        windowSizeWidth;
+  Integer                                                        windowSizeHeight;
+  ModuleType                                                     forwarderDefaultTarget;
+  Boolean                                                        forwarderImmediateJump;
+  StoragePath                                                    moduleConfigurationDirectory;
+  Map<String, StoragePath>                                       storagePickerHistoryLocation;
+  Map<ModuleLauncherCategory, List<ModuleLauncherConfiguration>> moduleLauncher;
+  Map<ModuleType, Object>                                        moduleSetting;
   SettingData({
     required this.version,
     required this.themeMode,
@@ -60,20 +44,12 @@ class SettingData {
     required this.moduleConfigurationDirectory,
     required this.storagePickerHistoryLocation,
     required this.moduleLauncher,
-    required this.coreTaskWorker,
-    required this.coreCommandSender,
-    required this.coreResourceShipper,
-    required this.popcapReflectionDescriptor,
-    required this.popcapAnimationViewer,
-    required this.popcapMapDesigner,
-    required this.popcapPackagePreviewer,
-    required this.popcapPackageBuilder,
-    required this.kairosoftGameManager,
+    required this.moduleSetting,
   });
 }
 
 class SettingState {
-  Future<Void> Function(String title, ModuleType type, List<String> option)?                       handleLaunch;
+  Future<Void> Function(String title, ModuleType type, Object option)?                             handleLaunch;
   Future<Void> Function(List<StoragePath> resource)?                                               handleForward;
   Future<Void> Function(List<String> command)?                                                     handleCommand;
   Future<Void> Function(Uri link)?                                                                 handleLink;
@@ -154,7 +130,7 @@ class SettingProvider with ChangeNotifier {
     if (file == null) {
       file = await this.file();
     }
-    this.data = SettingProvider._parseDataFromJson(await JsonHelper.decodeFile(file));
+    this.data = SettingProvider._parseDataFromJson((await JsonHelper.decodeFile(file)).jsonObject());
     return;
   }
 
@@ -179,6 +155,15 @@ class SettingProvider with ChangeNotifier {
 
   // #region utility
 
+  static SettingProvider of(
+    BuildContext context, {
+    Boolean listen = true,
+  }) {
+    return Provider.of<SettingProvider>(context, listen: listen);
+  }
+
+  // ----------------
+
   static SettingData _createDefaultData(
   ) {
     return .new(
@@ -195,48 +180,25 @@ class SettingProvider with ChangeNotifier {
       forwarderImmediateJump: false,
       moduleConfigurationDirectory: .new(),
       storagePickerHistoryLocation: {},
-      moduleLauncher: .new(
-        module: ModuleType.values.map(ModuleHelper.query).where((it) => !it.draft).map((it) => ModuleLauncherConfiguration(
-          title: it.name,
-          type: it.type,
-          option: [],
-        )).toList(),
-        pinned: [],
-        recent: [],
-      ),
-      coreTaskWorker: .new(
-        kernel: .new(),
-        script: .new(),
-        argument: [],
-        immediateLaunch: true,
-      ),
-      coreCommandSender: .new(
-        parallelForward: false,
-      ),
-      coreResourceShipper: .new(
-        parallelForward: false,
-        enableFilter: true,
-        enableBatch: false,
-      ),
-      popcapReflectionDescriptor: .new(
-      ),
-      popcapAnimationViewer: .new(
-        immediateSelect: true,
-        automaticPlay: true,
-        repeatPlay: true,
-        reversePlay: false,
-        keepSpeed: false,
-        showBoundary: false,
-      ),
-      popcapMapDesigner: .new(
-      ),
-      popcapPackagePreviewer: .new(
-      ),
-      popcapPackageBuilder: .new(
-      ),
-      kairosoftGameManager: .new(
-        repositoryOfWindowsSteam: .of('C:/Program Files (x86)/Steam'),
-      ),
+      moduleLauncher: {
+        for (var category in ModuleLauncherCategory.values) ...{
+          if (category == .module) ...{
+            category: ModuleType.values.map(ModuleHelper.query).where((it) => !it.draft).map((it) => ModuleLauncherConfiguration(
+              title: it.name,
+              type: it.type,
+              option: it.generateDefaultOption(),
+            )).toList(),
+          },
+          if (category != .module) ...{
+            category: [],
+          },
+        },
+      },
+      moduleSetting: {
+        for (var type in ModuleType.values) ...{
+          type: ModuleHelper.query(type).generateDefaultSetting(),
+        },
+      },
     );
   }
 
@@ -259,7 +221,7 @@ class SettingProvider with ChangeNotifier {
 
   // ----------------
 
-  static dynamic _makeDataToJson(
+  static JsonObject _makeDataToJson(
     SettingData data,
   ) {
     return {
@@ -276,126 +238,54 @@ class SettingProvider with ChangeNotifier {
       'forwarder_immediate_jump': data.forwarderImmediateJump,
       'module_configuration_directory': data.moduleConfigurationDirectory.emit(),
       'storage_picker_history_location': data.storagePickerHistoryLocation.map((key, value) => .new(key, value.emit())),
-      'module_launcher': {
-        'module': data.moduleLauncher.module.map((dataItem) => {
-          'title': dataItem.title,
-          'type': dataItem.type.selfLet((it) => ModuleHelper.query(it).identifier),
-          'option': dataItem.option,
-        }).toList(),
-        'pinned': data.moduleLauncher.pinned.map((dataItem) => {
-          'title': dataItem.title,
-          'type': dataItem.type.selfLet((it) => ModuleHelper.query(it).identifier),
-          'option': dataItem.option,
-        }).toList(),
-        'recent': data.moduleLauncher.recent.map((dataItem) => {
-          'title': dataItem.title,
-          'type': dataItem.type.selfLet((it) => ModuleHelper.query(it).identifier),
-          'option': dataItem.option,
-        }).toList(),
-      },
-      'core_task_worker': {
-        'kernel': data.coreTaskWorker.kernel.emit(),
-        'script': data.coreTaskWorker.script.emit(),
-        'argument': data.coreTaskWorker.argument,
-        'immediate_launch': data.coreTaskWorker.immediateLaunch,
-      },
-      'core_command_sender': {
-        'parallel_forward': data.coreCommandSender.parallelForward,
-      },
-      'core_resource_shipper': {
-        'parallel_forward': data.coreResourceShipper.parallelForward,
-        'enable_filter': data.coreResourceShipper.enableFilter,
-        'enable_batch': data.coreResourceShipper.enableBatch,
-      },
-      'popcap_reflection_descriptor': {
-      },
-      'popcap_animation_viewer': {
-        'immediate_select': data.popcapAnimationViewer.immediateSelect,
-        'automatic_play': data.popcapAnimationViewer.automaticPlay,
-        'repeat_play': data.popcapAnimationViewer.repeatPlay,
-        'reverse_play': data.popcapAnimationViewer.reversePlay,
-        'keep_speed': data.popcapAnimationViewer.keepSpeed,
-        'show_boundary': data.popcapAnimationViewer.showBoundary,
-      },
-      'popcap_map_designer': {
-      },
-      'popcap_package_previewer': {
-      },
-      'popcap_package_builder': {
-      },
-      'kairosoft_game_manager': {
-        'repository_of_windows_steam': data.kairosoftGameManager.repositoryOfWindowsSteam.emit(),
-      },
+      'module_launcher': data.moduleLauncher.selfLet((data) => {
+        for (var category in ModuleLauncherCategory.values) ...{
+          category.name.jsonKey(): data[category]!.map((data) => {
+            'title': data.title,
+            'type': data.type.selfLet((it) => ModuleHelper.query(it).identifier),
+            'option': data.option.selfLet((it) => ModuleHelper.query(data.type).makeOption(it)),
+          }).toList(),
+        },
+      }),
+      'module_setting': data.moduleSetting.selfLet((data) => {
+        for (var type in ModuleType.values) ...{
+          type.name.jsonKey(): data[type]!.selfLet((data) => ModuleHelper.query(type).makeSetting(data)),
+        },
+      }),
     };
   }
 
   static SettingData _parseDataFromJson(
-    dynamic json,
+    JsonObject json,
   ) {
     return SettingData(
-      version: (json['version'] as String).selfAlso((it) => assertTest(it == ApplicationInformation.version)),
-      themeMode: (json['theme_mode'] as String).selfLet((it) => ConvertHelper.parseEnumerationFromStringOfSnakeCase(it, StyledThemeMode.values)),
-      themeColorState: (json['theme_color_state'] as Boolean),
-      themeColorLight: (json['theme_color_light'] as Integer).selfLet((it) => .new(it)),
-      themeColorDark: (json['theme_color_dark'] as Integer).selfLet((it) => .new(it)),
-      themeFontState: (json['theme_font_state'] as Boolean),
-      themeFontPath: (json['theme_font_path'] as List<dynamic>).cast<String>().map((it) => StoragePath.of(it)).toList(),
-      windowSizeWidth: (json['window_size_width'] as Integer),
-      windowSizeHeight: (json['window_size_height'] as Integer),
-      forwarderDefaultTarget: (json['forwarder_default_target'] as String).selfLet((it) => ConvertHelper.parseEnumerationFromStringOfSnakeCase(it, ModuleType.values)),
-      forwarderImmediateJump: (json['forwarder_immediate_jump'] as Boolean),
-      moduleConfigurationDirectory: (json['module_configuration_directory'] as String).selfLet((it) => StoragePath.of(it)),
-      storagePickerHistoryLocation: (json['storage_picker_history_location'] as Map<dynamic, dynamic>).cast<String, String>().map((key, value) => .new(key, StoragePath.of(value))),
-      moduleLauncher: (json['module_launcher'] as Map<dynamic, dynamic>).selfLet((jsonPart) => ModuleLauncherSetting(
-        module: (jsonPart['module'] as List<dynamic>).cast<Map<dynamic, dynamic>>().map((jsonItem) => ModuleLauncherConfiguration(
-          title: (jsonItem['title'] as String),
-          type: (jsonItem['type'] as String).selfLet((it) => ConvertHelper.parseEnumerationFromStringOfSnakeCase(it, ModuleType.values)),
-          option: (jsonItem['option'] as List<dynamic>).cast<String>(),
-        )).toList(),
-        pinned: (jsonPart['pinned'] as List<dynamic>).cast<Map<dynamic, dynamic>>().map((jsonItem) => ModuleLauncherConfiguration(
-          title: (jsonItem['title'] as String),
-          type: (jsonItem['type'] as String).selfLet((it) => ConvertHelper.parseEnumerationFromStringOfSnakeCase(it, ModuleType.values)),
-          option: (jsonItem['option'] as List<dynamic>).cast<String>(),
-        )).toList(),
-        recent: (jsonPart['recent'] as List<dynamic>).cast<Map<dynamic, dynamic>>().map((jsonItem) => ModuleLauncherConfiguration(
-          title: (jsonItem['title'] as String),
-          type: (jsonItem['type'] as String).selfLet((it) => ConvertHelper.parseEnumerationFromStringOfSnakeCase(it, ModuleType.values)),
-          option: (jsonItem['option'] as List<dynamic>).cast<String>(),
-        )).toList(),
-      )),
-      coreTaskWorker: (json['core_task_worker'] as Map<dynamic, dynamic>).selfLet((jsonPart) => core_task_worker.Setting(
-        kernel: (jsonPart['kernel'] as String).selfLet((it) => StoragePath.of(it)),
-        script: (jsonPart['script'] as String).selfLet((it) => StoragePath.of(it)),
-        argument: (jsonPart['argument'] as List<dynamic>).cast<String>(),
-        immediateLaunch: (jsonPart['immediate_launch'] as Boolean),
-      )),
-      coreCommandSender: (json['core_command_sender'] as Map<dynamic, dynamic>).selfLet((jsonPart) => core_command_sender.Setting(
-        parallelForward: (jsonPart['parallel_forward'] as Boolean),
-      )),
-      coreResourceShipper: (json['core_resource_shipper'] as Map<dynamic, dynamic>).selfLet((jsonPart) => core_resource_shipper.Setting(
-        parallelForward: (jsonPart['parallel_forward'] as Boolean),
-        enableFilter: (jsonPart['enable_filter'] as Boolean),
-        enableBatch: (jsonPart['enable_batch'] as Boolean),
-      )),
-      popcapReflectionDescriptor: (json['popcap_reflection_descriptor'] as Map<dynamic, dynamic>).selfLet((jsonPart) => popcap_reflection_descriptor.Setting(
-      )),
-      popcapAnimationViewer: (json['popcap_animation_viewer'] as Map<dynamic, dynamic>).selfLet((jsonPart) => popcap_animation_viewer.Setting(
-        immediateSelect: (jsonPart['immediate_select'] as Boolean),
-        automaticPlay: (jsonPart['automatic_play'] as Boolean),
-        repeatPlay: (jsonPart['repeat_play'] as Boolean),
-        reversePlay: (jsonPart['reverse_play'] as Boolean),
-        keepSpeed: (jsonPart['keep_speed'] as Boolean),
-        showBoundary: (jsonPart['show_boundary'] as Boolean),
-      )),
-      popcapMapDesigner: (json['popcap_map_designer'] as Map<dynamic, dynamic>).selfLet((jsonPart) => popcap_map_designer.Setting(
-      )),
-      popcapPackagePreviewer: (json['popcap_package_previewer'] as Map<dynamic, dynamic>).selfLet((jsonPart) => popcap_package_previewer.Setting(
-      )),
-      popcapPackageBuilder: (json['popcap_package_builder'] as Map<dynamic, dynamic>).selfLet((jsonPart) => popcap_package_builder.Setting(
-      )),
-      kairosoftGameManager: (json['kairosoft_game_manager'] as Map<dynamic, dynamic>).selfLet((jsonPart) => kairosoft_game_manager.Setting(
-        repositoryOfWindowsSteam: (jsonPart['repository_of_windows_steam'] as String).selfLet((it) => StoragePath.of(it)),
-      )),
+      version: json.jsonIn('version').jsonString().selfAlso((it) => assertTest(it == ApplicationInformation.version)),
+      themeMode: json.jsonIn('theme_mode').jsonString().selfLet((it) => ConvertHelper.parseEnumerationFromStringOfSnakeCase(it, StyledThemeMode.values)),
+      themeColorState: json.jsonIn('theme_color_state').jsonBoolean(),
+      themeColorLight: json.jsonIn('theme_color_light').jsonInteger().selfLet((it) => .new(it)),
+      themeColorDark: json.jsonIn('theme_color_dark').jsonInteger().selfLet((it) => .new(it)),
+      themeFontState: json.jsonIn('theme_font_state').jsonBoolean(),
+      themeFontPath: json.jsonIn('theme_font_path').jsonArray().cast<String>().map((it) => StoragePath.of(it)).toList(),
+      windowSizeWidth: json.jsonIn('window_size_width').jsonInteger(),
+      windowSizeHeight: json.jsonIn('window_size_height').jsonInteger(),
+      forwarderDefaultTarget: json.jsonIn('forwarder_default_target').jsonString().selfLet((it) => ConvertHelper.parseEnumerationFromStringOfSnakeCase(it, ModuleType.values)),
+      forwarderImmediateJump: json.jsonIn('forwarder_immediate_jump').jsonBoolean(),
+      moduleConfigurationDirectory: json.jsonIn('module_configuration_directory').jsonString().selfLet((it) => StoragePath.of(it)),
+      storagePickerHistoryLocation: json.jsonIn('storage_picker_history_location').jsonObject().cast<String, String>().map((key, value) => .new(key, StoragePath.of(value))),
+      moduleLauncher: json.jsonIn('module_launcher').jsonObject().selfLet((json) => {
+        for (var category in ModuleLauncherCategory.values) ...{
+          category: json.jsonIn(category.name.jsonKey()).jsonArray().map((json) => ModuleLauncherConfiguration(
+            title: json.jsonIn('title').jsonString(),
+            type: json.jsonIn('type').jsonString().selfLet((it) => ConvertHelper.parseEnumerationFromStringOfSnakeCase(it, ModuleType.values)),
+            option: json.jsonIn('option').jsonObject().selfLet((it) => ModuleHelper.query(json.jsonIn('type').jsonString().selfLet((it) => ConvertHelper.parseEnumerationFromStringOfSnakeCase(it, ModuleType.values))).parseOption(it)),
+          )).toList(),
+        },
+      }),
+      moduleSetting: json.jsonIn('module_setting').jsonObject().selfLet((json) => {
+        for (var type in ModuleType.values) ...{
+          type: ModuleHelper.query(type).parseSetting(json.jsonIn(type.name.jsonKey()).jsonObject()),
+        },
+      }),
     );
   }
 
@@ -404,10 +294,14 @@ class SettingProvider with ChangeNotifier {
   Future<Void> quickSetup(
     StoragePath homeDirectory,
   ) async {
-    this.data.moduleConfigurationDirectory = homeDirectory.join('assistant');
-    this.data.coreTaskWorker.kernel = homeDirectory.join('kernel');
-    this.data.coreTaskWorker.script = homeDirectory.join('script').join('main.js');
-    this.data.coreTaskWorker.argument = [homeDirectory.emit()];
+    this.data.selfAlso((data) {
+      data.moduleConfigurationDirectory = homeDirectory.join('assistant');
+      data.moduleSetting[ModuleType.coreTaskWorker]!.as<core_task_worker.Setting>().selfAlso((data) {
+        data.kernel = homeDirectory.join('kernel');
+        data.script = homeDirectory.join('script').join('main.js');
+        data.argument = [homeDirectory.emit()];
+      });
+    });
     return;
   }
 

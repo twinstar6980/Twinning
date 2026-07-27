@@ -44,9 +44,9 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 			}
 			definition.compression = packet_compression_from_data(information_structure.header.resource_data_section_compression);
 			definition.resource.allocate_full(information_structure.resource_information.size());
+			auto resource_data_section_container = ByteArray{};
 			for (auto & current_resource_type : make_static_array<ResourceType>(ResourceType::Constant::general(), ResourceType::Constant::texture())) {
 				auto resource_data_section_view = ConstantByteListView{};
-				auto resource_data_section_container = ByteArray{};
 				auto resource_data_section_offset = Size{};
 				auto resource_data_section_size = Size{};
 				auto resource_data_section_size_original = Size{};
@@ -73,13 +73,13 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 					resource_data_section_view = resource_data_section_view_stored;
 				}
 				else {
-					resource_data_section_container.allocate(resource_data_section_size_original);
-					if (resource_data_section_size_original != 0_sz) {
-						auto resource_data_section_stored_stream = InputByteStreamView{resource_data_section_view_stored};
-						auto resource_data_section_original_stream = OutputByteStreamView{resource_data_section_container};
-						Data::Compression::Deflate::Uncompress::process(resource_data_section_original_stream, resource_data_section_stored_stream, 15_i, Data::Compression::Deflate::WrapperType::Constant::zlib());
+					if (resource_data_section_container.size() < resource_data_section_size_original) {
+						resource_data_section_container.allocate(resource_data_section_size_original);
 					}
-					resource_data_section_view = resource_data_section_container.view();
+					resource_data_section_view = resource_data_section_container.head(resource_data_section_size_original);
+					if (resource_data_section_size_original != 0_sz) {
+						Data::Compression::Deflate::Uncompress::process(as_left(OutputByteStreamView{resource_data_section_container.head(resource_data_section_size_original)}), as_left(InputByteStreamView{resource_data_section_view_stored}), 15_i, Data::Compression::Deflate::WrapperType::Constant::zlib());
+					}
 				}
 				for (auto & resource_index : SizeRange{information_structure.resource_information.size()}) {
 					auto & resource_information_structure = information_structure.resource_information.at(resource_index);
@@ -107,16 +107,16 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 					}
 					auto resource_data = resource_data_section_view.sub(cast_box<Size>(resource_information_structure.value.offset), cast_box<Size>(resource_information_structure.value.size));
 					if (resource_directory.has()) {
-						if (!Storage::exist_directory(resource_directory.get())) {
-							Storage::create_directory(resource_directory.get());
+						auto resource_path = resource_directory.get().push(resource_definition.path);
+						if (!Storage::exist_file(resource_path)) {
+							Storage::create_file(resource_path);
 						}
-						if (!Storage::exist_file(resource_directory.get().push(resource_definition.path))) {
-							Storage::create_file(resource_directory.get().push(resource_definition.path));
-						}
-						Storage::write_file(resource_directory.get().push(resource_definition.path), resource_data);
+						Storage::resize_file(resource_path, resource_data.size());
+						Storage::write_file(resource_path, 0_sz, resource_data);
 					}
 				}
 			}
+			resource_data_section_container.reset();
 			data.set_position(
 				cast_box<Size>(
 					Range::maximum(

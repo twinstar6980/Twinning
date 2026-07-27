@@ -29,7 +29,7 @@ class MainActivity : FlutterActivity() {
   public override fun onNewIntent(
     intent: Intent,
     caller: ComponentCaller,
-  ) {
+  ): Unit {
     super.onNewIntent(intent, caller)
     PlatformIntegrationManager.instance().inject_MainActivity_onNewIntent(this, intent, caller)
     return

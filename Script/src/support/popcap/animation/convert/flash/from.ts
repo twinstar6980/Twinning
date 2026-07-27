@@ -117,7 +117,7 @@ namespace Twinning.Script.Support.Popcap.Animation.Convert.Flash.From {
 				let frame_node = frame_node_list[layer_index];
 				if (layer.state !== null) {
 					if (frame_node.length > 0) {
-						(frame_node[frame_node.length - 1].value as Kernel.Notation.Xml.JS_Element).attribute.duration = `${layer.frame_duration}`;
+						(frame_node[frame_node.length - 1].value as Kernel.Notation.Xml.JS_Element).attribute['duration'] = `${layer.frame_duration}`;
 					}
 				}
 				if (layer.state === true) {
@@ -171,7 +171,7 @@ namespace Twinning.Script.Support.Popcap.Animation.Convert.Flash.From {
 		for (let layer_index in model) {
 			let layer = model[layer_index];
 			let frame_node = frame_node_list[layer_index];
-			(frame_node[frame_node.length - 1].value as Kernel.Notation.Xml.JS_Element).attribute.duration = `${layer.frame_duration}`;
+			(frame_node[frame_node.length - 1].value as Kernel.Notation.Xml.JS_Element).attribute['duration'] = `${layer.frame_duration}`;
 			delete model[layer_index];
 		}
 		return [XmlHelper.create_element('DOMSymbolItem', {

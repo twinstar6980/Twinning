@@ -1,5 +1,5 @@
 import '/common.dart';
-import 'dart:typed_data';
+import 'dart:typed_data' as lib;
 
 // ----------------
 
@@ -7,16 +7,16 @@ class ByteStreamView {
 
   // #region constructor
 
-  ByteData _view;
+  lib.ByteData _view;
 
   Integer _position;
 
-  Endian _endian;
+  lib.Endian _endian;
 
   // ----------------
 
   ByteStreamView(
-    ByteData view,
+    lib.ByteData view,
   ) :
     this._view = view,
     this._position = 0,
@@ -26,7 +26,7 @@ class ByteStreamView {
 
   // #region action
 
-  ByteData get view => this._view;
+  lib.ByteData get view => this._view;
 
   Integer get size => this._view.lengthInBytes;
 

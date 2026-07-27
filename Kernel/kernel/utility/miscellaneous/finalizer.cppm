@@ -25,13 +25,17 @@ export namespace Twinning::Kernel {
 
 		Action m_action;
 
+		Boolean m_disposed;
+
 	public:
 
 		#pragma region constructor
 
 		constexpr ~Finalizer(
 		) {
-			thiz.m_action();
+			if (!thiz.m_disposed) {
+				thiz.dispose();
+			}
 			return;
 		}
 
@@ -53,7 +57,8 @@ export namespace Twinning::Kernel {
 		explicit constexpr Finalizer(
 			Action const & action
 		) :
-			m_action{action} {
+			m_action{action},
+			m_disposed{k_false} {
 			return;
 		}
 
@@ -68,6 +73,18 @@ export namespace Twinning::Kernel {
 		constexpr auto operator =(
 			Finalizer && that
 		) -> Finalizer & = delete;
+
+		#pragma endregion
+
+		#pragma region dispose
+
+		constexpr auto dispose(
+		) -> Void {
+			assert_test(!thiz.m_disposed);
+			thiz.m_disposed = k_true;
+			thiz.m_action();
+			return;
+		}
 
 		#pragma endregion
 

@@ -756,7 +756,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 			return thiz._rebind_value(Third::quickjs_ng::$JS_NewStringLen(thiz._context(), unmake_pointer_unsafe<char>(value.begin()), unmake_box<std::size_t>(value.size())));
 		}
 
-		// TODO: sv remove
+		// TODO: remove
 		auto set_string(
 			ConstantStringView const & value
 		) -> Void {
@@ -847,15 +847,15 @@ export namespace Twinning::Kernel::Script::JavaScript {
 
 		// ----------------
 
+		// TODO: remove
 		auto is_object_of_class(
-			String const & name
+			ConstantStringView const & name
 		) -> Boolean {
 			return thiz.is_object() && thiz.get_object_class_name() == name;
 		}
 
-		// TODO: sv remove
 		auto is_object_of_class(
-			ConstantStringView const & name
+			String const & name
 		) -> Boolean {
 			return thiz.is_object() && thiz.get_object_class_name() == name;
 		}
@@ -984,7 +984,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 
 		// ----------------
 
-		// TODO: sv remove
+		// TODO: remove
 		auto get_object_property(
 			ConstantStringView const & name
 		) -> Value {
@@ -1017,7 +1017,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 
 		// ----------------
 
-		// TODO: sv remove
+		// TODO: remove
 		auto set_object_property(
 			ConstantStringView const & name,
 			Value &&                   value
@@ -1200,11 +1200,11 @@ export namespace Twinning::Kernel::Script::JavaScript {
 			if (module_name[0] == '~') {
 				auto & home = *make_pointer_unsafe<Optional<Path>>(opaque);
 				if (!home.has()) {
-					Third::quickjs_ng::$JS_ThrowReferenceError(ctx, "could not load module '%s': home path not set", module_name);
+					Third::quickjs_ng::$JS_ThrowReferenceError(ctx, "could not load module '%s': home path undefined", module_name);
 					return nullptr;
 				}
 				if (module_name[1] != '/') {
-					Third::quickjs_ng::$JS_ThrowReferenceError(ctx, "could not load module '%s': path invalid", module_name);
+					Third::quickjs_ng::$JS_ThrowReferenceError(ctx, "could not load module '%s': module path invalid", module_name);
 					return nullptr;
 				}
 				path = home.get().push(Path{make_string(module_name + 2)});
@@ -1216,13 +1216,13 @@ export namespace Twinning::Kernel::Script::JavaScript {
 				Third::quickjs_ng::$JS_ThrowReferenceError(ctx, "could not load module '%s': file not found", module_name);
 				return nullptr;
 			}
-			auto data = Storage::read_file(path);
-			data.expand(1_sz);
-			data.last() = k_null_byte;
+			auto data = ByteArray{Storage::size_file(path) + 1_sz};
+			auto data_view = data.head(data.size() - 1_sz);
+			Storage::read_file(path, 0_sz, data_view);
 			auto value = Third::quickjs_ng::$JS_Eval(
 				ctx,
-				unmake_pointer_unsafe<char>(data.begin()),
-				unmake_box<std::size_t>(data.size() - 1_sz),
+				unmake_pointer_unsafe<char>(data_view.begin()),
+				unmake_box<std::size_t>(data_view.size()),
 				module_name,
 				Third::quickjs_ng::$JS_EVAL_FLAG_STRICT | Third::quickjs_ng::$JS_EVAL_TYPE_MODULE | Third::quickjs_ng::$JS_EVAL_FLAG_COMPILE_ONLY
 			);
@@ -1295,7 +1295,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 					context_wrapper.evaluate(
 						R"((message) => {
 							let error = new Error();
-							error.name = 'NativeError';
+							error.name = 'NativeException';
 							error.message = message;
 							error.stack = error.stack.substring(error.stack.indexOf('\n') + 1);
 							return error;
@@ -1324,37 +1324,47 @@ export namespace Twinning::Kernel::Script::JavaScript {
 		Value &                      exception,
 		std::source_location const & location
 	) :
-		Exception{"Script.JavaScript.Execution", {}, location} {
-		auto exception_message = exception.context().evaluate(
+		Exception{"Script::JavaScript::ExecutionException", {}, location} {
+		auto message = exception.context().evaluate(
 			R"((exception) => {
 				function generate_exception_message(
 					exception,
 				) {
-					let title = '';
-					let description = [];
-					if (exception instanceof Error) {
-						if (exception.name === 'NativeError') {
-							title = `${exception.name}`;
-							description.push(...exception.message.split('\n'));
-						}
-						else {
-							title = `${exception.name}: ${exception.message}`;
-						}
-						if (exception.stack !== undefined) {
-							description.push(...exception.stack.split('\n').slice(0, -1)
-								.map((value) => (/^    at (.*) \((.*?)(?:\:(\d+)\:(\d+))?\)$/.exec(value)))
-								.filter((value) => (value !== null))
-								.map((value) => (`@ ${['native', 'missing', 'null'].includes(value[2]) ? `<${value[2]}>` : value[2]}:${value[3] === undefined ? '?' : value[3]}:${value[4] === undefined ? '?' : value[4]} ${value[1]}`))
-							);
-						}
+					let result = [];
+					if (!(exception instanceof Error)) {
+						result.push(`# <${typeof exception}>`);
+						result.push(`$ message: ${exception}`);
 					}
 					else {
-						title = `${exception}`;
+						result.push(`# ${exception.name}`);
+						if (exception.name === 'NativeException') {
+							result.push(...exception.message.split('\n'));
+						}
+						else {
+							result.push(`$ message: ${exception.message}`);
+							if (exception instanceof SuppressedError) {
+								result.push(...generate_exception_message(exception.error));
+							}
+						}
+						if (exception.stack !== undefined) {
+							for (let frame of exception.stack.split('\n').slice(0, -1)) {
+								let frame_match = /^    at (.*) \((.*?)(?:\:(\d+)\:(\d+))?\)$/.exec(frame);
+								if (frame_match === null) {
+									continue;
+								}
+								let frame_part = [
+									['native', 'missing', 'null'].includes(frame_match[2]) ? `<${frame_match[2]}>` : frame_match[2],
+									frame_match[3] === undefined ? '?' : frame_match[3],
+									frame_match[4] === undefined ? '?' : frame_match[4],
+									frame_match[1],
+								];
+								result.push(`@ ${frame_part[0]}:${frame_part[1]}:${frame_part[2]} ${frame_part[3]}`);
+							}
+						}
 					}
-					return [title, description];
+					return result;
 				}
-				let message = generate_exception_message(exception);
-				return [message[0], ...message[1]].join('\n');
+				return generate_exception_message(exception).join('\n');
 			})"_sv,
 			"<embedded>"_s,
 			k_false
@@ -1363,7 +1373,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 				exception
 			)
 		);
-		thiz.m_description.emplace_back(make_std_string(exception_message.get_string()));
+		thiz.m_description.emplace_back(std::format("message: \n{}", make_std_string(message.get_string())));
 		return;
 	}
 
@@ -1428,7 +1438,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 		Integer &      identifier,
 		String const & name
 	) -> Void {
-		auto name_null_terminated = make_null_terminated_string(name);
+		auto name_null_terminated = M_use_nts_n_of(name);
 		auto definition = Third::quickjs_ng::$JSClassDef{
 			.class_name = unmake_pointer_unsafe<char>(name_null_terminated.begin()),
 			.finalizer = &Detail::proxy_class_finalizer<t_finalizer>,
@@ -1468,9 +1478,9 @@ export namespace Twinning::Kernel::Script::JavaScript {
 	) -> Value {
 		auto result = Third::quickjs_ng::$JS_Eval(
 			thiz._context(),
-			unmake_pointer_unsafe<char>(make_null_terminated_string(script).begin()),
+			M_use_ntsp_n_of(script),
 			unmake_box<std::size_t>(script.size()),
-			unmake_pointer_unsafe<char>(make_null_terminated_string(name).begin()),
+			M_use_ntsp_n_of(name),
 			Third::quickjs_ng::$JS_EVAL_FLAG_STRICT | (!is_module ? (Third::quickjs_ng::$JS_EVAL_TYPE_GLOBAL) : (Third::quickjs_ng::$JS_EVAL_TYPE_MODULE))
 		);
 		if (Third::quickjs_ng::$JS_IsException(result)) {
@@ -1529,7 +1539,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 			Third::quickjs_ng::$JS_NewCFunction2(
 				thiz._context(),
 				&Detail::proxy_native_function<t_function>,
-				unmake_pointer_unsafe<char>(make_null_terminated_string(name).begin()),
+				M_use_ntsp_n_of(name),
 				0,
 				!is_constructor ? (Third::quickjs_ng::$JS_CFUNC_generic) : (Third::quickjs_ng::$JS_CFUNC_constructor),
 				0

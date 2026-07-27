@@ -13,7 +13,7 @@ def build(
 	platform: str,
 ) -> tuple[str, str] | None:
 	destination = None
-	if utility.check_platform(platform, ['windows.amd64', 'linux.amd64', 'macintosh.arm64', 'android.arm64', 'iphone.arm64']):
+	if utility.project_check_platform(platform, ['windows.amd64', 'linux.amd64', 'macintosh.arm64', 'android.arm64', 'iphone.arm64']):
 		utility.sh_execute_command(source, [
 			'npm',
 			'install',
@@ -32,13 +32,13 @@ def build(
 			f'{source}/build',
 			f'{temporary}/artifact',
 		)
-		utility.pack_zip(
-			f'{temporary}/artifact',
+		utility.ex_archive_pack_zip(
 			f'{temporary}/artifact.zip',
+			f'{temporary}/artifact',
 			f'script',
 		)
 		destination = ('.zip', f'{temporary}/artifact.zip')
 	return destination
 
 if __name__ == '__main__':
-	utility.build_project_module(__file__, build, sys.argv[1])
+	utility.project_build_module(__file__, build, sys.argv[1])

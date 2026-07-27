@@ -1,5 +1,5 @@
 import '/common.dart';
-import 'package:collection/collection.dart';
+import 'package:collection/collection.dart' as lib;
 
 // ----------------
 

@@ -1,7 +1,6 @@
 import '/common.dart';
 import '/widget/export.dart';
 import '/view/core_command_sender/setting.dart';
-import 'package:flutter/widgets.dart';
 
 // ----------------
 

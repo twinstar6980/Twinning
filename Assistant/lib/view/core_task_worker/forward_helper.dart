@@ -2,9 +2,9 @@ import '/common.dart';
 import '/module.dart';
 import '/setting.dart';
 import '/utility/json_helper.dart';
+import '/widget/export.dart';
 import '/view/home/module_page.dart';
-import 'package:flutter/widgets.dart';
-import 'package:provider/provider.dart';
+import '/view/core_task_worker/option.dart';
 
 // ----------------
 
@@ -16,16 +16,17 @@ class ForwardHelper {
     BuildContext context,
     List<String> argument,
   ) async {
-    var setting = Provider.of<SettingProvider>(context, listen: false);
+    var setting = SettingProvider.of(context, listen: false);
     var key = GlobalKey();
     await setting.state.homeInsertPage!(
       key,
       .new(
         title: ModuleHelper.query(.coreTaskWorker).name,
         type: .coreTaskWorker,
-        option: [
-          '-immediate_launch', 'false',
-        ],
+        option: Option(
+          immediateLaunch: false,
+          additionalArgument: null,
+        ),
       ),
       true,
     );
@@ -40,14 +41,14 @@ class ForwardHelper {
     BuildContext context,
     List<String> argument,
   ) async {
-    var setting = Provider.of<SettingProvider>(context, listen: false);
+    var setting = SettingProvider.of(context, listen: false);
     await setting.state.handleLaunch!(
       ModuleHelper.query(.coreTaskWorker).name,
       .coreTaskWorker,
-      [
-        '-immediate_launch', 'true',
-        '-additional_argument', ...argument,
-      ],
+      Option(
+        immediateLaunch: true,
+        additionalArgument: argument,
+      ),
     );
     return;
   }

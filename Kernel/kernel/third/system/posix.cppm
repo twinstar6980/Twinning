@@ -33,23 +33,25 @@ export namespace Twinning::Kernel::Third::system::posix {
 
 	using $siginfo_t = siginfo_t;
 
-	using $posix_spawn_file_actions_t = posix_spawn_file_actions_t;
+	inline constexpr auto $open = open;
 
-	inline constexpr auto $getenv = getenv;
+	inline constexpr auto $close = close;
 
-	inline constexpr auto $setenv = setenv;
+	inline constexpr auto $chdir = chdir;
 
-	inline constexpr auto $unsetenv = unsetenv;
+	inline constexpr auto $fseeko64 = fseeko64;
 
-	inline constexpr auto $posix_spawn = posix_spawn;
+	inline constexpr auto $ftello64 = ftello64;
 
-	inline constexpr auto $posix_spawn_file_actions_init = posix_spawn_file_actions_init;
+	inline constexpr auto $dup2 = dup2;
 
-	inline constexpr auto $posix_spawn_file_actions_addopen = posix_spawn_file_actions_addopen;
+	inline constexpr auto $fork = fork;
 
-	inline constexpr auto $posix_spawn_file_actions_destroy = posix_spawn_file_actions_destroy;
+	inline constexpr auto $execve = execve;
 
 	inline constexpr auto $waitid = waitid;
+
+	inline constexpr auto $_exit = _exit;
 
 	inline constexpr auto $O_RDONLY = O_RDONLY;
 

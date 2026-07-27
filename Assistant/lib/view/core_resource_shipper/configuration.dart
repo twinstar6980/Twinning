@@ -1,5 +1,4 @@
 import '/common.dart';
-import '/utility/convert_helper.dart';
 
 // ----------------
 
@@ -60,39 +59,4 @@ class Configuration {
   Configuration({
     required this.option,
   });
-}
-
-// ----------------
-
-class ConfigurationHelper {
-
-  // #region convert
-
-  static Configuration parseDataFromJson(
-    dynamic json,
-  ) {
-    return Configuration(
-      option: (json['option'] as List<dynamic>).map((jsonGroup) => OptionGroupConfiguration(
-        name: (jsonGroup['name'] as String),
-        icon: (jsonGroup['icon'] as String),
-        item: (jsonGroup['item'] as List<dynamic>).map((jsonItem) => OptionConfiguration(
-          name: (jsonItem['name'] as String),
-          icon: (jsonItem['icon'] as String),
-          filter: (jsonItem['filter'] as Map<dynamic, dynamic>?)?.selfLet((jsonFilter) => FilterConfiguration(
-            name: (jsonFilter['name'] as String),
-            type: (jsonFilter['type'] as String).selfLet((it) => ConvertHelper.parseEnumerationFromStringOfSnakeCase(it, FilterType.values)),
-          )),
-          batch: (jsonItem['batch'] as Boolean),
-          method: (jsonItem['method'] as String?),
-          preset: (jsonItem['preset'] as List<dynamic>).map((jsonPreset) => jsonPreset == null ? null : PresetConfiguration(
-            name: (jsonPreset['name'] as String),
-            argument: (jsonPreset['argument'] as Map<dynamic, dynamic>).cast<String, Object>(),
-          )).toList(),
-        )).toList(),
-      )).toList(),
-    );
-  }
-
-  // #endregion
-
 }

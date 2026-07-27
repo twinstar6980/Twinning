@@ -10,8 +10,6 @@
 
 - [Android Content URI 处理方式](#Android-Content-URI-处理方式)
 
-- [Android 调用外部程序的限制](#Android-调用外部程序的限制)
-
 - [Shell 对宿主终端的要求](#Shell-对宿主终端的要求)
 
 - [JSON 文件格式](#JSON-文件格式)
@@ -96,43 +94,27 @@
 |    MT Manager    |               bin.mt.plus.fp                |         /...          |
 |       NMM        |               in.mfile.files                |         /...          |
 
-## Android 调用外部程序的限制
-
-由于 Android 的系统限制，应用在调用外部程序时可能会受到 `SELinux` 的限制，即使授予了文件可执行权限，也无法成功执行，这一般会表现为返回错误码 `127` 。
-
-若要让应用调用非系统内建的外部程序，需要满足以下几点要求：
-
-* 设备已获取 `ROOT` 权限。
-
-* 通过 `setenforce 0` 指令将 `SELinux` 切换到不安全的宽容模式。
-
-* 将可执行程序文件放置于非 FUSE 目录内，确保应用有权访问，并赋予可执行权限。
-
-此外，在一些系统环境中，应用默认的程序检索逻辑会优先匹配到 `/vendor/bin` 目录内的供应商实现程序，例如 `sh` ，它们往往会导致预期之外的结果。可以在 `<home>/script/configuration/setting.json` 中指定所需程序的其绝对路径。
-
-不过，在 `Android` 上执行外部程序时，会默认调用 `Termux` 环境而非本机环境，这种情况下无需上述权限要求，只需为应用授予调用 `Termux` 服务的权限。
-
 ## Shell 对宿主终端的要求
 
 `Shell` 提供了基于终端的命令行界面，但需要宿主终端支持以下特性：
 
-* UTF-8 输入/输出：必需，若不支持，将导致程序无法正常进行输入输出。
+* UTF-8 输入/输出：若不支持，程序可能无法正常进行输入输出。
 
-* 虚拟终端控制序列：可选，若不支持，将导致程序无法对不同类型的文本修饰以不同的颜色。
+* 虚拟终端控制序列：若不支持，程序无法对不同类型的文本修饰以不同的颜色。
 
 	> 默认情况下，工具会使用控制序列来优化输出效果，但如果运行在不支持控制序列的终端中，控制序列将直接输出为字符串，影响用户的阅读。
 	>
 	> 用户可以通过修改 `<home>/script/configuration/setting.json` 配置中的 `console_basic_disable_virtual_terminal_sequence` 项为 `true` 以禁用控制序列的使用。
 
-* 完备的字体：可选，若不支持，一些字符（如汉字、emoji ）将无法正常显示。
+* 完备的字体：若不支持，一些字符（如汉字、emoji ）将无法正常显示。
 
 有些操作系统未提供终端程序，或默认终端程序不提供（或默认关闭）这些支持，用户可以安装第三方终端并在其中运行本程序，可以参照以下列表：
 
-* Windows - [Windows Terminal](https://apps.microsoft.com/store/detail/windows-terminal/9N0DX20HK701)
+* `Windows` [Windows Terminal](https://apps.microsoft.com/store/detail/windows-terminal/9N0DX20HK701)
 
-* Android - [Termux](https://termux.dev/en/)
+* `Android` [Termux](https://termux.dev/en/)
 
-* iPhone - [Filza](https://www.tigisoftware.com/default/?page_id=78)
+* `Iphone` [Filza](https://www.tigisoftware.com/default/?page_id=78)
 
 > @ `Windows` \
 > 双击以运行启动脚本时，将在系统默认终端中运行程序，若想更改为在指定第三方终端中运行，请修改 `launch.cmd` ，但切换终端将导致一次 cmd 窗口闪烁，除非你使用 Windows 11 并将 Windows Terminal 设为系统默认终端。

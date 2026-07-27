@@ -1,7 +1,7 @@
 import '/common.dart';
 import '/utility/convert_helper.dart';
-import 'package:collection/collection.dart';
-import 'package:flutter/foundation.dart';
+import 'package:collection/collection.dart' as lib;
+import 'package:flutter/foundation.dart' as lib;
 
 // ----------------
 
@@ -65,7 +65,7 @@ class StoragePath {
   // #region equality
 
   @override
-  operator ==(other) => other is StoragePath && this._type == other._type && this._root == other._root && listEquals(this._segment, other._segment);
+  operator ==(other) => other is StoragePath && this._type == other._type && this._root == other._root && lib.listEquals(this._segment, other._segment);
 
   @override
   get hashCode => Object.hashAll([this._type, this._root, ...this._segment]);

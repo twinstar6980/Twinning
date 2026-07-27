@@ -1,13 +1,12 @@
 import '/common.dart';
-import '/utility/command_line_reader.dart';
-import '/utility/command_line_writer.dart';
+import '/utility/finalizer.dart';
 import '/widget/export.dart';
 import '/view/home/module_page.dart';
 import '/view/kairosoft_game_manager/setting.dart';
 import '/view/kairosoft_game_manager/configuration.dart';
+import '/view/kairosoft_game_manager/option.dart';
 import '/view/kairosoft_game_manager/game_card.dart';
 import '/view/kairosoft_game_manager/game_helper.dart';
-import 'package:flutter/widgets.dart';
 
 // ----------------
 
@@ -24,7 +23,7 @@ class MainPage extends StatefulWidget {
 
   final Setting       setting;
   final Configuration configuration;
-  final List<String>  option;
+  final Option        option;
 
   // ----------------
 
@@ -42,19 +41,27 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
   Future<Void> _loadGame(
   ) async {
     this._gameInformation = [];
-    this._gameLoading = true;
-    await refreshState(this.setState);
+    {
+      this._gameLoading = true;
+      await refreshState(this.setState);
+    }
+    var finalizer = Finalizer(() async {
+      this._gameLoading = false;
+      await refreshState(this.setState);
+    });
     try {
       if (SystemChecker.isWindows) {
         this._gameInformation = await GameRepositoryHelper.loadWindowsSteamRepository(this.widget.setting.repositoryOfWindowsSteam);
       }
-    }
-    catch (e) {
-      rethrow;
+      else if (SystemChecker.isAndroid) {
+        this._gameInformation = await GameRepositoryHelper.loadAndroidPlayRepository();
+      }
+      else {
+        await StyledSnackExtension.show(this.context, 'this module is unsupported on current system');
+      }
     }
     finally {
-      this._gameLoading = false;
-      await refreshState(this.setState);
+      await finalizer.dispose();
     }
     return;
   }
@@ -83,19 +90,16 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
   }
 
   @override
-  modulePageApplyOption(optionView) async {
-    var option = CommandLineReader(optionView);
-    if (!option.done()) {
-      throw Exception('too many option \'${option.nextStringList().join(' ')}\'');
-    }
+  modulePageApplyOption(option) async {
+    option as Option;
     await refreshState(this.setState);
     return;
   }
 
   @override
   modulePageCollectOption() async {
-    var option = CommandLineWriter();
-    return option.done();
+    var option = Option();
+    return option;
   }
 
   @override

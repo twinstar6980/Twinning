@@ -13,7 +13,7 @@ namespace Twinning.Script.Support.Wwise.Media {
 
 	export type Format = typeof FormatX[number];
 
-	export const FormatE = FormatX as unknown as Format[];
+	export const FormatE = [...FormatX];
 
 	// #endregion
 

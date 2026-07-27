@@ -6,9 +6,8 @@ import '/utility/json_helper.dart';
 import '/widget/export.dart';
 import '/view/popcap_animation_viewer/model.dart' as model;
 import 'dart:ui' as lib;
-import 'dart:math';
-import 'dart:collection';
-import 'package:flutter/widgets.dart';
+import 'dart:math' as lib;
+import 'dart:collection' as lib;
 
 // ----------------
 
@@ -151,8 +150,8 @@ class VisualHelper {
     }
     if (variant.value is model.RotateTranslateTransform) {
       var value = variant.value.as<model.RotateTranslateTransform>();
-      var valueCos = cos(value.angle);
-      var valueSin = sin(value.angle);
+      var valueCos = lib.cos(value.angle);
+      var valueSin = lib.sin(value.angle);
       result = .new(
         valueCos, valueSin, 0, 0,
         -valueSin, valueCos, 0, 0,
@@ -212,7 +211,7 @@ class VisualHelper {
     List<Boolean>                                                   spriteFilter,
     Animation<Floater>                                              driver,
   ) {
-    var layerList = SplayTreeMap<Integer, _VisualLayer?>();
+    var layerList = lib.SplayTreeMap<Integer, _VisualLayer?>();
     var frameIndex = 0;
     for (var frame in sprite.frame) {
       for (var action in frame.remove) {
@@ -333,7 +332,7 @@ class VisualHelper {
       if (!await StorageHelper.existFile(textureFile)) {
         continue;
       }
-      var textureData = await StorageHelper.readFile(textureFile);
+      var textureData = await StorageHelper.readFileData(textureFile);
       var texture = await ConvertHelper.parseImageFromData(textureData, isPng: true);
       var textureDescriptor = await lib.ImageDescriptor.encoded(await .fromUint8List(textureData));
       result[image.name] = (image: texture, width: textureDescriptor.width, height: textureDescriptor.height);

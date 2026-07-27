@@ -1,7 +1,7 @@
 import '/common.dart';
 import '/utility/storage_path.dart';
 import '/utility/storage_helper.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter/services.dart' as lib;
 
 // ----------------
 
@@ -34,8 +34,8 @@ class ApplicationFontManager {
       var index = this._loadedFile.indexOf(path);
       if (index == -1) {
         index = this._loadedFile.length;
-        var loader = FontLoader('_custom_${index + 1}');
-        loader.addFont(Future.sync(() async => (await StorageHelper.readFile(path)).buffer.asByteData()));
+        var loader = lib.FontLoader('_custom_${index + 1}');
+        loader.addFont(Future.sync(() async => (await StorageHelper.readFileData(path)).buffer.asByteData()));
         await loader.load();
         this._loadedFile.add(path);
       }

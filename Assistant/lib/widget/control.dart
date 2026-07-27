@@ -2,9 +2,9 @@ import '/common.dart';
 import '/utility/system_ui_helper.dart';
 import '/widget/common.dart';
 import '/widget/container.dart';
-import 'package:collection/collection.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/services.dart' as lib;
+import 'package:flutter/rendering.dart' as lib;
+import 'package:flutter/widgets.dart' as widgets;
 import 'package:flutter/material.dart' as material;
 
 // ----------------
@@ -436,7 +436,7 @@ class StyledProgress extends StatelessWidget {
 
 // #region text
 
-typedef StyledTextOverflow = TextOverflow;
+typedef StyledTextOverflow = lib.TextOverflow;
 
 typedef StyledTextAlign = TextAlign;
 
@@ -506,7 +506,7 @@ class StyledText extends StatelessWidget {
 
   @override
   build(context) {
-    return Text(
+    return widgets.Text(
       this.text,
       overflow: this.overflow,
       textAlign: this.align,
@@ -1115,7 +1115,7 @@ class StyledRadio extends StatelessWidget {
   @override
   build(context) {
     return switch (this.variant) {
-      .standard => RadioGroup(
+      .standard => widgets.RadioGroup(
         groupValue: this.value,
         onChanged: (value) => this.onChanged(context),
         child: material.Radio(
@@ -1210,7 +1210,7 @@ enum StyledInputVariant {
   underlined,
 }
 
-typedef StyledInputType = TextInputType;
+typedef StyledInputType = lib.TextInputType;
 
 typedef StyledInputFormatter = RegExp;
 
@@ -1319,7 +1319,7 @@ class StyledInput extends StatefulWidget {
 
 class _StyledInputState extends State<StyledInput> {
 
-  late FocusNode             _focusNode;
+  late widgets.FocusNode         _focusNode;
   late TextEditingController _valueController;
 
   // ----------------
@@ -1350,7 +1350,7 @@ class _StyledInputState extends State<StyledInput> {
 
   @override
   build(context) {
-    return Focus(
+    return widgets.Focus(
       focusNode: this._focusNode,
       onFocusChange: (value) async {
         if (!value) {
@@ -1361,7 +1361,7 @@ class _StyledInputState extends State<StyledInput> {
         enabled: this.widget.enabled,
         keyboardType: this.widget.type,
         maxLines: this.widget.type == .multiline ? null : 1,
-        inputFormatters: this.widget.format == null ? null : [FilteringTextInputFormatter.allow(this.widget.format!)],
+        inputFormatters: this.widget.format == null ? null : [lib.FilteringTextInputFormatter.allow(this.widget.format!)],
         decoration: switch (this.widget.variant) {
           .filled => material.InputDecoration(
             contentPadding: .fromLTRB(12, 16, 12, 16),
@@ -1423,14 +1423,14 @@ class StyledInputCombo extends StatefulWidget {
   });
 
   const StyledInputCombo.filled({
-    Key?                                                        key = null,
-    Boolean                                                     enabled = true,
-    required String?                                            hint,
-    required Widget?                                            prefix,
-    required List<Widget>?                                      suffix,
-    required List<({Object value, String name})>                option,
-    required Object?                                            value,
-    required Void Function(BuildContext context, Object? value) onChanged,
+    Key?                                                       key = null,
+    Boolean                                                    enabled = true,
+    required String?                                           hint,
+    required Widget?                                           prefix,
+    required List<Widget>?                                     suffix,
+    required List<({Object value, String name})>               option,
+    required Object?                                           value,
+    required Void Function(BuildContext context, Object value) onChanged,
   }) : this._(
     key: key,
     variant: .filled,
@@ -1444,14 +1444,14 @@ class StyledInputCombo extends StatefulWidget {
   );
 
   const StyledInputCombo.outlined({
-    Key?                                                        key = null,
-    Boolean                                                     enabled = true,
-    required String?                                            hint,
-    required Widget?                                            prefix,
-    required List<Widget>?                                      suffix,
-    required List<({Object value, String name})>                option,
-    required Object?                                            value,
-    required Void Function(BuildContext context, Object? value) onChanged,
+    Key?                                                       key = null,
+    Boolean                                                    enabled = true,
+    required String?                                           hint,
+    required Widget?                                           prefix,
+    required List<Widget>?                                     suffix,
+    required List<({Object value, String name})>               option,
+    required Object?                                           value,
+    required Void Function(BuildContext context, Object value) onChanged,
   }) : this._(
     key: key,
     variant: .outlined,
@@ -1465,14 +1465,14 @@ class StyledInputCombo extends StatefulWidget {
   );
 
   const StyledInputCombo.underlined({
-    Key?                                                        key = null,
-    Boolean                                                     enabled = true,
-    required String?                                            hint,
-    required Widget?                                            prefix,
-    required List<Widget>?                                      suffix,
-    required List<({Object value, String name})>                option,
-    required Object?                                            value,
-    required Void Function(BuildContext context, Object? value) onChanged,
+    Key?                                                       key = null,
+    Boolean                                                    enabled = true,
+    required String?                                           hint,
+    required Widget?                                           prefix,
+    required List<Widget>?                                     suffix,
+    required List<({Object value, String name})>               option,
+    required Object?                                           value,
+    required Void Function(BuildContext context, Object value) onChanged,
   }) : this._(
     key: key,
     variant: .underlined,
@@ -1487,14 +1487,14 @@ class StyledInputCombo extends StatefulWidget {
 
   // ----------------
 
-  final StyledInputComboVariant                            variant;
-  final Boolean                                            enabled;
-  final String?                                            hint;
-  final Widget?                                            prefix;
-  final List<Widget>?                                      suffix;
-  final List<({Object value, String name})>                option;
-  final Object?                                            value;
-  final Void Function(BuildContext context, Object? value) onChanged;
+  final StyledInputComboVariant                           variant;
+  final Boolean                                           enabled;
+  final String?                                           hint;
+  final Widget?                                           prefix;
+  final List<Widget>?                                     suffix;
+  final List<({Object value, String name})>               option;
+  final Object?                                           value;
+  final Void Function(BuildContext context, Object value) onChanged;
 
   // ----------------
 
@@ -1505,7 +1505,7 @@ class StyledInputCombo extends StatefulWidget {
 
 class _StyledInputComboState extends State<StyledInputCombo> {
 
-  late FocusNode             _focusNode;
+  late widgets.FocusNode         _focusNode;
   late TextEditingController _valueController;
 
   // ----------------
@@ -1515,14 +1515,14 @@ class _StyledInputComboState extends State<StyledInputCombo> {
     super.initState();
     this._focusNode = .new();
     this._valueController = .new();
-    this._valueController.text = this.widget.option.firstWhereOrNull((it) => it.value == this.widget.value)?.name ?? '';
+    this._valueController.text = this.widget.value == null ? '' : this.widget.option.firstWhere((it) => it.value == this.widget.value).name;
     return;
   }
 
   @override
   didUpdateWidget(oldWidget) {
     super.didUpdateWidget(oldWidget);
-    this._valueController.text = this.widget.option.firstWhereOrNull((it) => it.value == this.widget.value)?.name ?? '';
+    this._valueController.text = this.widget.value == null ? '' : this.widget.option.firstWhere((it) => it.value == this.widget.value).name;
     return;
   }
 
@@ -1782,7 +1782,7 @@ class StyledListTile extends StatelessWidget {
     onLongPressed: onLongPressed,
   );
 
-  // TODO: remove?
+  // TODO: remove
   const StyledListTile.standardTight({
     Key?                                 key = null,
     Boolean                              enabled = true,
@@ -1805,7 +1805,7 @@ class StyledListTile extends StatelessWidget {
     onLongPressed: onLongPressed,
   );
 
-  // TODO: remove?
+  // TODO: remove
   const StyledListTile.standardCustom({
     Key?                                 key = null,
     Boolean                              enabled = true,
@@ -2235,15 +2235,15 @@ class StyledMenu<TValue> {
 
 }
 
-extension StyledMenuExtension on StyledMenu<dynamic> {
+extension StyledMenuExtension on StyledMenu<Object?> {
 
   static Future<TResult?> show<TResult>(
     BuildContext        context,
     StyledMenu<TResult> menu,
   ) async {
-    var button = context.findRenderObject()!.as<RenderBox>();
-    var overlay = Overlay.of(context).context.findRenderObject()!.as<RenderBox>();
-    var position = RelativeRect.fromRect(
+    var button = context.findRenderObject()!.as<widgets.RenderBox>();
+    var overlay = widgets.Overlay.of(context).context.findRenderObject()!.as<widgets.RenderBox>();
+    var position = lib.RelativeRect.fromRect(
       .fromPoints(
         button.localToGlobal(.new(0, overlay.size.height), ancestor: overlay),
         button.localToGlobal(button.size.bottomRight(.zero), ancestor: overlay),
@@ -2513,6 +2513,18 @@ extension StyledModalDialogExtension on StyledModalDialog {
     StyledModalDialog dialog,
   ) async {
     return await material.showDialog<TResult>(
+      barrierDismissible: true,
+      context: context,
+      builder: (context) => dialog,
+    );
+  }
+
+  static Future<TResult?> showAsFixed<TResult>(
+    BuildContext      context,
+    StyledModalDialog dialog,
+  ) async {
+    return await material.showDialog<TResult>(
+      barrierDismissible: false,
       context: context,
       builder: (context) => dialog,
     );
@@ -2678,7 +2690,7 @@ class StyledScaffold extends StatelessWidget {
   build(context) {
     return switch (this.variant) {
       .standard => material.Scaffold(
-        appBar: PreferredSize(
+        appBar: widgets.PreferredSize(
           preferredSize: .fromHeight(material.kToolbarHeight),
           child: this.title,
         ),

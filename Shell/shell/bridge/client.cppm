@@ -52,9 +52,11 @@ export namespace Twinning::Shell::Bridge {
 		virtual auto finish(
 		) -> void = abstract;
 
-		// ----------------
+		#pragma endregion
 
-		virtual auto callback(
+		#pragma region handle
+
+		virtual auto handle(
 			std::vector<std::string> const & argument
 		) -> std::vector<std::string> = abstract;
 

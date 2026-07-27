@@ -141,7 +141,6 @@ export namespace Twinning::Kernel::Trait {
 
 	// ----------------
 
-	// TODO: maybe bug, use assignment instead of constructor if in consteval context
 	template <typename TIt, typename ... TArgument> requires
 		CategoryConstraint<IsPureInstance<TIt> && IsValid<TArgument ...>>
 		&& (IsConstructible<TIt, TArgument && ...>)
@@ -149,12 +148,7 @@ export namespace Twinning::Kernel::Trait {
 		TIt &            it,
 		TArgument && ... argument
 	) -> Void {
-		if consteval {
-			it = AsUnmakeConstant<TIt>{as_forward<TArgument>(argument) ...};
-		}
-		else {
-			new(&as_variable(it)) AsUnmakeConstant<TIt>{as_forward<TArgument>(argument) ...};
-		}
+		new(&as_variable(it)) AsUnmakeConstant<TIt>{as_forward<TArgument>(argument) ...};
 		return;
 	}
 
@@ -164,11 +158,7 @@ export namespace Twinning::Kernel::Trait {
 	inline constexpr auto destruct(
 		TIt & it
 	) -> Void {
-		if consteval {
-		}
-		else {
-			it.~TIt();
-		}
+		it.~TIt();
 		return;
 	}
 

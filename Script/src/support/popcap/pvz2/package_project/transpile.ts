@@ -93,7 +93,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Transpile {
 					}
 					let new_source_data_directory = make_scope_child_path(resource_directory, 'source.sprite');
 					let new_sprite_property_list: Array<SpecialPtxResourcePropertySpriteProperty> = [];
-					let data = StorageHelper.read_file(source_file);
+					let data = StorageHelper.read_file_data(source_file);
 					let data_stream = Kernel.ByteStreamView.watch(data.view());
 					let image = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(resource_property.size));
 					let image_view = image.view();
@@ -191,7 +191,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Transpile {
 					}
 					let resource_data = Kernel.ByteStreamView.watch(buffer.view());
 					Support.Popcap.Texture.Encoding.encode(resource_data, atlas_view, conversion_setting.format, texture_encode_option);
-					StorageHelper.write_file(new_source_file, resource_data.stream_view());
+					StorageHelper.write_file_data(new_source_file, resource_data.stream_view());
 					resource_setting.type = 'texture';
 					resource_setting.property = {
 						path: resource_property.path + '',
@@ -240,7 +240,6 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Transpile {
 			}
 			default: {
 				throw new Error('unknown resource type');
-				break;
 			}
 		}
 		if (resource_setting.type !== resource_type_old) {

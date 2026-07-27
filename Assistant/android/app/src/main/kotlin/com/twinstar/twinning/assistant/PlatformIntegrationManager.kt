@@ -9,8 +9,11 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.Point
 import android.graphics.Rect
+import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -23,10 +26,14 @@ import android.view.WindowInsets
 import androidx.core.database.getFloatOrNull
 import androidx.core.database.getLongOrNull
 import androidx.core.database.getStringOrNull
+import androidx.core.graphics.drawable.toBitmap
 import androidx.core.net.toUri
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
+import java.nio.IntBuffer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -48,7 +55,7 @@ class PlatformIntegrationManager {
 
   // endregion
 
-  // region construct
+  // region constructor
 
   private constructor(
   ) {
@@ -80,18 +87,26 @@ class PlatformIntegrationManager {
     host: MainActivity,
     with_flutterEngine: FlutterEngine,
   ): Unit {
-    this.activity = host
-    this.channel = MethodChannel(
-      with_flutterEngine.dartExecutor.binaryMessenger,
-      "${this.queryApplicationIdentifier()}/PlatformIntegrationManager",
+    return this.executePlatformTask(
+      false,
+      {
+        return@executePlatformTask
+      },
+      {
+        this.activity = host
+        this.channel = MethodChannel(
+          with_flutterEngine.dartExecutor.binaryMessenger,
+          "${this.queryApplicationIdentifier()}/PlatformIntegrationManager",
+        )
+        this.channel.setMethodCallHandler({ call, result ->
+          this.executePlatformBackgroundTask({
+            this@PlatformIntegrationManager.handle(call, result)
+          })
+          return@setMethodCallHandler
+        })
+        return@executePlatformTask
+      },
     )
-    this.channel.setMethodCallHandler({ call, result ->
-      CoroutineScope(Dispatchers.Main).launch {
-        this@PlatformIntegrationManager.handle(call, result)
-      }
-      return@setMethodCallHandler
-    })
-    return
   }
 
   @Suppress("FunctionName", "LocalVariableName")
@@ -99,16 +114,22 @@ class PlatformIntegrationManager {
     host: MainActivity,
     with_savedInstanceState: Bundle?,
   ): Unit {
-    this.registerNotificationSupport()
-    this.registerDragDropSupport()
-    val intent = this.activity.intent
-    if (intent.action == Intent.ACTION_VIEW && intent.data != null && intent.data!!.scheme == this.queryApplicationIdentifier()) {
-      runBlocking {
-        val link = intent.data!!.toString()
-        this@PlatformIntegrationManager.invokeReceiveApplicationLink(link)
-      }
-    }
-    return
+    return this.executePlatformTask(
+      false,
+      {
+        return@executePlatformTask
+      },
+      {
+        this.registerNotificationSupport()
+        this.registerDragDropSupport()
+        val intent = this.activity.intent
+        if (intent.action == Intent.ACTION_VIEW && intent.data != null && intent.data!!.scheme == this.queryApplicationIdentifier()) {
+          val link = intent.data!!.toString()
+          this@PlatformIntegrationManager.invokeReceiveApplicationLink(link)
+        }
+        return@executePlatformTask
+      },
+    )
   }
 
   @Suppress("FunctionName", "LocalVariableName")
@@ -117,14 +138,20 @@ class PlatformIntegrationManager {
     with_intent: Intent,
     with_caller: ComponentCaller,
   ): Unit {
-    val intent = with_intent
-    if (intent.action == Intent.ACTION_VIEW && intent.data != null && intent.data!!.scheme == this.queryApplicationIdentifier()) {
-      runBlocking {
-        val link = intent.data!!.toString()
-        this@PlatformIntegrationManager.invokeReceiveApplicationLink(link)
-      }
-    }
-    return
+    return this.executePlatformTask(
+      true,
+      {
+        return@executePlatformTask
+      },
+      {
+        val intent = with_intent
+        if (intent.action == Intent.ACTION_VIEW && intent.data != null && intent.data!!.scheme == this.queryApplicationIdentifier()) {
+          val link = intent.data!!.toString()
+          this@PlatformIntegrationManager.invokeReceiveApplicationLink(link)
+        }
+        return@executePlatformTask
+      },
+    )
   }
 
   @Suppress("FunctionName", "LocalVariableName")
@@ -134,35 +161,37 @@ class PlatformIntegrationManager {
     with_resultCode: Int,
     with_data: Intent?,
   ): Unit {
-    when (with_requestCode) {
-      this.requestCodeForPickStorageItem -> {
-        runBlocking {
-          val value = mutableListOf<Uri>()
-          if (with_data != null) {
-            if (with_data.data != null) {
-              value.add(with_data.data!!)
-            }
-            else if (with_data.clipData != null) {
-              for (index in 0 until with_data.clipData!!.itemCount) {
-                value.add(with_data.clipData!!.getItemAt(index).uri)
+    return this.executePlatformTask(
+      true,
+      {
+        return@executePlatformTask
+      },
+      {
+        when (with_requestCode) {
+          this.requestCodeForPickStorageItem -> {
+            val value = mutableListOf<Uri>()
+            if (with_data != null) {
+              if (with_data.data != null) {
+                value.add(with_data.data!!)
+              }
+              else if (with_data.clipData != null) {
+                for (index in 0 until with_data.clipData!!.itemCount) {
+                  value.add(with_data.clipData!!.getItemAt(index).uri)
+                }
               }
             }
+            this@PlatformIntegrationManager.continuation.send(value)
           }
-          this@PlatformIntegrationManager.continuation.send(value)
+          this.requestForToggleStoragePermission -> {
+            this@PlatformIntegrationManager.continuation.send(null)
+          }
+          this.requestForToggleNotificationPermission -> {
+            this@PlatformIntegrationManager.continuation.send(null)
+          }
         }
-      }
-      this.requestForToggleStoragePermission -> {
-        runBlocking {
-          this@PlatformIntegrationManager.continuation.send(null)
-        }
-      }
-      this.requestForToggleNotificationPermission -> {
-        runBlocking {
-          this@PlatformIntegrationManager.continuation.send(null)
-        }
-      }
-    }
-    return
+        return@executePlatformTask
+      },
+    )
   }
 
   // endregion
@@ -262,6 +291,21 @@ class PlatformIntegrationManager {
             this.decodeFlutterValue<Long>(getArgument("width")),
             this.decodeFlutterValue<Long>(getArgument("height")),
           )
+        }
+        "on_android_list_application" -> {
+          val detail = this.handleOnAndroidListApplication(
+          )
+          setResult("target", this.encodeFlutterValue(detail))
+        }
+        "on_android_query_application" -> {
+          val detail = this.handleOnAndroidQueryApplication(
+            this.decodeFlutterValue<String>(getArgument("target")),
+          )
+          setResult("name", this.encodeFlutterValue(detail.first))
+          setResult("version", this.encodeFlutterValue(detail.second))
+          setResult("icon_width", this.encodeFlutterValue(detail.third.first))
+          setResult("icon_height", this.encodeFlutterValue(detail.third.second))
+          setResult("icon_data", this.encodeFlutterValue(detail.third.third))
         }
         else -> throw Exception("invalid method")
       }
@@ -513,6 +557,32 @@ class PlatformIntegrationManager {
     throw Exception("unsupported method")
   }
 
+  // ----------------
+
+  private suspend fun handleOnAndroidListApplication(
+  ): List<String> {
+    val information = this.activity.packageManager.getInstalledPackages(PackageManager.GET_META_DATA)
+    val target = information.map({ it -> it.packageName }).toList()
+    return target
+  }
+
+  private suspend fun handleOnAndroidQueryApplication(
+    target: String,
+  ): Triple<String, String, Triple<Long, Long, ByteArray>> {
+    val information = this.activity.packageManager.getPackageInfo(target, PackageManager.GET_META_DATA)
+    check(information.applicationInfo != null)
+    val name = information.applicationInfo!!.loadLabel(this.activity.packageManager).toString()
+    val version = information.versionName!!
+    val iconDrawable = information.applicationInfo!!.loadIcon(this.activity.packageManager)
+    val iconBitmap = iconDrawable.toBitmap()
+    val iconBuffer = ByteBuffer.allocate(iconBitmap.width * iconBitmap.height * 4)
+    iconBitmap.copyPixelsToBuffer(iconBuffer)
+    val iconWidth = iconBitmap.width.toLong()
+    val iconHeight = iconBitmap.height.toLong()
+    val iconData = iconBuffer.array()
+    return Triple(name, version, Triple(iconWidth, iconHeight, iconData))
+  }
+
   // endregion
 
   // region invoke
@@ -523,6 +593,16 @@ class PlatformIntegrationManager {
   ): Unit {
     val result = this.channel.invokeMethod(method, argument)
     return result
+  }
+
+  // ----------------
+
+  private suspend fun invokeReceivePlatformException(
+    message: String,
+  ): Unit {
+    return this.invoke("receive_platform_exception", mapOf(
+      "message" to this.encodeFlutterValue(message),
+    ))
   }
 
   // ----------------
@@ -571,7 +651,7 @@ class PlatformIntegrationManager {
 
   // region support
 
-  private fun registerNotificationSupport(
+  private suspend fun registerNotificationSupport(
   ): Unit {
     val manager = this.activity.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     manager.createNotificationChannel(
@@ -584,41 +664,48 @@ class PlatformIntegrationManager {
 
   // ----------------
 
-  private fun registerDragDropSupport(
+  private suspend fun registerDragDropSupport(
   ): Unit {
-    this.activity.findViewById<View>(android.R.id.content).setOnDragListener({ view, event ->
-      when (event.action) {
-        DragEvent.ACTION_DRAG_ENTERED -> {
-          runBlocking {
-            this@PlatformIntegrationManager.invokeReceiveApplicationDragEnter()
+    this.activity.findViewById<View>(android.R.id.content).setOnDragListener({ _, event ->
+      return@setOnDragListener this@PlatformIntegrationManager.executePlatformTask(
+        true,
+        {
+          return@executePlatformTask true
+        },
+        {
+          when (event.action) {
+            DragEvent.ACTION_DRAG_ENTERED -> {
+              this@PlatformIntegrationManager.invokeReceiveApplicationDragEnter()
+            }
+            DragEvent.ACTION_DRAG_LOCATION -> {
+              val displayDensity = this.queryDisplayDensity()
+              val locationX = (event.x / displayDensity).roundToLong()
+              val locationY = (event.y / displayDensity).roundToLong()
+              this@PlatformIntegrationManager.invokeReceiveApplicationDragOver(locationX, locationY)
+            }
+            DragEvent.ACTION_DRAG_EXITED -> {
+              this@PlatformIntegrationManager.invokeReceiveApplicationDragLeave()
+            }
+            DragEvent.ACTION_DROP -> {
+              val target = mutableListOf<String>()
+              for (targetIndex in 0 until event.clipData.itemCount) {
+                val targetItemUri = event.clipData.getItemAt(targetIndex).uri
+                var targetItem = null as String?
+                try {
+                  targetItem = this.resolveContentUri(targetItemUri)
+                }
+                catch (_: Exception) {
+                  target.clear()
+                  break
+                }
+                target.add(targetItem)
+              }
+              this@PlatformIntegrationManager.invokeReceiveApplicationDragDrop(target)
+            }
           }
-        }
-        DragEvent.ACTION_DRAG_LOCATION -> {
-          val displayDensity = this.queryDisplayDensity()
-          val locationX = (event.x / displayDensity).roundToLong()
-          val locationY = (event.y / displayDensity).roundToLong()
-          runBlocking {
-            this@PlatformIntegrationManager.invokeReceiveApplicationDragOver(locationX, locationY)
-          }
-        }
-        DragEvent.ACTION_DRAG_EXITED -> {
-          runBlocking {
-            this@PlatformIntegrationManager.invokeReceiveApplicationDragLeave()
-          }
-        }
-        DragEvent.ACTION_DROP -> {
-          val target = mutableListOf<String>()
-          for (targetIndex in 0 until event.clipData.itemCount) {
-            val targetItemUri = event.clipData.getItemAt(targetIndex).uri
-            val targetItem = this.resolveContentUri(targetItemUri)
-            target.add(targetItem)
-          }
-          runBlocking {
-            this@PlatformIntegrationManager.invokeReceiveApplicationDragDrop(target)
-          }
-        }
-      }
-      return@setOnDragListener true
+          return@executePlatformTask true
+        },
+      )
     })
     return
   }
@@ -632,6 +719,41 @@ class PlatformIntegrationManager {
   private val requestForToggleStoragePermission: Int = 1002
 
   private val requestForToggleNotificationPermission: Int = 1003
+
+  // ----------------
+
+  private fun <TResult> executePlatformTask(
+    handleException: Boolean,
+    fallbackAction: () -> TResult,
+    taskAction: suspend () -> TResult,
+  ): TResult {
+    return runBlocking {
+      try {
+        return@runBlocking taskAction()
+      }
+      catch (e: Exception) {
+        if (!handleException) {
+          throw e
+        }
+        this@PlatformIntegrationManager.invokeReceivePlatformException(e.stackTraceToString())
+        return@runBlocking fallbackAction()
+      }
+    }
+  }
+
+  private fun executePlatformBackgroundTask(
+    taskAction: suspend () -> Unit,
+  ): Unit {
+    CoroutineScope(Dispatchers.Main).launch {
+      try {
+        taskAction()
+      }
+      catch (e: Exception) {
+        this@PlatformIntegrationManager.invokeReceivePlatformException(e.stackTraceToString())
+      }
+    }
+    return
+  }
 
   // ----------------
 

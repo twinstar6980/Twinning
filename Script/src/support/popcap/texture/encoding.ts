@@ -23,7 +23,7 @@ namespace Twinning.Script.Support.Popcap.Texture.Encoding {
 
 	export type Format = typeof FormatX[number];
 
-	export const FormatE = FormatX as unknown as Format[];
+	export const FormatE = [...FormatX];
 
 	// ----------------
 
@@ -478,7 +478,7 @@ namespace Twinning.Script.Support.Popcap.Texture.Encoding {
 		let data = Kernel.ByteArray.allocate(Kernel.Size.value(data_size));
 		let data_stream = Kernel.ByteStreamView.watch(data.view());
 		encode(data_stream, image_view, format, option);
-		StorageHelper.write_file(data_file, data_stream.stream_view());
+		StorageHelper.write_file_data(data_file, data_stream.stream_view());
 		return;
 	}
 
@@ -488,7 +488,7 @@ namespace Twinning.Script.Support.Popcap.Texture.Encoding {
 		image_size: KernelX.Image.ImageSize,
 		format: Format,
 	): void {
-		let data = StorageHelper.read_file(data_file);
+		let data = StorageHelper.read_file_data(data_file);
 		let data_stream = Kernel.ByteStreamView.watch(data.view());
 		let image_size_padded = compute_padded_image_size(image_size, format);
 		let image = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(image_size_padded));

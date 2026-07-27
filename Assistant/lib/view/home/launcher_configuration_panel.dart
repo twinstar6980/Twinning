@@ -1,8 +1,8 @@
 import '/common.dart';
 import '/module.dart';
-import '/utility/convert_helper.dart';
+import '/utility/json_type.dart';
+import '/utility/json_helper.dart';
 import '/widget/export.dart';
-import 'package:flutter/widgets.dart';
 
 // ----------------
 
@@ -65,6 +65,7 @@ class LauncherConfigurationPanel extends StatelessWidget {
                 value: this.data.type == item,
                 onChanged: (context) async {
                   this.data.type = item;
+                  this.data.option = ModuleHelper.query(this.data.type).generateDefaultOption();
                   await refreshState(setStateForPanel);
                   await refreshState(setState);
                   this.onUpdate();
@@ -78,7 +79,7 @@ class LauncherConfigurationPanel extends StatelessWidget {
           icon: IconSet.format_list_bulleted,
           label: 'Option',
           comment: [
-            StyledText.inherit('${this.data.option.length}').withFlexExpanded(),
+            StyledText.inherit('${ModuleHelper.query(this.data.type).makeOption(this.data.option).length}').withFlexExpanded(),
           ],
           onPressed: null,
           panelBuilder: (context, setStateForPanel) => [
@@ -89,9 +90,14 @@ class LauncherConfigurationPanel extends StatelessWidget {
                 hint: null,
                 prefix: null,
                 suffix: null,
-                value: ConvertHelper.makeStringListToStringWithLine(this.data.option),
+                value: JsonHelper.encodeText(ModuleHelper.query(this.data.type).makeOption(this.data.option)),
                 onChanged: (context, value) async {
-                  this.data.option = ConvertHelper.parseStringListFromStringWithLine(value);
+                  try {
+                    this.data.option = ModuleHelper.query(this.data.type).parseOption(JsonHelper.decodeText(value).jsonObject());
+                  }
+                  catch (e) {
+                    // ignored
+                  }
                   await refreshState(setStateForPanel);
                   await refreshState(setState);
                   this.onUpdate();

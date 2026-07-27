@@ -30,12 +30,9 @@ namespace Twinning.Script.Support.Popcap.Pvz2.ResourceManifest.NewTypeObjectNota
 		data: ByteStreamView,
 		value: string,
 	): void {
-		data.i32(BigInt(value.length));
-		let string_c = Kernel.String.value(value);
-		let string_view = new Uint8Array(Kernel.Miscellaneous.cast_CharacterListView_to_ByteListView(Kernel.Miscellaneous.cast_String_to_CharacterListView(string_c)).value);
-		for (let index = 0; index < string_view.length; index++) {
-			data.u8(BigInt(string_view[index]));
-		}
+		let size = ConvertHelper.compute_utf8_string_size(value);
+		data.u32(BigInt(size));
+		ConvertHelper.write_utf8_string(data, value);
 		return;
 	}
 
@@ -115,7 +112,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.ResourceManifest.NewTypeObjectNota
 		let definition = JsonHelper.decode_file(definition_file) as ResourceManifest.Package;
 		let data_stream = new ByteStreamView(data_buffer.value);
 		process(data_stream, definition);
-		StorageHelper.write_file(data_file, data_buffer.sub(Kernel.Size.value(0n), Kernel.Size.value(BigInt(data_stream.p()))));
+		StorageHelper.write_file_data(data_file, data_buffer.sub(Kernel.Size.value(0n), Kernel.Size.value(BigInt(data_stream.p()))));
 		return;
 	}
 

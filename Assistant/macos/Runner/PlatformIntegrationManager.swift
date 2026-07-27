@@ -35,83 +35,131 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
     _ host: AppDelegate,
     _ with_notification: Notification,
   ) -> Void {
-    NSAppleEventManager.shared().setEventHandler(
-      self,
-      andSelector: #selector(self.resolveAppleEventForUrl(_:withReplyEvent:)),
-      forEventClass: AEEventClass(kInternetEventClass),
-      andEventID: AEEventID(kAEGetURL),
+    return try! self.executePlatformTask(
+      false,
+      {
+        return
+      },
+      {
+        NSAppleEventManager.shared().setEventHandler(
+          self,
+          andSelector: #selector(self.resolveAppleEventForUrl(_:withReplyEvent:)),
+          forEventClass: AEEventClass(kInternetEventClass),
+          andEventID: AEEventID(kAEGetURL),
+        )
+        return
+      },
     )
-    return
   }
 
   public func inject_MainFlutterWindow_awakeFromNib(
     _ host: MainFlutterWindow,
   ) -> Void {
-    self.window = host
-    self.channel = FlutterMethodChannel(
-      name: "\(try! self.queryApplicationIdentifier())/PlatformIntegrationManager",
-      binaryMessenger: (host.contentViewController as! FlutterViewController).engine.binaryMessenger,
+    return try! self.executePlatformTask(
+      false,
+      {
+        return
+      },
+      {
+        self.window = host
+        self.channel = FlutterMethodChannel(
+          name: "\(try! self.queryApplicationIdentifier())/PlatformIntegrationManager",
+          binaryMessenger: (host.contentViewController as! FlutterViewController).engine.binaryMessenger,
+        )
+        self.channel.setMethodCallHandler({ [weak self] (call, result) in
+          self.executePlatformBackgroundTask({
+            await self?.handle(call, result)
+          })
+          return
+        })
+        self.executePlatformBackgroundTask({
+          try await self.registerNotificationSupport()
+          try await self.registerDragDropSupport()
+        })
+        return
+      },
     )
-    self.channel.setMethodCallHandler({ [weak self] (call, result) in
-      Task {
-        await self?.handle(call, result)
-      }
-      return
-    })
-    Task { @MainActor in
-      try self.registerNotificationSupport()
-      try self.registerDragDropSupport()
-    }
-    return
   }
 
   public func inject_MainFlutterWindow_draggingEntered(
     _ host: MainFlutterWindow,
     _ with_sender: any NSDraggingInfo,
   ) -> NSDragOperation {
-    Task { @MainActor in
-      try await self.invokeReceiveApplicationDragEnter()
-    }
-    return .init()
+    return try! self.executePlatformTask(
+      true,
+      {
+        return .init()
+      },
+      {
+        self.executePlatformBackgroundTask({
+          try await self.invokeReceiveApplicationDragEnter()
+        })
+        return .init()
+      },
+    )
   }
 
   public func inject_MainFlutterWindow_draggingUpdated(
     _ host: MainFlutterWindow,
     _ with_sender: any NSDraggingInfo,
   ) -> NSDragOperation {
-    Task { @MainActor in
-      let window = try self.getCurrentWindow()
-      let point = window.contentView!.convert(with_sender.draggingLocation, from: nil)
-      let locationX = Int((point.x).rounded())
-      let locationY = Int((window.contentView!.bounds.height - point.y).rounded())
-      try await self.invokeReceiveApplicationDragOver(locationX, locationY)
-    }
-    return .link
+    return try! self.executePlatformTask(
+      true,
+      {
+        return .init()
+      },
+      {
+        let window = try self.getCurrentWindow()
+        let point = window.contentView!.convert(with_sender.draggingLocation, from: nil)
+        let locationX = Int((point.x).rounded())
+        let locationY = Int((window.contentView!.bounds.height - point.y).rounded())
+        self.executePlatformBackgroundTask({
+          try await self.invokeReceiveApplicationDragOver(locationX, locationY)
+        })
+        return .link
+      },
+    )
   }
 
   public func inject_MainFlutterWindow_draggingExited(
     _ host: MainFlutterWindow,
     _ with_sender: (any NSDraggingInfo)?,
   ) -> Void {
-    Task { @MainActor in
-      try await self.invokeReceiveApplicationDragLeave()
-    }
-    return
+    return try! self.executePlatformTask(
+      true,
+      {
+        return
+      },
+      {
+        self.executePlatformBackgroundTask({
+          try await self.invokeReceiveApplicationDragLeave()
+        })
+        return
+      },
+    )
   }
 
   public func inject_MainFlutterWindow_performDragOperation(
     _ host: MainFlutterWindow,
     _ with_sender: any NSDraggingInfo,
   ) -> Bool {
-    Task { @MainActor in
-      let targetUrl = with_sender.draggingPasteboard.readObjects(forClasses: [NSURL.self], options: [NSPasteboard.ReadingOptionKey.urlReadingFileURLsOnly: true]) as? [URL]
-      guard targetUrl != nil else {
-        throw NSError(domain: "failed to get url.", code: 0)
-      }
-      let target = try targetUrl!.map({ (item) in try self.resolveFileUrl(item) })
-      try await self.invokeReceiveApplicationDragDrop(target)
-    }
-    return true
+    return try! self.executePlatformTask(
+      true,
+      {
+        return true
+      },
+      {
+        let targetUrl = with_sender.draggingPasteboard.readObjects(forClasses: [NSURL.self], options: [NSPasteboard.ReadingOptionKey.urlReadingFileURLsOnly: true]) as? [URL]
+        guard targetUrl != nil else {
+          throw NSError(domain: "failed to get url.", code: 0)
+        }
+        let target = try targetUrl!.map({ (item) in try self.resolveFileUrl(item) })
+        self.executePlatformBackgroundTask({
+          try await self.invokeReceiveApplicationDragDrop(target)
+        })
+        return true
+      },
+    )
   }
 
   // MARK: - handle
@@ -513,7 +561,7 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
   // MARK: - support
 
   private func registerNotificationSupport(
-  ) throws -> Void {
+  ) async throws -> Void {
     let center = UNUserNotificationCenter.current()
     center.delegate = self
     center.requestAuthorization(options: [.sound, .alert], completionHandler: { _, _ in })
@@ -523,13 +571,46 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
   // ----------------
 
   private func registerDragDropSupport(
-  ) throws -> Void {
+  ) async throws -> Void {
     let window = try self.getCurrentWindow()
     window.registerForDraggedTypes([.fileURL])
     return
   }
 
   // MARK: - utility
+
+  private func executePlatformTask<TResult>(
+    _ handleException: Bool,
+    _ fallbackAction: () -> TResult,
+    _ taskAction: () throws -> TResult,
+  ) throws -> TResult {
+    do {
+      return try taskAction()
+    } catch {
+      if !handleException {
+        throw error!
+      }
+      Task { @MainActor in
+        try await self.invokeReceivePlatformException("\(exception!.localizedDescription)")
+      }
+      return fallbackAction()
+    }
+  }
+
+  private func executePlatformBackgroundTask(
+    _ taskAction: () async throws -> Void,
+  ) -> Void {
+    Task { @MainActor in
+      do {
+        result = try await taskAction()
+      } catch {
+        try await self.invokeReceivePlatformException("\(error.localizedDescription)")
+      }
+    }
+    return
+  }
+
+  // ----------------
 
   private func encodeFlutterValue<TValue>(
     _ ripe: TValue,
@@ -628,13 +709,21 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
     _ event: NSAppleEventDescriptor,
     withReplyEvent replyEvent: NSAppleEventDescriptor,
   ) {
-    let link = event.paramDescriptor(forKeyword: AEKeyword(keyDirectObject))?.stringValue
-    if link != nil {
-      Task {
-        try await self.invokeReceiveApplicationLink(link!)
-      }
-    }
-    return
+    return try! self.executePlatformTask(
+      true,
+      {
+        return
+      },
+      {
+        let link = event.paramDescriptor(forKeyword: AEKeyword(keyDirectObject))?.stringValue
+        if link != nil {
+          self.executePlatformBackgroundTask({
+            try await self.invokeReceiveApplicationLink(link!)
+          })
+        }
+        return
+      },
+    )
   }
 
   // MARK: - implement UNUserNotificationCenterDelegate
@@ -643,7 +732,15 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
     _ center: UNUserNotificationCenter,
     willPresent notification: UNNotification,
   ) async -> UNNotificationPresentationOptions {
-    return [.sound, .list, .banner]
+    return try! self.executePlatformTask(
+      true,
+      {
+        return [.sound, .list, .banner]
+      },
+      {
+        return [.sound, .list, .banner]
+      },
+    )
   }
 
 }

@@ -7058,5 +7058,663 @@
 				},
 			],
 		},
+		{
+			"identifier": "developer.utility",
+			"name": "Developer Utility",
+			"icon": "frame_bug",
+			"item": [
+				{
+					"identifier": "developer.utility.keystore.generate",
+					"name": "Keystore Generate",
+					"icon": "license",
+					"argument": [
+						{
+							"identifier": "target_file",
+							"name": "Target File",
+							"type": "path",
+							"option": null,
+						},
+						{
+							"identifier": "password",
+							"name": "Password",
+							"type": "string",
+							"option": null,
+						},
+						{
+							"identifier": "subject",
+							"name": "Subject",
+							"type": "string",
+							"option": null,
+						},
+						{
+							"identifier": "begin_time",
+							"name": "Begin Time",
+							"type": "string",
+							"option": null,
+						},
+						{
+							"identifier": "end_time",
+							"name": "End Time",
+							"type": "string",
+							"option": null,
+						},
+					],
+					"batch": null,
+					"preset": [
+					],
+				},
+				{
+					"identifier": "developer.utility.keystore.query",
+					"name": "Keystore Query",
+					"icon": "fact_check",
+					"argument": [
+						{
+							"identifier": "target_file",
+							"name": "Target File",
+							"type": "path",
+							"option": null,
+						},
+						{
+							"identifier": "result_file",
+							"name": "Result File",
+							"type": "path",
+							"option": null,
+						},
+						{
+							"identifier": "password",
+							"name": "Password",
+							"type": "string",
+							"option": null,
+						},
+					],
+					"batch": [
+						"target_file",
+						"result_file",
+					],
+					"preset": [
+					],
+				},
+				{
+					"identifier": "developer.utility.windows.sign_program",
+					"name": "Windows Sign Program",
+					"icon": "approval",
+					"argument": [
+						{
+							"identifier": "target",
+							"name": "Target",
+							"type": "path",
+							"option": null,
+						},
+						{
+							"identifier": "keystore_file",
+							"name": "Keystore File",
+							"type": "path",
+							"option": null,
+						},
+						{
+							"identifier": "keystore_password",
+							"name": "Keystore Password",
+							"type": "string",
+							"option": null,
+						},
+						{
+							"identifier": "type",
+							"name": "Type",
+							"type": "string",
+							"option": [
+								"pe",
+								"msix",
+							],
+						},
+					],
+					"batch": [
+						"target",
+					],
+					"preset": [
+						{
+							"name": "PE",
+							"argument": {
+								"type": "pe",
+							},
+						},
+						{
+							"name": "MSIX",
+							"argument": {
+								"type": "msix",
+							},
+						},
+					],
+				},
+				{
+					"identifier": "developer.utility.windows.pack_program",
+					"name": "Windows Pack Program",
+					"icon": "package_2",
+					"argument": [
+						{
+							"identifier": "content_directory",
+							"name": "Content Directory",
+							"type": "path",
+							"option": null,
+						},
+						{
+							"identifier": "package_file",
+							"name": "Package File",
+							"type": "path",
+							"option": null,
+						},
+						{
+							"identifier": "type",
+							"name": "Type",
+							"type": "string",
+							"option": [
+								"msix",
+							],
+						},
+					],
+					"batch": null,
+					"preset": [
+						{
+							"name": "MSIX",
+							"argument": {
+								"type": "msix",
+							},
+						},
+					],
+				},
+				{
+					"identifier": "developer.utility.windows.import_manifest",
+					"name": "Windows Import Manifest",
+					"icon": "download",
+					"argument": [
+						{
+							"identifier": "executable_file",
+							"name": "Executable File",
+							"type": "path",
+							"option": null,
+						},
+						{
+							"identifier": "manifest_file",
+							"name": "Manifest File",
+							"type": "path",
+							"option": null,
+						},
+						{
+							"identifier": "resource_identifier",
+							"name": "Resource Identifier",
+							"type": "integer",
+							"option": null,
+						},
+					],
+					"batch": null,
+					"preset": [
+					],
+				},
+				{
+					"identifier": "developer.utility.windows.export_manifest",
+					"name": "Windows Export Manifest",
+					"icon": "upload",
+					"argument": [
+						{
+							"identifier": "executable_file",
+							"name": "Executable File",
+							"type": "path",
+							"option": null,
+						},
+						{
+							"identifier": "manifest_file",
+							"name": "Manifest File",
+							"type": "path",
+							"option": null,
+						},
+						{
+							"identifier": "resource_identifier",
+							"name": "Resource Identifier",
+							"type": "integer",
+							"option": null,
+						},
+					],
+					"batch": null,
+					"preset": [
+					],
+				},
+				{
+					"identifier": "developer.utility.windows.create_pri_resource",
+					"name": "Windows Create Pri Resource",
+					"icon": "library_books",
+					"argument": [
+						{
+							"identifier": "package_directory",
+							"name": "Package Directory",
+							"type": "path",
+							"option": null,
+						},
+					],
+					"batch": null,
+					"preset": [
+					],
+				},
+				{
+					"identifier": "developer.utility.linux.sign_program",
+					"name": "Linux Sign Program",
+					"icon": "approval",
+					"argument": [
+						{
+							"identifier": "target",
+							"name": "Target",
+							"type": "path",
+							"option": null,
+						},
+						{
+							"identifier": "keystore_file",
+							"name": "Keystore File",
+							"type": "path",
+							"option": null,
+						},
+						{
+							"identifier": "keystore_password",
+							"name": "Keystore Password",
+							"type": "string",
+							"option": null,
+						},
+						{
+							"identifier": "type",
+							"name": "Type",
+							"type": "string",
+							"option": [
+								"elf",
+							],
+						},
+					],
+					"batch": [
+						"target",
+					],
+					"preset": [
+						{
+							"name": "ELF",
+							"argument": {
+								"type": "elf",
+							},
+						},
+					],
+				},
+				{
+					"identifier": "developer.utility.linux.pack_program",
+					"name": "Linux Pack Program",
+					"icon": "package_2",
+					"argument": [
+						{
+							"identifier": "content_directory",
+							"name": "Content Directory",
+							"type": "path",
+							"option": null,
+						},
+						{
+							"identifier": "package_file",
+							"name": "Package File",
+							"type": "path",
+							"option": null,
+						},
+						{
+							"identifier": "type",
+							"name": "Type",
+							"type": "string",
+							"option": [
+								"appimage",
+							],
+						},
+					],
+					"batch": null,
+					"preset": [
+						{
+							"name": "APPIMAGE",
+							"argument": {
+								"type": "appimage",
+							},
+						},
+					],
+				},
+				{
+					"identifier": "developer.utility.macintosh.sign_program",
+					"name": "Macintosh Sign Program",
+					"icon": "approval",
+					"argument": [
+						{
+							"identifier": "target",
+							"name": "Target",
+							"type": "path",
+							"option": null,
+						},
+						{
+							"identifier": "keystore_file",
+							"name": "Keystore File",
+							"type": "path",
+							"option": null,
+						},
+						{
+							"identifier": "keystore_password",
+							"name": "Keystore Password",
+							"type": "string",
+							"option": null,
+						},
+						{
+							"identifier": "type",
+							"name": "Type",
+							"type": "string",
+							"option": [
+								"macho",
+								"app",
+							],
+						},
+					],
+					"batch": [
+						"target",
+					],
+					"preset": [
+						{
+							"name": "MACHO",
+							"argument": {
+								"type": "macho",
+							},
+						},
+						{
+							"name": "APP",
+							"argument": {
+								"type": "app",
+							},
+						},
+					],
+				},
+				{
+					"identifier": "developer.utility.macintosh.pack_program",
+					"name": "Macintosh Pack Program",
+					"icon": "package_2",
+					"argument": [
+						{
+							"identifier": "content_directory",
+							"name": "Content Directory",
+							"type": "path",
+							"option": null,
+						},
+						{
+							"identifier": "package_file",
+							"name": "Package File",
+							"type": "path",
+							"option": null,
+						},
+						{
+							"identifier": "type",
+							"name": "Type",
+							"type": "string",
+							"option": [
+								"dmg",
+							],
+						},
+						{
+							"identifier": "name",
+							"name": "Name",
+							"type": "string",
+							"option": null,
+						},
+					],
+					"batch": null,
+					"preset": [
+						{
+							"name": "DMG",
+							"argument": {
+								"type": "dmg",
+							},
+						},
+					],
+				},
+				{
+					"identifier": "developer.utility.android.sign_program",
+					"name": "Android Sign Program",
+					"icon": "approval",
+					"argument": [
+						{
+							"identifier": "target",
+							"name": "Target",
+							"type": "path",
+							"option": null,
+						},
+						{
+							"identifier": "keystore_file",
+							"name": "Keystore File",
+							"type": "path",
+							"option": null,
+						},
+						{
+							"identifier": "keystore_password",
+							"name": "Keystore Password",
+							"type": "string",
+							"option": null,
+						},
+						{
+							"identifier": "type",
+							"name": "Type",
+							"type": "string",
+							"option": [
+								"apk",
+								"apks",
+							],
+						},
+						{
+							"identifier": "signature_version_1",
+							"name": "Signature Version 1",
+							"type": "boolean",
+							"option": null,
+						},
+						{
+							"identifier": "signature_version_2",
+							"name": "Signature Version 2",
+							"type": "boolean",
+							"option": null,
+						},
+						{
+							"identifier": "signature_version_3",
+							"name": "Signature Version 3",
+							"type": "boolean",
+							"option": null,
+						},
+					],
+					"batch": [
+						"target",
+					],
+					"preset": [
+						{
+							"name": "APK",
+							"argument": {
+								"type": "apk",
+							},
+						},
+						{
+							"name": "APKS",
+							"argument": {
+								"type": "apks",
+							},
+						},
+					],
+				},
+				{
+					"identifier": "developer.utility.android.pack_program",
+					"name": "Android Pack Program",
+					"icon": "package_2",
+					"argument": [
+						{
+							"identifier": "content_directory",
+							"name": "Content Directory",
+							"type": "path",
+							"option": null,
+						},
+						{
+							"identifier": "package_file",
+							"name": "Package File",
+							"type": "path",
+							"option": null,
+						},
+						{
+							"identifier": "type",
+							"name": "Type",
+							"type": "string",
+							"option": [
+								"apk",
+								"apks",
+							],
+						},
+						{
+							"identifier": "name",
+							"name": "Name",
+							"type": "string",
+							"option": null,
+						},
+					],
+					"batch": null,
+					"preset": [
+						{
+							"name": "APK",
+							"argument": {
+								"type": "apk",
+							},
+						},
+						{
+							"name": "APKS",
+							"argument": {
+								"type": "apks",
+							},
+						},
+					],
+				},
+				{
+					"identifier": "developer.utility.android.align_package",
+					"name": "Android Align Package",
+					"icon": "align_justify_space_even",
+					"argument": [
+						{
+							"identifier": "package_file",
+							"name": "Package File",
+							"type": "path",
+							"option": null,
+						},
+						{
+							"identifier": "type",
+							"name": "Type",
+							"type": "string",
+							"option": [
+								"apk",
+								"apks",
+							],
+						},
+					],
+					"batch": null,
+					"preset": [
+						{
+							"name": "APK",
+							"argument": {
+								"type": "apk",
+							},
+						},
+						{
+							"name": "APKS",
+							"argument": {
+								"type": "apks",
+							},
+						},
+					],
+				},
+				{
+					"identifier": "developer.utility.iphone.sign_program",
+					"name": "Iphone Sign Program",
+					"icon": "approval",
+					"argument": [
+						{
+							"identifier": "target",
+							"name": "Target",
+							"type": "path",
+							"option": null,
+						},
+						{
+							"identifier": "keystore_file",
+							"name": "Keystore File",
+							"type": "path",
+							"option": null,
+						},
+						{
+							"identifier": "keystore_password",
+							"name": "Keystore Password",
+							"type": "string",
+							"option": null,
+						},
+						{
+							"identifier": "type",
+							"name": "Type",
+							"type": "string",
+							"option": [
+								"macho",
+								"app",
+							],
+						},
+					],
+					"batch": [
+						"target",
+					],
+					"preset": [
+						{
+							"name": "MACHO",
+							"argument": {
+								"type": "macho",
+							},
+						},
+						{
+							"name": "APP",
+							"argument": {
+								"type": "app",
+							},
+						},
+					],
+				},
+				{
+					"identifier": "developer.utility.iphone.pack_program",
+					"name": "Iphone Pack Program",
+					"icon": "package_2",
+					"argument": [
+						{
+							"identifier": "content_directory",
+							"name": "Content Directory",
+							"type": "path",
+							"option": null,
+						},
+						{
+							"identifier": "package_file",
+							"name": "Package File",
+							"type": "path",
+							"option": null,
+						},
+						{
+							"identifier": "type",
+							"name": "Type",
+							"type": "string",
+							"option": [
+								"ipa",
+							],
+						},
+						{
+							"identifier": "name",
+							"name": "Name",
+							"type": "string",
+							"option": null,
+						},
+					],
+					"batch": null,
+					"preset": [
+						{
+							"name": "IPA",
+							"argument": {
+								"type": "ipa",
+							},
+						},
+					],
+				},
+			],
+		},
 	],
 }

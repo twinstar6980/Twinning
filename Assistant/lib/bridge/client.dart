@@ -19,9 +19,11 @@ abstract class Client {
   Future<Void> finish(
   );
 
-  // ----------------
+  // #endregion
 
-  Future<List<String>> callback(
+  // #region handle
+
+  Future<List<String>> handle(
     List<String> argument,
   );
 

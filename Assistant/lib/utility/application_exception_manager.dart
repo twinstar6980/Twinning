@@ -1,5 +1,5 @@
 import '/common.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/widgets.dart' as lib;
 
 // ----------------
 
@@ -31,12 +31,12 @@ class ApplicationExceptionManager {
   Future<Void> initialize(
   ) async {
     assertTest(!this._initialized);
-    WidgetsBinding.instance.platformDispatcher.onError = (exception, stack) {
+    lib.WidgetsBinding.instance.platformDispatcher.onError = (exception, stack) {
       this._handler?.call(exception, stack);
       return true;
     };
-    FlutterError.onError = (details) {
-      FlutterError.presentError(details);
+    lib.FlutterError.onError = (details) {
+      lib.FlutterError.presentError(details);
       this._handler?.call(details.exception, details.stack);
       return;
     };

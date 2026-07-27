@@ -10,6 +10,8 @@
 	"external_program_path": {
 		"sh": null,
 		"adb": null,
+		"mt": null,
+		"signtool": null,
 		"zipalign": null,
 		"apksigner": null,
 		"7z": null,
@@ -17,6 +19,8 @@
 		"vgmstream-cli": null,
 		"Il2CppDumper": null,
 	},
+	"android_temporary_directory_for_data": "/data/local/tmp/twinning",
+	"android_temporary_directory_for_sdcard": "/sdcard/.twinning",
 	"console_basic_disable_virtual_terminal_sequence": false,
 	"language": "english",
 	"executor_typical_method_disable_name_filter": false,
@@ -1376,6 +1380,176 @@
 					"data_file": "?input",
 					"definition_file": "?automatic",
 				},
+			},
+		},
+		"developer.utility": {
+			"keystore.generate": {
+				"filter": null,
+				"argument": {
+					"target_file": "?input",
+					"password": "?input",
+					"subject": "?input",
+					"begin_time": "?input",
+					"end_time": "?input",
+				},
+				"batch": null,
+			},
+			"keystore.query": {
+				"filter": "(\\.(p12|pfx))$",
+				"argument": {
+					"target_file": "?input",
+					"result_file": "?automatic",
+					"password": "?input",
+				},
+				"batch": {
+					"target_file": "?input",
+					"result_file": "?automatic",
+				},
+			},
+			"windows.sign_program": {
+				"filter": "()$",
+				"argument": {
+					"target": "?input",
+					"keystore_file": "?input",
+					"keystore_password": "?input",
+					"type": "?input",
+				},
+				"batch": {
+					"target": "?input",
+				},
+			},
+			"windows.pack_program": {
+				"filter": "()$",
+				"argument": {
+					"content_directory": "?input",
+					"package_file": "?input",
+					"type": "?input",
+				},
+				"batch": null,
+			},
+			"windows.import_manifest": {
+				"filter": "(\\.(exe|dll))$",
+				"argument": {
+					"executable_file": "?input",
+					"manifest_file": "?automatic",
+					"resource_identifier": "?input",
+				},
+				"batch": null,
+			},
+			"windows.export_manifest": {
+				"filter": "(\\.(exe|dll))$",
+				"argument": {
+					"executable_file": "?input",
+					"manifest_file": "?automatic",
+					"resource_identifier": "?input",
+				},
+				"batch": null,
+			},
+			"windows.create_pri_resource": {
+				"filter": "()$",
+				"argument": {
+					"package_directory": "?input",
+				},
+				"batch": null,
+			},
+			"linux.sign_program": {
+				"filter": "()$",
+				"argument": {
+					"target": "?input",
+					"keystore_file": "?input",
+					"keystore_password": "?input",
+					"type": "?input",
+				},
+				"batch": {
+					"target": "?input",
+				},
+			},
+			"linux.pack_program": {
+				"filter": "()$",
+				"argument": {
+					"content_directory": "?input",
+					"package_file": "?input",
+					"type": "?input",
+				},
+				"batch": null,
+			},
+			"macintosh.sign_program": {
+				"filter": "()$",
+				"argument": {
+					"target": "?input",
+					"keystore_file": "?input",
+					"keystore_password": "?input",
+					"type": "?input",
+				},
+				"batch": {
+					"target": "?input",
+				},
+			},
+			"macintosh.pack_program": {
+				"filter": "()$",
+				"argument": {
+					"content_directory": "?input",
+					"package_file": "?input",
+					"type": "?input",
+					"name": "?input",
+				},
+				"batch": null,
+			},
+			"android.sign_program": {
+				"filter": "()$",
+				"argument": {
+					"target": "?input",
+					"keystore_file": "?input",
+					"keystore_password": "?input",
+					"type": "?input",
+					"signature_version_1": "?input",
+					"signature_version_2": "?input",
+					"signature_version_3": "?input",
+				},
+				"batch": {
+					"target": "?input",
+				},
+			},
+			"android.pack_program": {
+				"filter": "()$",
+				"argument": {
+					"content_directory": "?input",
+					"package_file": "?input",
+					"type": "?input",
+				},
+				"batch": null,
+			},
+			"android.align_package": {
+				"filter": "(\\.(apk|apks))$",
+				"argument": {
+					"package_file": "?input",
+					"type": "?input",
+				},
+				"batch": {
+					"package_file": "?input",
+				},
+			},
+			"iphone.sign_program": {
+				"filter": "()$",
+				"argument": {
+					"target": "?input",
+					"keystore_file": "?input",
+					"keystore_password": "?input",
+					"type": "?input",
+				},
+				"batch": {
+					"target": "?input",
+				},
+			},
+			"iphone.pack_program": {
+				"filter": "()$",
+				"argument": {
+					"content_directory": "?input",
+					"package_file": "?input",
+					"type": "?input",
+					"name": "?input",
+				},
+				"batch": null,
 			},
 		},
 	},

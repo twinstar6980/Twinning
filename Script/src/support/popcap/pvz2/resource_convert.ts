@@ -182,7 +182,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.ResourceConvert {
 					}
 					actual_size = Support.Popcap.Texture.Encoding.compute_padded_image_size(actual_size, format);
 					Console.verbosity(`    size = [ ${size[0].toString().padStart(4, ' ')}, ${size[1].toString().padStart(4, ' ')} ] of [ ${actual_size[0].toString().padStart(4, ' ')}, ${actual_size[1].toString().padStart(4, ' ')} ], format = ${format}`, []);
-					let data = StorageHelper.read_file(resource_directory.push(path.parent()!).join(path.name()! + '.ptx'));
+					let data = StorageHelper.read_file_data(resource_directory.push(path.parent()!).join(path.name()! + '.ptx'));
 					let data_stream = Kernel.ByteStreamView.watch(data.view());
 					let image = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(actual_size));
 					let image_view = image.view();
@@ -213,7 +213,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.ResourceConvert {
 			if (option.pam !== null && path.extension()?.toLowerCase() === 'pam') {
 				Console.verbosity(`  ${path.emit()}`, []);
 				try {
-					let data = StorageHelper.read_file(resource_directory.push(path));
+					let data = StorageHelper.read_file_data(resource_directory.push(path));
 					let data_stream = Kernel.ByteStreamView.watch(data.view());
 					let version_c = Kernel.Tool.Popcap.Animation.Version.value(option.pam.version);
 					let definition = Kernel.Tool.Popcap.Animation.Definition.Animation.default();
@@ -302,7 +302,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.ResourceConvert {
 			}
 			Console.information(los('support.popcap.pvz2.resource_convert:parse_resource_manifest'), []);
 			if (resource_path.toLowerCase().endsWith('rton')) {
-				let data = StorageHelper.read_file(resource_directory.push(new StoragePath(resource_path)));
+				let data = StorageHelper.read_file_data(resource_directory.push(new StoragePath(resource_path)));
 				let stream = Kernel.ByteStreamView.watch(data.view());
 				let result = Kernel.Notation.Json.Value.default<ResourceManifest.Package>();
 				Kernel.Tool.Popcap.ReflectionObjectNotation.Decode.process(
@@ -313,7 +313,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.ResourceConvert {
 				resource_manifest = result.value;
 			}
 			if (resource_path.toLowerCase().endsWith('newton')) {
-				let data = StorageHelper.read_file(resource_directory.push(new StoragePath(resource_path)));
+				let data = StorageHelper.read_file_data(resource_directory.push(new StoragePath(resource_path)));
 				let stream = new ByteStreamView(data.view().value);
 				let result = ResourceManifest.NewTypeObjectNotation.Decode.process(
 					stream,

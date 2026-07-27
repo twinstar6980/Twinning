@@ -2,8 +2,6 @@ import '/common.dart';
 import '/setting.dart';
 import '/utility/miscellaneous_helper.dart';
 import '/widget/export.dart';
-import 'package:flutter/widgets.dart';
-import 'package:provider/provider.dart';
 
 // ----------------
 
@@ -22,7 +20,7 @@ class OnboardingPanel extends StatelessWidget {
 
   @override
   build(context) {
-    var setting = Provider.of<SettingProvider>(context);
+    var setting = SettingProvider.of(context);
     return FlexContainer.vertical([
       StyledListTile.standard(
         leading: IconView.of(IconSet.settings),

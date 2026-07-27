@@ -47,7 +47,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject {
 
 	export type ResourceType = typeof ResourceTypeX[number];
 
-	export const ResourceTypeE = ResourceTypeX as unknown as ResourceType[];
+	export const ResourceTypeE = [...ResourceTypeX];
 
 	export type DummyResourceProperty = {
 	};
@@ -126,7 +126,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject {
 
 	export type ManifestType = typeof ManifestTypeX[number];
 
-	export const ManifestTypeE = ManifestTypeX as unknown as ManifestType[];
+	export const ManifestTypeE = [...ManifestTypeX];
 
 	// ----------------
 

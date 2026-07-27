@@ -1,5 +1,7 @@
 module;
 
+#pragma clang diagnostic ignored "-Wunused-variable"
+
 #include <gtk/gtk.h>
 #include <flutter_linux/flutter_linux.h>
 #include "./my_application.h"
@@ -21,7 +23,7 @@ export {
 
 	public:
 
-		#pragma region construct
+		#pragma region constructor
 
 		~PlatformIntegrationManager(
 		) = default;
@@ -55,7 +57,7 @@ export {
 
 	private:
 
-		#pragma region construct
+		#pragma region constructor
 
 		explicit PlatformIntegrationManager(
 			std::nullptr_t _
@@ -81,6 +83,19 @@ export {
 				result *= prime;
 			}
 			return result;
+		}
+
+		// ----------------
+
+		template <typename TFinalizer>
+		static constexpr auto make_finalizer(
+			TFinalizer const & finalizer
+		) -> auto {
+			auto finalizer_wrapper = [&](auto it) {
+				delete it;
+				finalizer();
+			};
+			return std::unique_ptr<std::uint8_t, decltype(finalizer_wrapper)>{new std::uint8_t{}, std::move(finalizer_wrapper)};
 		}
 
 		#pragma endregion
@@ -114,43 +129,74 @@ export {
 			GApplication * & with_application,
 			FlView * &       also_view
 		) -> void {
-			thiz.m_application = GTK_APPLICATION(with_application);
-			g_autoptr(FlStandardMethodCodec) codec = fl_standard_method_codec_new();
-			thiz.m_channel = fl_method_channel_new(
-				fl_engine_get_binary_messenger(fl_view_get_engine(also_view)),
-				std::format("{}/PlatformIntegrationManager", thiz.query_application_identifier()).data(),
-				FL_METHOD_CODEC(codec)
-			);
-			fl_method_channel_set_method_call_handler(
-				thiz.m_channel,
-				[](
-				FlMethodChannel * channel,
-				FlMethodCall *    method_call,
-				gpointer          user_data
-			) -> void {
-					auto & self = *static_cast<PlatformIntegrationManager *>(user_data);
-					g_autoptr(FlMethodResponse) response = nullptr;
-					self.handle(method_call, response);
-					g_autoptr(GError) error = nullptr;
-					if (!fl_method_call_respond(method_call, response, &error)) {
-						g_warning("Failed to send response: %s", error->message);
-					}
+			return thiz.execute_platform_task(
+				false,
+				std::function{[] {
 					return;
-				},
-				&thiz,
-				nullptr
+				}},
+				std::function{[&] {
+					thiz.m_application = GTK_APPLICATION(with_application);
+					auto codec = fl_standard_method_codec_new();
+					auto response_finalizer = make_finalizer([&] {
+						g_object_unref(codec);
+					});
+					thiz.m_channel = fl_method_channel_new(
+						fl_engine_get_binary_messenger(fl_view_get_engine(also_view)),
+						std::format("{}/PlatformIntegrationManager", thiz.query_application_identifier()).data(),
+						FL_METHOD_CODEC(codec)
+					);
+					fl_method_channel_set_method_call_handler(
+						thiz.m_channel,
+						[](
+						FlMethodChannel * channel,
+						FlMethodCall *    method_call,
+						gpointer          user_data
+					) -> void {
+							auto & self = *static_cast<PlatformIntegrationManager *>(user_data);
+							self.execute_platform_background_task(
+								[&] {
+									auto response = std::add_pointer_t<FlMethodResponse>{nullptr};
+									auto response_finalizer = make_finalizer([&] {
+										if (response != nullptr) {
+											g_object_unref(response);
+										}
+									});
+									self.handle(method_call, response);
+									auto error = std::add_pointer_t<GError>{nullptr};
+									if (!fl_method_call_respond(method_call, response, &error)) {
+										auto error_finalizer = make_finalizer([&] {
+											g_error_free(error);
+										});
+										g_warning("Failed to send response: %s", error->message);
+									}
+								}
+							);
+							return;
+						},
+						&thiz,
+						nullptr
+					);
+					thiz.register_notification_support();
+					thiz.register_drag_drop_support();
+					return;
+				}}
 			);
-			thiz.register_notification_support();
-			thiz.register_drag_drop_support();
-			return;
 		}
 
 		auto inject_MyApplication_dispose(
 			MyApplication & host,
 			GObject * &     with_object
 		) -> void {
-			g_clear_object(&thiz.m_channel);
-			return;
+			return thiz.execute_platform_task(
+				false,
+				std::function{[] {
+					return;
+				}},
+				std::function{[&] {
+					g_clear_object(&thiz.m_channel);
+					return;
+				}}
+			);
 		}
 
 		#pragma endregion
@@ -183,7 +229,6 @@ export {
 						break;
 					}
 					case hash_string("update_application_permission"): {
-						[[maybe_unused]]
 						auto detail = thiz.handle_update_application_permission(
 							thiz.decode_flutter_value<std::string>(get_argument("name"))
 						);
@@ -197,7 +242,6 @@ export {
 						break;
 					}
 					case hash_string("update_application_extension"): {
-						[[maybe_unused]]
 						auto detail = thiz.handle_update_application_extension(
 							thiz.decode_flutter_value<std::string>(get_argument("name")),
 							thiz.decode_flutter_value<bool>(get_argument("state"))
@@ -212,7 +256,6 @@ export {
 						break;
 					}
 					case hash_string("reveal_storage_item"): {
-						[[maybe_unused]]
 						auto detail = thiz.handle_reveal_storage_item(
 							thiz.decode_flutter_value<std::string>(get_argument("target"))
 						);
@@ -235,7 +278,6 @@ export {
 						break;
 					}
 					case hash_string("push_system_notification"): {
-						[[maybe_unused]]
 						auto detail = thiz.handle_push_system_notification(
 							thiz.decode_flutter_value<std::string>(get_argument("title")),
 							thiz.decode_flutter_value<std::string>(get_argument("description"))
@@ -261,7 +303,6 @@ export {
 						break;
 					}
 					case hash_string("update_window_placement"): {
-						[[maybe_unused]]
 						auto detail = thiz.handle_update_window_placement(
 							thiz.decode_flutter_value<std::int64_t>(get_argument("x")),
 							thiz.decode_flutter_value<std::int64_t>(get_argument("y")),
@@ -380,13 +421,16 @@ export {
 			if (type == "save_file") {
 				dialog_action = GTK_FILE_CHOOSER_ACTION_SAVE;
 			}
-			g_autoptr(GtkFileChooserNative) dialog = gtk_file_chooser_native_new(
+			auto dialog = gtk_file_chooser_native_new(
 				"File Chooser",
 				window,
 				dialog_action,
 				"_Accept",
 				"_Cancel"
 			);
+			auto dialog_finalizer = make_finalizer([&] {
+				g_object_unref(dialog);
+			});
 			gtk_file_chooser_set_select_multiple(GTK_FILE_CHOOSER(dialog), multiply ? TRUE : FALSE);
 			gtk_file_chooser_set_show_hidden(GTK_FILE_CHOOSER(dialog), TRUE);
 			gtk_file_chooser_set_local_only(GTK_FILE_CHOOSER(dialog), TRUE);
@@ -402,7 +446,10 @@ export {
 			auto target = std::vector<std::string>{};
 			auto dialog_response = gtk_native_dialog_run(GTK_NATIVE_DIALOG(dialog));
 			if (dialog_response == GTK_RESPONSE_ACCEPT) {
-				g_autoptr(GSList) target_list = gtk_file_chooser_get_filenames(GTK_FILE_CHOOSER(dialog));
+				auto target_list = gtk_file_chooser_get_filenames(GTK_FILE_CHOOSER(dialog));
+				auto event_finalizer = make_finalizer([&] {
+					g_slist_free_full(target_list, g_free);
+				});
 				for (auto target_item = target_list; target_item != nullptr; target_item = target_item->next) {
 					target.emplace_back(static_cast<gchar *>(target_item->data));
 				}
@@ -439,12 +486,18 @@ export {
 			std::string const & title,
 			std::string const & description
 		) -> std::tuple<> {
-			g_autoptr(GDBusConnection) connection = nullptr;
-			g_autoptr(GError) error = nullptr;
+			auto connection = std::add_pointer_t<GDBusConnection>{nullptr};
+			auto error = std::add_pointer_t<GError>{nullptr};
 			connection = g_bus_get_sync(G_BUS_TYPE_SESSION, nullptr, &error);
 			if (connection == nullptr) {
+				auto error_finalizer = make_finalizer([&] {
+					g_error_free(error);
+				});
 				throw std::runtime_error{std::string{"Exception: "} + error->message};
 			}
+			auto connection_finalizer = make_finalizer([&] {
+				g_object_unref(connection);
+			});
 			auto notification = g_variant_new(
 				"(susssasa{sv}i)",
 				thiz.exposed_application_name(),
@@ -490,11 +543,12 @@ export {
 		auto handle_query_window_placement(
 		) -> std::tuple<std::int64_t, std::int64_t, std::int64_t, std::int64_t> {
 			auto window = thiz.get_current_window();
+			auto window_inset = thiz.get_current_window_inset();
 			auto rect = GdkRectangle{};
 			gtk_window_get_position(window, &rect.x, &rect.y);
 			gtk_window_get_size(window, &rect.width, &rect.height);
-			auto x = static_cast<std::int64_t>(rect.x);
-			auto y = static_cast<std::int64_t>(rect.y);
+			auto x = static_cast<std::int64_t>(rect.x + std::get<0>(window_inset));
+			auto y = static_cast<std::int64_t>(rect.y + std::get<1>(window_inset));
 			auto width = static_cast<std::int64_t>(rect.width);
 			auto height = static_cast<std::int64_t>(rect.height);
 			return std::make_tuple(std::move(x), std::move(y), std::move(width), std::move(height));
@@ -507,12 +561,13 @@ export {
 			std::int64_t const & height
 		) -> std::tuple<> {
 			auto window = thiz.get_current_window();
-			auto actual_x = static_cast<gint>(x);
-			auto actual_y = static_cast<gint>(y);
+			auto window_inset = thiz.get_current_window_inset();
+			auto actual_x = static_cast<gint>(x - std::get<0>(window_inset));
+			auto actual_y = static_cast<gint>(y - std::get<1>(window_inset));
 			auto actual_width = static_cast<gint>(width);
 			auto actual_height = static_cast<gint>(height);
-			gtk_window_move(window, actual_x, actual_y);
 			gtk_window_resize(window, actual_width, actual_height);
+			gtk_window_move(window, actual_x, actual_y);
 			return std::make_tuple();
 		}
 
@@ -537,6 +592,19 @@ export {
 				nullptr
 			);
 			return;
+		}
+
+		// ----------------
+
+		auto invoke_receive_platform_exception(
+			std::string const & message
+		) -> void {
+			return thiz.invoke(
+				"receive_platform_exception",
+				std::map<std::string, FlValue *>{{
+					std::make_pair("message", thiz.encode_flutter_value(auto{message})),
+				}}
+			);
 		}
 
 		// ----------------
@@ -621,7 +689,7 @@ export {
 				GTK_DEST_DEFAULT_ALL,
 				&target,
 				1,
-				static_cast<GdkDragAction>(GDK_ACTION_MOVE | GDK_ACTION_COPY | GDK_ACTION_LINK)
+				static_cast<GdkDragAction>(GDK_ACTION_COPY | GDK_ACTION_MOVE | GDK_ACTION_LINK)
 			);
 			g_signal_connect(
 				widget,
@@ -636,16 +704,25 @@ export {
 					gpointer         user_data
 				) -> gboolean {
 						auto & self = *static_cast<PlatformIntegrationManager *>(user_data);
-						if (!self.m_drag_inside) {
-							self.m_drag_inside = true;
-							self.invoke_receive_application_drag_enter();
-						}
-						else {
-							auto location_x = static_cast<std::int64_t>(x);
-							auto location_y = static_cast<std::int64_t>(y);
-							self.invoke_receive_application_drag_over(location_x, location_y);
-						}
-						return TRUE;
+						return self.execute_platform_task(
+							true,
+							std::function{[] {
+								return static_cast<gboolean>(FALSE);
+							}},
+							std::function{[&] {
+								if (!self.m_drag_inside) {
+									self.m_drag_inside = true;
+									self.invoke_receive_application_drag_enter();
+								}
+								else {
+									auto window_inset = self.get_current_window_inset();
+									auto location_x = static_cast<std::int64_t>(x - std::get<0>(window_inset));
+									auto location_y = static_cast<std::int64_t>(y - std::get<1>(window_inset));
+									self.invoke_receive_application_drag_over(location_x, location_y);
+								}
+								return static_cast<gboolean>(TRUE);
+							}}
+						);
 					}
 				),
 				&thiz
@@ -661,13 +738,24 @@ export {
 					gpointer         user_data
 				) -> void {
 						auto & self = *static_cast<PlatformIntegrationManager *>(user_data);
-						self.m_drag_inside = false;
-						g_autoptr(GdkEvent) event = gtk_get_current_event();
-						assert_test(event != nullptr);
-						if (event->type != GDK_DROP_START) {
-							self.invoke_receive_application_drag_leave();
-						}
-						return;
+						return self.execute_platform_task(
+							true,
+							std::function{[] {
+								return;
+							}},
+							std::function{[&] {
+								self.m_drag_inside = false;
+								auto event = gtk_get_current_event();
+								assert_test(event != nullptr);
+								auto event_finalizer = make_finalizer([&] {
+									gdk_event_free(event);
+								});
+								if (event->type != GDK_DROP_START) {
+									self.invoke_receive_application_drag_leave();
+								}
+								return;
+							}}
+						);
 					}
 				),
 				&thiz
@@ -687,24 +775,35 @@ export {
 					gpointer           user_data
 				) -> void {
 						auto & self = *static_cast<PlatformIntegrationManager *>(user_data);
-						self.m_drag_inside = false;
-						g_auto(GStrv) target_uri = gtk_selection_data_get_uris(data);
-						assert_test(target_uri != nullptr);
-						auto has_invalid_item = false;
-						auto target = std::vector<std::string>{};
-						for (auto target_index = std::size_t{0}; target_uri[target_index] != nullptr; ++target_index) {
-							g_autofree gchar * target_item = g_filename_from_uri(target_uri[target_index], nullptr, nullptr);
-							if (target_item == nullptr) {
-								has_invalid_item = true;
-								break;
-							}
-							target.emplace_back(target_item);
-						}
-						if (!has_invalid_item) {
-							self.invoke_receive_application_drag_drop(target);
-						}
-						gtk_drag_finish(context, has_invalid_item ? FALSE : TRUE, FALSE, time);
-						return;
+						return self.execute_platform_task(
+							true,
+							std::function{[] {
+								return;
+							}},
+							std::function{[&] {
+								self.m_drag_inside = false;
+								auto target_uri = gtk_selection_data_get_uris(data);
+								assert_test(target_uri != nullptr);
+								auto target_uri_finalizer = make_finalizer([&] {
+									g_strfreev(target_uri);
+								});
+								auto target = std::vector<std::string>{};
+								for (auto target_index = std::size_t{0}; target_uri[target_index] != nullptr; ++target_index) {
+									auto target_item = g_filename_from_uri(target_uri[target_index], nullptr, nullptr);
+									if (target_item == nullptr) {
+										target.clear();
+										break;
+									}
+									auto target_item_finalizer = make_finalizer([&] {
+										g_free(target_item);
+									});
+									target.emplace_back(target_item);
+								}
+								self.invoke_receive_application_drag_drop(target);
+								gtk_drag_finish(context, target.empty() ? FALSE : TRUE, FALSE, time);
+								return;
+							}}
+						);
 					}
 				),
 				&thiz
@@ -716,15 +815,34 @@ export {
 
 		#pragma region utility
 
-		template <typename TFinalizer>
-		auto make_finalizer(
-			TFinalizer const & finalizer
-		) -> auto {
-			auto finalizer_wrapper = [&](auto it) {
-				delete it;
-				finalizer();
-			};
-			return std::unique_ptr<std::uint8_t, decltype(finalizer_wrapper)>{new std::uint8_t{}, std::move(finalizer_wrapper)};
+		template <typename TResult>
+		auto execute_platform_task(
+			bool const &                      handle_exception,
+			std::function<TResult ()> const & fallback_action,
+			std::function<TResult ()> const & task_action
+		) -> TResult {
+			try {
+				return task_action();
+			}
+			catch (...) {
+				if (!handle_exception) {
+					throw;
+				}
+				thiz.invoke_receive_platform_exception(thiz.parse_current_exception());
+				return fallback_action();
+			}
+		}
+
+		auto execute_platform_background_task(
+			std::function<void ()> const & task_action
+		) -> void {
+			try {
+				task_action();
+			}
+			catch (...) {
+				thiz.invoke_receive_platform_exception(thiz.parse_current_exception());
+			}
+			return;
 		}
 
 		// ----------------
@@ -840,9 +958,12 @@ export {
 			std::string const & link
 		) const -> void {
 			auto state_b = gboolean{};
-			g_autoptr(GError) error = nullptr;
+			auto error = std::add_pointer_t<GError>{nullptr};
 			state_b = gtk_show_uri_on_window(nullptr, link.data(), GDK_CURRENT_TIME, &error);
 			if (!state_b) {
+				auto error_finalizer = make_finalizer([&] {
+					g_error_free(error);
+				});
 				throw std::runtime_error{std::string{"Exception: "} + error->message};
 			}
 			return;
@@ -867,6 +988,19 @@ export {
 			auto window = GTK_WINDOW(g_list_nth_data(gtk_application_get_windows(thiz.m_application), 0));
 			assert_test(window != nullptr);
 			return window;
+		}
+
+		auto get_current_window_inset(
+		) const -> std::tuple<std::int64_t, std::int64_t> {
+			auto state_b = gboolean{};
+			auto window = thiz.get_current_window();
+			auto content = gtk_bin_get_child(GTK_BIN(window));
+			assert_test(content != nullptr);
+			auto x = gint{};
+			auto y = gint{};
+			state_b = gtk_widget_translate_coordinates(content, GTK_WIDGET(window), 0, 0, &x, &y);
+			assert_test(state_b != FALSE);
+			return std::make_tuple(static_cast<std::int64_t>(x), static_cast<std::int64_t>(y));
 		}
 
 		#pragma endregion

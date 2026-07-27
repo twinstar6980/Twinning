@@ -1,9 +1,9 @@
 import '/common.dart';
 import '/utility/convert_helper.dart';
 import '/bridge/data.dart';
-import 'dart:convert';
-import 'dart:ffi' as ffi;
-import 'package:ffi/ffi.dart' as ffi;
+import 'dart:convert' as lib;
+import 'dart:ffi' as lib;
+import 'package:ffi/ffi.dart' as lib;
 
 // ----------------
 
@@ -25,22 +25,22 @@ class MessageProxy {
   // #region convert
 
   static MessageProxy parse(
-    ffi.Pointer<Message> instance,
+    lib.Pointer<Message> instance,
   ) {
     var proxy = MessageProxy(null);
     var value = proxy.value;
     var dataPosition = 0;
-    var valueSize = (instance.ref.data + dataPosition).cast<ffi.Uint32>().value;
-    dataPosition += ffi.sizeOf<ffi.Uint32>();
+    var valueSize = (instance.ref.data + dataPosition).cast<lib.Uint32>().value;
+    dataPosition += lib.sizeOf<lib.Uint32>();
     for (var valueIndex = 0; valueIndex < valueSize; valueIndex++) {
-      var valueItemSize = (instance.ref.data + dataPosition).cast<ffi.Uint32>().value;
-      dataPosition += ffi.sizeOf<ffi.Uint32>();
-      var valueItem = utf8.decode((instance.ref.data + dataPosition).cast<ffi.Uint8>().asTypedList(valueItemSize));
-      dataPosition += ffi.sizeOf<ffi.Uint8>() * valueItemSize;
+      var valueItemSize = (instance.ref.data + dataPosition).cast<lib.Uint32>().value;
+      dataPosition += lib.sizeOf<lib.Uint32>();
+      var valueItem = lib.utf8.decode((instance.ref.data + dataPosition).cast<lib.Uint8>().asTypedList(valueItemSize));
+      dataPosition += lib.sizeOf<lib.Uint8>() * valueItemSize;
       value.add(valueItem);
-      var dataPadding = dataPosition % ffi.sizeOf<ffi.Uint32>();
+      var dataPadding = dataPosition % lib.sizeOf<lib.Uint32>();
       if (dataPadding != 0) {
-        dataPadding = ffi.sizeOf<ffi.Uint32>() - dataPadding;
+        dataPadding = lib.sizeOf<lib.Uint32>() - dataPadding;
       }
       dataPosition += dataPadding;
     }
@@ -49,37 +49,37 @@ class MessageProxy {
   }
 
   static Void construct(
-    ffi.Pointer<Message> instance,
+    lib.Pointer<Message> instance,
     MessageProxy         proxy,
   ) {
-    var value = proxy.value.map((value) => utf8.encode(value)).toList();
+    var value = proxy.value.map((value) => lib.utf8.encode(value)).toList();
     var dataSize = 0;
-    dataSize += ffi.sizeOf<ffi.Uint32>();
+    dataSize += lib.sizeOf<lib.Uint32>();
     for (var valueItem in value) {
-      dataSize += ffi.sizeOf<ffi.Uint32>();
-      dataSize += ffi.sizeOf<ffi.Uint8>() * valueItem.length;
-      var dataPadding = dataSize % ffi.sizeOf<ffi.Uint32>();
+      dataSize += lib.sizeOf<lib.Uint32>();
+      dataSize += lib.sizeOf<lib.Uint8>() * valueItem.length;
+      var dataPadding = dataSize % lib.sizeOf<lib.Uint32>();
       if (dataPadding != 0) {
-        dataPadding = ffi.sizeOf<ffi.Uint32>() - dataPadding;
+        dataPadding = lib.sizeOf<lib.Uint32>() - dataPadding;
       }
       dataSize += dataPadding;
     }
-    instance.ref.data = ffi.calloc.call<ffi.Uint8>(dataSize);
+    instance.ref.data = lib.calloc.call<lib.Uint8>(dataSize);
     instance.ref.size = dataSize;
     var dataPosition = 0;
     var valueSize = value.length;
-    (instance.ref.data + dataPosition).cast<ffi.Uint32>().value = valueSize;
-    dataPosition += ffi.sizeOf<ffi.Uint32>();
+    (instance.ref.data + dataPosition).cast<lib.Uint32>().value = valueSize;
+    dataPosition += lib.sizeOf<lib.Uint32>();
     for (var valueIndex = 0; valueIndex < valueSize; valueIndex++) {
       var valueItem = value[valueIndex];
       var valueItemSize = valueItem.length;
-      (instance.ref.data + dataPosition).cast<ffi.Uint32>().value = valueItemSize;
-      dataPosition += ffi.sizeOf<ffi.Uint32>();
-      (instance.ref.data + dataPosition).cast<ffi.Uint8>().asTypedList(valueItemSize).setAll(0, valueItem);
-      dataPosition += ffi.sizeOf<ffi.Uint8>() * valueItemSize;
-      var dataPadding = dataPosition % ffi.sizeOf<ffi.Uint32>();
+      (instance.ref.data + dataPosition).cast<lib.Uint32>().value = valueItemSize;
+      dataPosition += lib.sizeOf<lib.Uint32>();
+      (instance.ref.data + dataPosition).cast<lib.Uint8>().asTypedList(valueItemSize).setAll(0, valueItem);
+      dataPosition += lib.sizeOf<lib.Uint8>() * valueItemSize;
+      var dataPadding = dataPosition % lib.sizeOf<lib.Uint32>();
       if (dataPadding != 0) {
-        dataPadding = ffi.sizeOf<ffi.Uint32>() - dataPadding;
+        dataPadding = lib.sizeOf<lib.Uint32>() - dataPadding;
       }
       dataPosition += dataPadding;
     }
@@ -88,10 +88,10 @@ class MessageProxy {
   }
 
   static Void destruct(
-    ffi.Pointer<Message> instance,
+    lib.Pointer<Message> instance,
   ) {
-    ffi.calloc.free(instance.ref.data);
-    instance.ref.data = ffi.nullptr;
+    lib.calloc.free(instance.ref.data);
+    instance.ref.data = lib.nullptr;
     instance.ref.size = 0;
     return;
   }
@@ -117,45 +117,45 @@ class ExecutorProxy {
 
   // #region convert
 
-  static final Map<ffi.Pointer<Executor>, ({ffi.NativeCallable invoke, ffi.NativeCallable clear})> _guard = {};
+  static final Map<lib.Pointer<Executor>, ({lib.NativeCallable invoke, lib.NativeCallable clear})> _guard = {};
 
   // ----------------
 
   static ExecutorProxy parse(
-    ffi.Pointer<Executor> instance,
+    lib.Pointer<Executor> instance,
   ) {
     var proxy = ExecutorProxy(null);
     proxy.value = (callbackProxy, argumentProxy, resultProxy) {
       var exceptionProxy = MessageProxy(null);
-      var callback = ffi.Pointer<Executor>.fromAddress(0);
-      var argument = ffi.Pointer<Message>.fromAddress(0);
-      var result = ffi.Pointer<Message>.fromAddress(0);
-      var exception = ffi.Pointer<Message>.fromAddress(0);
+      var callback = lib.Pointer<Executor>.fromAddress(0);
+      var argument = lib.Pointer<Message>.fromAddress(0);
+      var result = lib.Pointer<Message>.fromAddress(0);
+      var exception = lib.Pointer<Message>.fromAddress(0);
       {
-        callback = ffi.calloc.call<Executor>();
-        argument = ffi.calloc.call<Message>();
-        result = ffi.calloc.call<Message>();
-        exception = ffi.calloc.call<Message>();
+        callback = lib.calloc.call<Executor>();
+        argument = lib.calloc.call<Message>();
+        result = lib.calloc.call<Message>();
+        exception = lib.calloc.call<Message>();
       }
       {
         ExecutorProxy.construct(callback, callbackProxy);
         MessageProxy.construct(argument, argumentProxy);
       }
       {
-        instance.ref.invoke.asFunction<Void Function(ffi.Pointer<Executor> self, ffi.Pointer<Executor> callback, ffi.Pointer<Message> argument, ffi.Pointer<Message> result, ffi.Pointer<Message> exception)>()(instance, callback, argument, result, exception);
+        instance.ref.invoke.asFunction<Void Function(lib.Pointer<Executor> self, lib.Pointer<Executor> callback, lib.Pointer<Message> argument, lib.Pointer<Message> result, lib.Pointer<Message> exception)>()(instance, callback, argument, result, exception);
         resultProxy.value = MessageProxy.parse(result).value;
         exceptionProxy.value = MessageProxy.parse(exception).value;
-        instance.ref.clear.asFunction<Void Function(ffi.Pointer<Executor> self, ffi.Pointer<Executor> callback, ffi.Pointer<Message> argument, ffi.Pointer<Message> result, ffi.Pointer<Message> exception)>()(instance, callback, argument, result, exception);
+        instance.ref.clear.asFunction<Void Function(lib.Pointer<Executor> self, lib.Pointer<Executor> callback, lib.Pointer<Message> argument, lib.Pointer<Message> result, lib.Pointer<Message> exception)>()(instance, callback, argument, result, exception);
       }
       {
         ExecutorProxy.destruct(callback);
         MessageProxy.destruct(argument);
       }
       {
-        ffi.calloc.free(callback);
-        ffi.calloc.free(argument);
-        ffi.calloc.free(result);
-        ffi.calloc.free(exception);
+        lib.calloc.free(callback);
+        lib.calloc.free(argument);
+        lib.calloc.free(result);
+        lib.calloc.free(exception);
       }
       if (!exceptionProxy.value.isEmpty) {
         throw exceptionProxy.value.first;
@@ -166,16 +166,16 @@ class ExecutorProxy {
   }
 
   static Void construct(
-    ffi.Pointer<Executor> instance,
+    lib.Pointer<Executor> instance,
     ExecutorProxy         proxy,
   ) {
     assertTest(!ExecutorProxy._guard.containsKey(instance));
-    var guardForInvoke = ffi.NativeCallable<ffi.Void Function(ffi.Pointer<Executor> self, ffi.Pointer<Executor> callback, ffi.Pointer<Message> argument, ffi.Pointer<Message> result, ffi.Pointer<Message> exception)>.isolateLocal((
-      ffi.Pointer<Executor> self,
-      ffi.Pointer<Executor> callback,
-      ffi.Pointer<Message>  argument,
-      ffi.Pointer<Message>  result,
-      ffi.Pointer<Message>  exception,
+    var guardForInvoke = lib.NativeCallable<lib.Void Function(lib.Pointer<Executor> self, lib.Pointer<Executor> callback, lib.Pointer<Message> argument, lib.Pointer<Message> result, lib.Pointer<Message> exception)>.isolateLocal((
+      lib.Pointer<Executor> self,
+      lib.Pointer<Executor> callback,
+      lib.Pointer<Message>  argument,
+      lib.Pointer<Message>  result,
+      lib.Pointer<Message>  exception,
     ) {
       try {
         var callbackProxy = ExecutorProxy.parse(callback);
@@ -186,22 +186,22 @@ class ExecutorProxy {
         MessageProxy.construct(exception, .new([]));
       }
       catch (e, s) {
-        MessageProxy.construct(exception, .new([ConvertHelper.generateExceptionMessage(e, s)]));
+        MessageProxy.construct(exception, .new([ConvertHelper.generateExceptionMessage(e, s).join('\n')]));
         MessageProxy.construct(result, .new([]));
       }
       return null as Void;
     });
-    var guardForClear = ffi.NativeCallable<ffi.Void Function(ffi.Pointer<Executor> self, ffi.Pointer<Executor> callback, ffi.Pointer<Message> argument, ffi.Pointer<Message> result, ffi.Pointer<Message> exception)>.isolateLocal((
-      ffi.Pointer<Executor> self,
-      ffi.Pointer<Executor> callback,
-      ffi.Pointer<Message>  argument,
-      ffi.Pointer<Message>  result,
-      ffi.Pointer<Message>  exception,
+    var guardForClear = lib.NativeCallable<lib.Void Function(lib.Pointer<Executor> self, lib.Pointer<Executor> callback, lib.Pointer<Message> argument, lib.Pointer<Message> result, lib.Pointer<Message> exception)>.isolateLocal((
+      lib.Pointer<Executor> self,
+      lib.Pointer<Executor> callback,
+      lib.Pointer<Message>  argument,
+      lib.Pointer<Message>  result,
+      lib.Pointer<Message>  exception,
     ) {
-      if (result != ffi.nullptr) {
+      if (result != lib.nullptr) {
         MessageProxy.destruct(result);
       }
-      if (exception != ffi.nullptr) {
+      if (exception != lib.nullptr) {
         MessageProxy.destruct(exception);
       }
       return null as Void;
@@ -213,14 +213,14 @@ class ExecutorProxy {
   }
 
   static Void destruct(
-    ffi.Pointer<Executor> instance,
+    lib.Pointer<Executor> instance,
   ) {
     var guard = ExecutorProxy._guard[instance]!;
     guard.invoke.close();
     guard.clear.close();
     assertTest(ExecutorProxy._guard.remove(instance) != null);
-    instance.ref.invoke = ffi.nullptr;
-    instance.ref.clear = ffi.nullptr;
+    instance.ref.invoke = lib.nullptr;
+    instance.ref.clear = lib.nullptr;
     return;
   }
 

@@ -6,8 +6,6 @@
 
 - [分步流程](#分步流程)
 
-- [外部程序](#外部程序)
-
 ## 平台支持
 
 工具支持以下平台：
@@ -42,7 +40,7 @@
 
 * `Assistant`
 
-  助理，实现了图像用户界面与额外的高级辅助功能。
+  助理，实现了图形用户界面与额外的高级辅助功能。
 
   可选模块，分发为应用安装包。
 
@@ -108,70 +106,12 @@
 
 	* `Extension - Forwarder` 启用转发器扩展。
 
-	  > 对于 `Windows` ，应用默认禁用转发器扩展，如果需要更改，请点击对话框中的开关。
+	  > 对于 `Linux` ，不支持该扩展。
 
-	  > 对于 `Linux` ，应用未实现扩展功能。
-
-	  > 对于 `Macintosh` ，系统默认禁用转发器扩展，如果需要更改，请点击对话框中的开关。
-
-	  > 对于 `Android` ，应用默认禁用转发器扩展，如果需要更改，请点击对话框中的开关。
-
-	  > 对于 `Iphone` ，系统默认启用转发器扩展，应用无法自行更改启用状态，如果需要更改，请打开 ⌈ 文件 ⌋ ，选择任意文件后点击 ⌈ 共享 ⌋ - ⌈ 编辑操作... ⌋ - ⌈ Twinning Assistant ⌋ ，勾选右侧的开关按钮。
-
-* 设置脚本交互语言。
-
-  以文本形式打开并编辑主目录内的 `<home>/script/configuration/setting.json` 文件，找到 `"language": "english"` 部分，修改它以切换工具的交互语言。
-
-	* `english` 英文（默认）
-
-	* `chinese` 中文
-
-	* `vietnamese` 越文
+	  > 对于 `Iphone` ，系统默认启用该扩展，应用无法自行更改启用状态，如果需要更改，请打开 ⌈ 文件 ⌋ ，选择任意文件后点击 ⌈ 共享 ⌋ - ⌈ 编辑操作... ⌋ - ⌈ Twinning Assistant ⌋ ，勾选右侧的开关按钮。
 
 * 现在，你可以通过终端或 GUI 应用使用工具。
 
-## 外部程序
+  > 可以通过修改脚本配置文件来设置脚本交互的语言，具体参见 [配置文件](./usage.md/#配置文件) 一节。
 
-工具的某些功能需要调用外部程序，需要用户自行下载与安装。
-
-* [adb](https://developer.android.com/studio/releases/platform-tools)
-
-  用于 **远程安卓辅助** 。
-
-  安装并配置 `PATH` 环境变量，以确保工具能通过 `PATH` 环境变量检索到 `adb` 可执行程序。
-
-* [7-Zip](https://7-zip.org/) `=26.01`
-
-  用于 **开罗游戏程序修改** 。
-
-  安装并配置 `PATH` 环境变量，以确保工具能通过 `PATH` 环境变量检索到 `7z` 可执行程序。
-
-* [WwiseConsole](https://www.audiokinetic.com/en/download) `=2019.2`
-
-  用于 **WEM 音频编码** 。
-
-  安装并配置 `PATH` 环境变量，以确保工具能通过 `PATH` 环境变量检索到 `WwiseConsole` 可执行程序。
-
-  > `WwiseConsole` 可执行程序的路径参见 [官方文档](https://www.audiokinetic.com/zh/library/edge/?source=SDK&id=bankscommandline.html) 。
-
-  > 该程序仅支持 `Windows` 、`Macintosh` 系统。
-
-* [vgmstream-cli](https://vgmstream.org/) `>=r2055`
-
-  用于 **WEM 音频解码** 。
-
-  安装并配置 `PATH` 环境变量，以确保工具能通过 `PATH` 环境变量检索到 `vgmstream-cli` 可执行程序。
-
-* [QuickTime](https://support.apple.com/kb/DL837) `>=7.6`
-
-  用于 **WEM 音频编码** 。
-
-  如果需要编码 `AAC` 格式的 `WEM` ，请确保 `QuickTime` 已正确安装至系统中，该程序会被 `WwiseConsole` 调用。
-
-  > 该程序仅支持 `Windows` 、`Macintosh` 系统。
-
-* [Il2CppDumper](https://github.com/Perfare/Il2CppDumper) `=6.7.46`
-
-  用于 **开罗游戏程序修改** 。
-
-  安装并配置 `PATH` 环境变量，以确保工具能通过 `PATH` 环境变量检索到 `Il2CppDumper` 可执行程序。
+  > 工具的某些功能会调用外部程序，需要用户自行下载与安装所需环境，具体参见 [外部程序](./usage.md/#外部程序) 一节。

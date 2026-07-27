@@ -1,6 +1,6 @@
 /**
  * JavaScript interface of Kernel
- * @version 141
+ * @version 144
  */
 declare namespace Twinning.Kernel {
 
@@ -195,29 +195,6 @@ declare namespace Twinning.Kernel {
 
 	}
 
-	/** Optional包装的String */
-	class StringOptional {
-
-		private _StringOptional;
-
-		// ----------------
-
-		static default(): StringOptional;
-
-		static copy(it: StringOptional): StringOptional;
-
-		// ----------------
-
-		static Value: null | string;
-
-		static value(it: typeof StringOptional.Value): StringOptional;
-
-		get value(): typeof StringOptional.Value;
-
-		set value(it: typeof StringOptional.Value);
-
-	}
-
 	/** 字符串列表 */
 	class StringList {
 
@@ -238,6 +215,29 @@ declare namespace Twinning.Kernel {
 		get value(): typeof StringList.Value;
 
 		set value(it: typeof StringList.Value);
+
+	}
+
+	/** 字符串映射表 */
+	class StringMap {
+
+		private _StringMap;
+
+		// ----------------
+
+		static default(): StringMap;
+
+		static copy(it: StringMap): StringMap;
+
+		// ----------------
+
+		static Value: Record<string, string>;
+
+		static value(it: typeof StringMap.Value): StringMap;
+
+		get value(): typeof StringMap.Value;
+
+		set value(it: typeof StringMap.Value);
 
 	}
 
@@ -1156,45 +1156,40 @@ declare namespace Twinning.Kernel {
 		): Size;
 
 		/**
-		 * 读取文件至一个新的字节序列容器
+		 * 修改文件尺寸
 		 * @param target 目标
-		 * @returns 内容
+		 * @param size 尺寸
+		 * @returns 无
+		 */
+		function resize_file(
+			target: Path,
+			size: Size,
+		): Void;
+
+		/**
+		 * 读取文件
+		 * @param target 目标
+		 * @param offset 偏移
+		 * @param data 内容
+		 * @returns 无
 		 */
 		function read_file(
 			target: Path,
-		): ByteArray;
+			offset: Size,
+			data: VariableByteListView,
+		): Void;
 
 		/**
-		 * 将字节序列写入文件
+		 * 写入文件
 		 * @param target 目标
+		 * @param offset 偏移
 		 * @param data 内容
 		 * @returns 无
 		 */
 		function write_file(
 			target: Path,
+			offset: Size,
 			data: ConstantByteListView,
-		): Void;
-
-		/**
-		 * 读取文件至字节输出流
-		 * @param target 目标
-		 * @param data 内容
-		 * @returns 无
-		 */
-		function read_file_stream(
-			target: Path,
-			data: OutputByteStreamView,
-		): Void;
-
-		/**
-		 * 将字节输入流写入文件
-		 * @param target 目标
-		 * @param data 内容
-		 * @returns 无
-		 */
-		function write_file_stream(
-			target: Path,
-			data: InputByteStreamView,
 		): Void;
 
 		// ----------------
@@ -1248,30 +1243,20 @@ declare namespace Twinning.Kernel {
 		function get_workspace(
 		): Path;
 
-		// ----------------
-
 		/**
 		 * 获取环境变量
 		 * @returns 环境变量列表
 		 */
 		function get_environment(
-		): StringList;
-
-		/**
-		 * 获取指定名称的环境变量
-		 * @param name 变量名
-		 * @returns 变量值
-		 */
-		function find_environment(
-			name: String,
-		): StringOptional;
+		): StringMap;
 
 		// ----------------
 
 		/**
 		 * 运行子进程
 		 * @param program 程序
-		 * @param argument 参数
+		 * @param argument 参数（Posix）
+		 * @param command 命令行（Windows）
 		 * @param workspace 工作目录
 		 * @param environment 环境变量
 		 * @param input 输入文件
@@ -1279,14 +1264,15 @@ declare namespace Twinning.Kernel {
 		 * @param error 错误文件
 		 * @returns 程序正常退出时，返回其退出码
 		 */
-		function run_process(
+		function run_child(
 			program: Path,
 			argument: StringList,
+			command: String,
 			workspace: Path,
-			environment: StringList,
-			input: PathOptional,
-			output: PathOptional,
-			error: PathOptional,
+			environment: StringMap,
+			input: Path,
+			output: Path,
+			error: Path,
 		): IntegerU32;
 
 	}
@@ -4875,62 +4861,62 @@ declare namespace Twinning.Kernel {
 
 		/**
 		 * 将 ByteListView 解释为 CharacterListView
-		 * @param t 目标
+		 * @param target 目标
 		 * @returns 结果
 		 */
 		function cast_ByteListView_to_CharacterListView(
-			t: ByteListView,
+			target: ByteListView,
 		): CharacterListView;
 
 		/**
 		 * 将 CharacterListView 解释为 ByteListView
-		 * @param t 目标
+		 * @param target 目标
 		 * @returns 结果
 		 */
 		function cast_CharacterListView_to_ByteListView(
-			t: CharacterListView,
+			target: CharacterListView,
 		): ByteListView;
 
 		// ----------------
 
 		/**
 		 * 移动 ByteArray 所持有的内存到新的 String
-		 * @param t 目标
+		 * @param target 目标
 		 * @returns 结果
 		 */
 		function cast_moveable_ByteArray_to_String(
-			t: ByteArray,
+			target: ByteArray,
 		): String;
 
 		/**
 		 * 移动 String 所持有的内存到新的 ByteArray
-		 * @param t 目标
+		 * @param target 目标
 		 * @returns 结果
 		 */
 		function cast_moveable_String_to_ByteArray(
-			t: String,
+			target: String,
 		): ByteArray;
 
 		// ----------------
 
 		/**
 		 * 获取 String 的内存视图为 CharacterListView
-		 * @param t 目标
+		 * @param target 目标
 		 * @returns 结果
 		 */
 		function cast_String_to_CharacterListView(
-			t: String,
+			target: String,
 		): CharacterListView;
 
 		// ----------------
 
 		/**
 		 * 通过 CharacterListView 指向的内存构造新的字符串
-		 * @param t 目标
+		 * @param target 目标
 		 * @returns 结果
 		 */
 		function cast_CharacterListView_to_JS_String(
-			t: CharacterListView,
+			target: CharacterListView,
 		): string;
 
 		// ----------------

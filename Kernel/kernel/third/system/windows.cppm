@@ -39,11 +39,9 @@ export namespace Twinning::Kernel::Third::system::windows {
 
 	inline auto const $_wfopen = _wfopen;
 
-	inline auto const $GetLastError = GetLastError;
+	inline auto const $_fseeki64 = _fseeki64;
 
-	inline auto const $GetEnvironmentVariableW = GetEnvironmentVariableW;
-
-	inline auto const $SetEnvironmentVariableW = SetEnvironmentVariableW;
+	inline auto const $_ftelli64 = _ftelli64;
 
 	inline auto const $WideCharToMultiByte = WideCharToMultiByte;
 
@@ -75,8 +73,6 @@ export namespace Twinning::Kernel::Third::system::windows {
 
 	inline constexpr auto $MB_ERR_INVALID_CHARS = MB_ERR_INVALID_CHARS;
 
-	inline constexpr auto $ERROR_ENVVAR_NOT_FOUND = ERROR_ENVVAR_NOT_FOUND;
-
 	inline constexpr auto $GENERIC_READ = GENERIC_READ;
 
 	inline constexpr auto $GENERIC_WRITE = GENERIC_WRITE;
@@ -99,7 +95,7 @@ export namespace Twinning::Kernel::Third::system::windows {
 
 	inline constexpr auto $CREATE_UNICODE_ENVIRONMENT = CREATE_UNICODE_ENVIRONMENT;
 
-	inline constexpr auto $DETACHED_PROCESS = DETACHED_PROCESS;
+	inline constexpr auto $CREATE_NO_WINDOW = CREATE_NO_WINDOW;
 
 	inline constexpr auto $WAIT_OBJECT_0 = WAIT_OBJECT_0;
 
