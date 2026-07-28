@@ -87,10 +87,6 @@ def build(
 			keystore,
 			'macho',
 		)
-		utility.fs_copy(
-			f'{temporary}/artifact.dylib',
-			f'{destination}',
-		)
 		destination = ('', f'{temporary}/artifact.dylib')
 	if utility.project_check_platform(platform, ['android.arm64']):
 		utility.sh_execute_command(source, [

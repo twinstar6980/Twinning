@@ -149,7 +149,7 @@ export namespace Twinning::Kernel::Storage {
 			state = Third::system::windows::$_fseeki64(handler.value, unmake_box<std::int64_t>(position), !mode ? stddef::$SEEK_SET : stddef::$SEEK_END);
 			#endif
 			#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
-			state = Third::system::posix::$fseeko64(handler.value, unmake_box<std::int64_t>(position), !mode ? stddef::$SEEK_SET : stddef::$SEEK_END);
+			state = Third::system::posix::$fseeko(handler.value, unmake_box<Third::system::posix::$off_t>(position), !mode ? stddef::$SEEK_SET : stddef::$SEEK_END);
 			#endif
 			assert_test(state == 0);
 			return;
@@ -163,7 +163,7 @@ export namespace Twinning::Kernel::Storage {
 			size = Third::system::windows::$_ftelli64(handler.value);
 			#endif
 			#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
-			size = Third::system::posix::$ftello64(handler.value);
+			size = Third::system::posix::$ftello(handler.value);
 			#endif
 			assert_test(size != -1);
 			return make_box<Size>(size);

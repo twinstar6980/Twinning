@@ -47,7 +47,7 @@ class PlatformIntegrationManager: NSObject, UIDocumentPickerDelegate, UNUserNoti
           binaryMessenger: with_engineBridge.applicationRegistrar.messenger(),
         )
         self.channel!.setMethodCallHandler({ [weak self] (call, result) in
-          self.executePlatformBackgroundTask({
+          self?.executePlatformBackgroundTask({
             await self?.handle(call, result)
           })
           return
@@ -468,7 +468,7 @@ class PlatformIntegrationManager: NSObject, UIDocumentPickerDelegate, UNUserNoti
   ) async throws -> Void {
     let center = UNUserNotificationCenter.current()
     center.delegate = self
-    center.requestAuthorization(options: [.sound, .alert], completionHandler: { _, _ in })
+    _ = try? await center.requestAuthorization(options: [.sound, .alert])
     return
   }
 
@@ -493,21 +493,21 @@ class PlatformIntegrationManager: NSObject, UIDocumentPickerDelegate, UNUserNoti
       return try taskAction()
     } catch {
       if !handleException {
-        throw error!
+        throw error
       }
       Task { @MainActor in
-        try await self.invokeReceivePlatformException("\(exception!.localizedDescription)")
+        try await self.invokeReceivePlatformException("\(error.localizedDescription)")
       }
       return fallbackAction()
     }
   }
 
   private func executePlatformBackgroundTask(
-    _ taskAction: () async throws -> Void,
+    _ taskAction: @escaping () async throws -> Void,
   ) -> Void {
     Task { @MainActor in
       do {
-        result = try await taskAction()
+        try await taskAction()
       } catch {
         try await self.invokeReceivePlatformException("\(error.localizedDescription)")
       }

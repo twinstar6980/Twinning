@@ -28,6 +28,8 @@ export module twinning.kernel.third.system.posix;
 
 export namespace Twinning::Kernel::Third::system::posix {
 
+	using $off_t = off_t;
+
 	using $id_t = id_t;
 
 	using $pid_t = pid_t;
@@ -40,9 +42,9 @@ export namespace Twinning::Kernel::Third::system::posix {
 
 	inline constexpr auto $chdir = chdir;
 
-	inline constexpr auto $fseeko64 = fseeko64;
+	inline constexpr auto $fseeko = fseeko;
 
-	inline constexpr auto $ftello64 = ftello64;
+	inline constexpr auto $ftello = ftello;
 
 	inline constexpr auto $dup2 = dup2;
 

@@ -67,7 +67,7 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
           binaryMessenger: (host.contentViewController as! FlutterViewController).engine.binaryMessenger,
         )
         self.channel.setMethodCallHandler({ [weak self] (call, result) in
-          self.executePlatformBackgroundTask({
+          self?.executePlatformBackgroundTask({
             await self?.handle(call, result)
           })
           return
@@ -520,6 +520,16 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
 
   // ----------------
 
+  private func invokeReceivePlatformException(
+    _ message: String,
+  ) async throws -> Void {
+    return try await self.invoke("receive_platform_exception", [
+      "message": self.encodeFlutterValue(message),
+    ])
+  }
+
+  // ----------------
+
   private func invokeReceiveApplicationLink(
     _ target: String,
   ) async throws -> Void {
@@ -564,12 +574,13 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
   ) async throws -> Void {
     let center = UNUserNotificationCenter.current()
     center.delegate = self
-    center.requestAuthorization(options: [.sound, .alert], completionHandler: { _, _ in })
+    _ = try? await center.requestAuthorization(options: [.sound, .alert])
     return
   }
 
   // ----------------
 
+  @MainActor
   private func registerDragDropSupport(
   ) async throws -> Void {
     let window = try self.getCurrentWindow()
@@ -588,21 +599,21 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
       return try taskAction()
     } catch {
       if !handleException {
-        throw error!
+        throw error
       }
       Task { @MainActor in
-        try await self.invokeReceivePlatformException("\(exception!.localizedDescription)")
+        try await self.invokeReceivePlatformException("\(error.localizedDescription)")
       }
       return fallbackAction()
     }
   }
 
   private func executePlatformBackgroundTask(
-    _ taskAction: () async throws -> Void,
+    _ taskAction: @escaping () async throws -> Void,
   ) -> Void {
     Task { @MainActor in
       do {
-        result = try await taskAction()
+        try await taskAction()
       } catch {
         try await self.invokeReceivePlatformException("\(error.localizedDescription)")
       }
