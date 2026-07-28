@@ -3,7 +3,6 @@ import '/module.dart';
 import '/utility/convert_helper.dart';
 import '/utility/storage_path.dart';
 import '/utility/storage_helper.dart';
-import '/utility/process_helper.dart';
 import '/utility/vdf_helper.dart';
 import '/utility/platform_integration_manager.dart';
 import '/widget/export.dart';
@@ -11,7 +10,6 @@ import '/view/core_task_worker/forward_helper.dart' as core_task_worker;
 import 'dart:ui' as lib;
 import 'dart:typed_data' as lib;
 import 'package:collection/collection.dart' as lib;
-import 'package:archive/archive_io.dart' as lib;
 
 // ----------------
 
@@ -263,55 +261,6 @@ class GameRecordHelper {
     return;
   }
 
-  static Future<Void> exportBackup(
-    StoragePath    targetDirectory,
-    StoragePath    archiveFile,
-    lib.Uint8List? key,
-  ) async {
-    var (archiveDirectory, archiveDirectoryFinalizer) = await StorageHelper.temporary();
-    await StorageHelper.createDirectory(archiveDirectory);
-    // TODO
-    await StorageHelper.createFile(archiveDirectory.join('configuration'));
-    await StorageHelper.writeFileText(archiveDirectory.join('configuration'), '');
-    await StorageHelper.createDirectory(archiveDirectory.join('data'));
-    for (var dataFile in await GameRecordHelper._listContent(targetDirectory)) {
-      await GameRecordHelper._encryptFile(targetDirectory.push(dataFile), archiveDirectory.join('data').push(dataFile), key);
-    }
-    if (await StorageHelper.exist(archiveFile)) {
-      await StorageHelper.remove(archiveFile);
-    }
-    var archive = lib.createArchiveFromDirectory(.new(archiveDirectory.emit()));
-    var archiveData = lib.ZipEncoder().encodeBytes(archive, level: lib.DeflateLevel.bestCompression);
-    if (!await StorageHelper.existFile(archiveFile)) {
-      await StorageHelper.createFile(archiveFile);
-    }
-    await StorageHelper.writeFileData(archiveFile, archiveData);
-    await archiveDirectoryFinalizer.dispose();
-    return;
-  }
-
-  static Future<Void> importBackup(
-    StoragePath    targetDirectory,
-    StoragePath    archiveFile,
-    lib.Uint8List? key,
-  ) async {
-    var (archiveDirectory, archiveDirectoryFinalizer) = await StorageHelper.temporary();
-    var archiveData = await StorageHelper.readFileData(archiveFile);
-    var archive = lib.ZipDecoder().decodeBytes(archiveData);
-    await lib.extractArchiveToDisk(archive, archiveDirectory.emit());
-    if (await StorageHelper.exist(targetDirectory)) {
-      await StorageHelper.remove(targetDirectory);
-    }
-    // TODO
-    var configuration = StorageHelper.readFileText(archiveDirectory.join('configuration'));
-    await StorageHelper.createDirectory(targetDirectory);
-    for (var dataFile in await GameRecordHelper._listContent(archiveDirectory.join('data'))) {
-      await GameRecordHelper._encryptFile(archiveDirectory.join('configuration').push(dataFile), targetDirectory.push(dataFile), key);
-    }
-    await archiveDirectoryFinalizer.dispose();
-    return;
-  }
-
   // #endregion
 
 }
@@ -442,13 +391,6 @@ class GameRepositoryHelper {
       .join(game.packageName);
   }
 
-  static Future<lib.Image?> extractWindowsProgramIcon(
-    StoragePath programFile,
-  ) async {
-    var icon = await PlatformIntegrationManager.instance.invokeOnWindowsExtractAssociatedIcon(programFile);
-    return await ConvertHelper.parseImageFromData(icon.data, width: icon.width, height: icon.height, isRawBgra: true);
-  }
-
   // #endregion
 
   // #region windows steam
@@ -485,7 +427,9 @@ class GameRepositoryHelper {
     information.packageIdentifier = gameIdentifier;
     information.packageVersion = gameManifest.entries.first.value!.as<Map<Object?, Object?>>()['buildid']!.as<Integer>().toString();
     information.packageName = gameManifest.entries.first.value!.as<Map<Object?, Object?>>()['name']!.as<String>();
-    information.packageIcon = await GameRepositoryHelper.extractWindowsProgramIcon(gameDirectory.join('KairoGames.exe'));
+    information.packageIcon = await (await PlatformIntegrationManager.instance.invokeOnWindowsExtractAssociatedIcon(gameDirectory.join('KairoGames.exe'))).selfLet((it) async {
+      return await ConvertHelper.parseImageFromData(it.data, width: it.width, height: it.height, isRawBgra: true);
+    });
     information.userIdentifier = gameManifest.entries.first.value!.as<Map<Object?, Object?>>()['LastOwner']!.as<Integer>().toString();
     information.userKey = GameRepositoryHelper.makeKeyFromWindowsSteamUser(information.userIdentifier!);
     await GameProgramHelper.detectState(information);
@@ -529,19 +473,21 @@ class GameRepositoryHelper {
   static Future<List<GameInformation>> loadAndroidPlayRepository(
   ) async {
     var result = <GameInformation>[];
-    var applicationList = (await PlatformIntegrationManager.instance.invokeOnAndroidListApplication()).target;
+    var applicationList = (await PlatformIntegrationManager.instance.invokeOnAndroidListApplicationIdentifier()).target;
     for (var application in applicationList) { 
       if (!application.startsWith('net.kairosoft.')) {
         continue;
       }
-      var applicationInformation = await PlatformIntegrationManager.instance.invokeOnAndroidQueryApplication(application);
+      var applicationInformation = await PlatformIntegrationManager.instance.invokeOnAndroidQueryApplicationInformation(application);
       var information = GameInformation();
       information.packageType = .androidPlay;
       information.packagePath = StoragePath.of('');
       information.packageIdentifier = application;
       information.packageVersion = applicationInformation.version;
       information.packageName = applicationInformation.name;
-      information.packageIcon = await ConvertHelper.parseImageFromData(applicationInformation.iconData, width: applicationInformation.iconWidth, height: applicationInformation.iconHeight, isRawRgba: true);
+      information.packageIcon = await (await PlatformIntegrationManager.instance.invokeOnAndroidExtractApplicationIcon(application)).selfLet((it) async {
+        return await ConvertHelper.parseImageFromData(it.data, width: it.width, height: it.height, isRawRgba: true);
+      });
       result.add(information);
     }
     return result;
@@ -588,7 +534,7 @@ class GameActionHelper {
     GameInformation game,
   ) async {
     if (game.packageType == .windowsSteam) {
-      await ProcessHelper.runProcess(game.packagePath.join('KairoGames.exe'), [], null, null);
+      await PlatformIntegrationManager.instance.invokeRevealStorageItem(game.packagePath.join('KairoGames.exe'));
     }
     return;
   }

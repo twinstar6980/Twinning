@@ -8,6 +8,7 @@ module;
 #pragma clang diagnostic ignored "-Weverything"
 
 #include "stdlib.h"
+#include "stdio.h"
 #include "unistd.h"
 #include "fcntl.h"
 #include "spawn.h"

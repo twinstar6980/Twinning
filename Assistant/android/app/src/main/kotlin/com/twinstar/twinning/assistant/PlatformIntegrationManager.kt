@@ -9,11 +9,8 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.Canvas
 import android.graphics.Point
 import android.graphics.Rect
-import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -22,7 +19,6 @@ import android.provider.DocumentsContract
 import android.provider.Settings
 import android.view.DragEvent
 import android.view.View
-import android.view.WindowInsets
 import androidx.core.database.getFloatOrNull
 import androidx.core.database.getLongOrNull
 import androidx.core.database.getStringOrNull
@@ -32,8 +28,6 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import java.nio.ByteBuffer
-import java.nio.ByteOrder
-import java.nio.IntBuffer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -292,20 +286,25 @@ class PlatformIntegrationManager {
             this.decodeFlutterValue<Long>(getArgument("height")),
           )
         }
-        "on_android_list_application" -> {
-          val detail = this.handleOnAndroidListApplication(
+        "on_android_list_application_identifier" -> {
+          val detail = this.handleOnAndroidListApplicationIdentifier(
           )
           setResult("target", this.encodeFlutterValue(detail))
         }
-        "on_android_query_application" -> {
-          val detail = this.handleOnAndroidQueryApplication(
+        "on_android_query_application_information" -> {
+          val detail = this.handleOnAndroidQueryApplicationInformation(
             this.decodeFlutterValue<String>(getArgument("target")),
           )
           setResult("name", this.encodeFlutterValue(detail.first))
           setResult("version", this.encodeFlutterValue(detail.second))
-          setResult("icon_width", this.encodeFlutterValue(detail.third.first))
-          setResult("icon_height", this.encodeFlutterValue(detail.third.second))
-          setResult("icon_data", this.encodeFlutterValue(detail.third.third))
+        }
+        "on_android_extract_application_icon" -> {
+          val detail = this.handleOnAndroidExtractApplicationIcon(
+            this.decodeFlutterValue<String>(getArgument("target")),
+          )
+          setResult("width", this.encodeFlutterValue(detail.first))
+          setResult("height", this.encodeFlutterValue(detail.second))
+          setResult("data", this.encodeFlutterValue(detail.third))
         }
         else -> throw Exception("invalid method")
       }
@@ -559,28 +558,36 @@ class PlatformIntegrationManager {
 
   // ----------------
 
-  private suspend fun handleOnAndroidListApplication(
+  private suspend fun handleOnAndroidListApplicationIdentifier(
   ): List<String> {
     val information = this.activity.packageManager.getInstalledPackages(PackageManager.GET_META_DATA)
     val target = information.map({ it -> it.packageName }).toList()
     return target
   }
 
-  private suspend fun handleOnAndroidQueryApplication(
+  private suspend fun handleOnAndroidQueryApplicationInformation(
     target: String,
-  ): Triple<String, String, Triple<Long, Long, ByteArray>> {
+  ): Pair<String, String> {
     val information = this.activity.packageManager.getPackageInfo(target, PackageManager.GET_META_DATA)
     check(information.applicationInfo != null)
     val name = information.applicationInfo!!.loadLabel(this.activity.packageManager).toString()
     val version = information.versionName!!
-    val iconDrawable = information.applicationInfo!!.loadIcon(this.activity.packageManager)
-    val iconBitmap = iconDrawable.toBitmap()
-    val iconBuffer = ByteBuffer.allocate(iconBitmap.width * iconBitmap.height * 4)
-    iconBitmap.copyPixelsToBuffer(iconBuffer)
-    val iconWidth = iconBitmap.width.toLong()
-    val iconHeight = iconBitmap.height.toLong()
-    val iconData = iconBuffer.array()
-    return Triple(name, version, Triple(iconWidth, iconHeight, iconData))
+    return Pair(name, version)
+  }
+
+  private suspend fun handleOnAndroidExtractApplicationIcon(
+    target: String,
+  ): Triple<Long, Long, ByteArray> {
+    val information = this.activity.packageManager.getPackageInfo(target, PackageManager.GET_META_DATA)
+    check(information.applicationInfo != null)
+    val drawable = information.applicationInfo!!.loadIcon(this.activity.packageManager)
+    val bitmap = drawable.toBitmap()
+    val buffer = ByteBuffer.allocate(bitmap.width * bitmap.height * 4)
+    bitmap.copyPixelsToBuffer(buffer)
+    val width = bitmap.width.toLong()
+    val height = bitmap.height.toLong()
+    val data = buffer.array()
+    return Triple(width, height, data)
   }
 
   // endregion

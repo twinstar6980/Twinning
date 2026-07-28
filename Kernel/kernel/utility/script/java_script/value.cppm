@@ -1438,7 +1438,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 		Integer &      identifier,
 		String const & name
 	) -> Void {
-		auto name_null_terminated = M_use_nts_n_of(name);
+		auto name_null_terminated = M_use_nts_n_safe_of(name);
 		auto definition = Third::quickjs_ng::$JSClassDef{
 			.class_name = unmake_pointer_unsafe<char>(name_null_terminated.begin()),
 			.finalizer = &Detail::proxy_class_finalizer<t_finalizer>,
@@ -1480,7 +1480,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 			thiz._context(),
 			M_use_ntsp_n_of(script),
 			unmake_box<std::size_t>(script.size()),
-			M_use_ntsp_n_of(name),
+			M_use_ntsp_n_safe_of(name),
 			Third::quickjs_ng::$JS_EVAL_FLAG_STRICT | (!is_module ? (Third::quickjs_ng::$JS_EVAL_TYPE_GLOBAL) : (Third::quickjs_ng::$JS_EVAL_TYPE_MODULE))
 		);
 		if (Third::quickjs_ng::$JS_IsException(result)) {
@@ -1539,7 +1539,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 			Third::quickjs_ng::$JS_NewCFunction2(
 				thiz._context(),
 				&Detail::proxy_native_function<t_function>,
-				M_use_ntsp_n_of(name),
+				M_use_ntsp_n_safe_of(name),
 				0,
 				!is_constructor ? (Third::quickjs_ng::$JS_CFUNC_generic) : (Third::quickjs_ng::$JS_CFUNC_constructor),
 				0

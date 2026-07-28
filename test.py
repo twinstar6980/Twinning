@@ -10,7 +10,7 @@ def test(
 	platform: str,
 ) -> None:
 	utility.project_ensure_platform(platform, ['windows.amd64', 'linux.amd64', 'macintosh.arm64'])
-	source = utility.project_locate_root()
+	root = utility.project_locate_root()
 	local = utility.project_locate_local()
 	test = utility.project_locate_local('test')
 	utility.fs_remove(
@@ -22,79 +22,79 @@ def test(
 	if utility.project_check_platform(platform, ['windows.amd64']):
 		utility.fs_create_link(
 			f'{test}/kernel',
-			f'{source}/Kernel/.build/windows/x64/release/kernel.dll',
+			f'{root}/Kernel/.build/windows/x64/release/kernel.dll',
 			False,
 		)
 		utility.fs_create_link(
 			f'{test}/script',
-			f'{source}/Script/build',
+			f'{root}/Script/build',
 			True,
 		)
 		utility.fs_create_link(
 			f'{test}/shell.exe',
-			f'{source}/Shell/.build/windows/x64/release/shell.exe',
+			f'{root}/Shell/.build/windows/x64/release/shell.exe',
 			False,
 		)
 		utility.fs_create_link(
 			f'{test}/assistant',
-			f'{source}/common/unembedded/assistant',
+			f'{root}/common/unembedded/assistant',
 			True,
 		)
 		utility.fs_create_link(
 			f'{test}/launch.cmd',
-			f'{source}/common/unembedded/launch.cmd',
+			f'{root}/common/unembedded/launch.cmd',
 			False,
 		)
 	if utility.project_check_platform(platform, ['linux.amd64']):
 		utility.fs_create_link(
 			f'{test}/kernel',
-			f'{source}/Kernel/.build/linux/x86_64/release/kernel.so',
+			f'{root}/Kernel/.build/linux/x86_64/release/libkernel.so',
 			False,
 		)
 		utility.fs_create_link(
 			f'{test}/script',
-			f'{source}/Script/build',
+			f'{root}/Script/build',
 			True,
 		)
 		utility.fs_create_link(
 			f'{test}/shell',
-			f'{source}/Shell/.build/linux/x86_64/release/shell',
+			f'{root}/Shell/.build/linux/x86_64/release/shell',
 			False,
 		)
 		utility.fs_create_link(
 			f'{test}/assistant',
-			f'{source}/common/unembedded/assistant',
+			f'{root}/common/unembedded/assistant',
 			True,
 		)
 		utility.fs_create_link(
 			f'{test}/launch.sh',
-			f'{source}/common/unembedded/launch.sh',
+			f'{root}/common/unembedded/launch.sh',
 			False,
 		)
 	if utility.project_check_platform(platform, ['macintosh.arm64']):
 		utility.fs_create_link(
 			f'{test}/kernel',
-			f'{source}/Kernel/.build/macosx/arm64/release/libkernel.dylib',
+			f'{root}/Kernel/.build/macosx/arm64/release/libkernel.dylib',
 			False,
 		)
 		utility.fs_create_link(
 			f'{test}/script',
-			f'{source}/Script/build',
+			f'{root}/Script/build',
 			True,
 		)
 		utility.fs_create_link(
 			f'{test}/shell',
-			f'{source}/Shell/.build/macosx/arm64/release/shell',
+			f'{root}/Shell/.build/macosx/arm64/release/shell',
 			False,
 		)
 		utility.fs_create_link(
 			f'{test}/assistant',
-			f'{source}/common/unembedded/assistant',
+			f'{root}/common/unembedded/assistant',
 			True,
 		)
 		utility.fs_create_link(
 			f'{test}/launch.sh',
-			f'{source}/common/unembedded/launch.sh',
+			f'{root}/common/unembedded/launch.sh',
 			False,
 		)
 	if True:

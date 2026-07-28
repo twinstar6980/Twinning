@@ -26,10 +26,10 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Xml {
 			switch (node.type().value) {
 				case Notation::Xml::NodeType::Constant::element().value: {
 					auto & node_value = node.get_element();
-					raw_node = raw_document.NewElement(M_use_ntsp_n_of(node_value.name));
+					raw_node = raw_document.NewElement(M_use_ntsp_n_safe_of(node_value.name));
 					auto raw_element = raw_node->ToElement();
 					for (auto & attribute : node_value.attribute) {
-						raw_element->SetAttribute(M_use_ntsp_n_of(attribute.key), M_use_ntsp_n_of(attribute.value));
+						raw_element->SetAttribute(M_use_ntsp_n_safe_of(attribute.key), M_use_ntsp_n_safe_of(attribute.value));
 					}
 					for (auto & child : node_value.child) {
 						raw_element->InsertEndChild(convert_node(raw_document, child));
@@ -38,14 +38,14 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Xml {
 				}
 				case Notation::Xml::NodeType::Constant::text().value: {
 					auto & node_value = node.get_text();
-					raw_node = raw_document.NewText(M_use_ntsp_n_of(node_value.value));
+					raw_node = raw_document.NewText(M_use_ntsp_n_safe_of(node_value.value));
 					auto raw_text = raw_node->ToText();
 					raw_text->SetCData(node_value.cdata.value);
 					break;
 				}
 				case Notation::Xml::NodeType::Constant::comment().value: {
 					auto & node_value = node.get_comment();
-					raw_node = raw_document.NewComment(M_use_ntsp_n_of(node_value.value));
+					raw_node = raw_document.NewComment(M_use_ntsp_n_safe_of(node_value.value));
 					break;
 				}
 				default: throw UnreachableException{};

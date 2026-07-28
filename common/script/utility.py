@@ -1,4 +1,5 @@
 import os
+import sys
 import re
 import pathlib
 import glob
@@ -88,7 +89,7 @@ def sh_execute_command(
 		actual_environment[environment_name] = environment_value
 	result = subprocess.run(
 		command,
-		shell=True,
+		shell=sys.platform == 'win32',
 		cwd=location,
 		env=actual_environment,
 		check=ensure_ok,

@@ -117,7 +117,6 @@ export namespace Twinning::Kernel::Process {
 			environment_string.append_list(element.key + "="_sv + element.value);
 			environment_string.append('\0'_c);
 		}
-		environment_string.append('\0'_c);
 		auto security_attribute = Third::system::windows::$SECURITY_ATTRIBUTES{};
 		security_attribute.nLength = sizeof(Third::system::windows::$SECURITY_ATTRIBUTES);
 		security_attribute.lpSecurityDescriptor = nullptr;
@@ -145,7 +144,7 @@ export namespace Twinning::Kernel::Process {
 			}
 		);
 		startup_information.hStdInput = Third::system::windows::$CreateFileW(
-			M_use_ntsp_w_of(input.emit_native()),
+			M_use_ntsp_w_safe_of(input.emit_native()),
 			Third::system::windows::$GENERIC_READ,
 			Third::system::windows::$FILE_SHARE_READ | Third::system::windows::$FILE_SHARE_WRITE | Third::system::windows::$FILE_SHARE_DELETE,
 			&security_attribute,
@@ -155,7 +154,7 @@ export namespace Twinning::Kernel::Process {
 		);
 		assert_test(startup_information.hStdInput != Third::system::windows::$INVALID_HANDLE_VALUE);
 		startup_information.hStdOutput = Third::system::windows::$CreateFileW(
-			M_use_ntsp_w_of(output.emit_native()),
+			M_use_ntsp_w_safe_of(output.emit_native()),
 			Third::system::windows::$GENERIC_WRITE,
 			Third::system::windows::$FILE_SHARE_READ | Third::system::windows::$FILE_SHARE_WRITE | Third::system::windows::$FILE_SHARE_DELETE,
 			&security_attribute,
@@ -165,7 +164,7 @@ export namespace Twinning::Kernel::Process {
 		);
 		assert_test(startup_information.hStdOutput != Third::system::windows::$INVALID_HANDLE_VALUE);
 		startup_information.hStdError = Third::system::windows::$CreateFileW(
-			M_use_ntsp_w_of(error.emit_native()),
+			M_use_ntsp_w_safe_of(error.emit_native()),
 			Third::system::windows::$GENERIC_WRITE,
 			Third::system::windows::$FILE_SHARE_READ | Third::system::windows::$FILE_SHARE_WRITE | Third::system::windows::$FILE_SHARE_DELETE,
 			&security_attribute,
@@ -176,14 +175,14 @@ export namespace Twinning::Kernel::Process {
 		assert_test(startup_information.hStdError != Third::system::windows::$INVALID_HANDLE_VALUE);
 		auto process_information = Third::system::windows::$PROCESS_INFORMATION{};
 		state_b = Third::system::windows::$CreateProcessW(
-			M_use_ntsp_w_of(program.emit_native()),
-			M_use_ntsp_w_of(command),
+			M_use_ntsp_w_safe_of(program.emit_native()),
+			M_use_ntsp_w_safe_of(command),
 			nullptr,
 			nullptr,
 			Third::system::windows::$TRUE,
 			Third::system::windows::$CREATE_UNICODE_ENVIRONMENT | Third::system::windows::$CREATE_NO_WINDOW,
 			M_use_ntsp_w_of(environment_string),
-			M_use_ntsp_w_of(workspace.emit_native()),
+			M_use_ntsp_w_safe_of(workspace.emit_native()),
 			&startup_information,
 			&process_information
 		);
@@ -214,11 +213,11 @@ export namespace Twinning::Kernel::Process {
 		#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
 		assert_test(!argument.empty());
 		auto state_i = int{};
-		auto program_string = M_use_nts_n_of(program.emit_native());
+		auto program_string = M_use_nts_n_safe_of(program.emit_native());
 		auto argument_string = List<String>{};
 		argument_string.allocate(argument.size());
 		for (auto & element : argument) {
-			argument_string.append(M_use_nts_n_of(element));
+			argument_string.append(M_use_nts_n_safe_of(element));
 		}
 		auto argument_string_list = List<char *>{};
 		argument_string_list.allocate(argument_string.size() + 1_sz);
@@ -229,7 +228,7 @@ export namespace Twinning::Kernel::Process {
 		auto environment_string = List<String>{};
 		environment_string.allocate(environment.size());
 		for (auto & element : environment) {
-			environment_string.append(M_use_nts_n_of(element.key + "="_sv + element.value));
+			environment_string.append(M_use_nts_n_safe_of(element.key + "="_sv + element.value));
 		}
 		auto environment_string_list = List<char *>{};
 		environment_string_list.allocate(environment_string.size() + 1_sz);
@@ -237,7 +236,7 @@ export namespace Twinning::Kernel::Process {
 			environment_string_list.append(unmake_pointer_unsafe<char>(element.begin()));
 		}
 		environment_string_list.append(nullptr);
-		auto workspace_string = M_use_nts_n_of(workspace.emit_native());
+		auto workspace_string = M_use_nts_n_safe_of(workspace.emit_native());
 		auto input_handle = int{-1};
 		auto output_handle = int{-1};
 		auto error_handle = int{-1};
@@ -258,19 +257,19 @@ export namespace Twinning::Kernel::Process {
 			}
 		);
 		input_handle = Third::system::posix::$open(
-			M_use_ntsp_n_of(input.emit_native()),
+			M_use_ntsp_n_safe_of(input.emit_native()),
 			Third::system::posix::$O_RDONLY,
 			0
 		);
 		assert_test(input_handle != -1);
 		output_handle = Third::system::posix::$open(
-			M_use_ntsp_n_of(output.emit_native()),
+			M_use_ntsp_n_safe_of(output.emit_native()),
 			Third::system::posix::$O_WRONLY,
 			0
 		);
 		assert_test(output_handle != -1);
 		error_handle = Third::system::posix::$open(
-			M_use_ntsp_n_of(error.emit_native()),
+			M_use_ntsp_n_safe_of(error.emit_native()),
 			Third::system::posix::$O_WRONLY,
 			0
 		);

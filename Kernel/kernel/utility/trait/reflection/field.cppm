@@ -51,7 +51,7 @@ export namespace Twinning::Kernel::Trait::Reflection {
 		}
 
 		template <typename TClass> requires
-			AutomaticConstraint // TODO: check type
+			CategoryConstraint<IsValid<TClass>>
 		inline static constexpr auto value_of(
 			TClass && thix
 		) -> auto && requires

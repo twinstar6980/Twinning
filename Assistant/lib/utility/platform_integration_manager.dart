@@ -338,29 +338,40 @@ class PlatformIntegrationManager {
 
   // ----------------
 
-  Future<({List<String> target})> invokeOnAndroidListApplication(
+  Future<({List<String> target})> invokeOnAndroidListApplicationIdentifier(
   ) async {
     assertTest(SystemChecker.isAndroid);
-    var detail = await this._invoke('on_android_list_application', {
+    var detail = await this._invoke('on_android_list_application_identifier', {
     });
     return (
       target: detail['target']!.as<List<Object?>>().cast<String>(),
     );
   }
 
-  Future<({String name, String version, Integer iconWidth, Integer iconHeight, lib.Uint8List iconData})> invokeOnAndroidQueryApplication(
+  Future<({String name, String version})> invokeOnAndroidQueryApplicationInformation(
     String target,
   ) async {
     assertTest(SystemChecker.isAndroid);
-    var detail = await this._invoke('on_android_query_application', {
+    var detail = await this._invoke('on_android_query_application_information', {
       'target': target,
     });
     return (
       name: detail['name']!.as<String>(),
       version: detail['version']!.as<String>(),
-      iconWidth: detail['icon_width']!.as<Integer>(),
-      iconHeight: detail['icon_height']!.as<Integer>(),
-      iconData: detail['icon_data']!.as<lib.Uint8List>(),
+    );
+  }
+
+  Future<({Integer width, Integer height, lib.Uint8List data})> invokeOnAndroidExtractApplicationIcon(
+    String target,
+  ) async {
+    assertTest(SystemChecker.isAndroid);
+    var detail = await this._invoke('on_android_extract_application_icon', {
+      'target': target,
+    });
+    return (
+      width: detail['width']!.as<Integer>(),
+      height: detail['height']!.as<Integer>(),
+      data: detail['data']!.as<lib.Uint8List>(),
     );
   }
 

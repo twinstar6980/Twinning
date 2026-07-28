@@ -27,7 +27,7 @@ final class ApplicationInformation {
 
   static const String identifier = 'com.twinstar.twinning.assistant';
 
-  static const String version = '208';
+  static const String version = '209';
 
   static const String name = 'Twinning Assistant';
 

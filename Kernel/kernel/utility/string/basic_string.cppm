@@ -302,6 +302,16 @@ export namespace Twinning::Kernel {
 		return result;
 	}
 
+	template <typename TSource> requires
+		CategoryConstraint<IsPureInstance<TSource>>
+		&& (IsConvertible<TSource, BasicStringView<typename TSource::Element, k_true> const &>)
+	inline auto ensure_safe_null_terminated_string(
+		TSource const & source
+	) -> TSource const & {
+		assert_test(!Range::has(source, make_box<typename TSource::Element>('\0')));
+		return source;
+	}
+
 	// ----------------
 
 	template <typename TResult, typename TSource, typename TSeparator> requires

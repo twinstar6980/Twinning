@@ -335,6 +335,9 @@
 
 #pragma region string
 
+#define M_use_nts_safe(_value)\
+	ensure_safe_null_terminated_string(_value)
+
 #define M_use_nts_n_of(_value)\
 	make_null_terminated_string(_value)
 
@@ -343,6 +346,15 @@
 
 #define M_use_ntsp_w_of(_value)\
 	unmake_pointer_unsafe<wchar_t>(make_null_terminated_string(SystemNativeString::wide_from_utf8(unsafe_cast<BasicString<CharacterN>>(_value))).begin())
+
+#define M_use_nts_n_safe_of(_value)\
+	M_use_nts_n_of(M_use_nts_safe(_value))
+
+#define M_use_ntsp_n_safe_of(_value)\
+	M_use_ntsp_n_of(M_use_nts_safe(_value))
+
+#define M_use_ntsp_w_safe_of(_value)\
+	M_use_ntsp_w_of(M_use_nts_safe(_value))
 
 #pragma endregion
 

@@ -53,8 +53,9 @@ export namespace Twinning::Kernel::Storage {
 		inline auto emit_path(
 			Path const & value
 		) -> std::filesystem::path {
-			auto string = value.emit_native();
-			return std::filesystem::path{unsafe_cast<std::u8string_view>(make_std_string_view(string))};
+			auto value_string = value.emit_native();
+			M_use_nts_safe(value_string);
+			return std::filesystem::path{unsafe_cast<std::u8string_view>(make_std_string_view(value_string))};
 		}
 
 		#pragma endregion
@@ -120,16 +121,18 @@ export namespace Twinning::Kernel::Storage {
 			Path const &         path,
 			Boolean const &      mode
 		) -> auto {
+			auto path_string = path.emit_native();
+			M_use_nts_safe(path_string);
 			#if defined M_system_windows
-			auto file = Third::system::windows::$_wfopen(M_use_ntsp_w_of(path.emit_native()), !mode ? L"rb" : L"ab");
+			auto file = Third::system::windows::$_wfopen(M_use_ntsp_w_of(path_string), !mode ? L"rb" : L"ab");
 			#endif
 			#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
-			auto file = std::fopen(M_use_ntsp_n_of(path.emit_native()), !mode ? "rb" : "ab");
+			auto file = std::fopen(M_use_ntsp_n_of(path_string), !mode ? "rb" : "ab");
 			#endif
 			assert_test(file != nullptr);
 			handler = make_pointer(file);
 			return make_finalizer(
-				[&handler]() {
+				[&handler] {
 					std::fclose(handler.value); // NOTE: EXPLAIN: skip result check
 					return;
 				}
@@ -206,7 +209,7 @@ export namespace Twinning::Kernel::Storage {
 			auto referent = resolve_link(target);
 			auto is_directory = Boolean{};
 			#if defined M_system_windows
-			auto attribute = Third::system::windows::$GetFileAttributesW(M_use_ntsp_w_of(target.emit_native()));
+			auto attribute = Third::system::windows::$GetFileAttributesW(M_use_ntsp_w_safe_of(target.emit_native()));
 			is_directory = attribute != Third::system::windows::$INVALID_FILE_ATTRIBUTES && (attribute & Third::system::windows::$FILE_ATTRIBUTE_DIRECTORY) != 0;
 			#endif
 			#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone

@@ -137,9 +137,11 @@ export {
 				std::function{[&] {
 					thiz.m_application = GTK_APPLICATION(with_application);
 					auto codec = fl_standard_method_codec_new();
-					auto response_finalizer = make_finalizer([&] {
-						g_object_unref(codec);
-					});
+					auto response_finalizer = make_finalizer(
+						[&] {
+							g_object_unref(codec);
+						}
+					);
 					thiz.m_channel = fl_method_channel_new(
 						fl_engine_get_binary_messenger(fl_view_get_engine(also_view)),
 						std::format("{}/PlatformIntegrationManager", thiz.query_application_identifier()).data(),
@@ -156,17 +158,21 @@ export {
 							self.execute_platform_background_task(
 								[&] {
 									auto response = std::add_pointer_t<FlMethodResponse>{nullptr};
-									auto response_finalizer = make_finalizer([&] {
-										if (response != nullptr) {
-											g_object_unref(response);
+									auto response_finalizer = make_finalizer(
+										[&] {
+											if (response != nullptr) {
+												g_object_unref(response);
+											}
 										}
-									});
+									);
 									self.handle(method_call, response);
 									auto error = std::add_pointer_t<GError>{nullptr};
 									if (!fl_method_call_respond(method_call, response, &error)) {
-										auto error_finalizer = make_finalizer([&] {
-											g_error_free(error);
-										});
+										auto error_finalizer = make_finalizer(
+											[&] {
+												g_error_free(error);
+											}
+										);
 										g_warning("Failed to send response: %s", error->message);
 									}
 								}
@@ -428,9 +434,11 @@ export {
 				"_Accept",
 				"_Cancel"
 			);
-			auto dialog_finalizer = make_finalizer([&] {
-				g_object_unref(dialog);
-			});
+			auto dialog_finalizer = make_finalizer(
+				[&] {
+					g_object_unref(dialog);
+				}
+			);
 			gtk_file_chooser_set_select_multiple(GTK_FILE_CHOOSER(dialog), multiply ? TRUE : FALSE);
 			gtk_file_chooser_set_show_hidden(GTK_FILE_CHOOSER(dialog), TRUE);
 			gtk_file_chooser_set_local_only(GTK_FILE_CHOOSER(dialog), TRUE);
@@ -447,9 +455,11 @@ export {
 			auto dialog_response = gtk_native_dialog_run(GTK_NATIVE_DIALOG(dialog));
 			if (dialog_response == GTK_RESPONSE_ACCEPT) {
 				auto target_list = gtk_file_chooser_get_filenames(GTK_FILE_CHOOSER(dialog));
-				auto event_finalizer = make_finalizer([&] {
-					g_slist_free_full(target_list, g_free);
-				});
+				auto event_finalizer = make_finalizer(
+					[&] {
+						g_slist_free_full(target_list, g_free);
+					}
+				);
 				for (auto target_item = target_list; target_item != nullptr; target_item = target_item->next) {
 					target.emplace_back(static_cast<gchar *>(target_item->data));
 				}
@@ -490,14 +500,18 @@ export {
 			auto error = std::add_pointer_t<GError>{nullptr};
 			connection = g_bus_get_sync(G_BUS_TYPE_SESSION, nullptr, &error);
 			if (connection == nullptr) {
-				auto error_finalizer = make_finalizer([&] {
-					g_error_free(error);
-				});
+				auto error_finalizer = make_finalizer(
+					[&] {
+						g_error_free(error);
+					}
+				);
 				throw std::runtime_error{std::string{"Exception: "} + error->message};
 			}
-			auto connection_finalizer = make_finalizer([&] {
-				g_object_unref(connection);
-			});
+			auto connection_finalizer = make_finalizer(
+				[&] {
+					g_object_unref(connection);
+				}
+			);
 			auto notification = g_variant_new(
 				"(susssasa{sv}i)",
 				thiz.exposed_application_name(),
@@ -747,9 +761,11 @@ export {
 								self.m_drag_inside = false;
 								auto event = gtk_get_current_event();
 								assert_test(event != nullptr);
-								auto event_finalizer = make_finalizer([&] {
-									gdk_event_free(event);
-								});
+								auto event_finalizer = make_finalizer(
+									[&] {
+										gdk_event_free(event);
+									}
+								);
 								if (event->type != GDK_DROP_START) {
 									self.invoke_receive_application_drag_leave();
 								}
@@ -784,9 +800,11 @@ export {
 								self.m_drag_inside = false;
 								auto target_uri = gtk_selection_data_get_uris(data);
 								assert_test(target_uri != nullptr);
-								auto target_uri_finalizer = make_finalizer([&] {
-									g_strfreev(target_uri);
-								});
+								auto target_uri_finalizer = make_finalizer(
+									[&] {
+										g_strfreev(target_uri);
+									}
+								);
 								auto target = std::vector<std::string>{};
 								for (auto target_index = std::size_t{0}; target_uri[target_index] != nullptr; ++target_index) {
 									auto target_item = g_filename_from_uri(target_uri[target_index], nullptr, nullptr);
@@ -794,9 +812,11 @@ export {
 										target.clear();
 										break;
 									}
-									auto target_item_finalizer = make_finalizer([&] {
-										g_free(target_item);
-									});
+									auto target_item_finalizer = make_finalizer(
+										[&] {
+											g_free(target_item);
+										}
+									);
 									target.emplace_back(target_item);
 								}
 								self.invoke_receive_application_drag_drop(target);
@@ -961,9 +981,11 @@ export {
 			auto error = std::add_pointer_t<GError>{nullptr};
 			state_b = gtk_show_uri_on_window(nullptr, link.data(), GDK_CURRENT_TIME, &error);
 			if (!state_b) {
-				auto error_finalizer = make_finalizer([&] {
-					g_error_free(error);
-				});
+				auto error_finalizer = make_finalizer(
+					[&] {
+						g_error_free(error);
+					}
+				);
 				throw std::runtime_error{std::string{"Exception: "} + error->message};
 			}
 			return;
