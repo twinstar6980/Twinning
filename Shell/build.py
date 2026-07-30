@@ -30,22 +30,22 @@ def build(
 		])
 		utility.fs_copy(
 			f'{source}/.build/windows/x64/release/shell.exe',
-			f'{temporary}/artifact.exe',
+			f'{temporary}/artifact',
 		)
 		utility.ex_windows_strip_executable(
-			f'{temporary}/artifact.exe',
+			f'{temporary}/artifact',
 		)
 		utility.ex_windows_import_manifest(
-			f'{temporary}/artifact.exe',
+			f'{temporary}/artifact',
 			f'{source}/shell/resource/windows/application.manifest',
 			1,
 		)
 		utility.ex_windows_sign(
-			f'{temporary}/artifact.exe',
+			f'{temporary}/artifact',
 			keystore,
 			'pe',
 		)
-		destination = ('.exe', f'{temporary}/artifact.exe')
+		destination = ('', f'{temporary}/artifact')
 	if utility.project_check_platform(platform, ['linux.amd64']):
 		utility.sh_execute_command(source, [
 			'xmake',

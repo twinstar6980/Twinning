@@ -669,23 +669,23 @@ def project_setup_library(
 
 def project_build_module(
 	path: str,
-	build: typing.Callable[[str, tuple[str, str] | None, str, str], tuple[str, str] | None],
+	builder: typing.Callable[[str, tuple[str, str] | None, str, str], tuple[str, str] | None],
 	platform: str,
 ) -> None:
 	with fs_temporary() as temporary:
-		module_name_original = pathlib.Path(path).parent.name
-		module_name_regularized = '_'.join([item.lower() for item in re.split(r'(?=[A-Z])', module_name_original)[1:]])
-		build_result = build(
-			project_locate_root(module_name_original),
+		name_original = pathlib.Path(path).parent.name
+		name_regularized = '_'.join([item.lower() for item in re.split(r'(?=[A-Z])', name_original)[1:]])
+		distribution = builder(
+			project_locate_root(name_original),
 			project_locate_keystore(),
 			temporary,
 			platform,
 		)
-		if build_result == None:
+		if distribution == None:
 			raise RuntimeError(f'unsupported platform \'{platform}\'')
-		distribution_file = project_locate_distribution(f'{platform}.{module_name_regularized}{build_result[0]}')
+		distribution_file = project_locate_distribution(f'{platform}.{name_regularized}{distribution[0]}')
 		fs_copy(
-			build_result[1],
+			distribution[1],
 			distribution_file,
 		)
 		print(f'>> BUILD MODULE >> {distribution_file}')
@@ -693,11 +693,11 @@ def project_build_module(
 
 def project_build_bundle(
 	path: str,
-	build: typing.Callable[[str, str, str, tuple[str, str] | None, str, str], tuple[str, str] | None],
+	builder: typing.Callable[[str, str, str, tuple[str, str] | None, str, str], tuple[str, str] | None],
 	platform: str,
 ) -> None:
 	with fs_temporary() as temporary:
-		build_result = build(
+		distribution = builder(
 			project_locate_root(),
 			project_locate_local(),
 			project_locate_distribution(),
@@ -705,11 +705,11 @@ def project_build_bundle(
 			temporary,
 			platform,
 		)
-		if build_result == None:
+		if distribution == None:
 			raise RuntimeError(f'unsupported platform \'{platform}\'')
-		distribution_file = project_locate_distribution(f'{platform}.bundle{build_result[0]}')
+		distribution_file = project_locate_distribution(f'{platform}.bundle{distribution[0]}')
 		fs_copy(
-			build_result[1],
+			distribution[1],
 			distribution_file,
 		)
 		print(f'>> BUILD BUNDLE >> {distribution_file}')

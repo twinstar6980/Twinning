@@ -1,5 +1,5 @@
 name: assistant
-version: 210.0.0+210
+version: 211.0.0+211
 environment:
   sdk: ^3.12.2
   flutter: ^3.44.2
@@ -11,7 +11,7 @@ dependencies:
   async: 2.13.1
   collection: 1.19.1
   stack_trace: 1.12.1
-  decimal: 3.2.5
+  decimal: 3.2.6
   json5: 0.8.2
   vdf: 1.1.0
   provider: 6.1.5+1

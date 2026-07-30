@@ -16,7 +16,7 @@ indent_style = tab
 indent_size = 4
 tab_width = 4
 
-[{~,*.sh,*.cmd}]
+[{~,*.sh,*.ps1,*.cmd,*.bat}]
 indent_style = tab
 indent_size = 4
 tab_width = 4

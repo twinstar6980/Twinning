@@ -31,7 +31,7 @@ def test(
 			True,
 		)
 		utility.fs_create_link(
-			f'{test}/shell.exe',
+			f'{test}/shell',
 			f'{root}/Shell/.build/windows/x64/release/shell.exe',
 			False,
 		)
@@ -41,8 +41,13 @@ def test(
 			True,
 		)
 		utility.fs_create_link(
-			f'{test}/launch.cmd',
-			f'{root}/common/unembedded/launch.cmd',
+			f'{test}/launch.sh',
+			f'{root}/common/unembedded/launch.sh',
+			False,
+		)
+		utility.fs_create_link(
+			f'{test}/launch.ps1',
+			f'{root}/common/unembedded/launch.ps1',
 			False,
 		)
 	if utility.project_check_platform(platform, ['linux.amd64']):
@@ -71,6 +76,11 @@ def test(
 			f'{root}/common/unembedded/launch.sh',
 			False,
 		)
+		utility.fs_create_link(
+			f'{test}/launch.ps1',
+			f'{root}/common/unembedded/launch.ps1',
+			False,
+		)
 	if utility.project_check_platform(platform, ['macintosh.arm64']):
 		utility.fs_create_link(
 			f'{test}/kernel',
@@ -95,6 +105,11 @@ def test(
 		utility.fs_create_link(
 			f'{test}/launch.sh',
 			f'{root}/common/unembedded/launch.sh',
+			False,
+		)
+		utility.fs_create_link(
+			f'{test}/launch.ps1',
+			f'{root}/common/unembedded/launch.ps1',
 			False,
 		)
 	if True:

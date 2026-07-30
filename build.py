@@ -31,28 +31,10 @@ def build(
 		f'{temporary}/artifact',
 	)
 	# module
-	module_distribution_list = {
-		'kernel': {
-			'windows.amd64': '',
-			'linux.amd64': '',
-			'macintosh.arm64': '',
-			'android.arm64': '',
-			'iphone.arm64': '',
-		},
-		'script': {
-			'windows.amd64': '!.zip',
-			'linux.amd64': '!.zip',
-			'macintosh.arm64': '!.zip',
-			'android.arm64': '!.zip',
-			'iphone.arm64': '!.zip',
-		},
-		'shell': {
-			'windows.amd64': '.exe',
-			'linux.amd64': '',
-			'macintosh.arm64': '',
-			'android.arm64': '',
-			'iphone.arm64': '',
-		},
+	module_distribution_list: dict[str, str | dict[str, str]] = {
+		'kernel': '',
+		'script': '.zip!',
+		'shell': '',
 		'assistant': {
 			'windows.amd64': '.msix',
 			'linux.amd64': '.AppImage',
@@ -62,36 +44,31 @@ def build(
 		},
 	}
 	for module_name, module_distribution in module_distribution_list.items():
-		module_distribution_extension = module_distribution.get(platform)
-		if module_distribution_extension == None:
-			continue
-		if module_distribution_extension == '!.zip':
+		module_distribution_extension = module_distribution if isinstance(module_distribution, str) else module_distribution[platform]
+		if module_distribution_extension == '.zip!':
 			utility.ex_archive_unpack_zip(
-				f'{distribution}/{platform}.{module_name}{'.zip'}',
+				f'{distribution}/{platform}.{module_name}{module_distribution_extension[:-1]}',
 				f'{temporary}/artifact/{module_name}',
 				f'{module_name}',
 			)
 		else:
 			utility.fs_copy(
-				f'{distribution}/{platform}.{module_name}{module_distribution.get(platform)}',
-				f'{temporary}/artifact/{module_name}{module_distribution.get(platform)}',
+				f'{distribution}/{platform}.{module_name}{module_distribution_extension}',
+				f'{temporary}/artifact/{module_name}{module_distribution_extension}',
 			)
 	# unembedded
-	if utility.project_check_platform(platform, ['windows.amd64', 'linux.amd64', 'macintosh.arm64', 'android.arm64', 'iphone.arm64']):
-		utility.fs_copy(
-			f'{source}/common/unembedded/assistant',
-			f'{temporary}/artifact/assistant',
-		)
-	if utility.project_check_platform(platform, ['windows.amd64']):
-		utility.fs_copy(
-			f'{source}/common/unembedded/launch.cmd',
-			f'{temporary}/artifact/launch.cmd',
-		)
-	if utility.project_check_platform(platform, ['linux.amd64', 'macintosh.arm64', 'android.arm64', 'iphone.arm64']):
-		utility.fs_copy(
-			f'{source}/common/unembedded/launch.sh',
-			f'{temporary}/artifact/launch.sh',
-		)
+	utility.fs_copy(
+		f'{source}/common/unembedded/assistant',
+		f'{temporary}/artifact/assistant',
+	)
+	utility.fs_copy(
+		f'{source}/common/unembedded/launch.sh',
+		f'{temporary}/artifact/launch.sh',
+	)
+	utility.fs_copy(
+		f'{source}/common/unembedded/launch.ps1',
+		f'{temporary}/artifact/launch.ps1',
+	)
 	# miscellaneous
 	utility.fs_copy(
 		f'{local}/library/{platform}',

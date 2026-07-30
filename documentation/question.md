@@ -84,7 +84,7 @@
 
 下表列出了受支持的 Content URI 格式，应用能够从以下几类 Content URI 中解析出绝对路径：
 
-|       应用名称       |                URI Provider                 |       URI Path        |
+|     应用名称     |                URI Provider                 |       URI Path        |
 |:----------------:|:-------------------------------------------:|:---------------------:|
 | AOSP DocumentsUI |    com.android.externalstorage.documents    | /document/primary:... |
 | AOSP DocumentsUI |    com.android.externalstorage.documents    |   /tree/primary:...   |
@@ -102,9 +102,9 @@
 
 * 虚拟终端控制序列：若不支持，程序无法对不同类型的文本修饰以不同的颜色。
 
-	> 默认情况下，工具会使用控制序列来优化输出效果，但如果运行在不支持控制序列的终端中，控制序列将直接输出为字符串，影响用户的阅读。
-	>
-	> 用户可以通过修改 `<home>/script/configuration/setting.json` 配置中的 `console_basic_disable_virtual_terminal_sequence` 项为 `true` 以禁用控制序列的使用。
+  > 默认情况下，工具会使用控制序列来优化输出效果，但如果运行在不支持控制序列的终端中，控制序列将直接输出为字符串，影响用户的阅读。
+  >
+  > 用户可以通过修改 `<home>/script/configuration/setting.json` 配置中的 `console_basic_disable_virtual_terminal_sequence` 项为 `true` 以禁用控制序列的使用。
 
 * 完备的字体：若不支持，一些字符（如汉字、emoji ）将无法正常显示。
 
@@ -117,7 +117,7 @@
 * `Iphone` [Filza](https://www.tigisoftware.com/default/?page_id=78)
 
 > @ `Windows` \
-> 双击以运行启动脚本时，将在系统默认终端中运行程序，若想更改为在指定第三方终端中运行，请修改 `launch.cmd` ，但切换终端将导致一次 cmd 窗口闪烁，除非你使用 Windows 11 并将 Windows Terminal 设为系统默认终端。
+> 右键执行启动脚本时，将在系统默认终端中运行程序，可以通过修改脚本来启动第三方终端中在其中并运行程序，但切换终端将导致一次控制台窗口闪烁，除非你使用 Windows 11 并将 Windows Terminal 设为系统默认终端。
 
 ## JSON 文件格式
 
