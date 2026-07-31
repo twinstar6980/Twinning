@@ -1,6 +1,6 @@
 /**
  * JavaScript interface of Kernel
- * @version 144
+ * @version 147
  */
 declare namespace Twinning.Kernel {
 
@@ -1256,13 +1256,13 @@ declare namespace Twinning.Kernel {
 		 * 运行子进程
 		 * @param program 程序
 		 * @param argument 参数（Posix）
-		 * @param command 命令行（Windows）
+		 * @param command 命令（Windows）
 		 * @param workspace 工作目录
 		 * @param environment 环境变量
 		 * @param input 输入文件
 		 * @param output 输出文件
 		 * @param error 错误文件
-		 * @returns 程序正常退出时，返回其退出码
+		 * @returns 程序正常退出时，返回其退出码（截断N位后的32位无符号数，不同系统中N不同，Windows=32，Linux=8，Macintosh=24）
 		 */
 		function run_child(
 			program: Path,

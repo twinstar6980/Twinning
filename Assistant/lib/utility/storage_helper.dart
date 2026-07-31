@@ -235,12 +235,12 @@ class StorageHelper {
     assertTest(await StorageHelper.existFile(target));
     assertTest(size >= 0);
     var targetString = target.emitNative();
-    var handler = await lib.File(targetString).open(mode: .writeOnlyAppend);
+    var handle = await lib.File(targetString).open(mode: .writeOnlyAppend);
     try {
-      await handler.truncate(size);
+      await handle.truncate(size);
     }
     finally {
-      await handler.close();
+      await handle.close();
     }
     return;
   }
@@ -255,15 +255,15 @@ class StorageHelper {
     assertTest(await StorageHelper.existFile(target));
     assertTest(offset >= 0);
     var targetString = target.emitNative();
-    var handler = await lib.File(targetString).open(mode: .read);
+    var handle = await lib.File(targetString).open(mode: .read);
     try {
-      assertTest(await handler.length() >= offset + data.length);
-      await handler.setPosition(offset);
-      var count = await handler.readInto(data);
+      assertTest(await handle.length() >= offset + data.length);
+      await handle.setPosition(offset);
+      var count = await handle.readInto(data);
       assertTest(count == data.length);
     }
     finally {
-      await handler.close();
+      await handle.close();
     }
     return;
   }
@@ -276,14 +276,14 @@ class StorageHelper {
     assertTest(await StorageHelper.existFile(target));
     assertTest(offset >= 0);
     var targetString = target.emitNative();
-    var handler = await lib.File(targetString).open(mode: .writeOnlyAppend);
+    var handle = await lib.File(targetString).open(mode: .writeOnlyAppend);
     try {
-      assertTest(await handler.length() >= offset + data.length);
-      await handler.setPosition(offset);
-      await handler.writeFrom(data);
+      assertTest(await handle.length() >= offset + data.length);
+      await handle.setPosition(offset);
+      await handle.writeFrom(data);
     }
     finally {
-      await handler.close();
+      await handle.close();
     }
     return;
   }

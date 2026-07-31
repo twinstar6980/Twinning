@@ -79,6 +79,14 @@ export namespace Twinning::Kernel {
 		return std::string_view{unmake_pointer_unsafe<char>(string.begin()), unmake_box<std::size_t>(string.size())};
 	}
 
+	inline auto make_std_string(
+		ConstantStringView const & string
+	) -> std::string {
+		return std::string{unmake_pointer_unsafe<char>(string.begin()), unmake_box<std::size_t>(string.size())};
+	}
+
+	// ----------------
+
 	inline constexpr auto hash_std_string_view(
 		std::string_view const & string
 	) -> ZIntegerU64 {
@@ -90,14 +98,6 @@ export namespace Twinning::Kernel {
 			result *= prime;
 		}
 		return result;
-	}
-
-	// ----------------
-
-	inline auto make_std_string(
-		ConstantStringView const & string
-	) -> std::string {
-		return std::string{unmake_pointer_unsafe<char>(string.begin()), unmake_box<std::size_t>(string.size())};
 	}
 
 	#pragma endregion

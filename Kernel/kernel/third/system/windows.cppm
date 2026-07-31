@@ -9,7 +9,6 @@ module;
 
 #include <Windows.h>
 #include <ShlObj.h>
-#include <stdio.h>
 
 #pragma clang diagnostic pop
 
@@ -25,23 +24,25 @@ export namespace Twinning::Kernel::Third::system::windows {
 
 	using $DWORD = DWORD;
 
+	using $LONGLONG = LONGLONG;
+
+	using $SIZE_T = SIZE_T;
+
 	using $CHAR = CHAR;
 
 	using $WCHAR = WCHAR;
 
-	using $SECURITY_ATTRIBUTES = SECURITY_ATTRIBUTES;
+	using $HANDLE = HANDLE;
+
+	using $LARGE_INTEGER = LARGE_INTEGER;
 
 	using $STARTUPINFOW = STARTUPINFOW;
 
+	using $STARTUPINFOEXW = STARTUPINFOEXW;
+
+	using $LPPROC_THREAD_ATTRIBUTE_LIST = LPPROC_THREAD_ATTRIBUTE_LIST;
+
 	using $PROCESS_INFORMATION = PROCESS_INFORMATION;
-
-	inline auto const $_wgetenv = _wgetenv;
-
-	inline auto const $_wfopen = _wfopen;
-
-	inline auto const $_fseeki64 = _fseeki64;
-
-	inline auto const $_ftelli64 = _ftelli64;
 
 	inline auto const $WideCharToMultiByte = WideCharToMultiByte;
 
@@ -51,7 +52,31 @@ export namespace Twinning::Kernel::Third::system::windows {
 
 	inline auto const $CreateFileW = CreateFileW;
 
+	inline auto const $SetFilePointerEx = SetFilePointerEx;
+
+	inline auto const $GetFileSizeEx = GetFileSizeEx;
+
+	inline auto const $SetEndOfFile = SetEndOfFile;
+
+	inline auto const $ReadFile = ReadFile;
+
+	inline auto const $WriteFile = WriteFile;
+
 	inline auto const $GetFileAttributesW = GetFileAttributesW;
+
+	inline auto const $SetHandleInformation = SetHandleInformation;
+
+	inline auto const $GetCurrentDirectoryW = GetCurrentDirectoryW;
+
+	inline auto const $GetEnvironmentStringsW = GetEnvironmentStringsW;
+
+	inline auto const $FreeEnvironmentStringsW = FreeEnvironmentStringsW;
+
+	inline auto const $InitializeProcThreadAttributeList = InitializeProcThreadAttributeList;
+
+	inline auto const $DeleteProcThreadAttributeList = DeleteProcThreadAttributeList;
+
+	inline auto const $UpdateProcThreadAttribute = UpdateProcThreadAttribute;
 
 	inline auto const $CreateProcessW = CreateProcessW;
 
@@ -73,6 +98,10 @@ export namespace Twinning::Kernel::Third::system::windows {
 
 	inline constexpr auto $MB_ERR_INVALID_CHARS = MB_ERR_INVALID_CHARS;
 
+	inline constexpr auto $CREATE_NEW = CREATE_NEW;
+
+	inline constexpr auto $OPEN_EXISTING = OPEN_EXISTING;
+
 	inline constexpr auto $GENERIC_READ = GENERIC_READ;
 
 	inline constexpr auto $GENERIC_WRITE = GENERIC_WRITE;
@@ -83,7 +112,7 @@ export namespace Twinning::Kernel::Third::system::windows {
 
 	inline constexpr auto $FILE_SHARE_DELETE = FILE_SHARE_DELETE;
 
-	inline constexpr auto $OPEN_EXISTING = OPEN_EXISTING;
+	inline constexpr auto $FILE_BEGIN = FILE_BEGIN;
 
 	inline constexpr auto $INVALID_FILE_ATTRIBUTES = INVALID_FILE_ATTRIBUTES;
 
@@ -93,18 +122,19 @@ export namespace Twinning::Kernel::Third::system::windows {
 
 	inline constexpr auto $STARTF_USESTDHANDLES = STARTF_USESTDHANDLES;
 
+	inline constexpr auto $HANDLE_FLAG_INHERIT = HANDLE_FLAG_INHERIT;
+
+	inline constexpr auto $PROC_THREAD_ATTRIBUTE_HANDLE_LIST = PROC_THREAD_ATTRIBUTE_HANDLE_LIST;
+
 	inline constexpr auto $CREATE_UNICODE_ENVIRONMENT = CREATE_UNICODE_ENVIRONMENT;
 
 	inline constexpr auto $CREATE_NO_WINDOW = CREATE_NO_WINDOW;
 
+	inline constexpr auto $EXTENDED_STARTUPINFO_PRESENT = EXTENDED_STARTUPINFO_PRESENT;
+
 	inline constexpr auto $WAIT_OBJECT_0 = WAIT_OBJECT_0;
 
 	inline auto const $INVALID_HANDLE_VALUE = INVALID_HANDLE_VALUE;
-
-	inline auto $_wenviron(
-	) -> wchar_t * * {
-		return _wenviron;
-	}
 
 }
 

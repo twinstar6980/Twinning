@@ -177,17 +177,6 @@ export {
 		using ::std::shared_ptr;
 	}
 	// filesystem
-	namespace std {
-		using ::std::FILE;
-		using ::std::fopen;
-		using ::std::fclose;
-		using ::std::fread;
-		using ::std::fwrite;
-	}
-	namespace stddef {
-		inline constexpr auto $SEEK_SET = int{SEEK_SET};
-		inline constexpr auto $SEEK_END = int{SEEK_END};
-	}
 	namespace std::filesystem {
 		using ::std::filesystem::filesystem_error;
 		using ::std::filesystem::path;
@@ -204,10 +193,7 @@ export {
 		using ::std::filesystem::create_symlink;
 		using ::std::filesystem::create_directory_symlink;
 		using ::std::filesystem::read_symlink;
-		using ::std::filesystem::file_size;
-		using ::std::filesystem::resize_file;
 		using ::std::filesystem::create_directories;
-		using ::std::filesystem::current_path;
 		using ::std::filesystem::begin;
 		using ::std::filesystem::end;
 		using ::std::filesystem::operator |;

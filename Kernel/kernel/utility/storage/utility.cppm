@@ -16,6 +16,8 @@ import twinning.kernel.utility.string.string;
 import twinning.kernel.utility.container.optional.optional;
 import twinning.kernel.utility.container.optional.null_optional;
 import twinning.kernel.utility.container.list.list;
+import twinning.kernel.utility.range.number_range;
+import twinning.kernel.utility.math.utility;
 import twinning.kernel.utility.miscellaneous.system_native_string;
 import twinning.kernel.third.system.windows;
 import twinning.kernel.third.system.posix;
@@ -117,56 +119,222 @@ export namespace Twinning::Kernel::Storage {
 		#pragma region file
 
 		inline auto open_file(
-			Pointer<std::FILE> & handler,
-			Path const &         path,
-			Boolean const &      mode
+			Pointer<Void> & handle,
+			Path const &    path,
+			Boolean const & mode_create,
+			Boolean const & mode_read,
+			Boolean const & mode_write
 		) -> auto {
-			auto path_string = path.emit_native();
-			M_use_nts_safe(path_string);
+			assert_test(mode_read || mode_write);
 			#if defined M_system_windows
-			auto file = Third::system::windows::$_wfopen(M_use_ntsp_w_of(path_string), !mode ? L"rb" : L"ab");
-			#endif
-			#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
-			auto file = std::fopen(M_use_ntsp_n_of(path_string), !mode ? "rb" : "ab");
-			#endif
-			assert_test(file != nullptr);
-			handler = make_pointer(file);
+			auto native_handle = Third::system::windows::$CreateFileW(
+				M_use_ntsp_w_safe_of(path.emit_native()),
+				(!mode_read ? 0 : Third::system::windows::$GENERIC_READ) | (!mode_write ? 0 : Third::system::windows::$GENERIC_WRITE),
+				Third::system::windows::$FILE_SHARE_READ | Third::system::windows::$FILE_SHARE_WRITE | Third::system::windows::$FILE_SHARE_DELETE,
+				nullptr,
+				!mode_create ? Third::system::windows::$OPEN_EXISTING : Third::system::windows::$CREATE_NEW,
+				Third::system::windows::$FILE_ATTRIBUTE_NORMAL,
+				nullptr
+			);
+			assert_test(native_handle != Third::system::windows::$INVALID_HANDLE_VALUE);
+			handle = make_pointer_unsafe<Void>(native_handle);
 			return make_finalizer(
-				[&handler] {
-					std::fclose(handler.value); // NOTE: EXPLAIN: skip result check
-					return;
+				[native_handle] {
+					auto state_b = Third::system::windows::$BOOL{};
+					state_b = Third::system::windows::$CloseHandle(native_handle);
+					assert_test(state_b != Third::system::windows::$FALSE);
 				}
 			);
+			#endif
+			#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
+			auto flag = int{};
+			if (mode_read && !mode_write) {
+				flag |= Third::system::posix::$O_RDONLY;
+			}
+			if (!mode_read && mode_write) {
+				flag |= Third::system::posix::$O_WRONLY;
+			}
+			if (mode_read && mode_write) {
+				flag |= Third::system::posix::$O_RDWR;
+			}
+			if (mode_create) {
+				flag |= Third::system::posix::$O_CREAT | Third::system::posix::$O_EXCL;
+			}
+			auto native_handle = Third::system::posix::$open(
+				M_use_ntsp_n_safe_of(path.emit_native()),
+				flag,
+				0644
+			);
+			assert_test(native_handle != -1);
+			handle = make_pointer_unsafe<Void>(reinterpret_cast<void *>(native_handle));
+			return make_finalizer(
+				[native_handle] {
+					auto state_i = int{};
+					state_i = Third::system::posix::$close(native_handle);
+					assert_test(state_i != -1);
+				}
+			);
+			#endif
 		}
 
 		inline auto seek_file(
-			Pointer<std::FILE> & handler,
-			Size const &         position,
-			Boolean const &      mode
+			Pointer<Void> const & handle,
+			Size const &          position
 		) -> Void {
-			auto state = int{};
 			#if defined M_system_windows
-			state = Third::system::windows::$_fseeki64(handler.value, unmake_box<std::int64_t>(position), !mode ? stddef::$SEEK_SET : stddef::$SEEK_END);
+			auto state_b = Third::system::windows::$BOOL{};
+			state_b = Third::system::windows::$SetFilePointerEx(
+				static_cast<Third::system::windows::$HANDLE>(handle.value),
+				Third::system::windows::$LARGE_INTEGER{
+					.QuadPart = unmake_box<Third::system::windows::$LONGLONG>(position),
+				},
+				nullptr,
+				Third::system::windows::$FILE_BEGIN
+			);
+			assert_test(state_b != Third::system::windows::$FALSE);
 			#endif
 			#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
-			state = Third::system::posix::$fseeko(handler.value, unmake_box<Third::system::posix::$off_t>(position), !mode ? stddef::$SEEK_SET : stddef::$SEEK_END);
+			auto state_o = Third::system::posix::$off_t{};
+			state_o = Third::system::posix::$lseek(
+				static_cast<int>(reinterpret_cast<std::intptr_t>(handle.value)),
+				unmake_box<Third::system::posix::$off_t>(position),
+				Third::system::posix::$SEEK_SET
+			);
+			assert_test(state_o != static_cast<Third::system::posix::$off_t>(-1));
 			#endif
-			assert_test(state == 0);
 			return;
 		}
 
-		inline auto tell_file(
-			Pointer<std::FILE> & handler
+		// ----------------
+
+		inline auto size_file(
+			Pointer<Void> const & handle
 		) -> Size {
-			auto size = std::int64_t{};
+			auto result = Size{};
 			#if defined M_system_windows
-			size = Third::system::windows::$_ftelli64(handler.value);
+			auto state_b = Third::system::windows::$BOOL{};
+			auto native_position = Third::system::windows::$LARGE_INTEGER{};
+			state_b = Third::system::windows::$GetFileSizeEx(
+				static_cast<Third::system::windows::$HANDLE>(handle.value),
+				&native_position
+			);
+			assert_test(state_b != Third::system::windows::$FALSE);
+			result = make_box<Size>(native_position.QuadPart);
 			#endif
 			#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
-			size = Third::system::posix::$ftello(handler.value);
+			auto state_i = int{};
+			auto stat = Third::system::posix::$stat{};
+			state_i = Third::system::posix::$fstat(
+				static_cast<int>(reinterpret_cast<std::intptr_t>(handle.value)),
+				&stat
+			);
+			assert_test(state_i != -1);
+			result = make_box<Size>(stat.st_size);
 			#endif
-			assert_test(size != -1);
-			return make_box<Size>(size);
+			return result;
+		}
+
+		inline auto resize_file(
+			Pointer<Void> const & handle,
+			Size const &          size
+		) -> Void {
+			#if defined M_system_windows
+			auto state_b = Third::system::windows::$BOOL{};
+			seek_file(handle, size);
+			state_b = Third::system::windows::$SetEndOfFile(
+				static_cast<Third::system::windows::$HANDLE>(handle.value)
+			);
+			assert_test(state_b != Third::system::windows::$FALSE);
+			#endif
+			#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
+			auto state_i = int{};
+			state_i = Third::system::posix::$ftruncate(
+				static_cast<int>(reinterpret_cast<std::intptr_t>(handle.value)),
+				unmake_box<Third::system::posix::$off_t>(size)
+			);
+			assert_test(state_i != -1);
+			#endif
+			return;
+		}
+
+		// ----------------
+
+		inline auto read_file(
+			Pointer<Void> const &        handle,
+			VariableByteListView const & data
+		) -> Void {
+			#if defined M_system_windows
+			auto state_b = Third::system::windows::$BOOL{};
+			auto current_position = 0_sz;
+			while (current_position != data.size()) {
+				auto current_count = Math::minimum(0x80000000_sz, data.size() - current_position);
+				auto current_count_actual = Third::system::windows::$DWORD{};
+				state_b = Third::system::windows::$ReadFile(
+					static_cast<Third::system::windows::$HANDLE>(handle.value),
+					unmake_pointer_unsafe<void>(data.begin() + current_position),
+					unmake_box<Third::system::windows::$DWORD>(current_count),
+					&current_count_actual,
+					nullptr
+				);
+				assert_test(state_b != Third::system::windows::$FALSE);
+				assert_test(make_box<Size>(current_count_actual) == current_count);
+				current_position += current_count;
+			}
+			#endif
+			#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
+			auto current_position = 0_sz;
+			while (current_position != data.size()) {
+				auto current_count = Math::minimum(0x80000000_sz, data.size() - current_position);
+				auto current_count_actual = Third::system::posix::$read(
+					static_cast<int>(reinterpret_cast<std::intptr_t>(handle.value)),
+					unmake_pointer_unsafe<void>(data.begin() + current_position),
+					unmake_box<std::size_t>(current_count)
+				);
+				assert_test(current_count_actual != -1);
+				assert_test(make_box<Size>(current_count_actual) == current_count);
+				current_position += current_count;
+			}
+			#endif
+			return;
+		}
+
+		inline auto write_file(
+			Pointer<Void> const &        handle,
+			ConstantByteListView const & data
+		) -> Void {
+			#if defined M_system_windows
+			auto state_b = Third::system::windows::$BOOL{};
+			auto current_position = 0_sz;
+			while (current_position != data.size()) {
+				auto current_count = Math::minimum(0x80000000_sz, data.size() - current_position);
+				auto current_count_actual = Third::system::windows::$DWORD{};
+				state_b = Third::system::windows::$WriteFile(
+					static_cast<Third::system::windows::$HANDLE>(handle.value),
+					unmake_pointer_unsafe<void>(data.begin() + current_position),
+					unmake_box<Third::system::windows::$DWORD>(current_count),
+					&current_count_actual,
+					nullptr
+				);
+				assert_test(state_b != Third::system::windows::$FALSE);
+				assert_test(make_box<Size>(current_count_actual) == current_count);
+				current_position += current_count;
+			}
+			#endif
+			#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
+			auto current_position = 0_sz;
+			while (current_position != data.size()) {
+				auto current_count = Math::minimum(0x80000000_sz, data.size() - current_position);
+				auto current_count_actual = Third::system::posix::$write(
+					static_cast<int>(reinterpret_cast<std::intptr_t>(handle.value)),
+					unmake_pointer_unsafe<void>(data.begin() + current_position),
+					unmake_box<std::size_t>(current_count)
+				);
+				assert_test(current_count_actual != -1);
+				assert_test(make_box<Size>(current_count_actual) == current_count);
+				current_position += current_count;
+			}
+			#endif
+			return;
 		}
 
 		#pragma endregion
@@ -342,8 +510,8 @@ export namespace Twinning::Kernel::Storage {
 		if (target_parent.has() && !exist_directory(target_parent.get())) {
 			create_directory(target_parent.get());
 		}
-		auto handler = Pointer<std::FILE>{};
-		auto finalizer = Detail::open_file(handler, target, k_true);
+		auto handle = Pointer<Void>{};
+		auto handle_finalizer = Detail::open_file(handle, target, k_true, k_true, k_true);
 		return;
 	}
 
@@ -353,8 +521,9 @@ export namespace Twinning::Kernel::Storage {
 		Path const & target
 	) -> Size {
 		assert_test(exist_file(target));
-		auto size = std::filesystem::file_size(Detail::emit_path(target));
-		return make_box<Size>(size);
+		auto handle = Pointer<Void>{};
+		auto handle_finalizer = Detail::open_file(handle, target, k_false, k_true, k_false);
+		return Detail::size_file(handle);
 	}
 
 	inline auto resize_file(
@@ -362,7 +531,9 @@ export namespace Twinning::Kernel::Storage {
 		Size const & size
 	) -> Void {
 		assert_test(exist_file(target));
-		std::filesystem::resize_file(Detail::emit_path(target), unmake_box<std::uintmax_t>(size));
+		auto handle = Pointer<Void>{};
+		auto handle_finalizer = Detail::open_file(handle, target, k_false, k_false, k_true);
+		Detail::resize_file(handle, size);
 		return;
 	}
 
@@ -374,13 +545,12 @@ export namespace Twinning::Kernel::Storage {
 		VariableByteListView const & data
 	) -> Void {
 		assert_test(exist_file(target));
-		auto handler = Pointer<std::FILE>{};
-		auto finalizer = Detail::open_file(handler, target, k_false);
-		Detail::seek_file(handler, 0_sz, k_true);
-		assert_test(Detail::tell_file(handler) >= offset + data.size());
-		Detail::seek_file(handler, offset, k_false);
-		auto count = std::fread(unmake_pointer_unsafe<void>(data.begin()), unmake_box<std::size_t>(data.size()), 1, handler.value);
-		assert_test(count == 1 || data.size() == 0_sz);
+		auto handle = Pointer<Void>{};
+		auto handle_finalizer = Detail::open_file(handle, target, k_false, k_true, k_false);
+		auto capacity = Detail::size_file(handle);
+		assert_test(capacity >= offset + data.size());
+		Detail::seek_file(handle, offset);
+		Detail::read_file(handle, data);
 		return;
 	}
 
@@ -390,13 +560,12 @@ export namespace Twinning::Kernel::Storage {
 		ConstantByteListView const & data
 	) -> Void {
 		assert_test(exist_file(target));
-		auto handler = Pointer<std::FILE>{};
-		auto finalizer = Detail::open_file(handler, target, k_true);
-		Detail::seek_file(handler, 0_sz, k_true);
-		assert_test(Detail::tell_file(handler) >= offset + data.size());
-		Detail::seek_file(handler, offset, k_false);
-		auto count = std::fwrite(unmake_pointer_unsafe<void>(data.begin()), unmake_box<std::size_t>(data.size()), 1, handler.value);
-		assert_test(count == 1 || data.size() == 0_sz);
+		auto handle = Pointer<Void>{};
+		auto handle_finalizer = Detail::open_file(handle, target, k_false, k_false, k_true);
+		auto capacity = Detail::size_file(handle);
+		assert_test(capacity >= offset + data.size());
+		Detail::seek_file(handle, offset);
+		Detail::write_file(handle, data);
 		return;
 	}
 

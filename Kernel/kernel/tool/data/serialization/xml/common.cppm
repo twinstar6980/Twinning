@@ -40,7 +40,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Xml {
 			bool                                       _elementJustOpened;
 			TinyXml2DynArrayImitator<char const *, 10> _stack;
 			bool                                       _firstElement;
-			std::FILE *                                _fp;
+			void *                                     _fp;
 			int                                        _depth;
 			int                                        _textDepth;
 			bool                                       _processEntities;

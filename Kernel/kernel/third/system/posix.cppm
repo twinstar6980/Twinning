@@ -11,7 +11,8 @@ module;
 #include "stdio.h"
 #include "unistd.h"
 #include "fcntl.h"
-#include "spawn.h"
+#include "errno.h"
+#include "sys/stat.h"
 #include "sys/wait.h"
 
 #if defined M_system_macintosh || defined M_system_iphone
@@ -30,6 +31,8 @@ export namespace Twinning::Kernel::Third::system::posix {
 
 	using $off_t = off_t;
 
+	using $stat = struct stat;
+
 	using $id_t = id_t;
 
 	using $pid_t = pid_t;
@@ -40,13 +43,21 @@ export namespace Twinning::Kernel::Third::system::posix {
 
 	inline constexpr auto $close = close;
 
-	inline constexpr auto $chdir = chdir;
+	inline constexpr auto $lseek = lseek;
 
-	inline constexpr auto $fseeko = fseeko;
+	inline constexpr auto $fstat = fstat;
 
-	inline constexpr auto $ftello = ftello;
+	inline constexpr auto $ftruncate = ftruncate;
+
+	inline constexpr auto $read = read;
+
+	inline constexpr auto $write = write;
 
 	inline constexpr auto $dup2 = dup2;
+
+	inline constexpr auto $chdir = chdir;
+
+	inline constexpr auto $getcwd = getcwd;
 
 	inline constexpr auto $fork = fork;
 
@@ -60,6 +71,14 @@ export namespace Twinning::Kernel::Third::system::posix {
 
 	inline constexpr auto $O_WRONLY = O_WRONLY;
 
+	inline constexpr auto $O_RDWR = O_RDWR;
+
+	inline constexpr auto $O_CREAT = O_CREAT;
+
+	inline constexpr auto $O_EXCL = O_EXCL;
+
+	inline constexpr auto $SEEK_SET = SEEK_SET;
+
 	inline constexpr auto $STDIN_FILENO = STDIN_FILENO;
 
 	inline constexpr auto $STDOUT_FILENO = STDOUT_FILENO;
@@ -71,6 +90,10 @@ export namespace Twinning::Kernel::Third::system::posix {
 	inline constexpr auto $WEXITED = WEXITED;
 
 	inline constexpr auto $P_PID = P_PID;
+
+	inline constexpr auto $ERANGE = ERANGE;
+
+	inline auto const & $errno = errno;
 
 	inline auto const & $environ = environ;
 
