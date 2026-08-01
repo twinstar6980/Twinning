@@ -157,7 +157,7 @@ export {
 							auto & self = *static_cast<PlatformIntegrationManager *>(user_data);
 							self.execute_platform_task_switch(
 								true,
-								[&, method_call = g_object_ref(method_call)] {
+								std::function{[&, method_call = g_object_ref(method_call)] {
 									auto response = std::add_pointer_t<FlMethodResponse>{nullptr};
 									try {
 										auto call_method = std::string{fl_method_call_get_name(method_call)};
@@ -173,7 +173,7 @@ export {
 									fl_method_call_respond(method_call, response, nullptr);
 									g_object_unref(response);
 									g_object_unref(method_call);
-								}
+								}}
 							);
 							return;
 						},
@@ -598,9 +598,9 @@ export {
 			}
 			thiz.execute_platform_task_switch(
 				true,
-				[&, method, raw_argument = std::move(raw_argument)] {
+				std::function{[&, method, raw_argument = std::move(raw_argument)] {
 					fl_method_channel_invoke_method(thiz.m_channel, method.data(), raw_argument, nullptr, nullptr, nullptr);
-				}
+				}}
 			);
 			return;
 		}
@@ -872,11 +872,11 @@ export {
 					[](
 					gpointer user_data
 				) -> gboolean {
-						auto data = std::unique_ptr<std::function<void()>>{static_cast<std::function<void()> *>(user_data)};
+						auto data = std::unique_ptr<std::function<void ()>>{static_cast<std::function<void ()> *>(user_data)};
 						data->operator()();
 						return G_SOURCE_REMOVE;
 					},
-					new std::function<void()>{std::move(task)}
+					new std::function<void ()>{std::move(task)}
 				);
 			}
 			else {

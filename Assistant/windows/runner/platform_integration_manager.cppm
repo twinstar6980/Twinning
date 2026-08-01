@@ -219,7 +219,7 @@ export {
 						}
 					}
 					if (with_message == k_window_message_identifier_for_foreground) {
-						auto data = std::unique_ptr<std::function<void()>>{reinterpret_cast<std::function<void()> *>(with_lparam)};
+						auto data = std::unique_ptr<std::function<void ()>>{reinterpret_cast<std::function<void ()> *>(with_lparam)};
 						data->operator()();
 					}
 					return;
@@ -251,7 +251,7 @@ export {
 					) -> void {
 							thiz.execute_platform_task_switch(
 								false,
-								[&, call_method_name = call.method_name(), call_arguments = *call.arguments(), result = std::shared_ptr{std::move(result)}] {
+								std::function{[&, call_method_name = call.method_name(), call_arguments = std::move(const_cast<flutter::EncodableValue &>(*call.arguments())), result = std::shared_ptr{std::move(result)}] {
 									try {
 										auto & call_method = call_method_name;
 										auto & call_argument = std::get<flutter::EncodableMap>(call_arguments);
@@ -272,7 +272,7 @@ export {
 											}}
 										);
 									}
-								}
+								}}
 							);
 							return;
 						}
@@ -809,9 +809,9 @@ export {
 			}
 			thiz.execute_platform_task_switch(
 				true,
-				[&, method, raw_argument = std::move(raw_argument)] {
+				std::function{[&, method, raw_argument = std::move(raw_argument)] {
 					thiz.m_channel->InvokeMethod(method, std::make_unique<flutter::EncodableValue>(std::move(raw_argument)), nullptr);
-				}
+				}}
 			);
 			return;
 		}
@@ -1246,7 +1246,7 @@ export {
 				return;
 			};
 			if (on_main) {
-				PostMessageW(thiz.m_window, k_window_message_identifier_for_foreground, 0, reinterpret_cast<LPARAM>(new std::function<void()>{std::move(task)}));
+				PostMessageW(thiz.m_window, k_window_message_identifier_for_foreground, 0, reinterpret_cast<LPARAM>(new std::function<void ()>{std::move(task)}));
 			}
 			else {
 				std::thread{std::move(task)}.detach();
