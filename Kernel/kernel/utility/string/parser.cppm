@@ -1018,8 +1018,8 @@ export namespace Twinning::Kernel::StringParser {
 		Byte &                     value
 	) -> Void {
 		value = 0x00_b;
-		value |= Bitwise::infuse(cast_box<Byte>(CharacterType::from_number_hexadecimal(stream.read_of())), 4_sz, 0_sz);
-		value |= Bitwise::infuse(cast_box<Byte>(CharacterType::from_number_hexadecimal(stream.read_of())), 0_sz, 0_sz);
+		value |= Bitwise::infuse(cast_box<Byte>(CharacterType::from_number_hexadecimal(stream.read_of())), 4_sz, 4_sz);
+		value |= Bitwise::infuse(cast_box<Byte>(CharacterType::from_number_hexadecimal(stream.read_of())), 0_sz, 4_sz);
 		return;
 	}
 
