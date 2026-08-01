@@ -93,8 +93,18 @@ class PlatformIntegrationManager {
           "${this.queryApplicationIdentifier()}/PlatformIntegrationManager",
         )
         this.channel.setMethodCallHandler({ call, result ->
-          this.executePlatformBackgroundTask({
-            this@PlatformIntegrationManager.handle(call, result)
+          this.executePlatformTaskSwitch(false, {
+            try {
+              val callMethod = call.method
+              @Suppress("UNCHECKED_CAST")
+              val callArgument = call.arguments as MutableMap<Any?, Any?>
+              val callResult = this@PlatformIntegrationManager.handle(callMethod, callArgument)
+              result.success(callResult)
+            }
+            catch (e: Exception) {
+              val callException = e.stackTraceToString()
+              result.error("", callException, null)
+            }
           })
           return@setMethodCallHandler
         })
@@ -193,127 +203,118 @@ class PlatformIntegrationManager {
   // region handle
 
   private suspend fun handle(
-    call: MethodCall,
-    result: MethodChannel.Result,
-  ): Unit {
-    try {
-      val method = call.method
-      @Suppress("UNCHECKED_CAST")
-      val rawArgument = call.arguments as MutableMap<Any?, Any?>
-      val getArgument = { name: String ->
-        this.extractFlutterValueMap(rawArgument, name)
-      }
-      val rawResult = mutableMapOf<Any?, Any?>()
-      val setResult = { name: String, value: Any? ->
-        this.infuseFlutterValueMap(rawResult, name, value)
-      }
-      when (method) {
-        "check_application_permission" -> {
-          val detail = this.handleCheckApplicationPermission(
-            this.decodeFlutterValue<String>(getArgument("name")),
-          )
-          setResult("state", this.encodeFlutterValue(detail))
-        }
-        "update_application_permission" -> {
-          val detail = this.handleUpdateApplicationPermission(
-            this.decodeFlutterValue<String>(getArgument("name")),
-          )
-        }
-        "check_application_extension" -> {
-          val detail = this.handleCheckApplicationExtension(
-            this.decodeFlutterValue<String>(getArgument("name")),
-          )
-          setResult("state", this.encodeFlutterValue(detail))
-        }
-        "update_application_extension" -> {
-          val detail = this.handleUpdateApplicationExtension(
-            this.decodeFlutterValue<String>(getArgument("name")),
-            this.decodeFlutterValue<Boolean>(getArgument("state")),
-          )
-        }
-        "query_storage_item" -> {
-          val detail = this.handleQueryStorageItem(
-            this.decodeFlutterValue<String>(getArgument("type")),
-          )
-          setResult("target", this.encodeFlutterValue(detail))
-        }
-        "reveal_storage_item" -> {
-          val detail = this.handleRevealStorageItem(
-            this.decodeFlutterValue<String>(getArgument("target")),
-          )
-        }
-        "pick_storage_item" -> {
-          val detail = this.handlePickStorageItem(
-            this.decodeFlutterValue<String>(getArgument("type")),
-            this.decodeFlutterValue<Boolean>(getArgument("multiply")),
-            this.decodeFlutterValue<String>(getArgument("location")),
-            this.decodeFlutterValue<String>(getArgument("name")),
-          )
-          setResult("target", this.encodeFlutterValue(detail))
-        }
-        "query_system_theme" -> {
-          val detail = this.handleQuerySystemTheme(
-          )
-          setResult("accent", this.encodeFlutterValue(detail))
-        }
-        "push_system_notification" -> {
-          val detail = this.handlePushSystemNotification(
-            this.decodeFlutterValue<String>(getArgument("title")),
-            this.decodeFlutterValue<String>(getArgument("description")),
-          )
-        }
-        "query_screen_placement" -> {
-          val detail = this.handleQueryScreenPlacement(
-          )
-          setResult("x", this.encodeFlutterValue(detail.first.first))
-          setResult("y", this.encodeFlutterValue(detail.first.second))
-          setResult("width", this.encodeFlutterValue(detail.second.first))
-          setResult("height", this.encodeFlutterValue(detail.second.second))
-        }
-        "query_window_placement" -> {
-          val detail = this.handleQueryWindowPlacement(
-          )
-          setResult("x", this.encodeFlutterValue(detail.first.first))
-          setResult("y", this.encodeFlutterValue(detail.first.second))
-          setResult("width", this.encodeFlutterValue(detail.second.first))
-          setResult("height", this.encodeFlutterValue(detail.second.second))
-        }
-        "update_window_placement" -> {
-          val detail = this.handleUpdateWindowPlacement(
-            this.decodeFlutterValue<Long>(getArgument("x")),
-            this.decodeFlutterValue<Long>(getArgument("y")),
-            this.decodeFlutterValue<Long>(getArgument("width")),
-            this.decodeFlutterValue<Long>(getArgument("height")),
-          )
-        }
-        "on_android_list_application_identifier" -> {
-          val detail = this.handleOnAndroidListApplicationIdentifier(
-          )
-          setResult("target", this.encodeFlutterValue(detail))
-        }
-        "on_android_query_application_information" -> {
-          val detail = this.handleOnAndroidQueryApplicationInformation(
-            this.decodeFlutterValue<String>(getArgument("target")),
-          )
-          setResult("name", this.encodeFlutterValue(detail.first))
-          setResult("version", this.encodeFlutterValue(detail.second))
-        }
-        "on_android_extract_application_icon" -> {
-          val detail = this.handleOnAndroidExtractApplicationIcon(
-            this.decodeFlutterValue<String>(getArgument("target")),
-          )
-          setResult("width", this.encodeFlutterValue(detail.first))
-          setResult("height", this.encodeFlutterValue(detail.second))
-          setResult("data", this.encodeFlutterValue(detail.third))
-        }
-        else -> throw Exception("invalid method")
-      }
-      result.success(rawResult)
+    method: String,
+    argument: MutableMap<Any?, Any?>,
+  ): MutableMap<Any?, Any?> {
+    val result = mutableMapOf<Any?, Any?>()
+    val getArgument = { name: String ->
+      this.extractFlutterValueMap(argument, name)
     }
-    catch (e: Exception) {
-      result.error("", e.stackTraceToString(), null)
+    val setResult = { name: String, value: Any? ->
+      this.infuseFlutterValueMap(result, name, value)
     }
-    return
+    when (method) {
+      "check_application_permission" -> {
+        val detail = this.handleCheckApplicationPermission(
+          this.decodeFlutterValue<String>(getArgument("name")),
+        )
+        setResult("state", this.encodeFlutterValue(detail))
+      }
+      "update_application_permission" -> {
+        val detail = this.handleUpdateApplicationPermission(
+          this.decodeFlutterValue<String>(getArgument("name")),
+        )
+      }
+      "check_application_extension" -> {
+        val detail = this.handleCheckApplicationExtension(
+          this.decodeFlutterValue<String>(getArgument("name")),
+        )
+        setResult("state", this.encodeFlutterValue(detail))
+      }
+      "update_application_extension" -> {
+        val detail = this.handleUpdateApplicationExtension(
+          this.decodeFlutterValue<String>(getArgument("name")),
+          this.decodeFlutterValue<Boolean>(getArgument("state")),
+        )
+      }
+      "query_storage_item" -> {
+        val detail = this.handleQueryStorageItem(
+          this.decodeFlutterValue<String>(getArgument("type")),
+        )
+        setResult("target", this.encodeFlutterValue(detail))
+      }
+      "reveal_storage_item" -> {
+        val detail = this.handleRevealStorageItem(
+          this.decodeFlutterValue<String>(getArgument("target")),
+        )
+      }
+      "pick_storage_item" -> {
+        val detail = this.handlePickStorageItem(
+          this.decodeFlutterValue<String>(getArgument("type")),
+          this.decodeFlutterValue<Boolean>(getArgument("multiply")),
+          this.decodeFlutterValue<String>(getArgument("location")),
+          this.decodeFlutterValue<String>(getArgument("name")),
+        )
+        setResult("target", this.encodeFlutterValue(detail))
+      }
+      "query_system_theme" -> {
+        val detail = this.handleQuerySystemTheme(
+        )
+        setResult("accent", this.encodeFlutterValue(detail))
+      }
+      "push_system_notification" -> {
+        val detail = this.handlePushSystemNotification(
+          this.decodeFlutterValue<String>(getArgument("title")),
+          this.decodeFlutterValue<String>(getArgument("description")),
+        )
+      }
+      "query_screen_placement" -> {
+        val detail = this.handleQueryScreenPlacement(
+        )
+        setResult("x", this.encodeFlutterValue(detail.first.first))
+        setResult("y", this.encodeFlutterValue(detail.first.second))
+        setResult("width", this.encodeFlutterValue(detail.second.first))
+        setResult("height", this.encodeFlutterValue(detail.second.second))
+      }
+      "query_window_placement" -> {
+        val detail = this.handleQueryWindowPlacement(
+        )
+        setResult("x", this.encodeFlutterValue(detail.first.first))
+        setResult("y", this.encodeFlutterValue(detail.first.second))
+        setResult("width", this.encodeFlutterValue(detail.second.first))
+        setResult("height", this.encodeFlutterValue(detail.second.second))
+      }
+      "update_window_placement" -> {
+        val detail = this.handleUpdateWindowPlacement(
+          this.decodeFlutterValue<Long>(getArgument("x")),
+          this.decodeFlutterValue<Long>(getArgument("y")),
+          this.decodeFlutterValue<Long>(getArgument("width")),
+          this.decodeFlutterValue<Long>(getArgument("height")),
+        )
+      }
+      "on_android_list_application_identifier" -> {
+        val detail = this.handleOnAndroidListApplicationIdentifier(
+        )
+        setResult("target", this.encodeFlutterValue(detail))
+      }
+      "on_android_query_application_information" -> {
+        val detail = this.handleOnAndroidQueryApplicationInformation(
+          this.decodeFlutterValue<String>(getArgument("target")),
+        )
+        setResult("name", this.encodeFlutterValue(detail.first))
+        setResult("version", this.encodeFlutterValue(detail.second))
+      }
+      "on_android_extract_application_icon" -> {
+        val detail = this.handleOnAndroidExtractApplicationIcon(
+          this.decodeFlutterValue<String>(getArgument("target")),
+        )
+        setResult("width", this.encodeFlutterValue(detail.first))
+        setResult("height", this.encodeFlutterValue(detail.second))
+        setResult("data", this.encodeFlutterValue(detail.third))
+      }
+      else -> throw Exception("invalid method")
+    }
+    return result
   }
 
   // ----------------
@@ -598,8 +599,10 @@ class PlatformIntegrationManager {
     method: String,
     argument: Map<String, Any?>,
   ): Unit {
-    val result = this.channel.invokeMethod(method, argument)
-    return result
+    this.executePlatformTaskSwitch(true, {
+      this.channel.invokeMethod(method, argument)
+    })
+    return
   }
 
   // ----------------
@@ -734,31 +737,35 @@ class PlatformIntegrationManager {
     fallbackAction: () -> TResult,
     taskAction: suspend () -> TResult,
   ): TResult {
-    return runBlocking {
+    val task = suspend task@{
       try {
-        return@runBlocking taskAction()
+        return@task taskAction()
       }
       catch (e: Exception) {
         if (!handleException) {
           throw e
         }
-        this@PlatformIntegrationManager.invokeReceivePlatformException(e.stackTraceToString())
-        return@runBlocking fallbackAction()
+        this.invokeReceivePlatformException(e.stackTraceToString())
+        return@task fallbackAction()
       }
     }
+    return runBlocking { task() }
   }
 
-  private fun executePlatformBackgroundTask(
+  private fun executePlatformTaskSwitch(
+    onMain: Boolean,
     taskAction: suspend () -> Unit,
   ): Unit {
-    CoroutineScope(Dispatchers.Main).launch {
+    val task = suspend task@{
       try {
         taskAction()
       }
       catch (e: Exception) {
-        this@PlatformIntegrationManager.invokeReceivePlatformException(e.stackTraceToString())
+        this.invokeReceivePlatformException(e.stackTraceToString())
       }
+      return@task
     }
+    CoroutineScope(if (onMain) Dispatchers.Main else Dispatchers.IO).launch { task() }
     return
   }
 

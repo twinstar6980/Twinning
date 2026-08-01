@@ -155,26 +155,24 @@ export {
 						gpointer          user_data
 					) -> void {
 							auto & self = *static_cast<PlatformIntegrationManager *>(user_data);
-							self.execute_platform_background_task(
-								[&] {
+							self.execute_platform_task_switch(
+								true,
+								[&, method_call = g_object_ref(method_call)] {
 									auto response = std::add_pointer_t<FlMethodResponse>{nullptr};
-									auto response_finalizer = make_finalizer(
-										[&] {
-											if (response != nullptr) {
-												g_object_unref(response);
-											}
-										}
-									);
-									self.handle(method_call, response);
-									auto error = std::add_pointer_t<GError>{nullptr};
-									if (!fl_method_call_respond(method_call, response, &error)) {
-										auto error_finalizer = make_finalizer(
-											[&] {
-												g_error_free(error);
-											}
-										);
-										g_warning("Failed to send response: %s", error->message);
+									try {
+										auto call_method = std::string{fl_method_call_get_name(method_call)};
+										auto call_argument = fl_method_call_get_args(method_call);
+										auto call_result = self.handle(call_method, call_argument);
+										response = FL_METHOD_RESPONSE(fl_method_success_response_new(call_result));
+										fl_value_unref(call_result);
 									}
+									catch (...) {
+										auto call_exception = self.parse_current_exception();
+										response = FL_METHOD_RESPONSE(fl_method_error_response_new("", call_exception.data(), nullptr));
+									}
+									fl_method_call_respond(method_call, response, nullptr);
+									g_object_unref(response);
+									g_object_unref(method_call);
 								}
 							);
 							return;
@@ -212,119 +210,120 @@ export {
 		#pragma region handle
 
 		auto handle(
-			FlMethodCall * const & call,
-			FlMethodResponse * &   response
-		) -> void {
-			try {
-				auto method = fl_method_call_get_name(call);
-				auto raw_argument = fl_method_call_get_args(call);
-				assert_test(fl_value_get_type(raw_argument) == FL_VALUE_TYPE_MAP);
-				auto get_argument = [&](std::string_view const & name) -> FlValue * {
-					return thiz.extract_flutter_value_map(raw_argument, name);
-				};
-				auto raw_result = fl_value_new_map();
-				auto set_result = [&](std::string_view const & name, FlValue * && value) -> void {
-					return thiz.infuse_flutter_value_map(raw_result, name, std::move(value));
-				};
-				switch (hash_string(method)) {
-					case hash_string("check_application_permission"): {
-						auto detail = thiz.handle_check_application_permission(
-							thiz.decode_flutter_value<std::string>(get_argument("name"))
-						);
-						set_result("state", thiz.encode_flutter_value(std::move(std::get<0>(detail))));
-						break;
+			std::string const & method,
+			FlValue * const &   argument
+		) -> FlValue * {
+			assert_test(fl_value_get_type(argument) == FL_VALUE_TYPE_MAP);
+			auto result = fl_value_new_map();
+			auto result_state = false;
+			auto result_finalizer = thiz.make_finalizer(
+				[&] {
+					if (!result_state) {
+						fl_value_unref(result);
 					}
-					case hash_string("update_application_permission"): {
-						auto detail = thiz.handle_update_application_permission(
-							thiz.decode_flutter_value<std::string>(get_argument("name"))
-						);
-						break;
-					}
-					case hash_string("check_application_extension"): {
-						auto detail = thiz.handle_check_application_extension(
-							thiz.decode_flutter_value<std::string>(get_argument("name"))
-						);
-						set_result("state", thiz.encode_flutter_value(std::move(std::get<0>(detail))));
-						break;
-					}
-					case hash_string("update_application_extension"): {
-						auto detail = thiz.handle_update_application_extension(
-							thiz.decode_flutter_value<std::string>(get_argument("name")),
-							thiz.decode_flutter_value<bool>(get_argument("state"))
-						);
-						break;
-					}
-					case hash_string("query_storage_item"): {
-						auto detail = thiz.handle_query_storage_item(
-							thiz.decode_flutter_value<std::string>(get_argument("type"))
-						);
-						set_result("target", thiz.encode_flutter_value(std::move(std::get<0>(detail))));
-						break;
-					}
-					case hash_string("reveal_storage_item"): {
-						auto detail = thiz.handle_reveal_storage_item(
-							thiz.decode_flutter_value<std::string>(get_argument("target"))
-						);
-						break;
-					}
-					case hash_string("pick_storage_item"): {
-						auto detail = thiz.handle_pick_storage_item(
-							thiz.decode_flutter_value<std::string>(get_argument("type")),
-							thiz.decode_flutter_value<bool>(get_argument("multiply")),
-							thiz.decode_flutter_value<std::string>(get_argument("location")),
-							thiz.decode_flutter_value<std::string>(get_argument("name"))
-						);
-						set_result("target", thiz.encode_flutter_value(std::move(std::get<0>(detail))));
-						break;
-					}
-					case hash_string("query_system_theme"): {
-						auto detail = thiz.handle_query_system_theme(
-						);
-						set_result("accent", thiz.encode_flutter_value(std::move(std::get<0>(detail))));
-						break;
-					}
-					case hash_string("push_system_notification"): {
-						auto detail = thiz.handle_push_system_notification(
-							thiz.decode_flutter_value<std::string>(get_argument("title")),
-							thiz.decode_flutter_value<std::string>(get_argument("description"))
-						);
-						break;
-					}
-					case hash_string("query_screen_placement"): {
-						auto detail = thiz.handle_query_screen_placement(
-						);
-						set_result("x", thiz.encode_flutter_value(std::move(std::get<0>(detail))));
-						set_result("y", thiz.encode_flutter_value(std::move(std::get<1>(detail))));
-						set_result("width", thiz.encode_flutter_value(std::move(std::get<2>(detail))));
-						set_result("height", thiz.encode_flutter_value(std::move(std::get<3>(detail))));
-						break;
-					}
-					case hash_string("query_window_placement"): {
-						auto detail = thiz.handle_query_window_placement(
-						);
-						set_result("x", thiz.encode_flutter_value(std::move(std::get<0>(detail))));
-						set_result("y", thiz.encode_flutter_value(std::move(std::get<1>(detail))));
-						set_result("width", thiz.encode_flutter_value(std::move(std::get<2>(detail))));
-						set_result("height", thiz.encode_flutter_value(std::move(std::get<3>(detail))));
-						break;
-					}
-					case hash_string("update_window_placement"): {
-						auto detail = thiz.handle_update_window_placement(
-							thiz.decode_flutter_value<std::int64_t>(get_argument("x")),
-							thiz.decode_flutter_value<std::int64_t>(get_argument("y")),
-							thiz.decode_flutter_value<std::int64_t>(get_argument("width")),
-							thiz.decode_flutter_value<std::int64_t>(get_argument("height"))
-						);
-						break;
-					}
-					default: throw std::runtime_error{"Exception: invalid method"};
 				}
-				response = FL_METHOD_RESPONSE(fl_method_success_response_new(raw_result));
+			);
+			auto get_argument = [&](std::string_view const & name) -> FlValue * {
+				return thiz.extract_flutter_value_map(argument, name);
+			};
+			auto set_result = [&](std::string_view const & name, FlValue * && value) -> void {
+				return thiz.infuse_flutter_value_map(result, name, std::move(value));
+			};
+			switch (hash_string(method)) {
+				case hash_string("check_application_permission"): {
+					auto detail = thiz.handle_check_application_permission(
+						thiz.decode_flutter_value<std::string>(get_argument("name"))
+					);
+					set_result("state", thiz.encode_flutter_value(std::move(std::get<0>(detail))));
+					break;
+				}
+				case hash_string("update_application_permission"): {
+					auto detail = thiz.handle_update_application_permission(
+						thiz.decode_flutter_value<std::string>(get_argument("name"))
+					);
+					break;
+				}
+				case hash_string("check_application_extension"): {
+					auto detail = thiz.handle_check_application_extension(
+						thiz.decode_flutter_value<std::string>(get_argument("name"))
+					);
+					set_result("state", thiz.encode_flutter_value(std::move(std::get<0>(detail))));
+					break;
+				}
+				case hash_string("update_application_extension"): {
+					auto detail = thiz.handle_update_application_extension(
+						thiz.decode_flutter_value<std::string>(get_argument("name")),
+						thiz.decode_flutter_value<bool>(get_argument("state"))
+					);
+					break;
+				}
+				case hash_string("query_storage_item"): {
+					auto detail = thiz.handle_query_storage_item(
+						thiz.decode_flutter_value<std::string>(get_argument("type"))
+					);
+					set_result("target", thiz.encode_flutter_value(std::move(std::get<0>(detail))));
+					break;
+				}
+				case hash_string("reveal_storage_item"): {
+					auto detail = thiz.handle_reveal_storage_item(
+						thiz.decode_flutter_value<std::string>(get_argument("target"))
+					);
+					break;
+				}
+				case hash_string("pick_storage_item"): {
+					auto detail = thiz.handle_pick_storage_item(
+						thiz.decode_flutter_value<std::string>(get_argument("type")),
+						thiz.decode_flutter_value<bool>(get_argument("multiply")),
+						thiz.decode_flutter_value<std::string>(get_argument("location")),
+						thiz.decode_flutter_value<std::string>(get_argument("name"))
+					);
+					set_result("target", thiz.encode_flutter_value(std::move(std::get<0>(detail))));
+					break;
+				}
+				case hash_string("query_system_theme"): {
+					auto detail = thiz.handle_query_system_theme(
+					);
+					set_result("accent", thiz.encode_flutter_value(std::move(std::get<0>(detail))));
+					break;
+				}
+				case hash_string("push_system_notification"): {
+					auto detail = thiz.handle_push_system_notification(
+						thiz.decode_flutter_value<std::string>(get_argument("title")),
+						thiz.decode_flutter_value<std::string>(get_argument("description"))
+					);
+					break;
+				}
+				case hash_string("query_screen_placement"): {
+					auto detail = thiz.handle_query_screen_placement(
+					);
+					set_result("x", thiz.encode_flutter_value(std::move(std::get<0>(detail))));
+					set_result("y", thiz.encode_flutter_value(std::move(std::get<1>(detail))));
+					set_result("width", thiz.encode_flutter_value(std::move(std::get<2>(detail))));
+					set_result("height", thiz.encode_flutter_value(std::move(std::get<3>(detail))));
+					break;
+				}
+				case hash_string("query_window_placement"): {
+					auto detail = thiz.handle_query_window_placement(
+					);
+					set_result("x", thiz.encode_flutter_value(std::move(std::get<0>(detail))));
+					set_result("y", thiz.encode_flutter_value(std::move(std::get<1>(detail))));
+					set_result("width", thiz.encode_flutter_value(std::move(std::get<2>(detail))));
+					set_result("height", thiz.encode_flutter_value(std::move(std::get<3>(detail))));
+					break;
+				}
+				case hash_string("update_window_placement"): {
+					auto detail = thiz.handle_update_window_placement(
+						thiz.decode_flutter_value<std::int64_t>(get_argument("x")),
+						thiz.decode_flutter_value<std::int64_t>(get_argument("y")),
+						thiz.decode_flutter_value<std::int64_t>(get_argument("width")),
+						thiz.decode_flutter_value<std::int64_t>(get_argument("height"))
+					);
+					break;
+				}
+				default: throw std::runtime_error{"Exception: invalid method"};
 			}
-			catch (...) {
-				response = FL_METHOD_RESPONSE(fl_method_error_response_new("", thiz.parse_current_exception().data(), nullptr));
-			}
-			return;
+			result_state = true;
+			return result;
 		}
 
 		// ----------------
@@ -597,13 +596,11 @@ export {
 			for (auto & argument_item : argument) {
 				thiz.infuse_flutter_value_map(raw_argument, argument_item.first, std::move(argument_item.second));
 			}
-			fl_method_channel_invoke_method(
-				thiz.m_channel,
-				method.data(),
-				raw_argument,
-				nullptr,
-				nullptr,
-				nullptr
+			thiz.execute_platform_task_switch(
+				true,
+				[&, method, raw_argument = std::move(raw_argument)] {
+					fl_method_channel_invoke_method(thiz.m_channel, method.data(), raw_argument, nullptr, nullptr, nullptr);
+				}
 			);
 			return;
 		}
@@ -837,30 +834,53 @@ export {
 
 		template <typename TResult>
 		auto execute_platform_task(
-			bool const &                      handle_exception,
-			std::function<TResult ()> const & fallback_action,
-			std::function<TResult ()> const & task_action
+			bool const &                 handle_exception,
+			std::function<TResult ()> && fallback_action,
+			std::function<TResult ()> && task_action
 		) -> TResult {
-			try {
-				return task_action();
-			}
-			catch (...) {
-				if (!handle_exception) {
-					throw;
+			auto task = [&] {
+				try {
+					return task_action();
 				}
-				thiz.invoke_receive_platform_exception(thiz.parse_current_exception());
-				return fallback_action();
-			}
+				catch (...) {
+					if (!handle_exception) {
+						throw;
+					}
+					thiz.invoke_receive_platform_exception(thiz.parse_current_exception());
+					return fallback_action();
+				}
+			};
+			return task();
 		}
 
-		auto execute_platform_background_task(
-			std::function<void ()> const & task_action
+		auto execute_platform_task_switch(
+			bool const &              on_main,
+			std::function<void ()> && task_action
 		) -> void {
-			try {
-				task_action();
+			auto task = [&, task_action = std::move(task_action)] {
+				try {
+					task_action();
+				}
+				catch (...) {
+					thiz.invoke_receive_platform_exception(thiz.parse_current_exception());
+				}
+				return;
+			};
+			if (on_main) {
+				g_main_context_invoke(
+					g_main_context_default(),
+					[](
+					gpointer user_data
+				) -> gboolean {
+						auto data = std::unique_ptr<std::function<void()>>{static_cast<std::function<void()> *>(user_data)};
+						data->operator()();
+						return G_SOURCE_REMOVE;
+					},
+					new std::function<void()>{std::move(task)}
+				);
 			}
-			catch (...) {
-				thiz.invoke_receive_platform_exception(thiz.parse_current_exception());
+			else {
+				std::thread{std::move(task)}.detach();
 			}
 			return;
 		}

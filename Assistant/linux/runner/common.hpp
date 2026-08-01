@@ -36,6 +36,7 @@
 #include <vector>
 #include <map>
 #include <functional>
+#include <thread>
 #include <filesystem>
 #include <utility>
 

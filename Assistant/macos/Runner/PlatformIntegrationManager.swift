@@ -66,13 +66,25 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
           name: "\(try! self.queryApplicationIdentifier())/PlatformIntegrationManager",
           binaryMessenger: (host.contentViewController as! FlutterViewController).engine.binaryMessenger,
         )
-        self.channel.setMethodCallHandler({ [weak self] (call, result) in
-          self?.executePlatformBackgroundTask({
-            await self?.handle(call, result)
+        self.channel.setMethodCallHandler({ (call, result) in
+          self.executePlatformTaskSwitch(false, {
+            do {
+              let callMethod = call.method
+              let callArgument = call.arguments as? Dictionary<String, Any?>
+              guard callArgument != nil else {
+                throw NSError(domain: "invalid argument.", code: 0)
+              }
+              let callResult = try await self.handle(callMethod, callArgument!)
+              result(callResult)
+            }
+            catch {
+              let callException = error.localizedDescription
+              result(FlutterError(code: "", message: callException, details: nil))
+            }
           })
           return
         })
-        self.executePlatformBackgroundTask({
+        self.executePlatformTaskSwitch(false, {
           try await self.registerNotificationSupport()
           try await self.registerDragDropSupport()
         })
@@ -91,7 +103,7 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
         return .init()
       },
       {
-        self.executePlatformBackgroundTask({
+        self.executePlatformTaskSwitch(false, {
           try await self.invokeReceiveApplicationDragEnter()
         })
         return .init()
@@ -113,7 +125,7 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
         let point = window.contentView!.convert(with_sender.draggingLocation, from: nil)
         let locationX = Int((point.x).rounded())
         let locationY = Int((window.contentView!.bounds.height - point.y).rounded())
-        self.executePlatformBackgroundTask({
+        self.executePlatformTaskSwitch(false, {
           try await self.invokeReceiveApplicationDragOver(locationX, locationY)
         })
         return .link
@@ -131,7 +143,7 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
         return
       },
       {
-        self.executePlatformBackgroundTask({
+        self.executePlatformTaskSwitch(false, {
           try await self.invokeReceiveApplicationDragLeave()
         })
         return
@@ -154,7 +166,7 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
           throw NSError(domain: "failed to get url.", code: 0)
         }
         let target = try targetUrl!.map({ (item) in try self.resolveFileUrl(item) })
-        self.executePlatformBackgroundTask({
+        self.executePlatformTaskSwitch(false, {
           try await self.invokeReceiveApplicationDragDrop(target)
         })
         return true
@@ -165,98 +177,88 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
   // MARK: - handle
 
   private func handle(
-    _ call: FlutterMethodCall,
-    _ result: @escaping FlutterResult,
-  ) async -> Void {
-    do {
-      let method = call.method
-      var rawArgument = call.arguments as? Dictionary<String, Any?>
-      guard rawArgument != nil else {
-        throw NSError(domain: "invalid argument.", code: 0)
-      }
-      let getArgument = { (name: String) in
-        return try self.extractFlutterValueMap(&rawArgument!, name)
-      }
-      var rawResult: Dictionary<String, Any?> = [:]
-      let setResult = { (name: String, value: Any?) in
-        return try self.infuseFlutterValueMap(&rawResult, name, value)
-      }
-      switch method {
-      case "check_application_permission":
-        let detail = try await self.handleCheckApplicationPermission(
-          try self.decodeFlutterValue(try getArgument("name")),
-        )
-        try setResult("state", try self.encodeFlutterValue(detail))
-      case "update_application_permission":
-        let _ = try await self.handleUpdateApplicationPermission(
-          try self.decodeFlutterValue(try getArgument("name")),
-        )
-      case "check_application_extension":
-        let detail = try await self.handleCheckApplicationExtension(
-          try self.decodeFlutterValue(try getArgument("name")),
-        )
-        try setResult("state", try self.encodeFlutterValue(detail))
-      case "update_application_extension":
-        let _ = try await self.handleUpdateApplicationExtension(
-          try self.decodeFlutterValue(try getArgument("name")),
-          try self.decodeFlutterValue(try getArgument("state")),
-        )
-      case "query_storage_item":
-        let detail = try await self.handleQueryStorageItem(
-          try self.decodeFlutterValue(try getArgument("type")),
-        )
-        try setResult("target", try self.encodeFlutterValue(detail))
-      case "reveal_storage_item":
-        let _ = try await self.handleRevealStorageItem(
-          try self.decodeFlutterValue(try getArgument("target")),
-        )
-      case "pick_storage_item":
-        let detail = try await self.handlePickStorageItem(
-          try self.decodeFlutterValue(try getArgument("type")),
-          try self.decodeFlutterValue(try getArgument("multiply")),
-          try self.decodeFlutterValue(try getArgument("location")),
-          try self.decodeFlutterValue(try getArgument("name")),
-        )
-        try setResult("target", try self.encodeFlutterValue(detail))
-      case "query_system_theme":
-        let detail = try await self.handleQuerySystemTheme(
-        )
-        try setResult("accent", try self.encodeFlutterValue(detail))
-      case "push_system_notification":
-        let _ = try await self.handlePushSystemNotification(
-          try self.decodeFlutterValue(try getArgument("title")),
-          try self.decodeFlutterValue(try getArgument("description")),
-        )
-      case "query_screen_placement":
-        let detail = try await self.handleQueryScreenPlacement(
-        )
-        try setResult("x", try self.encodeFlutterValue(detail.x))
-        try setResult("y", try self.encodeFlutterValue(detail.y))
-        try setResult("width", try self.encodeFlutterValue(detail.width))
-        try setResult("height", try self.encodeFlutterValue(detail.height))
-      case "query_window_placement":
-        let detail = try await self.handleQueryWindowPlacement(
-        )
-        try setResult("x", try self.encodeFlutterValue(detail.x))
-        try setResult("y", try self.encodeFlutterValue(detail.y))
-        try setResult("width", try self.encodeFlutterValue(detail.width))
-        try setResult("height", try self.encodeFlutterValue(detail.height))
-      case "update_window_placement":
-        let _ = try await self.handleUpdateWindowPlacement(
-          try self.decodeFlutterValue(try getArgument("x")),
-          try self.decodeFlutterValue(try getArgument("y")),
-          try self.decodeFlutterValue(try getArgument("width")),
-          try self.decodeFlutterValue(try getArgument("height")),
-        )
-      default:
-        throw NSError(domain: "invalid method.", code: 0)
-      }
-      result(rawResult)
+    _ method: String,
+    _ argument: Dictionary<String, Any?>,
+  ) async throws -> Dictionary<String, Any?> {
+    var argumentProxy = argument
+    var result: Dictionary<String, Any?> = [:]
+    let getArgument = { (name: String) in
+      return try self.extractFlutterValueMap(&argumentProxy, name)
     }
-    catch {
-      result(FlutterError(code: "", message: error.localizedDescription, details: nil))
+    let setResult = { (name: String, value: Any?) in
+      return try self.infuseFlutterValueMap(&result, name, value)
     }
-    return
+    switch method {
+    case "check_application_permission":
+      let detail = try await self.handleCheckApplicationPermission(
+        try self.decodeFlutterValue(try getArgument("name")),
+      )
+      try setResult("state", try self.encodeFlutterValue(detail))
+    case "update_application_permission":
+      let _ = try await self.handleUpdateApplicationPermission(
+        try self.decodeFlutterValue(try getArgument("name")),
+      )
+    case "check_application_extension":
+      let detail = try await self.handleCheckApplicationExtension(
+        try self.decodeFlutterValue(try getArgument("name")),
+      )
+      try setResult("state", try self.encodeFlutterValue(detail))
+    case "update_application_extension":
+      let _ = try await self.handleUpdateApplicationExtension(
+        try self.decodeFlutterValue(try getArgument("name")),
+        try self.decodeFlutterValue(try getArgument("state")),
+      )
+    case "query_storage_item":
+      let detail = try await self.handleQueryStorageItem(
+        try self.decodeFlutterValue(try getArgument("type")),
+      )
+      try setResult("target", try self.encodeFlutterValue(detail))
+    case "reveal_storage_item":
+      let _ = try await self.handleRevealStorageItem(
+        try self.decodeFlutterValue(try getArgument("target")),
+      )
+    case "pick_storage_item":
+      let detail = try await self.handlePickStorageItem(
+        try self.decodeFlutterValue(try getArgument("type")),
+        try self.decodeFlutterValue(try getArgument("multiply")),
+        try self.decodeFlutterValue(try getArgument("location")),
+        try self.decodeFlutterValue(try getArgument("name")),
+      )
+      try setResult("target", try self.encodeFlutterValue(detail))
+    case "query_system_theme":
+      let detail = try await self.handleQuerySystemTheme(
+      )
+      try setResult("accent", try self.encodeFlutterValue(detail))
+    case "push_system_notification":
+      let _ = try await self.handlePushSystemNotification(
+        try self.decodeFlutterValue(try getArgument("title")),
+        try self.decodeFlutterValue(try getArgument("description")),
+      )
+    case "query_screen_placement":
+      let detail = try await self.handleQueryScreenPlacement(
+      )
+      try setResult("x", try self.encodeFlutterValue(detail.x))
+      try setResult("y", try self.encodeFlutterValue(detail.y))
+      try setResult("width", try self.encodeFlutterValue(detail.width))
+      try setResult("height", try self.encodeFlutterValue(detail.height))
+    case "query_window_placement":
+      let detail = try await self.handleQueryWindowPlacement(
+      )
+      try setResult("x", try self.encodeFlutterValue(detail.x))
+      try setResult("y", try self.encodeFlutterValue(detail.y))
+      try setResult("width", try self.encodeFlutterValue(detail.width))
+      try setResult("height", try self.encodeFlutterValue(detail.height))
+    case "update_window_placement":
+      let _ = try await self.handleUpdateWindowPlacement(
+        try self.decodeFlutterValue(try getArgument("x")),
+        try self.decodeFlutterValue(try getArgument("y")),
+        try self.decodeFlutterValue(try getArgument("width")),
+        try self.decodeFlutterValue(try getArgument("height")),
+      )
+    default:
+      throw NSError(domain: "invalid method.", code: 0)
+    }
+    return result
   }
 
   // ----------------
@@ -514,7 +516,9 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
     _ method: String,
     _ argument: Dictionary<String, Any?>,
   ) async throws -> Void {
-    self.channel.invokeMethod(method, arguments: argument)
+    self.executePlatformTaskSwitch(true, { @MainActor in
+      self.channel.invokeMethod(method, arguments: argument)
+    })
     return
   }
 
@@ -592,30 +596,47 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
 
   private func executePlatformTask<TResult>(
     _ handleException: Bool,
-    _ fallbackAction: () -> TResult,
-    _ taskAction: () throws -> TResult,
+    _ fallbackAction: @escaping () -> TResult,
+    _ taskAction: @escaping () throws -> TResult,
   ) throws -> TResult {
-    do {
-      return try taskAction()
-    } catch {
-      if !handleException {
-        throw error
+    let task: () throws -> TResult = {
+      do {
+        return try taskAction()
       }
-      Task { @MainActor in
-        try await self.invokeReceivePlatformException("\(error.localizedDescription)")
+      catch {
+        if !handleException {
+          throw error
+        }
+        Task { @MainActor in
+          try await self.invokeReceivePlatformException("\(error.localizedDescription)")
+        }
+        return fallbackAction()
       }
-      return fallbackAction()
     }
+    return try task()
   }
 
-  private func executePlatformBackgroundTask(
+  private func executePlatformTaskSwitch(
+    _ onMain: Bool,
     _ taskAction: @escaping () async throws -> Void,
   ) -> Void {
-    Task { @MainActor in
+    let task: @Sendable () async -> Void = {
       do {
         try await taskAction()
-      } catch {
-        try await self.invokeReceivePlatformException("\(error.localizedDescription)")
+      }
+      catch {
+        try? await self.invokeReceivePlatformException("\(error.localizedDescription)")
+      }
+      return
+    }
+    if onMain {
+      Task { @MainActor in
+        await task()
+      }
+    }
+    else {
+      Task {
+        await task()
       }
     }
     return
@@ -728,7 +749,7 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
       {
         let link = event.paramDescriptor(forKeyword: AEKeyword(keyDirectObject))?.stringValue
         if link != nil {
-          self.executePlatformBackgroundTask({
+          self.executePlatformTaskSwitch(false, {
             try await self.invokeReceiveApplicationLink(link!)
           })
         }

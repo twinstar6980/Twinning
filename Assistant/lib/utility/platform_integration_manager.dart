@@ -27,27 +27,27 @@ class PlatformIntegrationManager {
   ) :
     this._channel = .new('${ApplicationInformation.identifier}/PlatformIntegrationManager'),
     this._streamControllerForLink = .new() {
-    this._channel.setMethodCallHandler((call) async => await this._handle(call));
+    this._channel.setMethodCallHandler((call) async => await this._handle(call.method, call.arguments as Map<Object?, Object?>));
   }
 
   // #endregion
 
   // #region handle
 
-  Future<Object?> _handle(
-    lib.MethodCall call,
+  Future<Map<Object?, Object?>> _handle(
+    String                method,
+    Map<Object?, Object?> argument,
   ) async {
-    var rawArgument = call.arguments as Map<Object?, Object?>;
+    var result = <Object?, Object?>{};
     var getArgument = (String name) {
-      return rawArgument[name];
+      return argument[name];
     };
-    var rawResult = <Object?, Object?>{};
     // ignore: unused_local_variable
     var setResult = (String name, Object? value) {
-      rawArgument[name] = value;
+      result[name] = value;
       return null as Void;
     };
-    switch (call.method) {
+    switch (method) {
       case 'receive_platform_exception': {
         // ignore: unused_local_variable
         var detail = await this._handleReceivePlatformException(
@@ -91,7 +91,7 @@ class PlatformIntegrationManager {
       }
       default: throw Exception('invalid method');
     }
-    return rawResult;
+    return result;
   }
 
   // ----------------
