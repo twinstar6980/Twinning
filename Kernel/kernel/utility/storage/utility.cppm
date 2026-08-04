@@ -19,8 +19,8 @@ import twinning.kernel.utility.container.list.list;
 import twinning.kernel.utility.range.number_range;
 import twinning.kernel.utility.math.utility;
 import twinning.kernel.utility.miscellaneous.system_native_string;
-import twinning.kernel.third.system.windows;
-import twinning.kernel.third.system.posix;
+import twinning.kernel.dependency.system.win32;
+import twinning.kernel.dependency.system.posix;
 
 export namespace Twinning::Kernel::Storage {
 
@@ -127,40 +127,40 @@ export namespace Twinning::Kernel::Storage {
 		) -> auto {
 			assert_test(mode_read || mode_write);
 			#if defined M_system_windows
-			auto native_handle = Third::system::windows::$CreateFileW(
+			auto native_handle = Dependency::system::win32::$CreateFileW(
 				M_use_ntsp_w_safe_of(path.emit_native()),
-				(!mode_read ? 0 : Third::system::windows::$GENERIC_READ) | (!mode_write ? 0 : Third::system::windows::$GENERIC_WRITE),
-				Third::system::windows::$FILE_SHARE_READ | Third::system::windows::$FILE_SHARE_WRITE | Third::system::windows::$FILE_SHARE_DELETE,
+				(!mode_read ? 0 : Dependency::system::win32::$GENERIC_READ) | (!mode_write ? 0 : Dependency::system::win32::$GENERIC_WRITE),
+				Dependency::system::win32::$FILE_SHARE_READ | Dependency::system::win32::$FILE_SHARE_WRITE | Dependency::system::win32::$FILE_SHARE_DELETE,
 				nullptr,
-				!mode_create ? Third::system::windows::$OPEN_EXISTING : Third::system::windows::$CREATE_NEW,
-				Third::system::windows::$FILE_ATTRIBUTE_NORMAL,
+				!mode_create ? Dependency::system::win32::$OPEN_EXISTING : Dependency::system::win32::$CREATE_NEW,
+				Dependency::system::win32::$FILE_ATTRIBUTE_NORMAL,
 				nullptr
 			);
-			assert_test(native_handle != Third::system::windows::$INVALID_HANDLE_VALUE);
+			assert_test(native_handle != Dependency::system::win32::$INVALID_HANDLE_VALUE);
 			handle = make_pointer_unsafe<Void>(native_handle);
 			return make_finalizer(
 				[native_handle] {
-					auto state_b = Third::system::windows::$BOOL{};
-					state_b = Third::system::windows::$CloseHandle(native_handle);
-					assert_test(state_b != Third::system::windows::$FALSE);
+					auto state_b = Dependency::system::win32::$BOOL{};
+					state_b = Dependency::system::win32::$CloseHandle(native_handle);
+					assert_test(state_b != Dependency::system::win32::$FALSE);
 				}
 			);
 			#endif
 			#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
 			auto flag = int{};
 			if (mode_read && !mode_write) {
-				flag |= Third::system::posix::$O_RDONLY;
+				flag |= Dependency::system::posix::$O_RDONLY;
 			}
 			if (!mode_read && mode_write) {
-				flag |= Third::system::posix::$O_WRONLY;
+				flag |= Dependency::system::posix::$O_WRONLY;
 			}
 			if (mode_read && mode_write) {
-				flag |= Third::system::posix::$O_RDWR;
+				flag |= Dependency::system::posix::$O_RDWR;
 			}
 			if (mode_create) {
-				flag |= Third::system::posix::$O_CREAT | Third::system::posix::$O_EXCL;
+				flag |= Dependency::system::posix::$O_CREAT | Dependency::system::posix::$O_EXCL;
 			}
-			auto native_handle = Third::system::posix::$open(
+			auto native_handle = Dependency::system::posix::$open(
 				M_use_ntsp_n_safe_of(path.emit_native()),
 				flag,
 				0644
@@ -170,7 +170,7 @@ export namespace Twinning::Kernel::Storage {
 			return make_finalizer(
 				[native_handle] {
 					auto state_i = int{};
-					state_i = Third::system::posix::$close(native_handle);
+					state_i = Dependency::system::posix::$close(native_handle);
 					assert_test(state_i != -1);
 				}
 			);
@@ -182,25 +182,25 @@ export namespace Twinning::Kernel::Storage {
 			Size const &          position
 		) -> Void {
 			#if defined M_system_windows
-			auto state_b = Third::system::windows::$BOOL{};
-			state_b = Third::system::windows::$SetFilePointerEx(
-				static_cast<Third::system::windows::$HANDLE>(handle.value),
-				Third::system::windows::$LARGE_INTEGER{
-					.QuadPart = unmake_box<Third::system::windows::$LONGLONG>(position),
+			auto state_b = Dependency::system::win32::$BOOL{};
+			state_b = Dependency::system::win32::$SetFilePointerEx(
+				static_cast<Dependency::system::win32::$HANDLE>(handle.value),
+				Dependency::system::win32::$LARGE_INTEGER{
+					.QuadPart = unmake_box<Dependency::system::win32::$LONGLONG>(position),
 				},
 				nullptr,
-				Third::system::windows::$FILE_BEGIN
+				Dependency::system::win32::$FILE_BEGIN
 			);
-			assert_test(state_b != Third::system::windows::$FALSE);
+			assert_test(state_b != Dependency::system::win32::$FALSE);
 			#endif
 			#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
-			auto state_o = Third::system::posix::$off_t{};
-			state_o = Third::system::posix::$lseek(
+			auto state_o = Dependency::system::posix::$off_t{};
+			state_o = Dependency::system::posix::$lseek(
 				static_cast<int>(reinterpret_cast<std::intptr_t>(handle.value)),
-				unmake_box<Third::system::posix::$off_t>(position),
-				Third::system::posix::$SEEK_SET
+				unmake_box<Dependency::system::posix::$off_t>(position),
+				Dependency::system::posix::$SEEK_SET
 			);
-			assert_test(state_o != static_cast<Third::system::posix::$off_t>(-1));
+			assert_test(state_o != static_cast<Dependency::system::posix::$off_t>(-1));
 			#endif
 			return;
 		}
@@ -212,19 +212,19 @@ export namespace Twinning::Kernel::Storage {
 		) -> Size {
 			auto result = Size{};
 			#if defined M_system_windows
-			auto state_b = Third::system::windows::$BOOL{};
-			auto native_position = Third::system::windows::$LARGE_INTEGER{};
-			state_b = Third::system::windows::$GetFileSizeEx(
-				static_cast<Third::system::windows::$HANDLE>(handle.value),
+			auto state_b = Dependency::system::win32::$BOOL{};
+			auto native_position = Dependency::system::win32::$LARGE_INTEGER{};
+			state_b = Dependency::system::win32::$GetFileSizeEx(
+				static_cast<Dependency::system::win32::$HANDLE>(handle.value),
 				&native_position
 			);
-			assert_test(state_b != Third::system::windows::$FALSE);
+			assert_test(state_b != Dependency::system::win32::$FALSE);
 			result = make_box<Size>(native_position.QuadPart);
 			#endif
 			#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
 			auto state_i = int{};
-			auto stat = Third::system::posix::$stat{};
-			state_i = Third::system::posix::$fstat(
+			auto stat = Dependency::system::posix::$stat{};
+			state_i = Dependency::system::posix::$fstat(
 				static_cast<int>(reinterpret_cast<std::intptr_t>(handle.value)),
 				&stat
 			);
@@ -239,18 +239,18 @@ export namespace Twinning::Kernel::Storage {
 			Size const &          size
 		) -> Void {
 			#if defined M_system_windows
-			auto state_b = Third::system::windows::$BOOL{};
+			auto state_b = Dependency::system::win32::$BOOL{};
 			seek_file(handle, size);
-			state_b = Third::system::windows::$SetEndOfFile(
-				static_cast<Third::system::windows::$HANDLE>(handle.value)
+			state_b = Dependency::system::win32::$SetEndOfFile(
+				static_cast<Dependency::system::win32::$HANDLE>(handle.value)
 			);
-			assert_test(state_b != Third::system::windows::$FALSE);
+			assert_test(state_b != Dependency::system::win32::$FALSE);
 			#endif
 			#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
 			auto state_i = int{};
-			state_i = Third::system::posix::$ftruncate(
+			state_i = Dependency::system::posix::$ftruncate(
 				static_cast<int>(reinterpret_cast<std::intptr_t>(handle.value)),
-				unmake_box<Third::system::posix::$off_t>(size)
+				unmake_box<Dependency::system::posix::$off_t>(size)
 			);
 			assert_test(state_i != -1);
 			#endif
@@ -264,19 +264,19 @@ export namespace Twinning::Kernel::Storage {
 			VariableByteListView const & data
 		) -> Void {
 			#if defined M_system_windows
-			auto state_b = Third::system::windows::$BOOL{};
+			auto state_b = Dependency::system::win32::$BOOL{};
 			auto current_position = 0_sz;
 			while (current_position != data.size()) {
 				auto current_count = Math::minimum(0x80000000_sz, data.size() - current_position);
-				auto current_count_actual = Third::system::windows::$DWORD{};
-				state_b = Third::system::windows::$ReadFile(
-					static_cast<Third::system::windows::$HANDLE>(handle.value),
+				auto current_count_actual = Dependency::system::win32::$DWORD{};
+				state_b = Dependency::system::win32::$ReadFile(
+					static_cast<Dependency::system::win32::$HANDLE>(handle.value),
 					unmake_pointer_unsafe<void>(data.begin() + current_position),
-					unmake_box<Third::system::windows::$DWORD>(current_count),
+					unmake_box<Dependency::system::win32::$DWORD>(current_count),
 					&current_count_actual,
 					nullptr
 				);
-				assert_test(state_b != Third::system::windows::$FALSE);
+				assert_test(state_b != Dependency::system::win32::$FALSE);
 				assert_test(make_box<Size>(current_count_actual) == current_count);
 				current_position += current_count;
 			}
@@ -285,7 +285,7 @@ export namespace Twinning::Kernel::Storage {
 			auto current_position = 0_sz;
 			while (current_position != data.size()) {
 				auto current_count = Math::minimum(0x80000000_sz, data.size() - current_position);
-				auto current_count_actual = Third::system::posix::$read(
+				auto current_count_actual = Dependency::system::posix::$read(
 					static_cast<int>(reinterpret_cast<std::intptr_t>(handle.value)),
 					unmake_pointer_unsafe<void>(data.begin() + current_position),
 					unmake_box<std::size_t>(current_count)
@@ -303,19 +303,19 @@ export namespace Twinning::Kernel::Storage {
 			ConstantByteListView const & data
 		) -> Void {
 			#if defined M_system_windows
-			auto state_b = Third::system::windows::$BOOL{};
+			auto state_b = Dependency::system::win32::$BOOL{};
 			auto current_position = 0_sz;
 			while (current_position != data.size()) {
 				auto current_count = Math::minimum(0x80000000_sz, data.size() - current_position);
-				auto current_count_actual = Third::system::windows::$DWORD{};
-				state_b = Third::system::windows::$WriteFile(
-					static_cast<Third::system::windows::$HANDLE>(handle.value),
+				auto current_count_actual = Dependency::system::win32::$DWORD{};
+				state_b = Dependency::system::win32::$WriteFile(
+					static_cast<Dependency::system::win32::$HANDLE>(handle.value),
 					unmake_pointer_unsafe<void>(data.begin() + current_position),
-					unmake_box<Third::system::windows::$DWORD>(current_count),
+					unmake_box<Dependency::system::win32::$DWORD>(current_count),
 					&current_count_actual,
 					nullptr
 				);
-				assert_test(state_b != Third::system::windows::$FALSE);
+				assert_test(state_b != Dependency::system::win32::$FALSE);
 				assert_test(make_box<Size>(current_count_actual) == current_count);
 				current_position += current_count;
 			}
@@ -324,7 +324,7 @@ export namespace Twinning::Kernel::Storage {
 			auto current_position = 0_sz;
 			while (current_position != data.size()) {
 				auto current_count = Math::minimum(0x80000000_sz, data.size() - current_position);
-				auto current_count_actual = Third::system::posix::$write(
+				auto current_count_actual = Dependency::system::posix::$write(
 					static_cast<int>(reinterpret_cast<std::intptr_t>(handle.value)),
 					unmake_pointer_unsafe<void>(data.begin() + current_position),
 					unmake_box<std::size_t>(current_count)
@@ -377,8 +377,8 @@ export namespace Twinning::Kernel::Storage {
 			auto referent = resolve_link(target);
 			auto is_directory = Boolean{};
 			#if defined M_system_windows
-			auto attribute = Third::system::windows::$GetFileAttributesW(M_use_ntsp_w_safe_of(target.emit_native()));
-			is_directory = attribute != Third::system::windows::$INVALID_FILE_ATTRIBUTES && (attribute & Third::system::windows::$FILE_ATTRIBUTE_DIRECTORY) != 0;
+			auto attribute = Dependency::system::win32::$GetFileAttributesW(M_use_ntsp_w_safe_of(target.emit_native()));
+			is_directory = attribute != Dependency::system::win32::$INVALID_FILE_ATTRIBUTES && (attribute & Dependency::system::win32::$FILE_ATTRIBUTE_DIRECTORY) != 0;
 			#endif
 			#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
 			is_directory = k_false;

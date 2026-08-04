@@ -1030,7 +1030,7 @@ export {
 			#pragma region constructor
 
 			explicit DropTarget(
-				PlatformIntegrationManager * const& host
+				PlatformIntegrationManager * const & host
 			) :
 				winrt::implements<DropTarget, IDropTarget>{},
 				m_host{host},

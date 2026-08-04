@@ -32,8 +32,8 @@ import twinning.kernel.utility.miscellaneous.finalizer;
 import twinning.kernel.utility.miscellaneous.system_native_string;
 import twinning.kernel.utility.miscellaneous.byte_series.container;
 import twinning.kernel.utility.storage.utility;
-import twinning.kernel.third.system.windows;
-import twinning.kernel.third.system.posix;
+import twinning.kernel.dependency.system.win32;
+import twinning.kernel.dependency.system.posix;
 
 export namespace Twinning::Kernel::Process {
 
@@ -43,33 +43,33 @@ export namespace Twinning::Kernel::Process {
 	) -> Path {
 		auto target = Path{};
 		#if defined M_system_windows
-		auto state_d = Third::system::windows::$DWORD{};
-		state_d = Third::system::windows::$GetCurrentDirectoryW(
+		auto state_d = Dependency::system::win32::$DWORD{};
+		state_d = Dependency::system::win32::$GetCurrentDirectoryW(
 			0,
 			nullptr
 		);
 		assert_test(state_d != 0);
 		auto buffer = BasicString<CharacterW>{make_box<Size>(state_d)};
-		state_d = Third::system::windows::$GetCurrentDirectoryW(
-			unmake_box<Third::system::windows::$DWORD>(buffer.capacity()),
-			unmake_pointer_unsafe<Third::system::windows::$WCHAR>(buffer.begin())
+		state_d = Dependency::system::win32::$GetCurrentDirectoryW(
+			unmake_box<Dependency::system::win32::$DWORD>(buffer.capacity()),
+			unmake_pointer_unsafe<Dependency::system::win32::$WCHAR>(buffer.begin())
 		);
 		assert_test(state_d != 0);
-		assert_test(state_d == unmake_box<Third::system::windows::$DWORD>(buffer.capacity() - 1_sz));
+		assert_test(state_d == unmake_box<Dependency::system::win32::$DWORD>(buffer.capacity() - 1_sz));
 		buffer.set_size(buffer.capacity() - 1_sz);
 		target.parse(unsafe_cast<String>(SystemNativeString::wide_to_utf8(buffer)));
 		#endif
 		#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
 		auto buffer = BasicString<Character>{256_sz};
 		while (k_true) {
-			auto current_result = Third::system::posix::$getcwd(
+			auto current_result = Dependency::system::posix::$getcwd(
 				unmake_pointer_unsafe<char>(buffer.begin()),
 				unmake_box<std::size_t>(buffer.capacity())
 			);
 			if (current_result != nullptr) {
 				break;
 			}
-			assert_test(Third::system::posix::$errno == Third::system::posix::$ERANGE);
+			assert_test(Dependency::system::posix::$errno == Dependency::system::posix::$ERANGE);
 			buffer.expand(buffer.capacity());
 		}
 		buffer.set_size(null_terminated_string_size_of(buffer.begin()));
@@ -82,13 +82,13 @@ export namespace Twinning::Kernel::Process {
 	) -> Map<String, String> {
 		auto result_list = List<String>{};
 		#if defined M_system_windows
-		auto state_b = Third::system::windows::$BOOL{};
-		auto string_raw = Third::system::windows::$GetEnvironmentStringsW();
+		auto state_b = Dependency::system::win32::$BOOL{};
+		auto string_raw = Dependency::system::win32::$GetEnvironmentStringsW();
 		assert_test(string_raw != nullptr);
 		auto string_pointer_raw_finalizer = make_finalizer(
 			[&] {
-				state_b = Third::system::windows::$FreeEnvironmentStringsW(string_raw);
-				assert_test(state_b != Third::system::windows::$FALSE);
+				state_b = Dependency::system::win32::$FreeEnvironmentStringsW(string_raw);
+				assert_test(state_b != Dependency::system::win32::$FALSE);
 			}
 		);
 		for (auto element_raw = string_raw; *element_raw != L'\0'; ++element_raw) {
@@ -99,7 +99,7 @@ export namespace Twinning::Kernel::Process {
 		}
 		#endif
 		#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
-		for (auto element_raw = Third::system::posix::$environ; *element_raw != nullptr; ++element_raw) {
+		for (auto element_raw = Dependency::system::posix::$environ; *element_raw != nullptr; ++element_raw) {
 			auto element_pointer = make_pointer_unsafe<Character>(*element_raw);
 			auto element_view = ConstantBasicStringView<Character>{element_pointer, null_terminated_string_size_of(element_pointer)};
 			result_list.append(element_view);
@@ -143,8 +143,8 @@ export namespace Twinning::Kernel::Process {
 		auto error_handle_finalizer = Storage::Detail::open_file(error_handle, error, k_false, k_false, k_true);
 		#if defined M_system_windows
 		assert_test(!command.empty());
-		auto state_b = Third::system::windows::$BOOL{};
-		auto state_d = Third::system::windows::$DWORD{};
+		auto state_b = Dependency::system::win32::$BOOL{};
+		auto state_d = Dependency::system::win32::$DWORD{};
 		auto environment_string = String{};
 		environment_string.allocate(
 			Range::accumulate(
@@ -159,86 +159,86 @@ export namespace Twinning::Kernel::Process {
 			environment_string.append_list(element.key + "="_sv + element.value);
 			environment_string.append('\0'_c);
 		}
-		auto startup_information = Third::system::windows::$STARTUPINFOEXW{};
-		startup_information.StartupInfo.cb = sizeof(Third::system::windows::$STARTUPINFOEXW);
-		startup_information.StartupInfo.dwFlags = Third::system::windows::$STARTF_USESTDHANDLES;
-		startup_information.StartupInfo.hStdInput = static_cast<Third::system::windows::$HANDLE>(input_handle.value);
-		startup_information.StartupInfo.hStdOutput = static_cast<Third::system::windows::$HANDLE>(output_handle.value);
-		startup_information.StartupInfo.hStdError = static_cast<Third::system::windows::$HANDLE>(error_handle.value);
-		auto startup_attribute_list_size = Third::system::windows::$SIZE_T{};
+		auto startup_information = Dependency::system::win32::$STARTUPINFOEXW{};
+		startup_information.StartupInfo.cb = sizeof(Dependency::system::win32::$STARTUPINFOEXW);
+		startup_information.StartupInfo.dwFlags = Dependency::system::win32::$STARTF_USESTDHANDLES;
+		startup_information.StartupInfo.hStdInput = static_cast<Dependency::system::win32::$HANDLE>(input_handle.value);
+		startup_information.StartupInfo.hStdOutput = static_cast<Dependency::system::win32::$HANDLE>(output_handle.value);
+		startup_information.StartupInfo.hStdError = static_cast<Dependency::system::win32::$HANDLE>(error_handle.value);
+		auto startup_attribute_list_size = Dependency::system::win32::$SIZE_T{};
 		auto startup_attribute_list_data = ByteArray{};
-		state_b = Third::system::windows::$InitializeProcThreadAttributeList(nullptr, 1, 0, &startup_attribute_list_size);
-		assert_test(state_b == Third::system::windows::$FALSE);
+		state_b = Dependency::system::win32::$InitializeProcThreadAttributeList(nullptr, 1, 0, &startup_attribute_list_size);
+		assert_test(state_b == Dependency::system::win32::$FALSE);
 		startup_attribute_list_data.allocate(make_box<Size>(startup_attribute_list_size));
-		startup_information.lpAttributeList = unmake_pointer_unsafe<AsUnmakeReference<decltype(*Third::system::windows::$LPPROC_THREAD_ATTRIBUTE_LIST{})>>(startup_attribute_list_data.begin());
-		state_b = Third::system::windows::$InitializeProcThreadAttributeList(startup_information.lpAttributeList, 1, 0, &startup_attribute_list_size);
-		assert_test(state_b != Third::system::windows::$FALSE);
+		startup_information.lpAttributeList = unmake_pointer_unsafe<AsUnmakeReference<decltype(*Dependency::system::win32::$LPPROC_THREAD_ATTRIBUTE_LIST{})>>(startup_attribute_list_data.begin());
+		state_b = Dependency::system::win32::$InitializeProcThreadAttributeList(startup_information.lpAttributeList, 1, 0, &startup_attribute_list_size);
+		assert_test(state_b != Dependency::system::win32::$FALSE);
 		auto startup_attribute_list_finalizer = make_finalizer(
 			[&] {
-				Third::system::windows::$DeleteProcThreadAttributeList(startup_information.lpAttributeList);
+				Dependency::system::win32::$DeleteProcThreadAttributeList(startup_information.lpAttributeList);
 				startup_attribute_list_data.reset();
 			}
 		);
-		auto inherit_handle_list = make_array<Third::system::windows::$HANDLE>(
+		auto inherit_handle_list = make_array<Dependency::system::win32::$HANDLE>(
 			startup_information.StartupInfo.hStdInput,
 			startup_information.StartupInfo.hStdOutput,
 			startup_information.StartupInfo.hStdError
 		);
 		for (auto & inherit_handle : inherit_handle_list) {
-			state_b = Third::system::windows::$SetHandleInformation(
+			state_b = Dependency::system::win32::$SetHandleInformation(
 				inherit_handle,
-				Third::system::windows::$HANDLE_FLAG_INHERIT,
-				Third::system::windows::$HANDLE_FLAG_INHERIT
+				Dependency::system::win32::$HANDLE_FLAG_INHERIT,
+				Dependency::system::win32::$HANDLE_FLAG_INHERIT
 			);
-			assert_test(state_b != Third::system::windows::$FALSE);
+			assert_test(state_b != Dependency::system::win32::$FALSE);
 		}
-		state_b = Third::system::windows::$UpdateProcThreadAttribute(
+		state_b = Dependency::system::win32::$UpdateProcThreadAttribute(
 			startup_information.lpAttributeList,
 			0,
-			Third::system::windows::$PROC_THREAD_ATTRIBUTE_HANDLE_LIST,
+			Dependency::system::win32::$PROC_THREAD_ATTRIBUTE_HANDLE_LIST,
 			unmake_pointer(inherit_handle_list.begin()),
-			unmake_box<std::size_t>(inherit_handle_list.size()) * sizeof(Third::system::windows::$HANDLE),
+			unmake_box<std::size_t>(inherit_handle_list.size()) * sizeof(Dependency::system::win32::$HANDLE),
 			nullptr,
 			nullptr
 		);
-		assert_test(state_b != Third::system::windows::$FALSE);
-		auto process_information = Third::system::windows::$PROCESS_INFORMATION{};
-		state_b = Third::system::windows::$CreateProcessW(
+		assert_test(state_b != Dependency::system::win32::$FALSE);
+		auto process_information = Dependency::system::win32::$PROCESS_INFORMATION{};
+		state_b = Dependency::system::win32::$CreateProcessW(
 			M_use_ntsp_w_safe_of(program.emit_native()),
 			M_use_ntsp_w_safe_of(command),
 			nullptr,
 			nullptr,
-			Third::system::windows::$TRUE,
-			Third::system::windows::$CREATE_UNICODE_ENVIRONMENT | Third::system::windows::$CREATE_NO_WINDOW | Third::system::windows::$EXTENDED_STARTUPINFO_PRESENT,
+			Dependency::system::win32::$TRUE,
+			Dependency::system::win32::$CREATE_UNICODE_ENVIRONMENT | Dependency::system::win32::$CREATE_NO_WINDOW | Dependency::system::win32::$EXTENDED_STARTUPINFO_PRESENT,
 			M_use_ntsp_w_of(environment_string),
 			M_use_ntsp_w_safe_of(workspace.emit_native()),
-			reinterpret_cast<Third::system::windows::$STARTUPINFOW *>(&startup_information),
+			reinterpret_cast<Dependency::system::win32::$STARTUPINFOW *>(&startup_information),
 			&process_information
 		);
-		assert_test(state_b != Third::system::windows::$FALSE);
+		assert_test(state_b != Dependency::system::win32::$FALSE);
 		startup_attribute_list_finalizer.dispose();
 		input_handle_finalizer.dispose();
 		output_handle_finalizer.dispose();
 		error_handle_finalizer.dispose();
 		auto process_handle_finalizer = make_finalizer(
 			[&] {
-				state_b = Third::system::windows::$CloseHandle(process_information.hProcess);
-				assert_test(state_b != Third::system::windows::$FALSE);
-				state_b = Third::system::windows::$CloseHandle(process_information.hThread);
-				assert_test(state_b != Third::system::windows::$FALSE);
+				state_b = Dependency::system::win32::$CloseHandle(process_information.hProcess);
+				assert_test(state_b != Dependency::system::win32::$FALSE);
+				state_b = Dependency::system::win32::$CloseHandle(process_information.hThread);
+				assert_test(state_b != Dependency::system::win32::$FALSE);
 			}
 		);
-		state_d = Third::system::windows::$WaitForSingleObject(
+		state_d = Dependency::system::win32::$WaitForSingleObject(
 			process_information.hProcess,
-			Third::system::windows::$INFINITE
+			Dependency::system::win32::$INFINITE
 		);
-		assert_test(state_d == Third::system::windows::$WAIT_OBJECT_0);
-		auto exit_code = Third::system::windows::$DWORD{};
-		state_b = Third::system::windows::$GetExitCodeProcess(
+		assert_test(state_d == Dependency::system::win32::$WAIT_OBJECT_0);
+		auto exit_code = Dependency::system::win32::$DWORD{};
+		state_b = Dependency::system::win32::$GetExitCodeProcess(
 			process_information.hProcess,
 			&exit_code
 		);
-		assert_test(state_b != Third::system::windows::$FALSE);
+		assert_test(state_b != Dependency::system::win32::$FALSE);
 		process_handle_finalizer.dispose();
 		result = make_box<IntegerU32>(exit_code);
 		#endif
@@ -269,22 +269,22 @@ export namespace Twinning::Kernel::Process {
 		}
 		environment_string_list.append(nullptr);
 		auto workspace_string = M_use_nts_n_safe_of(workspace.emit_native());
-		auto process_identifier = Third::system::posix::$fork();
+		auto process_identifier = Dependency::system::posix::$fork();
 		assert_test(process_identifier != -1);
 		if (process_identifier == 0) {
 			try {
-				state_i = Third::system::posix::$chdir(unmake_pointer_unsafe<char>(workspace_string.begin()));
+				state_i = Dependency::system::posix::$chdir(unmake_pointer_unsafe<char>(workspace_string.begin()));
 				assert_test(state_i != -1);
-				state_i = Third::system::posix::$dup2(static_cast<int>(reinterpret_cast<std::intptr_t>(input_handle.value)), Third::system::posix::$STDIN_FILENO);
+				state_i = Dependency::system::posix::$dup2(static_cast<int>(reinterpret_cast<std::intptr_t>(input_handle.value)), Dependency::system::posix::$STDIN_FILENO);
 				assert_test(state_i != -1);
-				state_i = Third::system::posix::$dup2(static_cast<int>(reinterpret_cast<std::intptr_t>(output_handle.value)), Third::system::posix::$STDOUT_FILENO);
+				state_i = Dependency::system::posix::$dup2(static_cast<int>(reinterpret_cast<std::intptr_t>(output_handle.value)), Dependency::system::posix::$STDOUT_FILENO);
 				assert_test(state_i != -1);
-				state_i = Third::system::posix::$dup2(static_cast<int>(reinterpret_cast<std::intptr_t>(error_handle.value)), Third::system::posix::$STDERR_FILENO);
+				state_i = Dependency::system::posix::$dup2(static_cast<int>(reinterpret_cast<std::intptr_t>(error_handle.value)), Dependency::system::posix::$STDERR_FILENO);
 				assert_test(state_i != -1);
 				input_handle_finalizer.dispose();
 				output_handle_finalizer.dispose();
 				error_handle_finalizer.dispose();
-				Third::system::posix::$execve(
+				Dependency::system::posix::$execve(
 					unmake_pointer_unsafe<char>(program_string.begin()),
 					unmake_pointer_unsafe<char *>(argument_string_list.begin()),
 					unmake_pointer_unsafe<char *>(environment_string_list.begin())
@@ -292,17 +292,17 @@ export namespace Twinning::Kernel::Process {
 			}
 			catch (...) {
 			}
-			Third::system::posix::$_exit(127);
+			Dependency::system::posix::$_exit(127);
 		}
 		input_handle_finalizer.dispose();
 		output_handle_finalizer.dispose();
 		error_handle_finalizer.dispose();
-		auto wait_information = Third::system::posix::$siginfo_t{};
-		state_i = Third::system::posix::$waitid(
-			Third::system::posix::$P_PID,
-			static_cast<Third::system::posix::$id_t>(process_identifier),
+		auto wait_information = Dependency::system::posix::$siginfo_t{};
+		state_i = Dependency::system::posix::$waitid(
+			Dependency::system::posix::$P_PID,
+			static_cast<Dependency::system::posix::$id_t>(process_identifier),
 			&wait_information,
-			Third::system::posix::$WEXITED | Third::system::posix::$WSTOPPED
+			Dependency::system::posix::$WEXITED | Dependency::system::posix::$WSTOPPED
 		);
 		assert_test(state_i == 0);
 		result = make_box<IntegerU32>(wait_information.si_status);

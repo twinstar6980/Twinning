@@ -20,7 +20,7 @@ import twinning.kernel.utility.string.basic_static_string;
 import twinning.kernel.utility.string.string;
 import twinning.kernel.utility.string.character_type;
 import twinning.kernel.utility.support.character_stream;
-import twinning.kernel.third.mscharconv;
+import twinning.kernel.dependency.mscharconv;
 
 export namespace Twinning::Kernel::StringParser {
 
@@ -692,7 +692,7 @@ export namespace Twinning::Kernel::StringParser {
 		}
 		auto valid_begin = stream.reserve_view().begin();
 		auto valid_end = stream.reserve_view().end();
-		auto convert_result = Third::mscharconv::to_chars(unmake_pointer_unsafe<char>(valid_begin), unmake_pointer_unsafe<char>(valid_end), value.value, 10);
+		auto convert_result = Dependency::mscharconv::to_chars(unmake_pointer_unsafe<char>(valid_begin), unmake_pointer_unsafe<char>(valid_end), value.value, 10);
 		assert_test(convert_result.ec == std::errc{});
 		stream.forward(make_box<Size>(convert_result.ptr - unmake_pointer_unsafe<char>(valid_begin)));
 		return;
@@ -738,7 +738,7 @@ export namespace Twinning::Kernel::StringParser {
 		}
 		auto valid_end = stream.current_pointer();
 		assert_test(valid_begin != valid_end);
-		auto convert_result = Third::mscharconv::from_chars(unmake_pointer_unsafe<char>(valid_begin), unmake_pointer_unsafe<char>(valid_end), value.value, 10);
+		auto convert_result = Dependency::mscharconv::from_chars(unmake_pointer_unsafe<char>(valid_begin), unmake_pointer_unsafe<char>(valid_end), value.value, 10);
 		assert_test(convert_result.ec == std::errc{});
 		return;
 	}
@@ -755,7 +755,7 @@ export namespace Twinning::Kernel::StringParser {
 		}
 		auto valid_begin = stream.reserve_view().begin();
 		auto valid_end = stream.reserve_view().end();
-		auto convert_result = Third::mscharconv::to_chars(unmake_pointer_unsafe<char>(valid_begin), unmake_pointer_unsafe<char>(valid_end), value.value, Third::mscharconv::chars_format::fixed);
+		auto convert_result = Dependency::mscharconv::to_chars(unmake_pointer_unsafe<char>(valid_begin), unmake_pointer_unsafe<char>(valid_end), value.value, Dependency::mscharconv::chars_format::fixed);
 		assert_test(convert_result.ec == std::errc{});
 		stream.forward(make_box<Size>(convert_result.ptr - unmake_pointer_unsafe<char>(valid_begin)));
 		if (!Range::has(Range::make_range(valid_begin, stream.current_pointer()), '.'_c)) {
@@ -827,7 +827,7 @@ export namespace Twinning::Kernel::StringParser {
 		assert_test(is_floater);
 		auto valid_end = stream.current_pointer();
 		assert_test(valid_begin != valid_end);
-		auto convert_result = Third::mscharconv::from_chars(unmake_pointer_unsafe<char>(valid_begin), unmake_pointer_unsafe<char>(valid_end), value.value, !is_scientific ? (Third::mscharconv::chars_format::fixed) : (Third::mscharconv::chars_format::scientific));
+		auto convert_result = Dependency::mscharconv::from_chars(unmake_pointer_unsafe<char>(valid_begin), unmake_pointer_unsafe<char>(valid_end), value.value, !is_scientific ? (Dependency::mscharconv::chars_format::fixed) : (Dependency::mscharconv::chars_format::scientific));
 		assert_test(convert_result.ec == std::errc{});
 		return;
 	}
@@ -914,12 +914,12 @@ export namespace Twinning::Kernel::StringParser {
 		}
 		auto valid_end = stream.current_pointer();
 		assert_test(valid_begin != valid_end);
-		auto convert_result = Third::mscharconv::from_chars_result{};
+		auto convert_result = Dependency::mscharconv::from_chars_result{};
 		if (!is_floater) {
-			convert_result = Third::mscharconv::from_chars(unmake_pointer_unsafe<char>(valid_begin), unmake_pointer_unsafe<char>(valid_end), value.set_integer().value, 10);
+			convert_result = Dependency::mscharconv::from_chars(unmake_pointer_unsafe<char>(valid_begin), unmake_pointer_unsafe<char>(valid_end), value.set_integer().value, 10);
 		}
 		else {
-			convert_result = Third::mscharconv::from_chars(unmake_pointer_unsafe<char>(valid_begin), unmake_pointer_unsafe<char>(valid_end), value.set_floater().value, !is_scientific ? (Third::mscharconv::chars_format::fixed) : (Third::mscharconv::chars_format::scientific));
+			convert_result = Dependency::mscharconv::from_chars(unmake_pointer_unsafe<char>(valid_begin), unmake_pointer_unsafe<char>(valid_end), value.set_floater().value, !is_scientific ? (Dependency::mscharconv::chars_format::fixed) : (Dependency::mscharconv::chars_format::scientific));
 		}
 		assert_test(convert_result.ec == std::errc{});
 		return;
@@ -937,7 +937,7 @@ export namespace Twinning::Kernel::StringParser {
 		}
 		auto valid_begin = stream.reserve_view().begin();
 		auto valid_end = stream.reserve_view().end();
-		auto convert_result = Third::mscharconv::to_chars(unmake_pointer_unsafe<char>(valid_begin), unmake_pointer_unsafe<char>(valid_end), value.value, 16);
+		auto convert_result = Dependency::mscharconv::to_chars(unmake_pointer_unsafe<char>(valid_begin), unmake_pointer_unsafe<char>(valid_end), value.value, 16);
 		assert_test(convert_result.ec == std::errc{});
 		stream.forward(make_box<Size>(convert_result.ptr - unmake_pointer_unsafe<char>(valid_begin)));
 		return;
@@ -995,7 +995,7 @@ export namespace Twinning::Kernel::StringParser {
 		}
 		auto valid_end = stream.current_pointer();
 		assert_test(valid_begin != valid_end);
-		auto convert_result = Third::mscharconv::from_chars(unmake_pointer_unsafe<char>(valid_begin), unmake_pointer_unsafe<char>(valid_end), value.value, 16);
+		auto convert_result = Dependency::mscharconv::from_chars(unmake_pointer_unsafe<char>(valid_begin), unmake_pointer_unsafe<char>(valid_end), value.value, 16);
 		assert_test(convert_result.ec == std::errc{});
 		return;
 	}

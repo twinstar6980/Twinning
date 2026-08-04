@@ -5,7 +5,7 @@ module;
 export module twinning.kernel.tool.data.compression.deflate.compress;
 import twinning.kernel.utility;
 import twinning.kernel.tool.data.compression.deflate.common;
-import twinning.kernel.third.zlib;
+import twinning.kernel.dependency.zlib;
 
 export namespace Twinning::Kernel::Tool::Data::Compression::Deflate {
 
@@ -25,9 +25,9 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Deflate {
 			StrategyMode const &   strategy_mode,
 			WrapperType const &    wrapper_type
 		) -> Void {
-			assert_test(Math::between(level, 0_i, make_box<Integer>(Third::zlib::$Z_BEST_COMPRESSION)));
-			assert_test(Math::between(window_exponent, 8_i, make_box<Integer>(Third::zlib::$MAX_WBITS)));
-			assert_test(Math::between(memory_level, 1_i, make_box<Integer>(Third::zlib::$MAX_MEM_LEVEL)));
+			assert_test(Math::between(level, 0_i, make_box<Integer>(Dependency::zlib::$Z_BEST_COMPRESSION)));
+			assert_test(Math::between(window_exponent, 8_i, make_box<Integer>(Dependency::zlib::$MAX_WBITS)));
+			assert_test(Math::between(memory_level, 1_i, make_box<Integer>(Dependency::zlib::$MAX_MEM_LEVEL)));
 			assert_test(!(window_exponent == 8_i && wrapper_type != WrapperType::Constant::zlib()));
 			auto z_state = int{};
 			auto z_window_exponent = unmake_box<int>(window_exponent);
@@ -46,11 +46,11 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Deflate {
 				}
 				default: throw UnreachableException{};
 			}
-			auto z_stream = Third::zlib::$z_stream{
-				.next_in = unmake_pointer_unsafe<Third::zlib::$Bytef>(raw.current_pointer()),
+			auto z_stream = Dependency::zlib::$z_stream{
+				.next_in = unmake_pointer_unsafe<Dependency::zlib::$Bytef>(raw.current_pointer()),
 				.avail_in = unmake_box<unsigned>(raw.reserve()),
 				.total_in = 0,
-				.next_out = unmake_pointer_unsafe<Third::zlib::$Bytef>(ripe.current_pointer()),
+				.next_out = unmake_pointer_unsafe<Dependency::zlib::$Bytef>(ripe.current_pointer()),
 				.avail_out = unmake_box<unsigned>(ripe.reserve()),
 				.total_out = 0,
 				.msg = nullptr,
@@ -62,31 +62,31 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Deflate {
 				.adler = 0,
 				.reserved = 0,
 			};
-			z_state = Third::zlib::$deflateInit2_(
+			z_state = Dependency::zlib::$deflateInit2_(
 				&z_stream,
 				unmake_box<int>(level),
-				Third::zlib::$Z_DEFLATED,
+				Dependency::zlib::$Z_DEFLATED,
 				z_window_exponent,
 				unmake_box<int>(memory_level),
 				unmake_box<int>(strategy_mode),
-				Third::zlib::$ZLIB_VERSION,
-				unmake_box<int>(k_type_size<Third::zlib::$z_stream>)
+				Dependency::zlib::$ZLIB_VERSION,
+				unmake_box<int>(k_type_size<Dependency::zlib::$z_stream>)
 			);
-			assert_test(z_state == Third::zlib::$Z_OK);
-			z_state = Third::zlib::$deflate(
+			assert_test(z_state == Dependency::zlib::$Z_OK);
+			z_state = Dependency::zlib::$deflate(
 				&z_stream,
-				Third::zlib::$Z_NO_FLUSH
+				Dependency::zlib::$Z_NO_FLUSH
 			);
-			assert_test(z_state == Third::zlib::$Z_OK);
-			z_state = Third::zlib::$deflate(
+			assert_test(z_state == Dependency::zlib::$Z_OK);
+			z_state = Dependency::zlib::$deflate(
 				&z_stream,
-				Third::zlib::$Z_FINISH
+				Dependency::zlib::$Z_FINISH
 			);
-			assert_test(z_state == Third::zlib::$Z_STREAM_END);
-			z_state = Third::zlib::$deflateEnd(
+			assert_test(z_state == Dependency::zlib::$Z_STREAM_END);
+			z_state = Dependency::zlib::$deflateEnd(
 				&z_stream
 			);
-			assert_test(z_state == Third::zlib::$Z_OK);
+			assert_test(z_state == Dependency::zlib::$Z_OK);
 			assert_test(z_stream.avail_in == 0);
 			raw.forward(make_box<Size>(z_stream.total_in));
 			ripe.forward(make_box<Size>(z_stream.total_out));

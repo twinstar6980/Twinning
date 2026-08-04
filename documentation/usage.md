@@ -309,10 +309,6 @@
 
 	  指定在 `Android` 上调用外部程序时，可能需要创建的临时目录的路径。
 
-	* `console_basic_disable_virtual_terminal_sequence` : `boolean` = `false`
-
-	  禁用命令行虚拟终端序列。仅当使用 `Shell` 时有效。
-
 	* `language` : `string` = `english`
 
 	  交互语言。可以为 `english` 或 `chinese` 或 `vietnamese` 。

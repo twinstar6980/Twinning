@@ -21,21 +21,21 @@ target('kernel', function()
 		{ public = true }
 	)
 	add_deps(
-		'third.mscharconv',
-		'third.tinyxml2',
-		'third.cpp_md5_lib',
-		'third.Rijndael',
-		'third.zlib',
-		'third.bzip2',
-		'third.lzma',
-		'third.open_vcdiff',
-		'third.avir',
-		'third.libsquish',
-		'third.PVRTCCompressor',
-		'third.etcpak',
-		'third.astc_encoder',
-		'third.libpng',
-		'third.quickjs_ng',
+		'dependency.mscharconv',
+		'dependency.tinyxml2',
+		'dependency.cpp_md5_lib',
+		'dependency.Rijndael',
+		'dependency.zlib',
+		'dependency.bzip2',
+		'dependency.lzma',
+		'dependency.open_vcdiff',
+		'dependency.avir',
+		'dependency.libsquish',
+		'dependency.PVRTCCompressor',
+		'dependency.etcpak',
+		'dependency.astc_encoder',
+		'dependency.libpng',
+		'dependency.quickjs_ng',
 		{}
 	)
 	on_load(function(target)

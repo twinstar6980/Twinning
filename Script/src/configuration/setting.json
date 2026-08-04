@@ -28,7 +28,6 @@
 	},
 	"android_temporary_directory_for_data": "/data/local/tmp/twinning",
 	"android_temporary_directory_for_sdcard": "/sdcard/.twinning",
-	"console_basic_disable_virtual_terminal_sequence": false,
 	"language": "english",
 	"executor_typical_method_disable_name_filter": false,
 	"executor_typical_method_configuration": {

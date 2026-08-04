@@ -4,7 +4,7 @@ module;
 
 export module twinning.kernel.tool.data.serialization.xml.common;
 import twinning.kernel.utility;
-import twinning.kernel.third.tinyxml2;
+import twinning.kernel.dependency.tinyxml2;
 
 export namespace Twinning::Kernel::Tool::Data::Serialization::Xml {
 
@@ -13,7 +13,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Xml {
 		// ReSharper disable CppInconsistentNaming
 
 		class TinyXml2Printer :
-			public Third::tinyxml2::XMLPrinter {
+			public Dependency::tinyxml2::XMLPrinter {
 
 		protected:
 
@@ -53,10 +53,10 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Xml {
 		// ReSharper restore CppInconsistentNaming
 
 		// NOTE: EXPLAIN: maybe failed if api changed
-		static_assert(sizeof(TinyXml2PrinterImitator) == sizeof(Third::tinyxml2::XMLPrinter));
+		static_assert(sizeof(TinyXml2PrinterImitator) == sizeof(Dependency::tinyxml2::XMLPrinter));
 
 		inline static auto move_printer_buffer_if_can(
-			Third::tinyxml2::XMLPrinter & printer
+			Dependency::tinyxml2::XMLPrinter & printer
 		) -> String {
 			auto & printer_imitator = unsafe_cast<TinyXml2PrinterImitator>(printer);
 			auto   buffer_data = make_pointer_unsafe<Character>(printer_imitator._buffer._mem);

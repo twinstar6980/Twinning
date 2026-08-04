@@ -7,7 +7,7 @@ import twinning.kernel.utility;
 import twinning.kernel.tool.texture.compression.dxtc.common;
 import twinning.kernel.tool.texture.encoding.common;
 import twinning.kernel.tool.texture.encoding.decode;
-import twinning.kernel.third.libsquish;
+import twinning.kernel.dependency.libsquish;
 
 export namespace Twinning::Kernel::Tool::Texture::Compression::Dxtc {
 
@@ -41,12 +41,12 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Dxtc {
 				auto ripe_data_size = block_count * k_block_bit_count_1 / k_type_bit_count<Byte>;
 				assert_test(ripe_data_size <= data.reserve());
 				auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
-				Third::libsquish::DecompressImage(
-					unmake_pointer_unsafe<Third::libsquish::u8>(raw_data.begin()),
+				Dependency::libsquish::DecompressImage(
+					unmake_pointer_unsafe<Dependency::libsquish::u8>(raw_data.begin()),
 					unmake_box<int>(image.size().width),
 					unmake_box<int>(image.size().height),
 					unmake_pointer_unsafe<void>(data.current_pointer()),
-					Third::libsquish::kDxt1
+					Dependency::libsquish::kDxt1
 				);
 				data.forward(ripe_data_size);
 				Encoding::Decode::process(as_left(InputByteStreamView{raw_data.view()}), image, raw_format);
@@ -55,12 +55,12 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Dxtc {
 				auto ripe_data_size = block_count * k_block_bit_count_3_5 / k_type_bit_count<Byte>;
 				assert_test(ripe_data_size <= data.reserve());
 				auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
-				Third::libsquish::DecompressImage(
-					unmake_pointer_unsafe<Third::libsquish::u8>(raw_data.begin()),
+				Dependency::libsquish::DecompressImage(
+					unmake_pointer_unsafe<Dependency::libsquish::u8>(raw_data.begin()),
 					unmake_box<int>(image.size().width),
 					unmake_box<int>(image.size().height),
 					unmake_pointer_unsafe<void>(data.current_pointer()),
-					Third::libsquish::kDxt3
+					Dependency::libsquish::kDxt3
 				);
 				data.forward(ripe_data_size);
 				Encoding::Decode::process(as_left(InputByteStreamView{raw_data.view()}), image, raw_format);
@@ -69,12 +69,12 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Dxtc {
 				auto ripe_data_size = block_count * k_block_bit_count_3_5 / k_type_bit_count<Byte>;
 				assert_test(ripe_data_size <= data.reserve());
 				auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
-				Third::libsquish::DecompressImage(
-					unmake_pointer_unsafe<Third::libsquish::u8>(raw_data.begin()),
+				Dependency::libsquish::DecompressImage(
+					unmake_pointer_unsafe<Dependency::libsquish::u8>(raw_data.begin()),
 					unmake_box<int>(image.size().width),
 					unmake_box<int>(image.size().height),
 					unmake_pointer_unsafe<void>(data.current_pointer()),
-					Third::libsquish::kDxt5
+					Dependency::libsquish::kDxt5
 				);
 				data.forward(ripe_data_size);
 				Encoding::Decode::process(as_left(InputByteStreamView{raw_data.view()}), image, raw_format);

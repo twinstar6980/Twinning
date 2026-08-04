@@ -7,7 +7,7 @@ import twinning.kernel.utility;
 import twinning.kernel.tool.texture.compression.pvrtc.common;
 import twinning.kernel.tool.texture.encoding.common;
 import twinning.kernel.tool.texture.encoding.encode;
-import twinning.kernel.third.PVRTCCompressor;
+import twinning.kernel.dependency.PVRTCCompressor;
 import twinning.kernel.tool.texture.encoding.decode;
 
 export namespace Twinning::Kernel::Tool::Texture::Compression::Pvrtc {
@@ -49,9 +49,9 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Pvrtc {
 							),
 						};
 						auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
-						Third::PVRTCCompressor::PvrTcDecoder::DecodeRgb4Bpp(
-							unmake_pointer_unsafe<Third::PVRTCCompressor::ColorRgb<unsigned char>>(raw_data.begin()),
-							Third::PVRTCCompressor::Point2<int>{unmake_box<int>(image.size().width), unmake_box<int>(image.size().height)},
+						Dependency::PVRTCCompressor::PvrTcDecoder::DecodeRgb4Bpp(
+							unmake_pointer_unsafe<Dependency::PVRTCCompressor::ColorRgb<unsigned char>>(raw_data.begin()),
+							Dependency::PVRTCCompressor::Point2<int>{unmake_box<int>(image.size().width), unmake_box<int>(image.size().height)},
 							unmake_pointer_unsafe<void>(data.current_pointer())
 						);
 						data.forward(ripe_data_size);
@@ -70,9 +70,9 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Pvrtc {
 							),
 						};
 						auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
-						Third::PVRTCCompressor::PvrTcDecoder::DecodeRgba4Bpp(
-							unmake_pointer_unsafe<Third::PVRTCCompressor::ColorRgba<unsigned char>>(raw_data.begin()),
-							Third::PVRTCCompressor::Point2<int>{unmake_box<int>(image.size().width), unmake_box<int>(image.size().height)},
+						Dependency::PVRTCCompressor::PvrTcDecoder::DecodeRgba4Bpp(
+							unmake_pointer_unsafe<Dependency::PVRTCCompressor::ColorRgba<unsigned char>>(raw_data.begin()),
+							Dependency::PVRTCCompressor::Point2<int>{unmake_box<int>(image.size().width), unmake_box<int>(image.size().height)},
 							unmake_pointer_unsafe<void>(data.current_pointer())
 						);
 						data.forward(ripe_data_size);

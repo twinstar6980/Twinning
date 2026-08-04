@@ -7,7 +7,7 @@ module;
 export module twinning.kernel.tool.data.serialization.xml.decode;
 import twinning.kernel.utility;
 import twinning.kernel.tool.data.serialization.xml.common;
-import twinning.kernel.third.tinyxml2;
+import twinning.kernel.dependency.tinyxml2;
 
 export namespace Twinning::Kernel::Tool::Data::Serialization::Xml {
 
@@ -19,8 +19,8 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Xml {
 		// ----------------
 
 		inline static auto convert_node(
-			ZPointer<Third::tinyxml2::XMLNode const> const & raw_node,
-			Notation::Xml::Node &                            node
+			ZPointer<Dependency::tinyxml2::XMLNode const> const & raw_node,
+			Notation::Xml::Node &                                 node
 		) -> Void {
 			if (auto raw_element = raw_node->ToElement()) {
 				node.set_element();
@@ -71,7 +71,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Xml {
 			String const &        data,
 			Notation::Xml::Node & value
 		) -> Void {
-			auto raw_document = Third::tinyxml2::XMLDocument{};
+			auto raw_document = Dependency::tinyxml2::XMLDocument{};
 			raw_document.Parse(unmake_pointer_unsafe<ZCharacter>(data.begin()), unmake_box<std::size_t>(data.size()));
 			auto current_child = raw_document.FirstChild();
 			assert_test(current_child != nullptr);

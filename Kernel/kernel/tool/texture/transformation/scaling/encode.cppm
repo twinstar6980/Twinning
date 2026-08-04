@@ -5,7 +5,7 @@ module;
 export module twinning.kernel.tool.texture.transformation.scaling.encode;
 import twinning.kernel.utility;
 import twinning.kernel.tool.texture.transformation.scaling.common;
-import twinning.kernel.third.avir;
+import twinning.kernel.dependency.avir;
 
 export namespace Twinning::Kernel::Tool::Texture::Transformation::Scaling {
 
@@ -25,7 +25,7 @@ export namespace Twinning::Kernel::Tool::Texture::Transformation::Scaling {
 			for (auto & y : SizeRange{raw.size().height}) {
 				Range::assign_from(raw_buffer.sub(raw.size().width * y, raw.size().width), raw[y]);
 			}
-			Third::avir::CImageResizer<>{8}.resizeImage(
+			Dependency::avir::CImageResizer<>{8}.resizeImage(
 				unmake_pointer_unsafe<std::uint8_t>(raw_buffer.begin()),
 				unmake_box<int>(raw.size().width),
 				unmake_box<int>(raw.size().height),

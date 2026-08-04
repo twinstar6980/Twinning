@@ -14,7 +14,6 @@ namespace Twinning.Script {
 		external_program_path: Record<string, null | string>;
 		android_temporary_directory_for_data: string;
 		android_temporary_directory_for_sdcard: string;
-		console_basic_disable_virtual_terminal_sequence: boolean;
 		language: string;
 		executor_typical_method_disable_name_filter: boolean;
 		executor_typical_method_configuration: Record<string, Record<string, Executor.TypicalMethodConfiguration>>;
@@ -62,9 +61,6 @@ namespace Twinning.Script {
 			},
 			android_temporary_directory_for_sdcard: (value) => {
 				AndroidHelper.g_temporary_directory_for_sdcard = new StoragePath(value);
-			},
-			console_basic_disable_virtual_terminal_sequence: (value) => {
-				Console.g_basic_disable_virtual_terminal_sequence = value;
 			},
 			language: (value) => {
 				Language.imbue(JsonHelper.decode_file(HomePath.script().join('configuration').join('language').join(`${value}.json`)) as Language.StringMap);

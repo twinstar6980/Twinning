@@ -7,7 +7,7 @@ import twinning.kernel.utility;
 import twinning.kernel.tool.texture.compression.astc.common;
 import twinning.kernel.tool.texture.encoding.common;
 import twinning.kernel.tool.texture.encoding.decode;
-import twinning.kernel.third.astc_encoder;
+import twinning.kernel.dependency.astc_encoder;
 
 export namespace Twinning::Kernel::Tool::Texture::Compression::Astc {
 
@@ -40,36 +40,36 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Astc {
 				auto ripe_data_size = block_count * k_block_bit_count / k_type_bit_count<Byte>;
 				assert_test(ripe_data_size <= data.reserve());
 				auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
-				auto astc_error = Third::astc_encoder::astcenc_error{};
-				auto astc_config = Third::astc_encoder::astcenc_config{};
-				astc_error = Third::astc_encoder::astcenc_config_init(
-					Third::astc_encoder::astcenc_profile::ASTCENC_PRF_LDR,
+				auto astc_error = Dependency::astc_encoder::astcenc_error{};
+				auto astc_config = Dependency::astc_encoder::astcenc_config{};
+				astc_error = Dependency::astc_encoder::astcenc_config_init(
+					Dependency::astc_encoder::astcenc_profile::ASTCENC_PRF_LDR,
 					unmake_box<unsigned int>(block_size.width),
 					unmake_box<unsigned int>(block_size.height),
 					1,
-					Third::astc_encoder::ASTCENC_PRE_FASTEST,
-					Third::astc_encoder::ASTCENC_FLG_DECOMPRESS_ONLY,
+					Dependency::astc_encoder::ASTCENC_PRE_FASTEST,
+					Dependency::astc_encoder::ASTCENC_FLG_DECOMPRESS_ONLY,
 					&astc_config
 				);
-				assert_test(astc_error == Third::astc_encoder::astcenc_error::ASTCENC_SUCCESS);
-				auto astc_context = ZPointer<Third::astc_encoder::astcenc_context>{};
-				astc_error = Third::astc_encoder::astcenc_context_alloc(&astc_config, 1, &astc_context, nullptr);
-				assert_test(astc_error == Third::astc_encoder::astcenc_error::ASTCENC_SUCCESS);
+				assert_test(astc_error == Dependency::astc_encoder::astcenc_error::ASTCENC_SUCCESS);
+				auto astc_context = ZPointer<Dependency::astc_encoder::astcenc_context>{};
+				astc_error = Dependency::astc_encoder::astcenc_context_alloc(&astc_config, 1, &astc_context, nullptr);
+				assert_test(astc_error == Dependency::astc_encoder::astcenc_error::ASTCENC_SUCCESS);
 				auto astc_image_data = unmake_pointer_unsafe<Void>(raw_data.begin());
-				auto astc_image = Third::astc_encoder::astcenc_image{
+				auto astc_image = Dependency::astc_encoder::astcenc_image{
 					.dim_x = unmake_box<unsigned int>(image.size().width),
 					.dim_y = unmake_box<unsigned int>(image.size().height),
 					.dim_z = 1,
-					.data_type = Third::astc_encoder::astcenc_type::ASTCENC_TYPE_U8,
+					.data_type = Dependency::astc_encoder::astcenc_type::ASTCENC_TYPE_U8,
 					.data = &astc_image_data,
 				};
-				auto astc_swizzle = Third::astc_encoder::astcenc_swizzle{
-					.r = Third::astc_encoder::astcenc_swz::ASTCENC_SWZ_R,
-					.g = Third::astc_encoder::astcenc_swz::ASTCENC_SWZ_G,
-					.b = Third::astc_encoder::astcenc_swz::ASTCENC_SWZ_B,
-					.a = Third::astc_encoder::astcenc_swz::ASTCENC_SWZ_A,
+				auto astc_swizzle = Dependency::astc_encoder::astcenc_swizzle{
+					.r = Dependency::astc_encoder::astcenc_swz::ASTCENC_SWZ_R,
+					.g = Dependency::astc_encoder::astcenc_swz::ASTCENC_SWZ_G,
+					.b = Dependency::astc_encoder::astcenc_swz::ASTCENC_SWZ_B,
+					.a = Dependency::astc_encoder::astcenc_swz::ASTCENC_SWZ_A,
 				};
-				astc_error = Third::astc_encoder::astcenc_decompress_image(
+				astc_error = Dependency::astc_encoder::astcenc_decompress_image(
 					astc_context,
 					unmake_pointer_unsafe<std::uint8_t>(data.current_pointer()),
 					unmake_box<std::size_t>(ripe_data_size),
@@ -77,8 +77,8 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Astc {
 					&astc_swizzle,
 					0
 				);
-				Third::astc_encoder::astcenc_context_free(astc_context);
-				assert_test(astc_error == Third::astc_encoder::astcenc_error::ASTCENC_SUCCESS);
+				Dependency::astc_encoder::astcenc_context_free(astc_context);
+				assert_test(astc_error == Dependency::astc_encoder::astcenc_error::ASTCENC_SUCCESS);
 				data.forward(ripe_data_size);
 				Encoding::Decode::process(as_left(InputByteStreamView{raw_data.view()}), image, raw_format);
 			}

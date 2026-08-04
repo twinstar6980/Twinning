@@ -1,0 +1,48 @@
+-- PVRTCCompressor
+-- ? 234ecb7db4785bd3c971d01d7f5556192fe9ab28
+-- https://github.com/brenwill/PVRTCCompressor
+
+target('dependency.PVRTCCompressor', function()
+	set_group('source/dependency')
+	set_kind('static')
+	add_headerfiles(
+		'AlphaBitmap.h',
+		'BitScale.h',
+		'BitUtility.h',
+		'Bitmap.h',
+		'ColorRgba.h',
+		'Interval.h',
+		'MortonTable.h',
+		'Point2.h',
+		'PvrTcDecoder.h',
+		'PvrTcEncoder.h',
+		'PvrTcPacket.h',
+		'RgbBitmap.h',
+		'RgbaBitmap.h',
+		{ install = false }
+	)
+	add_files(
+		'BitScale.cpp',
+		'MortonTable.cpp',
+		'PvrTcDecoder.cpp',
+		'PvrTcEncoder.cpp',
+		'PvrTcPacket.cpp',
+		'main.cpp',
+		{}
+	)
+	add_includedirs(
+		{ public = true }
+	)
+	add_defines(
+		{ public = true }
+	)
+	add_deps(
+		{}
+	)
+	on_load(function(target)
+		import('common.xmake.utility')
+		utility.apply_compiler_option_basic(target)
+		utility.apply_compiler_option_warning_disable(target)
+		return
+	end)
+end)

@@ -6,8 +6,6 @@ namespace Twinning.Script.Console {
 
 	// ----------------
 
-	export let g_basic_disable_virtual_terminal_sequence: boolean = false;
-
 	const k_basic_message_text_attribute: Record<MessageType, VirtualTerminalSequence.TextAttribute> = {
 		verbosity: {
 			background: null,
@@ -50,7 +48,7 @@ namespace Twinning.Script.Console {
 	function basic_set_message_text_attribute(
 		type: MessageType,
 	): void {
-		if (!g_basic_disable_virtual_terminal_sequence) {
+		if (Shell.basic_check_mode('output').mode) {
 			Shell.basic_output_text(VirtualTerminalSequence.text_attribute(k_basic_message_text_attribute[type]));
 		}
 		return;

@@ -7,7 +7,7 @@ import twinning.kernel.utility;
 import twinning.kernel.tool.texture.compression.etc.common;
 import twinning.kernel.tool.texture.encoding.common;
 import twinning.kernel.tool.texture.encoding.decode;
-import twinning.kernel.third.etcpak;
+import twinning.kernel.dependency.etcpak;
 
 export namespace Twinning::Kernel::Tool::Texture::Compression::Etc {
 
@@ -42,7 +42,7 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Etc {
 				auto ripe_data_size = block_count * k_block_bit_count / k_type_bit_count<Byte>;
 				assert_test(ripe_data_size <= data.reserve());
 				auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
-				Third::etcpak::DecodeRGB(
+				Dependency::etcpak::DecodeRGB(
 					unmake_pointer_unsafe<std::uint64_t>(data.current_pointer()),
 					unmake_pointer_unsafe<std::uint32_t>(raw_data.begin()),
 					unmake_box<std::int32_t>(image.size().width),
@@ -56,7 +56,7 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Etc {
 					auto ripe_data_size = block_count * k_block_bit_count / k_type_bit_count<Byte>;
 					assert_test(ripe_data_size <= data.reserve());
 					auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
-					Third::etcpak::DecodeRGB(
+					Dependency::etcpak::DecodeRGB(
 						unmake_pointer_unsafe<std::uint64_t>(data.current_pointer()),
 						unmake_pointer_unsafe<std::uint32_t>(raw_data.begin()),
 						unmake_box<std::int32_t>(image.size().width),
@@ -69,7 +69,7 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Etc {
 					auto ripe_data_size = block_count * k_block_bit_count * 2_sz / k_type_bit_count<Byte>;
 					assert_test(ripe_data_size <= data.reserve());
 					auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
-					Third::etcpak::DecodeRGBA(
+					Dependency::etcpak::DecodeRGBA(
 						unmake_pointer_unsafe<std::uint64_t>(data.current_pointer()),
 						unmake_pointer_unsafe<std::uint32_t>(raw_data.begin()),
 						unmake_box<std::int32_t>(image.size().width),
@@ -84,7 +84,7 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Etc {
 					auto ripe_data_size = block_count * k_block_bit_count / k_type_bit_count<Byte>;
 					assert_test(ripe_data_size <= data.reserve());
 					auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
-					Third::etcpak::DecodeR(
+					Dependency::etcpak::DecodeR(
 						unmake_pointer_unsafe<std::uint64_t>(data.current_pointer()),
 						unmake_pointer_unsafe<std::uint32_t>(raw_data.begin()),
 						unmake_box<std::int32_t>(image.size().width),
@@ -97,7 +97,7 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Etc {
 					auto ripe_data_size = block_count * k_block_bit_count * 2_sz / k_type_bit_count<Byte>;
 					assert_test(ripe_data_size <= data.reserve());
 					auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
-					Third::etcpak::DecodeRG(
+					Dependency::etcpak::DecodeRG(
 						unmake_pointer_unsafe<std::uint64_t>(data.current_pointer()),
 						unmake_pointer_unsafe<std::uint32_t>(raw_data.begin()),
 						unmake_box<std::int32_t>(image.size().width),

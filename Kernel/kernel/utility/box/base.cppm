@@ -134,7 +134,7 @@ export namespace Twinning::Kernel {
 					return declare<std::underlying_type_t<TValue>>();
 				}
 				if constexpr (IsBuiltinPointer<TValue>) {
-					return declare<std::intptr_t>();
+					return declare<std::uintptr_t>();
 				}
 			};
 			using SourceValue = decltype(map_underlying_type.template operator ()<TSource>());

@@ -10,8 +10,8 @@ import twinning.kernel.utility.exception.utility;
 import twinning.kernel.utility.string.basic_string_view;
 import twinning.kernel.utility.string.basic_string;
 import twinning.kernel.utility.string.basic_static_string;
-import twinning.kernel.third.system.windows;
-import twinning.kernel.third.system.posix;
+import twinning.kernel.dependency.system.win32;
+import twinning.kernel.dependency.system.posix;
 
 export namespace Twinning::Kernel::SystemNativeString {
 
@@ -26,10 +26,10 @@ export namespace Twinning::Kernel::SystemNativeString {
 		if (!source.empty()) {
 			auto destination_size = Size{};
 			destination_size = make_box<Size>(
-				Third::system::windows::$WideCharToMultiByte(
-					Third::system::windows::$CP_UTF8,
-					Third::system::windows::$WC_ERR_INVALID_CHARS,
-					unmake_pointer_unsafe<Third::system::windows::$WCHAR>(source.begin()),
+				Dependency::system::win32::$WideCharToMultiByte(
+					Dependency::system::win32::$CP_UTF8,
+					Dependency::system::win32::$WC_ERR_INVALID_CHARS,
+					unmake_pointer_unsafe<Dependency::system::win32::$WCHAR>(source.begin()),
 					unmake_box<int>(source.size()),
 					nullptr,
 					0,
@@ -40,10 +40,10 @@ export namespace Twinning::Kernel::SystemNativeString {
 			assert_test(destination_size != 0_sz);
 			destination.allocate_full(destination_size);
 			destination_size = make_box<Size>(
-				Third::system::windows::$WideCharToMultiByte(
-					Third::system::windows::$CP_UTF8,
-					Third::system::windows::$WC_ERR_INVALID_CHARS,
-					unmake_pointer_unsafe<Third::system::windows::$WCHAR>(source.begin()),
+				Dependency::system::win32::$WideCharToMultiByte(
+					Dependency::system::win32::$CP_UTF8,
+					Dependency::system::win32::$WC_ERR_INVALID_CHARS,
+					unmake_pointer_unsafe<Dependency::system::win32::$WCHAR>(source.begin()),
 					unmake_box<int>(source.size()),
 					unmake_pointer_unsafe<ZCharacterN>(destination.begin()),
 					unmake_box<int>(destination.size()),
@@ -65,10 +65,10 @@ export namespace Twinning::Kernel::SystemNativeString {
 		if (!source.empty()) {
 			auto destination_size = Size{};
 			destination_size = make_box<Size>(
-				Third::system::windows::$MultiByteToWideChar(
-					Third::system::windows::$CP_UTF8,
-					Third::system::windows::$MB_ERR_INVALID_CHARS,
-					unmake_pointer_unsafe<Third::system::windows::$CHAR>(source.begin()),
+				Dependency::system::win32::$MultiByteToWideChar(
+					Dependency::system::win32::$CP_UTF8,
+					Dependency::system::win32::$MB_ERR_INVALID_CHARS,
+					unmake_pointer_unsafe<Dependency::system::win32::$CHAR>(source.begin()),
 					unmake_box<int>(source.size()),
 					nullptr,
 					0
@@ -77,12 +77,12 @@ export namespace Twinning::Kernel::SystemNativeString {
 			assert_test(destination_size != 0_sz);
 			destination.allocate_full(destination_size);
 			destination_size = make_box<Size>(
-				Third::system::windows::$MultiByteToWideChar(
-					Third::system::windows::$CP_UTF8,
-					Third::system::windows::$MB_ERR_INVALID_CHARS,
-					unmake_pointer_unsafe<Third::system::windows::$CHAR>(source.begin()),
+				Dependency::system::win32::$MultiByteToWideChar(
+					Dependency::system::win32::$CP_UTF8,
+					Dependency::system::win32::$MB_ERR_INVALID_CHARS,
+					unmake_pointer_unsafe<Dependency::system::win32::$CHAR>(source.begin()),
 					unmake_box<int>(source.size()),
-					unmake_pointer_unsafe<Third::system::windows::$WCHAR>(destination.begin()),
+					unmake_pointer_unsafe<Dependency::system::win32::$WCHAR>(destination.begin()),
 					unmake_box<int>(destination.size())
 				)
 			);
@@ -98,10 +98,10 @@ export namespace Twinning::Kernel::SystemNativeString {
 		if (!source.empty()) {
 			auto destination_size = Size{};
 			destination_size = make_box<Size>(
-				Third::system::windows::$MultiByteToWideChar(
-					Third::system::windows::$CP_ACP,
-					Third::system::windows::$MB_ERR_INVALID_CHARS,
-					unmake_pointer_unsafe<Third::system::windows::$CHAR>(source.begin()),
+				Dependency::system::win32::$MultiByteToWideChar(
+					Dependency::system::win32::$CP_ACP,
+					Dependency::system::win32::$MB_ERR_INVALID_CHARS,
+					unmake_pointer_unsafe<Dependency::system::win32::$CHAR>(source.begin()),
 					unmake_box<int>(source.size()),
 					nullptr,
 					0
@@ -110,12 +110,12 @@ export namespace Twinning::Kernel::SystemNativeString {
 			assert_test(destination_size != 0_sz);
 			destination.allocate_full(destination_size);
 			destination_size = make_box<Size>(
-				Third::system::windows::$MultiByteToWideChar(
-					Third::system::windows::$CP_ACP,
-					Third::system::windows::$MB_ERR_INVALID_CHARS,
-					unmake_pointer_unsafe<Third::system::windows::$CHAR>(source.begin()),
+				Dependency::system::win32::$MultiByteToWideChar(
+					Dependency::system::win32::$CP_ACP,
+					Dependency::system::win32::$MB_ERR_INVALID_CHARS,
+					unmake_pointer_unsafe<Dependency::system::win32::$CHAR>(source.begin()),
 					unmake_box<int>(source.size()),
-					unmake_pointer_unsafe<Third::system::windows::$WCHAR>(destination.begin()),
+					unmake_pointer_unsafe<Dependency::system::win32::$WCHAR>(destination.begin()),
 					unmake_box<int>(destination.size())
 				)
 			);

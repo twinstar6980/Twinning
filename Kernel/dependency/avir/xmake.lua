@@ -1,0 +1,34 @@
+-- avir
+-- 3.1 1c8433cba92695ed69903175eae0fa527d1e8bc6
+-- https://github.com/avaneev/avir
+
+target('dependency.avir', function()
+	set_group('source/dependency')
+	set_kind('headeronly')
+	add_headerfiles(
+		'avir.h',
+		'avir_dil.h',
+		'avir_float4_sse.h',
+		'avir_float8_avx.h',
+		'lancir.h',
+		{ install = false }
+	)
+	add_files(
+		{}
+	)
+	add_includedirs(
+		{ public = true }
+	)
+	add_defines(
+		{ public = true }
+	)
+	add_deps(
+		{}
+	)
+	on_load(function(target)
+		import('common.xmake.utility')
+		utility.apply_compiler_option_basic(target)
+		utility.apply_compiler_option_warning_disable(target)
+		return
+	end)
+end)

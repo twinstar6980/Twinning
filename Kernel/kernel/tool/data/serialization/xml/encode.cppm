@@ -7,7 +7,7 @@ module;
 export module twinning.kernel.tool.data.serialization.xml.encode;
 import twinning.kernel.utility;
 import twinning.kernel.tool.data.serialization.xml.common;
-import twinning.kernel.third.tinyxml2;
+import twinning.kernel.dependency.tinyxml2;
 
 export namespace Twinning::Kernel::Tool::Data::Serialization::Xml {
 
@@ -19,10 +19,10 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Xml {
 		// ----------------
 
 		inline static auto convert_node(
-			Third::tinyxml2::XMLDocument & raw_document,
-			Notation::Xml::Node const &    node
-		) -> ZPointer<Third::tinyxml2::XMLNode> {
-			auto raw_node = ZPointer<Third::tinyxml2::XMLNode>{};
+			Dependency::tinyxml2::XMLDocument & raw_document,
+			Notation::Xml::Node const &         node
+		) -> ZPointer<Dependency::tinyxml2::XMLNode> {
+			auto raw_node = ZPointer<Dependency::tinyxml2::XMLNode>{};
 			switch (node.type().value) {
 				case Notation::Xml::NodeType::Constant::element().value: {
 					auto & node_value = node.get_element();
@@ -59,7 +59,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Xml {
 			String &                    data,
 			Notation::Xml::Node const & value
 		) -> Void {
-			auto raw_document = Third::tinyxml2::XMLDocument{};
+			auto raw_document = Dependency::tinyxml2::XMLDocument{};
 			raw_document.InsertEndChild(convert_node(raw_document, value));
 			auto printer = TinyXml2Printer{};
 			raw_document.Print(&printer);

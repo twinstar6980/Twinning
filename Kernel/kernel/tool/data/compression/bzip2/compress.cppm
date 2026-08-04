@@ -5,7 +5,7 @@ module;
 export module twinning.kernel.tool.data.compression.bzip2.compress;
 import twinning.kernel.utility;
 import twinning.kernel.tool.data.compression.bzip2.common;
-import twinning.kernel.third.bzip2;
+import twinning.kernel.dependency.bzip2;
 
 export namespace Twinning::Kernel::Tool::Data::Compression::Bzip2 {
 
@@ -25,7 +25,7 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Bzip2 {
 			assert_test(Math::between(block_size, 1_i, 9_i));
 			assert_test(Math::between(work_factor, 0_i, 250_i));
 			auto bz_state = int{};
-			auto bz_stream = Third::bzip2::$bz_stream{
+			auto bz_stream = Dependency::bzip2::$bz_stream{
 				.next_in = unmake_pointer_unsafe<char>(as_variable_pointer(raw.current_pointer())),
 				.avail_in = unmake_box<unsigned int>(raw.reserve()),
 				.total_in_lo32 = 0,
@@ -39,22 +39,22 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Bzip2 {
 				.bzfree = nullptr,
 				.opaque = nullptr,
 			};
-			bz_state = Third::bzip2::$BZ2_bzCompressInit(
+			bz_state = Dependency::bzip2::$BZ2_bzCompressInit(
 				&bz_stream,
 				unmake_box<int>(block_size),
 				0,
 				unmake_box<int>(work_factor)
 			);
-			assert_test(bz_state == Third::bzip2::$BZ_OK);
-			bz_state = Third::bzip2::$BZ2_bzCompress(
+			assert_test(bz_state == Dependency::bzip2::$BZ_OK);
+			bz_state = Dependency::bzip2::$BZ2_bzCompress(
 				&bz_stream,
-				Third::bzip2::$BZ_FINISH
+				Dependency::bzip2::$BZ_FINISH
 			);
-			assert_test(bz_state == Third::bzip2::$BZ_STREAM_END);
-			bz_state = Third::bzip2::$BZ2_bzCompressEnd(
+			assert_test(bz_state == Dependency::bzip2::$BZ_STREAM_END);
+			bz_state = Dependency::bzip2::$BZ2_bzCompressEnd(
 				&bz_stream
 			);
-			assert_test(bz_state == Third::bzip2::$BZ_OK);
+			assert_test(bz_state == Dependency::bzip2::$BZ_OK);
 			assert_test(bz_stream.avail_in == 0);
 			raw.forward(cast_box<Size>(Bitwise::infuse(make_box<IntegerU64>(bz_stream.total_in_hi32), 2_ix * 32_sz, 32_sz) | Bitwise::infuse(make_box<IntegerU64>(bz_stream.total_in_lo32), 1_ix * 32_sz, 32_sz)));
 			ripe.forward(cast_box<Size>(Bitwise::infuse(make_box<IntegerU64>(bz_stream.total_out_hi32), 2_ix * 32_sz, 32_sz) | Bitwise::infuse(make_box<IntegerU64>(bz_stream.total_out_lo32), 1_ix * 32_sz, 32_sz)));

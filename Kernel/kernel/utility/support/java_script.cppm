@@ -29,7 +29,7 @@ import twinning.kernel.utility.model.dimension;
 import twinning.kernel.utility.model.record;
 import twinning.kernel.utility.storage.path;
 import twinning.kernel.utility.image.regular;
-import twinning.kernel.third.quickjs_ng;
+import twinning.kernel.dependency.quickjs_ng;
 
 export namespace Twinning::Kernel::Script::JavaScript {
 
@@ -87,9 +87,9 @@ export namespace Twinning::Kernel::Script::JavaScript {
 			That const & that
 		) -> Void {
 			assert_test(Detail::g_native_class_identifier<TValue> != Detail::k_invalid_native_class_identifier);
-			auto thix_value = Third::quickjs_ng::$JS_NewObjectClass(thix._context(), unmake_box<Third::quickjs_ng::$JSClassID>(Detail::g_native_class_identifier<TValue>));
+			auto thix_value = Dependency::quickjs_ng::$JS_NewObjectClass(thix._context(), unmake_box<Dependency::quickjs_ng::$JSClassID>(Detail::g_native_class_identifier<TValue>));
 			auto thix_opaque = allocate_instance<That>(that);
-			Third::quickjs_ng::$JS_SetOpaque(thix_value, thix_opaque.value);
+			Dependency::quickjs_ng::$JS_SetOpaque(thix_value, thix_opaque.value);
 			thix._rebind_value(thix_value);
 			return;
 		}
@@ -99,9 +99,9 @@ export namespace Twinning::Kernel::Script::JavaScript {
 			That && that
 		) -> Void {
 			assert_test(Detail::g_native_class_identifier<TValue> != Detail::k_invalid_native_class_identifier);
-			auto thix_value = Third::quickjs_ng::$JS_NewObjectClass(thix._context(), unmake_box<Third::quickjs_ng::$JSClassID>(Detail::g_native_class_identifier<TValue>));
+			auto thix_value = Dependency::quickjs_ng::$JS_NewObjectClass(thix._context(), unmake_box<Dependency::quickjs_ng::$JSClassID>(Detail::g_native_class_identifier<TValue>));
 			auto thix_opaque = allocate_instance<That>(as_moveable(that));
-			Third::quickjs_ng::$JS_SetOpaque(thix_value, thix_opaque.value);
+			Dependency::quickjs_ng::$JS_SetOpaque(thix_value, thix_opaque.value);
 			thix._rebind_value(thix_value);
 			return;
 		}
@@ -112,7 +112,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 		) -> Void {
 			assert_test(Detail::g_native_class_identifier<TValue> != Detail::k_invalid_native_class_identifier);
 			auto thix_value = thix._value();
-			auto thix_opaque = make_pointer_unsafe<That>(Third::quickjs_ng::$JS_GetOpaque(thix_value, unmake_box<Third::quickjs_ng::$JSClassID>(Detail::g_native_class_identifier<TValue>)));
+			auto thix_opaque = make_pointer_unsafe<That>(Dependency::quickjs_ng::$JS_GetOpaque(thix_value, unmake_box<Dependency::quickjs_ng::$JSClassID>(Detail::g_native_class_identifier<TValue>)));
 			assert_test(thix_opaque != k_null_pointer);
 			that = *thix_opaque;
 			return;

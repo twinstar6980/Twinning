@@ -5,7 +5,7 @@ module;
 export module twinning.kernel.tool.data.differentiation.vcdiff.encode;
 import twinning.kernel.utility;
 import twinning.kernel.tool.data.differentiation.vcdiff.common;
-import twinning.kernel.third.open_vcdiff;
+import twinning.kernel.dependency.open_vcdiff;
 
 export namespace Twinning::Kernel::Tool::Data::Differentiation::Vcdiff {
 
@@ -24,8 +24,8 @@ export namespace Twinning::Kernel::Tool::Data::Differentiation::Vcdiff {
 		) -> Void {
 			auto v_state = bool{};
 			auto patch_container = std::string{};
-			auto hashed_dictionary = Third::open_vcdiff::HashedDictionary{unmake_pointer_unsafe<char>(before.current_pointer()), unmake_box<std::size_t>(before.reserve())};
-			auto encoder = Third::open_vcdiff::VCDiffStreamingEncoder{&hashed_dictionary, !interleaved ? (Third::open_vcdiff::VCDiffFormatExtensionFlagValues::VCD_STANDARD_FORMAT) : (Third::open_vcdiff::VCDiffFormatExtensionFlagValues::VCD_FORMAT_INTERLEAVED), true};
+			auto hashed_dictionary = Dependency::open_vcdiff::HashedDictionary{unmake_pointer_unsafe<char>(before.current_pointer()), unmake_box<std::size_t>(before.reserve())};
+			auto encoder = Dependency::open_vcdiff::VCDiffStreamingEncoder{&hashed_dictionary, !interleaved ? (Dependency::open_vcdiff::VCDiffFormatExtensionFlagValues::VCD_STANDARD_FORMAT) : (Dependency::open_vcdiff::VCDiffFormatExtensionFlagValues::VCD_FORMAT_INTERLEAVED), true};
 			v_state = hashed_dictionary.Init();
 			assert_test(v_state);
 			v_state = encoder.StartEncoding(&patch_container);

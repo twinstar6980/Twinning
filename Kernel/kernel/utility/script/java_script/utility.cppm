@@ -18,7 +18,7 @@ import twinning.kernel.utility.container.optional.optional;
 import twinning.kernel.utility.support.std;
 import twinning.kernel.utility.thread.mutex;
 import twinning.kernel.utility.thread.unlocker;
-import twinning.kernel.third.quickjs_ng;
+import twinning.kernel.dependency.quickjs_ng;
 
 export namespace Twinning::Kernel::Script::JavaScript {
 
@@ -336,7 +336,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 			Runtime & rt,
 			Value &   obj
 		) -> Void {
-			auto opaque = make_pointer_unsafe<NativeValueHandler<TClass>>(Third::quickjs_ng::$JS_GetOpaque(obj._value(), unmake_box<Third::quickjs_ng::$JSClassID>(g_native_class_identifier<TClass>)));
+			auto opaque = make_pointer_unsafe<NativeValueHandler<TClass>>(Dependency::quickjs_ng::$JS_GetOpaque(obj._value(), unmake_box<Dependency::quickjs_ng::$JSClassID>(g_native_class_identifier<TClass>)));
 			free_instance(opaque);
 			return;
 		}
@@ -437,7 +437,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 		auto set_constructor(
 		) -> NativeClassBuilder & {
 			thiz.m_constructor = thiz.m_proto.new_value(NativeFunctionWrapper<t_function, NativeFunctionWrapperType::Constant::constructor()>{thiz.whole_name()});
-			Third::quickjs_ng::$JS_SetConstructor(thiz.m_constructor._context(), thiz.m_constructor._value(), thiz.m_proto._value());
+			Dependency::quickjs_ng::$JS_SetConstructor(thiz.m_constructor._context(), thiz.m_constructor._value(), thiz.m_proto._value());
 			thiz.m_parent.define_object_property(
 				thiz.m_name,
 				Value{thiz.m_constructor}

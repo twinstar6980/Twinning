@@ -5,7 +5,7 @@ module;
 export module twinning.kernel.tool.data.compression.deflate.uncompress;
 import twinning.kernel.utility;
 import twinning.kernel.tool.data.compression.deflate.common;
-import twinning.kernel.third.zlib;
+import twinning.kernel.dependency.zlib;
 
 export namespace Twinning::Kernel::Tool::Data::Compression::Deflate {
 
@@ -22,7 +22,7 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Deflate {
 			Integer const &        window_exponent,
 			WrapperType const &    wrapper_type
 		) -> Void {
-			assert_test(Math::between(window_exponent, 8_i, make_box<Integer>(Third::zlib::$MAX_WBITS)));
+			assert_test(Math::between(window_exponent, 8_i, make_box<Integer>(Dependency::zlib::$MAX_WBITS)));
 			auto z_state = int{};
 			auto z_window_exponent = unmake_box<int>(window_exponent);
 			switch (wrapper_type.value) {
@@ -40,11 +40,11 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Deflate {
 				}
 				default: throw UnreachableException{};
 			}
-			auto z_stream = Third::zlib::$z_stream{
-				.next_in = unmake_pointer_unsafe<Third::zlib::$Bytef>(ripe.current_pointer()),
+			auto z_stream = Dependency::zlib::$z_stream{
+				.next_in = unmake_pointer_unsafe<Dependency::zlib::$Bytef>(ripe.current_pointer()),
 				.avail_in = unmake_box<unsigned>(ripe.reserve()),
 				.total_in = 0,
-				.next_out = unmake_pointer_unsafe<Third::zlib::$Bytef>(raw.current_pointer()),
+				.next_out = unmake_pointer_unsafe<Dependency::zlib::$Bytef>(raw.current_pointer()),
 				.avail_out = unmake_box<unsigned>(raw.reserve()),
 				.total_out = 0,
 				.msg = nullptr,
@@ -56,22 +56,22 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Deflate {
 				.adler = 0,
 				.reserved = 0,
 			};
-			z_state = Third::zlib::$inflateInit2_(
+			z_state = Dependency::zlib::$inflateInit2_(
 				&z_stream,
 				z_window_exponent,
-				Third::zlib::$ZLIB_VERSION,
-				unmake_box<int>(k_type_size<Third::zlib::$z_stream>)
+				Dependency::zlib::$ZLIB_VERSION,
+				unmake_box<int>(k_type_size<Dependency::zlib::$z_stream>)
 			);
-			assert_test(z_state == Third::zlib::$Z_OK);
-			z_state = Third::zlib::$inflate(
+			assert_test(z_state == Dependency::zlib::$Z_OK);
+			z_state = Dependency::zlib::$inflate(
 				&z_stream,
-				Third::zlib::$Z_NO_FLUSH
+				Dependency::zlib::$Z_NO_FLUSH
 			);
-			assert_test(z_state == Third::zlib::$Z_STREAM_END);
-			z_state = Third::zlib::$inflateEnd(
+			assert_test(z_state == Dependency::zlib::$Z_STREAM_END);
+			z_state = Dependency::zlib::$inflateEnd(
 				&z_stream
 			);
-			assert_test(z_state == Third::zlib::$Z_OK);
+			assert_test(z_state == Dependency::zlib::$Z_OK);
 			ripe.forward(make_box<Size>(z_stream.total_in));
 			raw.forward(make_box<Size>(z_stream.total_out));
 			return;

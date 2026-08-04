@@ -5,7 +5,7 @@ module;
 export module twinning.kernel.tool.texture.conversion.png.decode;
 import twinning.kernel.utility;
 import twinning.kernel.tool.texture.conversion.png.common;
-import twinning.kernel.third.libpng;
+import twinning.kernel.dependency.libpng;
 
 export namespace Twinning::Kernel::Tool::Texture::Conversion::Png {
 
@@ -20,71 +20,71 @@ export namespace Twinning::Kernel::Tool::Texture::Conversion::Png {
 			InputByteStreamView &            data,
 			Image::VariableImageView const & image
 		) -> Void {
-			auto png_struct = Third::libpng::$png_create_read_struct(Third::libpng::$PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
-			Third::libpng::$png_set_error_fn(png_struct, nullptr, &png_error, &png_warning);
-			Third::libpng::$png_set_read_fn(png_struct, &data, &png_read_data);
-			auto png_info = Third::libpng::$png_create_info_struct(png_struct);
-			Third::libpng::$png_read_info(png_struct, png_info);
-			assert_test(image.size() == Image::ImageSize{make_box<Size>(Third::libpng::$png_get_image_width(png_struct, png_info)), make_box<Size>(Third::libpng::$png_get_image_height(png_struct, png_info))});
-			auto png_bit_depth = Third::libpng::$png_get_bit_depth(png_struct, png_info);
-			switch (Third::libpng::$png_get_color_type(png_struct, png_info)) {
-				case Third::libpng::$PNG_COLOR_TYPE_PALETTE: {
-					Third::libpng::$png_set_add_alpha(png_struct, 0xFF, Third::libpng::$PNG_FILLER_AFTER);
-					Third::libpng::$png_set_palette_to_rgb(png_struct);
+			auto png_struct = Dependency::libpng::$png_create_read_struct(Dependency::libpng::$PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
+			Dependency::libpng::$png_set_error_fn(png_struct, nullptr, &png_error, &png_warning);
+			Dependency::libpng::$png_set_read_fn(png_struct, &data, &png_read_data);
+			auto png_info = Dependency::libpng::$png_create_info_struct(png_struct);
+			Dependency::libpng::$png_read_info(png_struct, png_info);
+			assert_test(image.size() == Image::ImageSize{make_box<Size>(Dependency::libpng::$png_get_image_width(png_struct, png_info)), make_box<Size>(Dependency::libpng::$png_get_image_height(png_struct, png_info))});
+			auto png_bit_depth = Dependency::libpng::$png_get_bit_depth(png_struct, png_info);
+			switch (Dependency::libpng::$png_get_color_type(png_struct, png_info)) {
+				case Dependency::libpng::$PNG_COLOR_TYPE_PALETTE: {
+					Dependency::libpng::$png_set_add_alpha(png_struct, 0xFF, Dependency::libpng::$PNG_FILLER_AFTER);
+					Dependency::libpng::$png_set_palette_to_rgb(png_struct);
 					break;
 				}
-				case Third::libpng::$PNG_COLOR_TYPE_GRAY: {
-					Third::libpng::$png_set_add_alpha(png_struct, 0xFF, Third::libpng::$PNG_FILLER_AFTER);
+				case Dependency::libpng::$PNG_COLOR_TYPE_GRAY: {
+					Dependency::libpng::$png_set_add_alpha(png_struct, 0xFF, Dependency::libpng::$PNG_FILLER_AFTER);
 					if (png_bit_depth == 1 || png_bit_depth == 2 || png_bit_depth == 4) {
-						Third::libpng::$png_set_expand_gray_1_2_4_to_8(png_struct);
+						Dependency::libpng::$png_set_expand_gray_1_2_4_to_8(png_struct);
 					}
 					[[fallthrough]];
 				}
-				case Third::libpng::$PNG_COLOR_TYPE_GRAY_ALPHA: {
+				case Dependency::libpng::$PNG_COLOR_TYPE_GRAY_ALPHA: {
 					if (png_bit_depth == 16) {
-						Third::libpng::$png_set_scale_16(png_struct);
+						Dependency::libpng::$png_set_scale_16(png_struct);
 					}
-					Third::libpng::$png_set_gray_to_rgb(png_struct);
+					Dependency::libpng::$png_set_gray_to_rgb(png_struct);
 					break;
 				}
-				case Third::libpng::$PNG_COLOR_TYPE_RGB: {
-					Third::libpng::$png_set_add_alpha(png_struct, 0xFF, Third::libpng::$PNG_FILLER_AFTER);
+				case Dependency::libpng::$PNG_COLOR_TYPE_RGB: {
+					Dependency::libpng::$png_set_add_alpha(png_struct, 0xFF, Dependency::libpng::$PNG_FILLER_AFTER);
 					[[fallthrough]];
 				}
-				case Third::libpng::$PNG_COLOR_TYPE_RGB_ALPHA: {
+				case Dependency::libpng::$PNG_COLOR_TYPE_RGB_ALPHA: {
 					if (png_bit_depth == 16) {
-						Third::libpng::$png_set_scale_16(png_struct);
+						Dependency::libpng::$png_set_scale_16(png_struct);
 					}
 					break;
 				}
 				default: throw UnreachableException{};
 			}
-			auto png_trans_alpha = Third::libpng::$png_bytep{};
+			auto png_trans_alpha = Dependency::libpng::$png_bytep{};
 			auto png_num_trans = int{};
-			auto png_trans_color = Third::libpng::$png_color_16p{};
-			if (Third::libpng::$png_get_tRNS(png_struct, png_info, &png_trans_alpha, &png_num_trans, &png_trans_color) != 0) {
-				Third::libpng::$png_set_tRNS_to_alpha(png_struct);
+			auto png_trans_color = Dependency::libpng::$png_color_16p{};
+			if (Dependency::libpng::$png_get_tRNS(png_struct, png_info, &png_trans_alpha, &png_num_trans, &png_trans_color) != 0) {
+				Dependency::libpng::$png_set_tRNS_to_alpha(png_struct);
 			}
-			auto png_background = Third::libpng::$png_color_16p{};
-			if (Third::libpng::$png_get_bKGD(png_struct, png_info, &png_background) != 0) {
-				Third::libpng::$png_set_background(png_struct, png_background, Third::libpng::$PNG_BACKGROUND_GAMMA_FILE, 1, 1.0);
+			auto png_background = Dependency::libpng::$png_color_16p{};
+			if (Dependency::libpng::$png_get_bKGD(png_struct, png_info, &png_background) != 0) {
+				Dependency::libpng::$png_set_background(png_struct, png_background, Dependency::libpng::$PNG_BACKGROUND_GAMMA_FILE, 1, 1.0);
 			}
 			auto png_file_srgb_intent = int{};
 			auto png_file_gamma = double{};
-			if (Third::libpng::$png_get_sRGB(png_struct, png_info, &png_file_srgb_intent) != 0) {
-				Third::libpng::$png_set_gamma(png_struct, Third::libpng::$PNG_DEFAULT_sRGB, Third::libpng::$PNG_DEFAULT_sRGB);
+			if (Dependency::libpng::$png_get_sRGB(png_struct, png_info, &png_file_srgb_intent) != 0) {
+				Dependency::libpng::$png_set_gamma(png_struct, Dependency::libpng::$PNG_DEFAULT_sRGB, Dependency::libpng::$PNG_DEFAULT_sRGB);
 			}
-			else if (Third::libpng::$png_get_gAMA(png_struct, png_info, &png_file_gamma) != 0) {
-				Third::libpng::$png_set_gamma(png_struct, Third::libpng::$PNG_DEFAULT_sRGB, png_file_gamma);
+			else if (Dependency::libpng::$png_get_gAMA(png_struct, png_info, &png_file_gamma) != 0) {
+				Dependency::libpng::$png_set_gamma(png_struct, Dependency::libpng::$PNG_DEFAULT_sRGB, png_file_gamma);
 			}
 			else {
-				Third::libpng::$png_set_gamma(png_struct, Third::libpng::$PNG_DEFAULT_sRGB, 0.45455);
+				Dependency::libpng::$png_set_gamma(png_struct, Dependency::libpng::$PNG_DEFAULT_sRGB, 0.45455);
 			}
 			for (auto & row : image.data()) {
-				Third::libpng::$png_read_row(png_struct, unmake_pointer_unsafe<Third::libpng::$png_byte>(row.begin()), nullptr);
+				Dependency::libpng::$png_read_row(png_struct, unmake_pointer_unsafe<Dependency::libpng::$png_byte>(row.begin()), nullptr);
 			}
-			Third::libpng::$png_read_end(png_struct, png_info);
-			Third::libpng::$png_destroy_read_struct(&png_struct, &png_info, nullptr);
+			Dependency::libpng::$png_read_end(png_struct, png_info);
+			Dependency::libpng::$png_destroy_read_struct(&png_struct, &png_info, nullptr);
 			return;
 		}
 
@@ -95,13 +95,13 @@ export namespace Twinning::Kernel::Tool::Texture::Conversion::Png {
 			Image::ImageSize &           image_size
 		) -> Void {
 			auto stream = InputByteStreamView{data};
-			auto png_struct = Third::libpng::$png_create_read_struct(Third::libpng::$PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
-			Third::libpng::$png_set_error_fn(png_struct, nullptr, &png_error, &png_warning);
-			Third::libpng::$png_set_read_fn(png_struct, &stream, &png_read_data);
-			auto png_info = Third::libpng::$png_create_info_struct(png_struct);
-			Third::libpng::$png_read_info(png_struct, png_info);
-			image_size = Image::ImageSize{make_box<Size>(Third::libpng::$png_get_image_width(png_struct, png_info)), make_box<Size>(Third::libpng::$png_get_image_height(png_struct, png_info))};
-			Third::libpng::$png_destroy_read_struct(&png_struct, &png_info, nullptr);
+			auto png_struct = Dependency::libpng::$png_create_read_struct(Dependency::libpng::$PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
+			Dependency::libpng::$png_set_error_fn(png_struct, nullptr, &png_error, &png_warning);
+			Dependency::libpng::$png_set_read_fn(png_struct, &stream, &png_read_data);
+			auto png_info = Dependency::libpng::$png_create_info_struct(png_struct);
+			Dependency::libpng::$png_read_info(png_struct, png_info);
+			image_size = Image::ImageSize{make_box<Size>(Dependency::libpng::$png_get_image_width(png_struct, png_info)), make_box<Size>(Dependency::libpng::$png_get_image_height(png_struct, png_info))};
+			Dependency::libpng::$png_destroy_read_struct(&png_struct, &png_info, nullptr);
 			return;
 		}
 

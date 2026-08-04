@@ -4,8 +4,8 @@ module;
 #include "kernel/utility/miscellaneous/low_level/common.hpp"
 
 export module twinning.kernel.utility.miscellaneous.low_level.system_native_string;
-import twinning.kernel.third.system.windows;
-import twinning.kernel.third.system.posix;
+import twinning.kernel.dependency.system.win32;
+import twinning.kernel.dependency.system.posix;
 
 export namespace Twinning::Kernel::LowLevel::SystemNativeString {
 
@@ -20,9 +20,9 @@ export namespace Twinning::Kernel::LowLevel::SystemNativeString {
 		if (!source.empty()) {
 			auto destination_size = std::size_t{};
 			destination_size = static_cast<std::size_t>(
-				Third::system::windows::$WideCharToMultiByte(
-					Third::system::windows::$CP_UTF8,
-					Third::system::windows::$WC_ERR_INVALID_CHARS,
+				Dependency::system::win32::$WideCharToMultiByte(
+					Dependency::system::win32::$CP_UTF8,
+					Dependency::system::win32::$WC_ERR_INVALID_CHARS,
 					source.data(),
 					static_cast<int>(source.size()),
 					nullptr,
@@ -35,9 +35,9 @@ export namespace Twinning::Kernel::LowLevel::SystemNativeString {
 			destination.reserve(destination_size + 1);
 			destination.resize(destination_size);
 			destination_size = static_cast<std::size_t>(
-				Third::system::windows::$WideCharToMultiByte(
-					Third::system::windows::$CP_UTF8,
-					Third::system::windows::$WC_ERR_INVALID_CHARS,
+				Dependency::system::win32::$WideCharToMultiByte(
+					Dependency::system::win32::$CP_UTF8,
+					Dependency::system::win32::$WC_ERR_INVALID_CHARS,
 					source.data(),
 					static_cast<int>(source.size()),
 					destination.data(),
@@ -60,9 +60,9 @@ export namespace Twinning::Kernel::LowLevel::SystemNativeString {
 		if (!source.empty()) {
 			auto destination_size = std::size_t{};
 			destination_size = static_cast<std::size_t>(
-				Third::system::windows::$MultiByteToWideChar(
-					Third::system::windows::$CP_UTF8,
-					Third::system::windows::$MB_ERR_INVALID_CHARS,
+				Dependency::system::win32::$MultiByteToWideChar(
+					Dependency::system::win32::$CP_UTF8,
+					Dependency::system::win32::$MB_ERR_INVALID_CHARS,
 					source.data(),
 					static_cast<int>(source.size()),
 					nullptr,
@@ -73,9 +73,9 @@ export namespace Twinning::Kernel::LowLevel::SystemNativeString {
 			destination.reserve(destination_size + 1);
 			destination.resize(destination_size);
 			destination_size = static_cast<std::size_t>(
-				Third::system::windows::$MultiByteToWideChar(
-					Third::system::windows::$CP_UTF8,
-					Third::system::windows::$MB_ERR_INVALID_CHARS,
+				Dependency::system::win32::$MultiByteToWideChar(
+					Dependency::system::win32::$CP_UTF8,
+					Dependency::system::win32::$MB_ERR_INVALID_CHARS,
 					source.data(),
 					static_cast<int>(source.size()),
 					destination.data(),
@@ -94,9 +94,9 @@ export namespace Twinning::Kernel::LowLevel::SystemNativeString {
 		if (!source.empty()) {
 			auto destination_size = std::size_t{};
 			destination_size = static_cast<std::size_t>(
-				Third::system::windows::$MultiByteToWideChar(
-					Third::system::windows::$CP_ACP,
-					Third::system::windows::$MB_ERR_INVALID_CHARS,
+				Dependency::system::win32::$MultiByteToWideChar(
+					Dependency::system::win32::$CP_ACP,
+					Dependency::system::win32::$MB_ERR_INVALID_CHARS,
 					source.data(),
 					static_cast<int>(source.size()),
 					nullptr,
@@ -107,9 +107,9 @@ export namespace Twinning::Kernel::LowLevel::SystemNativeString {
 			destination.reserve(destination_size + 1);
 			destination.resize(destination_size);
 			destination_size = static_cast<std::size_t>(
-				Third::system::windows::$MultiByteToWideChar(
-					Third::system::windows::$CP_ACP,
-					Third::system::windows::$MB_ERR_INVALID_CHARS,
+				Dependency::system::win32::$MultiByteToWideChar(
+					Dependency::system::win32::$CP_ACP,
+					Dependency::system::win32::$MB_ERR_INVALID_CHARS,
 					source.data(),
 					static_cast<int>(source.size()),
 					destination.data(),

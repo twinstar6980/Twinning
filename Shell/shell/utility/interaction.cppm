@@ -4,56 +4,220 @@ module;
 
 export module twinning.shell.utility.interaction;
 import twinning.shell.utility.system_native_string;
-import twinning.shell.third.system.windows;
-import twinning.shell.third.system.posix;
+import twinning.shell.dependency.system.win32;
+import twinning.shell.dependency.system.posix;
 
 export namespace Twinning::Shell::Interaction {
 
-	#pragma region console
+	#pragma region internal
+
+	inline auto get_handle(
+		bool const & is_input,
+		bool const & is_output
+	) -> std::intptr_t {
+		auto handle = std::intptr_t{};
+		assert_test(is_input != is_output);
+		#if defined M_system_windows
+		auto native_handle = Dependency::system::win32::$HANDLE{};
+		if (is_input) {
+			native_handle = Dependency::system::win32::$GetStdHandle(Dependency::system::win32::$STD_INPUT_HANDLE);
+		}
+		if (is_output) {
+			native_handle = Dependency::system::win32::$GetStdHandle(Dependency::system::win32::$STD_OUTPUT_HANDLE);
+		}
+		assert_test(native_handle != Dependency::system::win32::$INVALID_HANDLE_VALUE);
+		handle = reinterpret_cast<std::intptr_t>(native_handle);
+		#endif
+		#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
+		auto native_handle = int{};
+		if (is_input) {
+			native_handle = Dependency::system::posix::$STDIN_FILENO;
+		}
+		if (is_output) {
+			native_handle = Dependency::system::posix::$STDOUT_FILENO;
+		}
+		assert_test(native_handle != -1);
+		handle = static_cast<std::intptr_t>(native_handle);
+		#endif
+		return handle;
+	}
+
+	inline auto check_mode(
+		std::intptr_t const & handle
+	) -> bool {
+		auto mode = false;
+		#if defined M_system_windows
+		auto state_b = Dependency::system::win32::$BOOL{};
+		auto native_handle = reinterpret_cast<Dependency::system::win32::$HANDLE>(handle);
+		auto native_handle_mode = Dependency::system::win32::$DWORD{};
+		state_b = Dependency::system::win32::$GetConsoleMode(native_handle, &native_handle_mode);
+		mode = state_b != Dependency::system::win32::$FALSE;
+		#endif
+		#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
+		auto state_i = int{};
+		auto native_handle = static_cast<int>(handle);
+		state_i = Dependency::system::posix::$isatty(native_handle);
+		mode = state_i == 1;
+		#endif
+		return mode;
+	}
+
+	// ----------------
+
+	inline auto read_file(
+		std::intptr_t const & handle,
+		std::string &         text
+	) -> void {
+		std::getline(std::cin, text);
+		return;
+	}
+
+	inline auto write_file(
+		std::intptr_t const & handle,
+		std::string const &   text
+	) -> void {
+		#if defined M_system_windows
+		auto state_b = Dependency::system::win32::$BOOL{};
+		auto native_handle = reinterpret_cast<Dependency::system::win32::$HANDLE>(handle);
+		auto text_size = Dependency::system::win32::$DWORD{};
+		state_b = Dependency::system::win32::$WriteFile(
+			native_handle,
+			text.data(),
+			static_cast<Dependency::system::win32::$DWORD>(text.size()),
+			&text_size,
+			nullptr
+		);
+		assert_test(state_b != Dependency::system::win32::$FALSE);
+		assert_test(static_cast<std::size_t>(text_size) == text.size());
+		#endif
+		#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
+		auto native_handle = static_cast<int>(handle);
+		auto text_size = Dependency::system::posix::$write(
+			native_handle,
+			text.data(),
+			text.size()
+		);
+		assert_test(text_size != -1);
+		assert_test(static_cast<std::size_t>(text_size) == text.size());
+		#endif
+		return;
+	}
+
+	// ----------------
+
+	inline auto read_terminal(
+		std::intptr_t const & handle,
+		std::string &         text
+	) -> void {
+		#if defined M_system_windows
+		auto state_b = Dependency::system::win32::$BOOL{};
+		auto native_handle = reinterpret_cast<Dependency::system::win32::$HANDLE>(handle);
+		auto text_data = std::array<wchar_t, 0x1000>{};
+		auto text_size = Dependency::system::win32::$DWORD{};
+		state_b = Dependency::system::win32::$ReadConsoleW(
+			native_handle,
+			text_data.data(),
+			static_cast<Dependency::system::win32::$DWORD>(text_data.size()),
+			&text_size,
+			nullptr
+		);
+		assert_test(state_b != Dependency::system::win32::$FALSE);
+		text = SystemNativeString::wide_to_utf8(std::wstring_view{text_data.data(), text_size - 2});
+		#endif
+		#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
+		read_file(handle, text);
+		#endif
+		return;
+	}
+
+	inline auto write_terminal(
+		std::intptr_t const & handle,
+		std::string const &   text
+	) -> void {
+		#if defined M_system_windows
+		auto state_b = Dependency::system::win32::$BOOL{};
+		auto native_handle = reinterpret_cast<Dependency::system::win32::$HANDLE>(handle);
+		auto text_data = SystemNativeString::wide_from_utf8(text);
+		state_b = Dependency::system::win32::$WriteConsoleW(
+			native_handle,
+			text_data.data(),
+			static_cast<Dependency::system::win32::$DWORD>(text_data.size()),
+			nullptr,
+			nullptr
+		);
+		assert_test(state_b != Dependency::system::win32::$FALSE);
+		#endif
+		#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
+		write_file(handle, text);
+		#endif
+		return;
+	}
+
+	#pragma endregion
+
+	#pragma region utility
+
+	inline auto configure_locale(
+	) -> void {
+		#if defined M_system_windows
+		Dependency::system::win32::$SetProcessPreferredUILanguages(Dependency::system::win32::$MUI_LANGUAGE_NAME, L"en-US\0\0", nullptr);
+		#endif
+		std::locale::global(std::locale::classic());
+		return;
+	}
+
+	inline auto configure_stream(
+		bool const & is_input,
+		bool const & is_output
+	) -> void {
+		auto handle = get_handle(is_input, is_output);
+		if (check_mode(handle)) {
+			#if defined M_system_windows
+			auto state_b = Dependency::system::win32::$BOOL{};
+			auto native_handle = reinterpret_cast<Dependency::system::win32::$HANDLE>(handle);
+			auto native_handle_mode = Dependency::system::win32::$DWORD{};
+			state_b = Dependency::system::win32::$GetConsoleMode(native_handle, &native_handle_mode);
+			assert_test(state_b != Dependency::system::win32::$FALSE);
+			if (is_input) {
+				native_handle_mode |= Dependency::system::win32::$ENABLE_VIRTUAL_TERMINAL_INPUT;
+			}
+			if (is_output) {
+				native_handle_mode |= Dependency::system::win32::$ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+			}
+			state_b = Dependency::system::win32::$SetConsoleMode(native_handle, native_handle_mode);
+			assert_test(state_b != Dependency::system::win32::$FALSE);
+			#endif
+			#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
+			#endif
+		}
+		return;
+	}
+
+	// ----------------
 
 	inline auto input_text(
 	) -> std::string {
 		auto text = std::string{};
-		#if defined M_system_windows
-		auto state_b = Third::system::windows::$BOOL{};
-		auto handle = Third::system::windows::$GetStdHandle(Third::system::windows::$STD_INPUT_HANDLE);
-		auto handle_mode = Third::system::windows::$DWORD{};
-		if (Third::system::windows::$GetConsoleMode(handle, &handle_mode)) {
-			auto text_w = std::array<wchar_t, 0x1000>{};
-			auto length = Third::system::windows::$DWORD{};
-			state_b = Third::system::windows::$ReadConsoleW(handle, text_w.data(), static_cast<Third::system::windows::$DWORD>(text_w.size()), &length, nullptr);
-			assert_test(state_b != Third::system::windows::$FALSE);
-			text = SystemNativeString::wide_to_utf8(std::wstring_view{text_w.data(), length - 2});
+		auto handle = get_handle(true, false);
+		if (!check_mode(handle)) {
+			read_file(handle, text);
 		}
 		else {
-			std::getline(std::cin, text);
+			read_terminal(handle, text);
 		}
-		#endif
-		#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
-		std::getline(std::cin, text);
-		#endif
 		return text;
 	}
 
 	inline auto output_text(
 		std::string const & text
 	) -> void {
-		#if defined M_system_windows
-		auto state_b = Third::system::windows::$BOOL{};
-		auto handle = Third::system::windows::$GetStdHandle(Third::system::windows::$STD_OUTPUT_HANDLE);
-		auto handle_mode = Third::system::windows::$DWORD{};
-		if (Third::system::windows::$GetConsoleMode(handle, &handle_mode)) {
-			auto text_w = SystemNativeString::wide_from_utf8(text);
-			state_b = Third::system::windows::$WriteConsoleW(handle, text_w.data(), static_cast<Third::system::windows::$DWORD>(text_w.size()), nullptr, nullptr);
-			assert_test(state_b != Third::system::windows::$FALSE);
+		auto handle = get_handle(false, true);
+		if (!check_mode(handle)) {
+			write_file(handle, text);
 		}
 		else {
-			std::cout << text << std::flush;
+			write_terminal(handle, text);
 		}
-		#endif
-		#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
-		std::cout << text << std::flush;
-		#endif
 		return;
 	}
 

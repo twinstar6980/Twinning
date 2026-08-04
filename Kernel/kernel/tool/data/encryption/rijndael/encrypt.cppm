@@ -5,7 +5,7 @@ module;
 export module twinning.kernel.tool.data.encryption.rijndael.encrypt;
 import twinning.kernel.utility;
 import twinning.kernel.tool.data.encryption.rijndael.common;
-import twinning.kernel.third.Rijndael;
+import twinning.kernel.dependency.Rijndael;
 
 export namespace Twinning::Kernel::Tool::Data::Encryption::Rijndael {
 
@@ -31,7 +31,7 @@ export namespace Twinning::Kernel::Tool::Data::Encryption::Rijndael {
 			auto initialization_vector_view = mode == Mode::Constant::ecb() ? (k_empty_initialization_vector.view().head(cast_box<Size>(block_size))) : (initialization_vector);
 			auto raw_size = raw.reserve();
 			if (raw_size != 0_sz) {
-				auto rijndael = Third::Rijndael::CRijndael{};
+				auto rijndael = Dependency::Rijndael::CRijndael{};
 				rijndael.MakeKey(unmake_pointer_unsafe<char>(key.begin()), unmake_pointer_unsafe<char>(initialization_vector_view.begin()), unmake_box<int>(key.size()), unmake_box<int>(block_size));
 				rijndael.Encrypt(unmake_pointer_unsafe<char>(raw.current_pointer()), unmake_pointer_unsafe<char>(ripe.current_pointer()), unmake_box<std::size_t>(raw.reserve()), unmake_box<int>(mode));
 			}

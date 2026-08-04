@@ -42,6 +42,20 @@ namespace Twinning.Script.Shell {
 
 	// #region basic
 
+	export function basic_check_mode(
+		name: 'input' | 'output',
+	): {mode: boolean} {
+		TerminateHelper.mark();
+		let result = callback([
+			'check_mode',
+			name,
+		]);
+		TerminateHelper.mark();
+		return {
+			mode: ConvertHelper.parse_boolean_from_string(result[0]),
+		};
+	}
+
 	export function basic_output_text(
 		text: string,
 	): {} {

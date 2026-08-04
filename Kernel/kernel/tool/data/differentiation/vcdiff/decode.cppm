@@ -5,7 +5,7 @@ module;
 export module twinning.kernel.tool.data.differentiation.vcdiff.decode;
 import twinning.kernel.utility;
 import twinning.kernel.tool.data.differentiation.vcdiff.common;
-import twinning.kernel.third.open_vcdiff;
+import twinning.kernel.dependency.open_vcdiff;
 
 export namespace Twinning::Kernel::Tool::Data::Differentiation::Vcdiff {
 
@@ -24,7 +24,7 @@ export namespace Twinning::Kernel::Tool::Data::Differentiation::Vcdiff {
 		) -> Void {
 			auto v_state = bool{};
 			auto after_container = std::string{};
-			auto decoder = Third::open_vcdiff::VCDiffStreamingDecoder{};
+			auto decoder = Dependency::open_vcdiff::VCDiffStreamingDecoder{};
 			decoder.SetAllowVcdTarget(true);
 			decoder.SetMaximumTargetFileSize(unmake_box<std::size_t>(k_number_maximum<IntegerS32>));
 			decoder.SetMaximumTargetWindowSize(unmake_box<std::size_t>(maximum_window_size));

@@ -11,7 +11,6 @@ import twinning.shell.bridge.service;
 import twinning.shell.bridge.library;
 import twinning.shell.bridge.client;
 import twinning.shell.bridge.launcher;
-import twinning.shell.third.system.windows;
 
 export namespace Twinning::Shell {
 
@@ -98,6 +97,14 @@ export namespace Twinning::Shell {
 					result.emplace_back(std::move(std::get<0>(detail)));
 					break;
 				}
+				case hash_string("check_mode"sv): {
+					assert_test(argument.size() == 2);
+					auto detail = thiz.handle_check_mode(
+						argument[1]
+					);
+					result.emplace_back(std::get<0>(detail) ? "true"sv : "false"sv);
+					break;
+				}
 				case hash_string("output_text"sv): {
 					assert_test(argument.size() == 2);
 					auto detail = thiz.handle_output_text(
@@ -128,7 +135,7 @@ export namespace Twinning::Shell {
 				value = "basic"sv;
 			}
 			if (name == "version"sv) {
-				value = M_version;
+				value = std::string_view{M_version};
 			}
 			if (name == "terminate"sv) {
 				value = "false"sv;
@@ -137,6 +144,15 @@ export namespace Twinning::Shell {
 		}
 
 		// ----------------
+
+		auto handle_check_mode(
+			std::string const & name
+		) -> std::tuple<bool> {
+			assert_test(name == "input"sv || name == "output"sv);
+			auto handle = Interaction::get_handle(name == "input"sv, name == "output"sv);
+			auto mode = Interaction::check_mode(handle);
+			return std::make_tuple(mode);
+		}
 
 		auto handle_output_text(
 			std::string const & text
@@ -222,14 +238,17 @@ export namespace Twinning::Shell {
 		#pragma region life
 
 		auto run(
-			int const &                argc,
-			void const * const* const& argv,
-			void * const&              extra
+			int const &                  argc,
+			void const * const * const & argv,
+			void * const &               extra
 		) -> int {
 			#if defined M_build_release
 			try
 			#endif
 			{
+				Interaction::configure_locale();
+				Interaction::configure_stream(true, false);
+				Interaction::configure_stream(false, true);
 				auto args = std::vector<std::string>{};
 				args.reserve(static_cast<std::size_t>(argc));
 				for (auto & arg : std::span{argv, static_cast<std::size_t>(argc)}) {
@@ -240,10 +259,6 @@ export namespace Twinning::Shell {
 					args.emplace_back(static_cast<char const *>(arg));
 					#endif
 				}
-				#if defined M_system_windows
-				Third::system::windows::$SetProcessPreferredUILanguages(Third::system::windows::$MUI_LANGUAGE_NAME, L"en-US\0\0", nullptr);
-				#endif
-				std::locale::global(std::locale::classic());
 				assert_test(args.size() >= 3);
 				auto result = thiz.launch_session(static_cast<Bridge::Service *>(extra), args[1], args[2], std::vector<std::string>{args.begin() + 3, args.end()});
 				return result.has_value() ? 0 : 1;
@@ -265,7 +280,7 @@ export namespace Twinning::Shell {
 		#pragma region utility
 
 		auto launch_session(
-			Bridge::Service * const&         kernel_library_symbol,
+			Bridge::Service * const &        kernel_library_symbol,
 			std::string const &              kernel,
 			std::string const &              script,
 			std::vector<std::string> const & argument
