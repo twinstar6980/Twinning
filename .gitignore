@@ -1,43 +1,43 @@
-# Common
+# common
 
-# System - Windows
+# system - windows
 /**/desktop.ini
 
-# System - Macintosh
+# system - macintosh
 /**/.DS_Store
 
-# Environment - Git
+# environment - git
 /**/.git
 
-# Environment - Xmake
+# environment - xmake
 /**/.xmake
 
-# Environment - Node.js
+# environment - node.js
 /**/package-lock.json
 /**/node_modules
 
-# Environment - Gradle
+# environment - gradle
 /**/.gradle
 
-# Environment - Flutter
+# environment - flutter
 /**/pubspec.lock
 /**/.dart_tool
 /**/.flutter-plugins-dependencies
 /**/default.profraw
 
-# Environment - Visual Studio
+# environment - visual studio
 /**/.vs
 /**/*.vcxproj.user
 /**/*.csproj.user
 
-# Environment - Visual Studio Code
+# environment - visual studio code
 /**/.vscode
 
-# Environment - Xcode
+# environment - xcode
 /**/xcuserdata
 
-# Environment - JetBrains
+# environment - jetbrains
 /**/.idea
 
-# Project
+# project
 /.local

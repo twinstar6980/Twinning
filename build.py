@@ -3,10 +3,10 @@ import sys
 sys.dont_write_bytecode = True
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 import common.script.utility as utility
-import Kernel.build as build_kernel
-import Script.build as build_script
-import Shell.build as build_shell
-import Assistant.build as build_assistant
+import module.kernel.build as build_kernel
+import module.script.build as build_script
+import module.shell.build as build_shell
+import module.assistant.build as build_assistant
 
 # ----------------
 
@@ -56,17 +56,17 @@ def build(
 				f'{distribution}/{platform}.{module_name}{module_distribution_extension}',
 				f'{temporary}/artifact/{module_name}{module_distribution_extension}',
 			)
-	# unembedded
+	# asset
 	utility.fs_copy(
-		f'{source}/common/unembedded/assistant',
+		f'{source}/common/asset/assistant',
 		f'{temporary}/artifact/assistant',
 	)
 	utility.fs_copy(
-		f'{source}/common/unembedded/launch.sh',
+		f'{source}/common/asset/launch.sh',
 		f'{temporary}/artifact/launch.sh',
 	)
 	utility.fs_copy(
-		f'{source}/common/unembedded/launch.ps1',
+		f'{source}/common/asset/launch.ps1',
 		f'{temporary}/artifact/launch.ps1',
 	)
 	# miscellaneous

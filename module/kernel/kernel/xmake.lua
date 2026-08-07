@@ -8,9 +8,9 @@ target('kernel', function()
 		{ install = false }
 	)
 	add_files(
-		'**.cppm',
 		'**.cpp',
-		manifest.root .. '/../common/cpp/std.cppm',
+		'**.cppm',
+		manifest.root .. '/../../common/cpp/std.cppm',
 		{}
 	)
 	add_includedirs(

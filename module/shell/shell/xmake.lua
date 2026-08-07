@@ -8,9 +8,9 @@ target('shell', function()
 		{ install = false }
 	)
 	add_files(
-		'**.cppm',
 		'**.cpp',
-		manifest.root .. '/../common/cpp/std.cppm',
+		'**.cppm',
+		manifest.root .. '/../../common/cpp/std.cppm',
 		{}
 	)
 	add_includedirs(
@@ -31,9 +31,9 @@ target('shell', function()
 		return
 	end)
 	set_runargs(
-		manifest.root .. '/../.local/test/kernel',
-		manifest.root .. '/../.local/test/script/main.js',
-		manifest.root .. '/../.local/test',
+		manifest.root .. '/../../.local/test/kernel',
+		manifest.root .. '/../../.local/test/script/main.js',
+		manifest.root .. '/../../.local/test',
 		{ private = true }
 	)
 end)

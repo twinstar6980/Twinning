@@ -9,13 +9,13 @@ target('runner', function()
 	)
 	add_files(
 		'**.cpp',
-		manifest.root .. '/../Shell/shell/**.cppm',
-		manifest.root .. '/../common/cpp/std.cppm',
+		manifest.root .. '/../shell/shell/**.cppm',
+		manifest.root .. '/../../common/cpp/std.cppm',
 		{}
 	)
 	add_includedirs(
 		manifest.root .. '',
-		manifest.root .. '/../Shell',
+		manifest.root .. '/../shell',
 		{}
 	)
 	add_defines(
@@ -33,9 +33,9 @@ target('runner', function()
 		return
 	end)
 	set_runargs(
-		manifest.root .. '/../.local/test/kernel',
-		manifest.root .. '/../.local/test/script/main.js',
-		manifest.root .. '/../.local/test',
+		manifest.root .. '/../../.local/test/kernel',
+		manifest.root .. '/../../.local/test/script/main.js',
+		manifest.root .. '/../../.local/test',
 		{ private = true }
 	)
 end)

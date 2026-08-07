@@ -42,6 +42,6 @@ flutter {
 }
 
 project.tasks.named("preBuild").dependsOn(tasks.register<Copy>("myLoadAsset") {
-    from(layout.projectDirectory.dir("../../../.local/library/android.arm64"))
+    from(layout.projectDirectory.dir("../../../../.local/library/android.arm64"))
     into(layout.projectDirectory.dir("src/main/jniLibs/arm64-v8a"))
 })

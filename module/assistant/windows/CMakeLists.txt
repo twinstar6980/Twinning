@@ -114,7 +114,7 @@ install(FILES "${AOT_LIBRARY}" DESTINATION "${INSTALL_BUNDLE_DATA_DIR}"
 set(CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION "${INSTALL_BUNDLE_LIB_DIR}")
 include(InstallRequiredSystemLibraries)
 install(
-  DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/../../.local/library/windows.amd64/"
+  DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/../../../.local/library/windows.amd64/"
   DESTINATION "${INSTALL_BUNDLE_LIB_DIR}"
   COMPONENT Runtime
 )

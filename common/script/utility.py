@@ -610,10 +610,15 @@ def project_locate_root(
 ) -> str:
 	return f'{pathlib.Path(__file__).absolute().parent.parent.parent.as_posix()}{'' if name is None else f'/{name}'}'
 
+def project_locate_module(
+	name: str | None = None,
+) -> str:
+	return f'{project_locate_root('module')}{'' if name is None else f'/{name}'}'
+
 def project_locate_local(
 	name: str | None = None,
 ) -> str:
-	return f'{project_locate_root()}/.local{'' if name is None else f'/{name}'}'
+	return f'{project_locate_root('.local')}{'' if name is None else f'/{name}'}'
 
 def project_locate_distribution(
 	name: str | None = None,
@@ -673,17 +678,16 @@ def project_build_module(
 	platform: str,
 ) -> None:
 	with fs_temporary() as temporary:
-		name_original = pathlib.Path(path).parent.name
-		name_regularized = '_'.join([item.lower() for item in re.split(r'(?=[A-Z])', name_original)[1:]])
+		name = pathlib.Path(path).parent.name
 		distribution = builder(
-			project_locate_root(name_original),
+			project_locate_module(name),
 			project_locate_keystore(),
 			temporary,
 			platform,
 		)
 		if distribution == None:
 			raise RuntimeError(f'unsupported platform \'{platform}\'')
-		distribution_file = project_locate_distribution(f'{platform}.{name_regularized}{distribution[0]}')
+		distribution_file = project_locate_distribution(f'{platform}.{name}{distribution[0]}')
 		fs_copy(
 			distribution[1],
 			distribution_file,

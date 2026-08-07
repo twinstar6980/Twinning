@@ -64,27 +64,27 @@
 
 具体参照本工具内的外壳实现：
 
-* [`Shell`](../Shell/shell/bridge) with `C++`
+* [`Shell`](../module/shell/shell/bridge) with `C++`
 
-* [`Assistant`](../Assistant/lib/bridge) with `Dart`
+* [`Assistant`](../module/assistant/lib/bridge) with `Dart`
 
-下面以 [`Shell`](../Shell/shell/bridge) 模块为例介绍应如何集成 `Kernel` ：
+下面以 [`Shell`](../module/shell/shell/bridge) 模块为例介绍应如何集成 `Kernel` ：
 
-* [`data.cppm`](../Shell/shell/bridge/data.cppm) ：声明 `Kernel` 中的数据类型。
+* [`data.cppm`](../module/shell/shell/bridge/data.cppm) ：声明 `Kernel` 中的数据类型。
 
-  > `Kernel` 模块中已经提供了适用于 `C++` 的接口声明 [`interface.hpp`](https://github.com/twinstar6980/Twinning/blob/main/Kernel/kernel/interface/interface.hpp) ，接口需要用户传递 C 式的结构体作为参数值与返回值。
+  > `Kernel` 模块中已经提供了适用于 `C++` 的接口声明 [`interface.hpp`](https://github.com/twinstar6980/Twinning/blob/main/module/kernel/kernel/interface/interface.hpp) ，接口需要用户传递 C 式的结构体作为参数值与返回值。
 
-* [`proxy.cppm`](../Shell/shell/bridge/proxy.cppm) ：创建一个辅助类，负责接口所需的 C 式结构体的解析与构造。
+* [`proxy.cppm`](../module/shell/shell/bridge/proxy.cppm) ：创建一个辅助类，负责接口所需的 C 式结构体的解析与构造。
 
-* [`service.cppm`](../Shell/shell/bridge/service.cppm) ：声明 `Kernel` 导出的服务类型。
+* [`service.cppm`](../module/shell/shell/bridge/service.cppm) ：声明 `Kernel` 导出的服务类型。
 
-* [`library.cppm`](../Shell/shell/bridge/library.cppm) ：定义 `Kernel` 库的抽象类，它封装了对 `Kernel` 库的加载与符号获取。
+* [`library.cppm`](../module/shell/shell/bridge/library.cppm) ：定义 `Kernel` 库的抽象类，它封装了对 `Kernel` 库的加载与符号获取。
 
-* [`client.cppm`](https://github.com/twinstar6980/Twinning/blob/main/Shell/shell/bridge/client.cppm) ：定义 `Shell` 客户端的抽象类。
+* [`client.cppm`](https://github.com/twinstar6980/Twinning/blob/main/module/shell/shell/bridge/client.cppm) ：定义 `Shell` 客户端的抽象类。
 
-  > [`main_console.cppm`](https://github.com/twinstar6980/Twinning/blob/main/Shell/shell/main_console.cppm) ：实现了对基本的命令行式 `Shell` 客户端的封装。
+  > [`main_console.cppm`](https://github.com/twinstar6980/Twinning/blob/main/module/shell/shell/main_console.cppm) ：实现了对基本的命令行式 `Shell` 客户端的封装。
 
-* [`launcher.cppm`](../Shell/shell/bridge/launcher.cppm) ：创建一个辅助类，配合 `Library` 与 `Client` 实例调用 `Kernel` 接口。
+* [`launcher.cppm`](../module/shell/shell/bridge/launcher.cppm) ：创建一个辅助类，配合 `Library` 与 `Client` 实例调用 `Kernel` 接口。
 
 ## 自定义脚本
 
