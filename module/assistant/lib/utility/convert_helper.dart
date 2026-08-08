@@ -183,7 +183,7 @@ class ConvertHelper {
   static List<String> parseStringListFromStringWithLine(
     String text,
   ) {
-    var value = text.split('\n').map((value) => !value.endsWith('\r') ? value : value.substring(0, value.length - 1)).toList();
+    var value = ConvertHelper.normalizeStringLineFeed(text).split('\n');
     if (!value.isEmpty && value.last.isEmpty) {
       value.removeLast();
     }

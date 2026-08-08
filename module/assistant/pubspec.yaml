@@ -1,5 +1,5 @@
 name: assistant
-version: 216.0.0+216
+version: 217.0.0+217
 environment:
   sdk: ^3.12.2
   flutter: ^3.44.2

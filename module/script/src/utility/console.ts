@@ -147,6 +147,42 @@ namespace Twinning.Script.Console {
 
 	// #region input
 
+	const g_basic_common_input_buffer: {
+		data: string;
+		position: number;
+	} = {
+		data: '',
+		position: 0,
+	};
+
+	function basic_common_input_parse(
+	): string {
+		let buffer = g_basic_common_input_buffer;
+		let result = null as null | string;
+		while (true) {
+			for (; buffer.position < buffer.data.length; buffer.position++) {
+				let current = buffer.data[buffer.position];
+				if (current === '\n') {
+					result = buffer.data.substring(0, buffer.position);
+					buffer.data = buffer.data.substring(buffer.position + 1);
+					buffer.position = 0;
+					break;
+				}
+			}
+			if (result != null) {
+				break;
+			}
+			let part = Shell.basic_input_text().text;
+			if (part === '' || part === '\r') {
+				part = '\n';
+			}
+			buffer.data += ConvertHelper.normalize_string_line_feed(part);
+		}
+		return result;
+	}
+
+	// ----------------
+
 	function common_input<TValue>(
 		reader: () => string,
 		echoer: (value: string) => void,
@@ -229,7 +265,7 @@ namespace Twinning.Script.Console {
 				basic_common_output(leading, true, 0, true);
 				basic_set_message_text_attribute('verbosity');
 				basic_common_output('', false, 1, false);
-				let value = Shell.basic_input_text().text;
+				let value = basic_common_input_parse();
 				if (value !== '' && value[0] !== '?') {
 					value = `??${value}`;
 				}

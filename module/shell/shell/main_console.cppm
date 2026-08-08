@@ -247,8 +247,8 @@ export namespace Twinning::Shell {
 			#endif
 			{
 				Interaction::configure_locale();
-				Interaction::configure_stream(true, false);
-				Interaction::configure_stream(false, true);
+				Interaction::configure_terminal(true, false);
+				Interaction::configure_terminal(false, true);
 				auto args = std::vector<std::string>{};
 				args.reserve(static_cast<std::size_t>(argc));
 				for (auto & arg : std::span{argv, static_cast<std::size_t>(argc)}) {
