@@ -32,6 +32,8 @@
 
 #include "astcenccli_internal.h"
 
+#include <vector>
+
 /* ============================================================================
    Platform code for Windows using the Win32 APIs.
 ============================================================================ */
@@ -169,7 +171,7 @@ void set_thread_name(
 }
 
 /* ============================================================================
-   Platform code for an platform using POSIX APIs.
+   Platform code for a platform using POSIX APIs.
 ============================================================================ */
 #else
 
@@ -255,7 +257,7 @@ void launch_threads(
 	}
 
 	// Otherwise spawn worker threads
-	launch_desc *thread_descs = new launch_desc[thread_count];
+	std::vector<launch_desc> thread_descs(thread_count);
 	int actual_thread_count { 0 };
 
 	for (int i = 0; i < thread_count; i++)
@@ -270,7 +272,7 @@ void launch_threads(
 			&(thread_descs[actual_thread_count].thread_handle),
 			nullptr,
 			launch_threads_helper,
-			reinterpret_cast<void*>(thread_descs + actual_thread_count));
+			reinterpret_cast<void*>(&thread_descs[actual_thread_count]));
 
 		// Track how many threads we actually created
 		if (!error)
@@ -308,6 +310,4 @@ void launch_threads(
 	{
 		func(1, 0, payload);
 	}
-
-	delete[] thread_descs;
 }

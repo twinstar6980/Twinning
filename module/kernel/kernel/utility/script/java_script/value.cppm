@@ -796,12 +796,14 @@ export namespace Twinning::Kernel::Script::JavaScript {
 					thiz._context(),
 					unmake_pointer_unsafe<std::uint8_t>(data.begin()),
 					unmake_box<std::size_t>(data.size()),
+					0_szz,
 					!is_holder
 					? nullptr
-					: [](Dependency::quickjs_ng::$JSRuntime * rt, void * opaque, void * ptr) -> void {
+					: [](Dependency::quickjs_ng::$JSRuntime * rt, void * opaque, void * ptr, std::size_t size) -> void * {
+						assert_test(size == 0_szz);
 						auto data = make_pointer_unsafe<std::uint8_t>(ptr);
 						free_instance_array(data);
-						return;
+						return nullptr;
 					},
 					nullptr,
 					false

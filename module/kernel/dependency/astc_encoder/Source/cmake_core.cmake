@@ -1,6 +1,6 @@
 #  SPDX-License-Identifier: Apache-2.0
 #  ----------------------------------------------------------------------------
-#  Copyright 2020-2025 Arm Limited
+#  Copyright 2020-2026 Arm Limited
 #
 #  Licensed under the Apache License, Version 2.0 (the "License"); you may not
 #  use this file except in compliance with the License. You may obtain a copy
@@ -90,7 +90,7 @@ if(${ASTCENC_CLI})
         astcenccli_entry.cpp)
 
     # Veneer is compiled with extended ISA but without vector length overrides
-    # so we can safely do SVE vector length compatability checks
+    # so we can safely do SVE vector length compatibility checks
     add_library(${ASTCENC_TARGET}-veneer2
         astcenccli_entry2.cpp)
 
@@ -196,7 +196,6 @@ macro(astcenc_set_properties ASTCENC_TARGET_NAME ASTCENC_VENEER_TYPE)
             PRIVATE
                 $<${is_gnu_fe}:-fsanitize=address>
                 $<${is_clang}:-fuse-ld=lld>)
-
     endif()
 
     if(${ASTCENC_UBSAN})
@@ -450,8 +449,8 @@ macro(astcenc_set_properties ASTCENC_TARGET_NAME ASTCENC_VENEER_TYPE)
         else()
             target_compile_options(${ASTCENC_TARGET_NAME}
                 PRIVATE
-                    $<${is_clangcl}:-mcpu=native -march=native>
-                    $<${is_gnu_fe}:-mcpu=native -march=native>
+                    $<${is_clangcl}:-march=native>
+                    $<${is_gnu_fe}:-march=native>
                     $<${is_gnu_fe}:-Wno-unused-command-line-argument>)
         endif()
     endif()
@@ -461,9 +460,12 @@ endmacro()
 string(CONCAT EXTERNAL_CXX_FLAGS
        " $<${is_gnu_fe}: -fno-strict-aliasing>"
        " $<${is_gnu_fe}: -Wno-pedantic>"
+       " $<${is_gnu_fe}: -Wno-unused-function>"
+       " $<${is_clangcl}: -Xclang -Wno-unused-function>"
        " $<${is_gnu_fe}: -Wno-unused-parameter>"
        " $<${is_gnu_fe}: -Wno-old-style-cast>"
        " $<${is_gnu_fe}: -Wno-double-promotion>"
+       " $<${is_gnu_fe}: -Wno-calloc-transposed-args>"
        " $<${is_gnu_fe}: -Wno-zero-as-null-pointer-constant>"
        " $<${is_gnu_fe}: -Wno-disabled-macro-expansion>"
        " $<${is_gnu_fe}: -Wno-reserved-id-macro>"

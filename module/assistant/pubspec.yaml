@@ -1,5 +1,5 @@
 name: assistant
-version: 215.0.0+215
+version: 216.0.0+216
 environment:
   sdk: ^3.12.2
   flutter: ^3.44.2
@@ -7,7 +7,7 @@ dependencies:
   flutter:
     sdk: flutter
   ffi: 2.2.0
-  win32: 6.3.0
+  win32: 6.4.0
   async: 2.13.1
   collection: 1.19.1
   stack_trace: 1.12.1

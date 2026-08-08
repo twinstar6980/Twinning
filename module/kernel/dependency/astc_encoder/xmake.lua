@@ -1,5 +1,5 @@
 -- astc_encoder
--- 5.4.0 3ee54d103ca66a5b1f751ad49a4b8064235e2cf9
+-- 5.7.0 baff485b0ff36d2f95d28961605106502c653966
 -- https://github.com/ARM-software/astc-encoder
 
 target('dependency.astc_encoder', function()

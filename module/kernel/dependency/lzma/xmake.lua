@@ -1,5 +1,5 @@
 -- lzma
--- 26.01 8c63d71ff886bda90c86db28466287f977374237
+-- 26.02 f9d78aff31a5f2521ae7ddbdc97c4a8855808959
 -- https://github.com/ip7z/7zip
 
 target('dependency.lzma', function()
