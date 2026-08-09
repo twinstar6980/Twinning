@@ -6,6 +6,16 @@ namespace Twinning.Script.Console {
 
 	// ----------------
 
+	const k_basic_common_stream_mode: {
+		input: boolean;
+		output: boolean;
+	} = {
+		input: Shell.basic_check_mode('input').mode,
+		output: Shell.basic_check_mode('output').mode,
+	};
+
+	// ----------------
+
 	const k_basic_message_text_attribute: Record<MessageType, VirtualTerminalSequence.TextAttribute> = {
 		verbosity: {
 			background: null,
@@ -48,10 +58,49 @@ namespace Twinning.Script.Console {
 	function basic_set_message_text_attribute(
 		type: MessageType,
 	): void {
-		if (Shell.basic_check_mode('output').mode) {
+		if (k_basic_common_stream_mode.output) {
 			Shell.basic_output_text(VirtualTerminalSequence.text_attribute(k_basic_message_text_attribute[type]));
 		}
 		return;
+	}
+
+	// ----------------
+
+	const g_basic_common_input_buffer: {
+		data: string;
+		position: number;
+	} = {
+		data: '',
+		position: 0,
+	};
+
+	function basic_common_input_take_line(
+	): string {
+		let buffer = g_basic_common_input_buffer;
+		let result = null as null | string;
+		while (true) {
+			for (; buffer.position < buffer.data.length; buffer.position++) {
+				let current = buffer.data[buffer.position];
+				if (current === '\n') {
+					result = buffer.data.substring(0, buffer.position);
+					buffer.data = buffer.data.substring(buffer.position + 1);
+					buffer.position = 0;
+					break;
+				}
+			}
+			if (result != null) {
+				break;
+			}
+			let part = Shell.basic_input_text().text;
+			if (part === '' || part === '\r') {
+				part = '\n';
+			}
+			buffer.data += ConvertHelper.normalize_string_line_feed(part);
+		}
+		if (!k_basic_common_stream_mode.output) {
+			Shell.basic_output_text(result + '\n');
+		}
+		return result;
 	}
 
 	// #endregion
@@ -147,42 +196,6 @@ namespace Twinning.Script.Console {
 
 	// #region input
 
-	const g_basic_common_input_buffer: {
-		data: string;
-		position: number;
-	} = {
-		data: '',
-		position: 0,
-	};
-
-	function basic_common_input_parse(
-	): string {
-		let buffer = g_basic_common_input_buffer;
-		let result = null as null | string;
-		while (true) {
-			for (; buffer.position < buffer.data.length; buffer.position++) {
-				let current = buffer.data[buffer.position];
-				if (current === '\n') {
-					result = buffer.data.substring(0, buffer.position);
-					buffer.data = buffer.data.substring(buffer.position + 1);
-					buffer.position = 0;
-					break;
-				}
-			}
-			if (result != null) {
-				break;
-			}
-			let part = Shell.basic_input_text().text;
-			if (part === '' || part === '\r') {
-				part = '\n';
-			}
-			buffer.data += ConvertHelper.normalize_string_line_feed(part);
-		}
-		return result;
-	}
-
-	// ----------------
-
 	function common_input<TValue>(
 		reader: () => string,
 		echoer: (value: string) => void,
@@ -265,7 +278,7 @@ namespace Twinning.Script.Console {
 				basic_common_output(leading, true, 0, true);
 				basic_set_message_text_attribute('verbosity');
 				basic_common_output('', false, 1, false);
-				let value = basic_common_input_parse();
+				let value = basic_common_input_take_line();
 				if (value !== '' && value[0] !== '?') {
 					value = `??${value}`;
 				}
