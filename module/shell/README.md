@@ -8,7 +8,7 @@
 
 * 要求
 
-	* [xmake 3.0](https://xmake.io/#/)
+	* [xmake 3.1](https://xmake.io/#/)
 
 	* [LLVM 22.1 (LLVM-MinGW-ucrt 20260616)](https://github.com/mstorsjo/llvm-mingw) for `Windows`
 

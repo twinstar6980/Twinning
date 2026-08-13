@@ -9,7 +9,10 @@ namespace Twinning.Script.Console {
 	const k_basic_common_stream_mode: {
 		input: boolean;
 		output: boolean;
-	} = {
+	} = !Shell.is_basic ? {
+		input: false,
+		output: false,
+	} : {
 		input: Shell.basic_check_mode('input').mode,
 		output: Shell.basic_check_mode('output').mode,
 	};

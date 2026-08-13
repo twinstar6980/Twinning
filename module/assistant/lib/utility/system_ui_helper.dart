@@ -2,7 +2,7 @@ import '/common.dart';
 import '/widget/export.dart';
 import '/utility/platform_integration_manager.dart';
 import 'package:flutter/services.dart' as lib;
-import 'package:flutter/material.dart' as lib;
+import 'package:material_ui/material_ui.dart' as lib;
 
 // ----------------
 

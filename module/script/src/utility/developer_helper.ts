@@ -306,7 +306,6 @@ namespace Twinning.Script.DeveloperHelper {
 		keystore: Keystore,
 		type: MacintoshSignatureType,
 	): void {
-		// TODO
 		let keystore_information = keystore_query(keystore[0], keystore[1]);
 		let [temporary_directory, temporary_directory_finalizer] = StorageHelper.temporary();
 		using temporary_directory_using = temporary_directory_finalizer;
@@ -349,28 +348,37 @@ namespace Twinning.Script.DeveloperHelper {
 		StorageHelper.write_file_text(default_entitlement_file, `<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"><plist version="1.0"><dict></dict></plist>`);
 		let sign_list = [] as Array<StoragePath>;
 		let temporary_binary_file = temporary_directory.join('binary');
-		StorageHelper.copy(target, temporary_binary_file, true);
+		StorageHelper.copy(target, temporary_binary_file, false);
 		if (type === 'macho') {
-			sign_list.push(target);
+			sign_list.push(new StoragePath());
 		}
 		if (type === 'app') {
-			sign_list.push(...StorageHelper.list_directory(temporary_binary_file.join('Contents').join('Frameworks'), 1n, false, false, false, true).filter((it) => it.extension()?.toLowerCase() === 'framework'));
-			sign_list.push(...StorageHelper.list_directory(temporary_binary_file.join('Contents').join('PlugIns'), 1n, false, false, false, true).filter((it) => it.extension()?.toLowerCase() === 'appex'));
-			sign_list.push(...StorageHelper.list_directory(temporary_binary_file.join('Frameworks'), 1n, false, false, false, true).filter((it) => it.extension()?.toLowerCase() === 'framework'));
-			sign_list.push(...StorageHelper.list_directory(temporary_binary_file.join('PlugIns'), 1n, false, false, false, true).filter((it) => it.extension()?.toLowerCase() === 'appex'));
-			sign_list.push(target);
+			let search_embedded = (path: StoragePath) => {
+				if (StorageHelper.exist_directory(temporary_binary_file.push(path))) {
+					let item = StorageHelper.list_directory(temporary_binary_file.push(path), 1n, false, false, false, true)
+						.filter((it) => it.extension()?.toLowerCase() === 'framework')
+						.map((it) => path.push(it));
+					sign_list.push(...item);
+				}
+				return;
+			};
+			search_embedded(new StoragePath().join('Frameworks'));
+			search_embedded(new StoragePath().join('PlugIns'));
+			search_embedded(new StoragePath().join('Contents').join('Frameworks'));
+			search_embedded(new StoragePath().join('Contents').join('PlugIns'));
+			sign_list.push(new StoragePath());
 		}
 		for (let item_file of sign_list) {
 			let item_entitlement_file = temporary_directory.join(`original.${item_file.emit_posix().replaceAll('/', '_')}.entitlements`);
 			ExternalHelper.run_codesign_export_entitlement(
-				item_file,
+				temporary_binary_file.push(item_file),
 				item_entitlement_file,
 			);
-			if (StorageHelper.exist_file(item_entitlement_file)) {
+			if (!StorageHelper.exist_file(item_entitlement_file)) {
 				item_entitlement_file = default_entitlement_file;
 			}
 			ExternalHelper.run_codesign_sign(
-				item_file,
+				temporary_binary_file.push(item_file),
 				item_entitlement_file,
 				keystore_name,
 				temporary_keychain_file,

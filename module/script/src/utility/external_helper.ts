@@ -1178,8 +1178,8 @@ namespace Twinning.Script.ExternalHelper {
 			'codesign',
 			[
 				`-s`, `${keystore_name}`,
-				`--keychain`, `${keychain_file}`,
-				`--entitlements`, `:${entitlement_file.emit_native()}`,
+				`--keychain`, `${keychain_file.emit_native()}`,
+				`--entitlements`, `${entitlement_file.emit_native()}`,
 				`--force`,
 				`${target_file.emit_native()}`,
 			],
@@ -1229,12 +1229,11 @@ namespace Twinning.Script.ExternalHelper {
 	): void {
 		let [temporary_directory, temporary_directory_finalizer] = StorageHelper.temporary();
 		using temporary_directory_using = temporary_directory_finalizer;
-		let temporary_keychain_file = temporary_directory.join('temporary.keychain');
 		let process_result = launch_process(
 			'security',
 			[
 				`delete-keychain`,
-				`${temporary_keychain_file.emit_native()}`,
+				`${keychain_file.emit_native()}`,
 			],
 			null,
 			null,
@@ -1244,7 +1243,6 @@ namespace Twinning.Script.ExternalHelper {
 		if (process_result.code !== 0n) {
 			ProcessHelper.throw_execution_exception(process_result);
 		}
-		StorageHelper.copy(temporary_keychain_file, keychain_file, false);
 		return;
 	}
 
@@ -1255,13 +1253,12 @@ namespace Twinning.Script.ExternalHelper {
 	): void {
 		let [temporary_directory, temporary_directory_finalizer] = StorageHelper.temporary();
 		using temporary_directory_using = temporary_directory_finalizer;
-		let temporary_keychain_file = temporary_directory.join('temporary.keychain');
 		let process_result = launch_process(
 			'security',
 			[
 				`unlock-keychain`,
 				`-p`, `${password}`,
-				`${temporary_keychain_file.emit_native()}`,
+				`${keychain_file.emit_native()}`,
 			],
 			null,
 			null,
@@ -1271,7 +1268,6 @@ namespace Twinning.Script.ExternalHelper {
 		if (process_result.code !== 0n) {
 			ProcessHelper.throw_execution_exception(process_result);
 		}
-		StorageHelper.copy(temporary_keychain_file, keychain_file, false);
 		return;
 	}
 
@@ -1282,7 +1278,6 @@ namespace Twinning.Script.ExternalHelper {
 	): void {
 		let [temporary_directory, temporary_directory_finalizer] = StorageHelper.temporary();
 		using temporary_directory_using = temporary_directory_finalizer;
-		let temporary_keychain_file = temporary_directory.join('temporary.keychain');
 		let process_result = launch_process(
 			'security',
 			[
@@ -1290,7 +1285,7 @@ namespace Twinning.Script.ExternalHelper {
 				`-S`, `apple-tool:,apple:`,
 				`-s`,
 				`-k`, `${password}`,
-				`${temporary_keychain_file.emit_native()}`,
+				`${keychain_file.emit_native()}`,
 			],
 			null,
 			null,
@@ -1300,7 +1295,6 @@ namespace Twinning.Script.ExternalHelper {
 		if (process_result.code !== 0n) {
 			ProcessHelper.throw_execution_exception(process_result);
 		}
-		StorageHelper.copy(temporary_keychain_file, keychain_file, false);
 		return;
 	}
 
@@ -1312,13 +1306,12 @@ namespace Twinning.Script.ExternalHelper {
 	): void {
 		let [temporary_directory, temporary_directory_finalizer] = StorageHelper.temporary();
 		using temporary_directory_using = temporary_directory_finalizer;
-		let temporary_keychain_file = temporary_directory.join('temporary.keychain');
 		let process_result = launch_process(
 			'security',
 			[
 				`import`,
 				`${keystore_file.emit_native()}`,
-				`-k`, `${temporary_keychain_file.emit_native()}`,
+				`-k`, `${keychain_file.emit_native()}`,
 				`-P`, `${password}`,
 				`-T`, `/usr/bin/codesign`,
 			],
@@ -1330,7 +1323,6 @@ namespace Twinning.Script.ExternalHelper {
 		if (process_result.code !== 0n) {
 			ProcessHelper.throw_execution_exception(process_result);
 		}
-		StorageHelper.copy(temporary_keychain_file, keychain_file, false);
 		return;
 	}
 
@@ -1357,7 +1349,7 @@ namespace Twinning.Script.ExternalHelper {
 		if (process_result.code !== 0n) {
 			ProcessHelper.throw_execution_exception(process_result);
 		}
-		return ConvertHelper.split_string_by_line_feed(ConvertHelper.normalize_string_line_feed(process_result.output), true).map((it) => new StoragePath(it));
+		return ConvertHelper.split_string_by_line_feed(ConvertHelper.normalize_string_line_feed(process_result.output), true).map((it) => new StoragePath(it.trim().replaceAll(/^"|"$/g, '')));
 	}
 
 	export function run_security_find_identity(

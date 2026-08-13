@@ -25,7 +25,6 @@ import androidx.core.database.getStringOrNull
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.net.toUri
 import io.flutter.embedding.engine.FlutterEngine
-import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import java.nio.ByteBuffer
 import kotlinx.coroutines.CoroutineScope
@@ -303,6 +302,8 @@ class PlatformIntegrationManager {
         )
         setResult("name", this.encodeFlutterValue(detail.first))
         setResult("version", this.encodeFlutterValue(detail.second))
+        setResult("source", this.encodeFlutterValue(detail.third.first))
+        setResult("data", this.encodeFlutterValue(detail.third.second))
       }
       "on_android_extract_application_icon" -> {
         val detail = this.handleOnAndroidExtractApplicationIcon(
@@ -568,12 +569,14 @@ class PlatformIntegrationManager {
 
   private suspend fun handleOnAndroidQueryApplicationInformation(
     target: String,
-  ): Pair<String, String> {
+  ): Triple<String, String, Pair<String, String>> {
     val information = this.activity.packageManager.getPackageInfo(target, PackageManager.GET_META_DATA)
     check(information.applicationInfo != null)
     val name = information.applicationInfo!!.loadLabel(this.activity.packageManager).toString()
     val version = information.versionName!!
-    return Pair(name, version)
+    val source = information.applicationInfo!!.sourceDir
+    val data = information.applicationInfo!!.dataDir
+    return Triple(name, version, Pair(source, data))
   }
 
   private suspend fun handleOnAndroidExtractApplicationIcon(

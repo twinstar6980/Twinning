@@ -33,7 +33,6 @@ enum GamePackageType {
 
 class GameInformation {
   GamePackageType  packageType;
-  StoragePath      packagePath;
   String           packageIdentifier;
   String           packageVersion;
   String           packageName;
@@ -43,10 +42,11 @@ class GameInformation {
   GameProgramState programState;
   GameRecordState  recordState;
   List<String>     recordBackup;
+  StoragePath      packagePath;
+  StoragePath      recordPath;
   GameInformation(
   ) :
     this.packageType = .windowsSteam,
-    this.packagePath = .new(),
     this.packageIdentifier = '',
     this.packageVersion = '',
     this.packageName = '',
@@ -55,7 +55,9 @@ class GameInformation {
     this.userKey = null,
     this.programState = .none,
     this.recordState = .none,
-    this.recordBackup = [];
+    this.recordBackup = [],
+    this.packagePath = .new(),
+    this.recordPath = .new();
 }
 
 class GameRecordHelper {
@@ -67,7 +69,7 @@ class GameRecordHelper {
   ) async {
     var result = null as StoragePath?;
     if (game.packageType == .windowsSteam) {
-      result = game.packagePath.join('saves').join(game.userIdentifier ?? '0');
+      result = game.recordPath;
     }
     result!;
     return result;
@@ -406,8 +408,8 @@ class GameRepositoryHelper {
   // ----------------
 
   static Future<GameInformation?> loadWindowsSteamGame(
-    StoragePath libraryDirectory,
     String      gameIdentifier,
+    StoragePath libraryDirectory,
   ) async {
     var gameManifestFile = libraryDirectory.join('steamapps').join('appmanifest_${gameIdentifier}.acf');
     if (!await StorageHelper.existFile(gameManifestFile)) {
@@ -423,7 +425,6 @@ class GameRepositoryHelper {
     }
     var information = GameInformation();
     information.packageType = .windowsSteam;
-    information.packagePath = gameDirectory;
     information.packageIdentifier = gameIdentifier;
     information.packageVersion = gameManifest.entries.first.value!.as<Map<Object?, Object?>>()['buildid']!.as<Integer>().toString();
     information.packageName = gameManifest.entries.first.value!.as<Map<Object?, Object?>>()['name']!.as<String>();
@@ -432,6 +433,8 @@ class GameRepositoryHelper {
     });
     information.userIdentifier = gameManifest.entries.first.value!.as<Map<Object?, Object?>>()['LastOwner']!.as<Integer>().toString();
     information.userKey = GameRepositoryHelper.makeKeyFromWindowsSteamUser(information.userIdentifier!);
+    information.packagePath = gameDirectory;
+    information.recordPath = gameDirectory.join('saves').join(information.userIdentifier ?? '0');
     await GameProgramHelper.detectState(information);
     await GameRecordHelper.detectState(information);
     await GameRecordHelper.listBackup(information);
@@ -450,7 +453,7 @@ class GameRepositoryHelper {
       var libraryDirectory = StoragePath.of(library.value!.as<Map<Object?, Object?>>()['path']!.as<String>().replaceAll('\\\\', '/'));
       for (var game in library.value!.as<Map<Object?, Object?>>()['apps']!.as<Map<Object?, Object?>>().entries) {
         var gameIdentifier = game.key!.as<String>();
-        var gameConfiguration = await GameRepositoryHelper.loadWindowsSteamGame(libraryDirectory, gameIdentifier);
+        var gameConfiguration = await GameRepositoryHelper.loadWindowsSteamGame(gameIdentifier, libraryDirectory);
         if (gameConfiguration != null) {
           result.add(gameConfiguration);
         }
@@ -470,25 +473,37 @@ class GameRepositoryHelper {
   // #region android play
 
   // TODO
+  static Future<GameInformation?> loadAndroidPlayGame(
+    String gameIdentifier,
+  ) async {
+    if (!gameIdentifier.startsWith('net.kairosoft.')) {
+      return null;
+    }
+    var applicationInformation = await PlatformIntegrationManager.instance.invokeOnAndroidQueryApplicationInformation(gameIdentifier);
+    var information = GameInformation();
+    information.packageType = .androidPlay;
+    information.packageIdentifier = gameIdentifier;
+    information.packageVersion = applicationInformation.version;
+    information.packageName = applicationInformation.name;
+    information.packageIcon = await (await PlatformIntegrationManager.instance.invokeOnAndroidExtractApplicationIcon(gameIdentifier)).selfLet((it) async {
+      return await ConvertHelper.parseImageFromData(it.data, width: it.width, height: it.height, isRawRgba: true);
+    });
+    information.userIdentifier = null;
+    information.userKey = null;
+    information.packagePath = applicationInformation.source;
+    information.recordPath = applicationInformation.data.join('rs');
+    return information;
+  }
+
   static Future<List<GameInformation>> loadAndroidPlayRepository(
   ) async {
     var result = <GameInformation>[];
     var applicationList = (await PlatformIntegrationManager.instance.invokeOnAndroidListApplicationIdentifier()).target;
-    for (var application in applicationList) { 
-      if (!application.startsWith('net.kairosoft.')) {
-        continue;
+    for (var gameIdentifier in applicationList) {
+      var gameConfiguration = await GameRepositoryHelper.loadAndroidPlayGame(gameIdentifier);
+      if (gameConfiguration != null) {
+        result.add(gameConfiguration);
       }
-      var applicationInformation = await PlatformIntegrationManager.instance.invokeOnAndroidQueryApplicationInformation(application);
-      var information = GameInformation();
-      information.packageType = .androidPlay;
-      information.packagePath = StoragePath.of('');
-      information.packageIdentifier = application;
-      information.packageVersion = applicationInformation.version;
-      information.packageName = applicationInformation.name;
-      information.packageIcon = await (await PlatformIntegrationManager.instance.invokeOnAndroidExtractApplicationIcon(application)).selfLet((it) async {
-        return await ConvertHelper.parseImageFromData(it.data, width: it.width, height: it.height, isRawRgba: true);
-      });
-      result.add(information);
     }
     return result;
   }
@@ -506,15 +521,18 @@ class GameActionHelper {
   ) async {
     var newInformation = null as GameInformation?;
     if (game.packageType == .windowsSteam) {
-      newInformation = await GameRepositoryHelper.loadWindowsSteamGame(game.packagePath.parent()!.parent()!.parent()!, game.packageIdentifier);
+      newInformation = await GameRepositoryHelper.loadWindowsSteamGame(game.packageIdentifier, game.packagePath.parent()!.parent()!.parent()!);
+    }
+    if (game.packageType == .androidPlay) {
+      newInformation = await GameRepositoryHelper.loadAndroidPlayGame(game.packageIdentifier);
     }
     newInformation!;
     game.packageType = newInformation.packageType;
-    game.packagePath = newInformation.packagePath;
     game.packageIdentifier = newInformation.packageIdentifier;
     game.packageVersion = newInformation.packageVersion;
     game.packageName = newInformation.packageName;
     game.packageIcon = newInformation.packageIcon;
+    game.packagePath = newInformation.packagePath;
     game.userIdentifier = newInformation.userIdentifier;
     game.userKey = newInformation.userKey;
     game.programState = newInformation.programState;
@@ -535,6 +553,8 @@ class GameActionHelper {
   ) async {
     if (game.packageType == .windowsSteam) {
       await PlatformIntegrationManager.instance.invokeRevealStorageItem(game.packagePath.join('KairoGames.exe'));
+    }
+    if (game.packageType == .androidPlay) {
     }
     return;
   }

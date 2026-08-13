@@ -104,6 +104,7 @@ def build(
 			'--no-tree-shake-icons',
 			'--target-platform', 'android-arm64',
 			'--split-per-abi',
+			'--android-project-arg', 'force-version-code-ignoring-abi=true',
 		])
 		utility.fs_copy(
 			f'{source}/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk',

@@ -14,6 +14,14 @@ analyzer:
     prefer_is_empty: ignore
     empty_catches: ignore
     sort_child_properties_last: ignore
+  exclude:
+    - build/**
+    - windows/**
+    - macos/**
+    - linux/**
+    - android/**
+    - ios/**
+    - web/**
 linter:
   rules:
     prefer_const_constructors: false

@@ -1,7 +1,7 @@
 import '/common.dart';
 import 'package:provider/provider.dart' as lib;
 import 'package:flutter/widgets.dart' as lib;
-import 'package:flutter/material.dart' as material;
+import 'package:material_ui/material_ui.dart' as material;
 import 'package:material_symbols_icons/material_symbols_icons.dart' as lib;
 import 'package:material_symbols_icons/get.dart' as lib;
 

@@ -348,7 +348,7 @@ class PlatformIntegrationManager {
     );
   }
 
-  Future<({String name, String version})> invokeOnAndroidQueryApplicationInformation(
+  Future<({String name, String version, StoragePath source, StoragePath data})> invokeOnAndroidQueryApplicationInformation(
     String target,
   ) async {
     assertTest(SystemChecker.isAndroid);
@@ -358,6 +358,8 @@ class PlatformIntegrationManager {
     return (
       name: detail['name']!.as<String>(),
       version: detail['version']!.as<String>(),
+      source: detail['source']!.as<String>().selfLet((it) => StoragePath.of(it)),
+      data: detail['data']!.as<String>().selfLet((it) => StoragePath.of(it)),
     );
   }
 

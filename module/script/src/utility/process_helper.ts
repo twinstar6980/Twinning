@@ -78,7 +78,7 @@ namespace Twinning.Script.ProcessHelper {
 
 	export function search_program_path(
 		name: string,
-		allow_script: boolean,
+		allow_interpreted: boolean,
 	): null | StoragePath {
 		let result: null | StoragePath = null;
 		let item_delimiter = KernelX.is_windows ? ';' : ':';
@@ -88,13 +88,13 @@ namespace Twinning.Script.ProcessHelper {
 		let path_extension_list = [''];
 		if (KernelX.is_windows) {
 			path_extension_list.push('.exe');
-			if (allow_script) {
-				path_extension_list.push('.sh', '.ps1', '.cmd', '.bat');
+			if (allow_interpreted) {
+				path_extension_list.push('.sh', '.ps1', '.cmd', '.bat', 'py', 'jar');
 			}
 		}
 		if (KernelX.is_linux || KernelX.is_macintosh || KernelX.is_android || KernelX.is_iphone) {
-			if (allow_script) {
-				path_extension_list.push('.sh', '.ps1');
+			if (allow_interpreted) {
+				path_extension_list.push('.sh', '.ps1', 'py', 'jar');
 			}
 		}
 		for (let path_extension of path_extension_list) {
@@ -116,11 +116,11 @@ namespace Twinning.Script.ProcessHelper {
 		name: string,
 		map: null | ProgramPathMap,
 		allow_search: boolean,
-		allow_script: boolean,
+		allow_interpreted: boolean,
 	): StoragePath {
 		let result = map === null ? null : query_program_path(name, map);
 		if (result === null && allow_search) {
-			result = search_program_path(name, allow_script);
+			result = search_program_path(name, allow_interpreted);
 		}
 		if (result === null) {
 			throw new Error(`could not find '${name}' program from 'PATH' environment`);
@@ -208,7 +208,7 @@ namespace Twinning.Script.ProcessHelper {
 
 	export type ExecutionHost = 'native' | 'termux';
 
-	export type ExecutionInterpreter = 'direct' | 'sh' | 'pwsh' | 'cmd';
+	export type ExecutionInterpreter = 'direct' | 'sh' | 'pwsh' | 'cmd' | 'python' | 'java';
 
 	// ----------------
 
@@ -350,15 +350,15 @@ namespace Twinning.Script.ProcessHelper {
 		input: string,
 		host: ExecutionHost,
 	): ExecutionResult {
-		let result: null | ExecutionResult = null;
+		let runner = null as null | typeof execute_child_in_native;
 		if (host === 'native') {
-			result = execute_child_in_native(program, argument, command, workspace, environment, input);
+			runner = execute_child_in_native;
 		}
 		if (host === 'termux') {
-			result = execute_child_in_termux(program, argument, command, workspace, environment, input);
+			runner = execute_child_in_termux;
 		}
-		assert_test(result !== null);
-		return result;
+		assert_test(runner !== null);
+		return runner(program, argument, command, workspace, environment, input);
 	}
 
 	// ----------------
@@ -470,6 +470,54 @@ namespace Twinning.Script.ProcessHelper {
 		);
 	}
 
+	function execute_child_by_python(
+		program: StoragePath,
+		argument: Array<string>,
+		workspace: StoragePath,
+		environment: Record<string, string>,
+		input: string,
+		host: ExecutionHost,
+		path: ProgramPathMap,
+	): ExecutionResult {
+		return execute_child_by_direct(
+			locate_program_path('python', path, true, false),
+			[
+				`-B`,
+				program.emit_native(),
+				...argument,
+			],
+			workspace,
+			environment,
+			input,
+			host,
+			path,
+		);
+	}
+
+	function execute_child_by_java(
+		program: StoragePath,
+		argument: Array<string>,
+		workspace: StoragePath,
+		environment: Record<string, string>,
+		input: string,
+		host: ExecutionHost,
+		path: ProgramPathMap,
+	): ExecutionResult {
+		return execute_child_by_direct(
+			locate_program_path('java', path, true, false),
+			[
+				`-jar`,
+				program.emit_native(),
+				...argument,
+			],
+			workspace,
+			environment,
+			input,
+			host,
+			path,
+		);
+	}
+
 	function execute_child_by(
 		program: StoragePath,
 		argument: Array<string>,
@@ -480,21 +528,27 @@ namespace Twinning.Script.ProcessHelper {
 		interpreter: ExecutionInterpreter,
 		path: ProgramPathMap,
 	): ExecutionResult {
-		let result: null | ExecutionResult = null;
+		let runner = null as null | typeof execute_child_by_direct;
 		if (interpreter === 'direct') {
-			result = execute_child_by_direct(program, argument, workspace, environment, input, host, path);
+			runner = execute_child_by_direct;
 		}
 		if (interpreter === 'sh') {
-			result = execute_child_by_sh(program, argument, workspace, environment, input, host, path);
+			runner = execute_child_by_sh;
 		}
 		if (interpreter === 'pwsh') {
-			result = execute_child_by_pwsh(program, argument, workspace, environment, input, host, path);
+			runner = execute_child_by_pwsh;
 		}
 		if (interpreter === 'cmd') {
-			result = execute_child_by_cmd(program, argument, workspace, environment, input, host, path);
+			runner = execute_child_by_cmd;
 		}
-		assert_test(result !== null);
-		return result;
+		if (interpreter === 'python') {
+			runner = execute_child_by_python;
+		}
+		if (interpreter === 'java') {
+			runner = execute_child_by_java;
+		}
+		assert_test(runner !== null);
+		return runner(program, argument, workspace, environment, input, host, path);
 	}
 
 	// ----------------
@@ -538,6 +592,12 @@ namespace Twinning.Script.ProcessHelper {
 			}
 			if (program_extension === 'cmd' || program_extension === 'bat') {
 				interpreter = 'cmd';
+			}
+			if (program_extension === 'py') {
+				interpreter = 'python';
+			}
+			if (program_extension === 'jar') {
+				interpreter = 'java';
 			}
 		}
 		if (host === 'termux') {

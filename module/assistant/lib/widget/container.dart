@@ -4,7 +4,7 @@ import 'dart:ui' as lib;
 import 'package:flutter/gestures.dart' as lib;
 import 'package:flutter/rendering.dart' as lib;
 import 'package:flutter/widgets.dart' as widgets;
-import 'package:flutter/material.dart' as material;
+import 'package:material_ui/material_ui.dart' as material;
 import 'package:single_child_two_dimensional_scroll_view/single_child_two_dimensional_scroll_view.dart' as lib;
 
 // ----------------
