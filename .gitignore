@@ -24,6 +24,22 @@
 /**/.dart_tool
 /**/.flutter-plugins-dependencies
 /**/default.profraw
+/**/windows/flutter/ephemeral
+/**/windows/flutter/generated_plugin_registrant.cc
+/**/windows/flutter/generated_plugin_registrant.h
+/**/windows/flutter/generated_plugins.cmake
+/**/linux/flutter/ephemeral
+/**/linux/flutter/generated_plugin_registrant.cc
+/**/linux/flutter/generated_plugin_registrant.h
+/**/linux/flutter/generated_plugins.cmake
+/**/macos/Flutter/ephemeral
+/**/macos/Flutter/GeneratedPluginRegistrant.swift
+/**/android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java
+/**/ios/Flutter/ephemeral
+/**/ios/Flutter/Generated.xcconfig
+/**/ios/Flutter/flutter_export_environment.sh
+/**/ios/Runner/GeneratedPluginRegistrant.h
+/**/ios/Runner/GeneratedPluginRegistrant.m
 
 # environment - visual studio
 /**/.vs

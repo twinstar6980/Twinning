@@ -16,7 +16,7 @@ indent_style = tab
 indent_size = 4
 tab_width = 4
 
-[{~,*.sh,*.ps1,*.cmd,*.bat}]
+[{~,*.sh,*.ps1}]
 indent_style = tab
 indent_size = 4
 tab_width = 4
@@ -46,7 +46,7 @@ indent_style = tab
 indent_size = 4
 tab_width = 4
 
-[{~,*.hpp,*.cpp,*.cppm}]
+[{~,*.h,*.c,*.cc,*.hpp,*.cpp,*.cppm}]
 indent_style = tab
 indent_size = 4
 tab_width = 4
@@ -76,16 +76,6 @@ indent_style = space
 indent_size = 2
 tab_width = 2
 
-[{~,*.cs}]
-indent_style = tab
-indent_size = 4
-tab_width = 4
-
-[{~,*.xaml}]
-indent_style = tab
-indent_size = 4
-tab_width = 4
-
 [{~,*.lua}]
 indent_style = tab
 indent_size = 4
@@ -96,13 +86,7 @@ indent_style = tab
 indent_size = 4
 tab_width = 4
 
-[{~,*.slnx,*.vcxproj,*.vcxproj.filters,*.csproj,*.csproj.filters,Directory.Packages.props,Directory.Build.props,Directory.Build.target}]
-indent_style = space
-indent_size = 2
-tab_width = 2
-end_of_line = crlf
-
-[{~,*.rc,*.def,*.manifest,*.appxmanifest,AppxManifest.xml,NativeMethods.txt,NativeMethods.json,*.pubxml,launchSettings.json}]
+[{~,*.rc,*.def,*.manifest,*.appxmanifest,AppxManifest.xml}]
 indent_style = space
 indent_size = 2
 tab_width = 2

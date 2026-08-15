@@ -32,6 +32,10 @@ def build(
 			f'{source}/build',
 			f'{temporary}/artifact',
 		)
+		utility.fs_copy(
+			f'{source}/src/configuration',
+			f'{temporary}/artifact/configuration',
+		)
 		utility.ex_archive_pack_zip(
 			f'{temporary}/artifact.zip',
 			f'{temporary}/artifact',

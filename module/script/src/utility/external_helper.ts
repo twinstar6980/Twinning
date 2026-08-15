@@ -283,7 +283,7 @@ namespace Twinning.Script.ExternalHelper {
 	): void {
 		let [temporary_directory, temporary_directory_finalizer] = StorageHelper.temporary();
 		using temporary_directory_using = temporary_directory_finalizer;
-		let temporary_content_directory = temporary_directory.join('content');
+		let temporary_content_directory = temporary_directory.join(`content`);
 		let process_result = launch_process(
 			'7z',
 			[
@@ -315,7 +315,7 @@ namespace Twinning.Script.ExternalHelper {
 	): void {
 		let [temporary_directory, temporary_directory_finalizer] = StorageHelper.temporary();
 		using temporary_directory_using = temporary_directory_finalizer;
-		let temporary_content_directory = temporary_directory.join('content');
+		let temporary_content_directory = temporary_directory.join(`content`);
 		for (let content_item of content) {
 			StorageHelper.copy(content_item.placement, temporary_content_directory.push(content_item.location), false);
 		}
@@ -760,9 +760,9 @@ namespace Twinning.Script.ExternalHelper {
 	): Array<string> {
 		let [temporary_directory, temporary_directory_finalizer] = StorageHelper.temporary();
 		using temporary_directory_using = temporary_directory_finalizer;
-		let temporary_program_file = temporary_directory.join('program');
-		let temporary_metadata_file = temporary_directory.join('metadata');
-		let temporary_dump_directory = temporary_directory.join('dump');
+		let temporary_program_file = temporary_directory.join(`program`);
+		let temporary_metadata_file = temporary_directory.join(`metadata`);
+		let temporary_dump_directory = temporary_directory.join(`dump`);
 		StorageHelper.copy(program_file, temporary_program_file, false);
 		StorageHelper.copy(metadata_file, temporary_metadata_file, false);
 		StorageHelper.create_directory(temporary_dump_directory);
@@ -884,7 +884,7 @@ namespace Twinning.Script.ExternalHelper {
 		let [temporary_directory, temporary_directory_finalizer] = StorageHelper.temporary();
 		using temporary_directory_using = temporary_directory_finalizer;
 		let temporary_executable_file = temporary_directory.join(`executable.${target_type}`);
-		let temporary_keystore_file = temporary_directory.join('keystore');
+		let temporary_keystore_file = temporary_directory.join(`keystore.p12`);
 		StorageHelper.copy(target_file, temporary_executable_file, false);
 		StorageHelper.copy(keystore_file, temporary_keystore_file, false);
 		let process_result = launch_process(
@@ -919,8 +919,8 @@ namespace Twinning.Script.ExternalHelper {
 	): void {
 		let [temporary_directory, temporary_directory_finalizer] = StorageHelper.temporary();
 		using temporary_directory_using = temporary_directory_finalizer;
-		let temporary_executable_file = temporary_directory.join('executable');
-		let temporary_manifest_file = temporary_directory.join('manifest');
+		let temporary_executable_file = temporary_directory.join(`executable`);
+		let temporary_manifest_file = temporary_directory.join(`manifest`);
 		StorageHelper.copy(executable_file, temporary_executable_file, false);
 		StorageHelper.copy(manifest_file, temporary_manifest_file, false);
 		let process_result = launch_process(
@@ -951,8 +951,8 @@ namespace Twinning.Script.ExternalHelper {
 	): void {
 		let [temporary_directory, temporary_directory_finalizer] = StorageHelper.temporary();
 		using temporary_directory_using = temporary_directory_finalizer;
-		let temporary_executable_file = temporary_directory.join('executable');
-		let temporary_manifest_file = temporary_directory.join('manifest');
+		let temporary_executable_file = temporary_directory.join(`executable`);
+		let temporary_manifest_file = temporary_directory.join(`manifest`);
 		StorageHelper.copy(executable_file, temporary_executable_file, false);
 		let process_result = launch_process(
 			'mt',
@@ -981,7 +981,7 @@ namespace Twinning.Script.ExternalHelper {
 	): void {
 		let [temporary_directory, temporary_directory_finalizer] = StorageHelper.temporary();
 		using temporary_directory_using = temporary_directory_finalizer;
-		let temporary_configure_file = temporary_directory.join('priconfig.xml');
+		let temporary_configure_file = temporary_directory.join(`priconfig.xml`);
 		let process_result = launch_process(
 			'makepri',
 			[
@@ -1009,10 +1009,10 @@ namespace Twinning.Script.ExternalHelper {
 	): void {
 		let [temporary_directory, temporary_directory_finalizer] = StorageHelper.temporary();
 		using temporary_directory_using = temporary_directory_finalizer;
-		let temporary_project_directory = temporary_directory.join('project');
-		let temporary_configure_file = temporary_directory.join('priconfig.xml');
-		let temporary_resource_directory = temporary_directory.join('resource');
-		StorageHelper.copy(project_directory, temporary_project_directory, true);
+		let temporary_project_directory = temporary_directory.join(`project`);
+		let temporary_configure_file = temporary_directory.join(`priconfig.xml`);
+		let temporary_resource_directory = temporary_directory.join(`resource`);
+		StorageHelper.copy(project_directory, temporary_project_directory, false);
 		StorageHelper.copy(configure_file, temporary_configure_file, false);
 		StorageHelper.create_directory(temporary_resource_directory);
 		let process_result = launch_process(
@@ -1022,7 +1022,7 @@ namespace Twinning.Script.ExternalHelper {
 				`/o`,
 				`/cf`, `${temporary_configure_file.emit_native()}`,
 				`/pr`, `${temporary_project_directory.emit_native()}`,
-				`/of`, `${temporary_resource_directory.join('resources.pri').emit_native()}`,
+				`/of`, `${temporary_resource_directory.join(`resources.pri`).emit_native()}`,
 			],
 			null,
 			null,
@@ -1049,9 +1049,9 @@ namespace Twinning.Script.ExternalHelper {
 	): void {
 		let [temporary_directory, temporary_directory_finalizer] = StorageHelper.temporary();
 		using temporary_directory_using = temporary_directory_finalizer;
-		let temporary_package_file = temporary_directory.join('package.msix');
-		let temporary_content_directory = temporary_directory.join('package');
-		StorageHelper.copy(content_directory, temporary_content_directory, true);
+		let temporary_package_file = temporary_directory.join(`package.msix`);
+		let temporary_content_directory = temporary_directory.join(`content`);
+		StorageHelper.copy(content_directory, temporary_content_directory, false);
 		let process_result = launch_process(
 			'makeappx',
 			[
@@ -1080,9 +1080,9 @@ namespace Twinning.Script.ExternalHelper {
 	): void {
 		let [temporary_directory, temporary_directory_finalizer] = StorageHelper.temporary();
 		using temporary_directory_using = temporary_directory_finalizer;
-		let temporary_package_file = temporary_directory.join('package.msix');
-		let temporary_content_directory = temporary_directory.join('package');
-		StorageHelper.copy(package_file, temporary_package_file, true);
+		let temporary_package_file = temporary_directory.join(`package.msix`);
+		let temporary_content_directory = temporary_directory.join(`content`);
+		StorageHelper.copy(package_file, temporary_package_file, false);
 		let process_result = launch_process(
 			'makeappx',
 			[
@@ -1114,9 +1114,9 @@ namespace Twinning.Script.ExternalHelper {
 	): void {
 		let [temporary_directory, temporary_directory_finalizer] = StorageHelper.temporary();
 		using temporary_directory_using = temporary_directory_finalizer;
-		let temporary_package_file = temporary_directory.join('package.AppImage');
-		let temporary_content_directory = temporary_directory.join('package.AppDir');
-		StorageHelper.copy(content_directory, temporary_content_directory, true);
+		let temporary_package_file = temporary_directory.join(`package.AppImage`);
+		let temporary_content_directory = temporary_directory.join(`content.AppDir`);
+		StorageHelper.copy(content_directory, temporary_content_directory, false);
 		let process_result = launch_process(
 			'appimagetool',
 			[
@@ -1203,7 +1203,7 @@ namespace Twinning.Script.ExternalHelper {
 	): void {
 		let [temporary_directory, temporary_directory_finalizer] = StorageHelper.temporary();
 		using temporary_directory_using = temporary_directory_finalizer;
-		let temporary_keychain_file = temporary_directory.join('temporary.keychain');
+		let temporary_keychain_file = temporary_directory.join(`temporary.keychain`);
 		let process_result = launch_process(
 			'security',
 			[
@@ -1227,8 +1227,6 @@ namespace Twinning.Script.ExternalHelper {
 		keychain_file: StoragePath,
 		option?: LaunchingOption,
 	): void {
-		let [temporary_directory, temporary_directory_finalizer] = StorageHelper.temporary();
-		using temporary_directory_using = temporary_directory_finalizer;
 		let process_result = launch_process(
 			'security',
 			[
@@ -1251,8 +1249,6 @@ namespace Twinning.Script.ExternalHelper {
 		password: string,
 		option?: LaunchingOption,
 	): void {
-		let [temporary_directory, temporary_directory_finalizer] = StorageHelper.temporary();
-		using temporary_directory_using = temporary_directory_finalizer;
 		let process_result = launch_process(
 			'security',
 			[
@@ -1276,8 +1272,6 @@ namespace Twinning.Script.ExternalHelper {
 		password: string,
 		option?: LaunchingOption,
 	): void {
-		let [temporary_directory, temporary_directory_finalizer] = StorageHelper.temporary();
-		using temporary_directory_using = temporary_directory_finalizer;
 		let process_result = launch_process(
 			'security',
 			[
@@ -1306,11 +1300,13 @@ namespace Twinning.Script.ExternalHelper {
 	): void {
 		let [temporary_directory, temporary_directory_finalizer] = StorageHelper.temporary();
 		using temporary_directory_using = temporary_directory_finalizer;
+		let temporary_keystore_file = temporary_directory.join(`keystore.p12`);
+		StorageHelper.copy(keystore_file, temporary_keystore_file, false);
 		let process_result = launch_process(
 			'security',
 			[
 				`import`,
-				`${keystore_file.emit_native()}`,
+				`${temporary_keystore_file.emit_native()}`,
 				`-k`, `${keychain_file.emit_native()}`,
 				`-P`, `${password}`,
 				`-T`, `/usr/bin/codesign`,
@@ -1330,8 +1326,6 @@ namespace Twinning.Script.ExternalHelper {
 		keychain_file_list: null | Array<StoragePath>,
 		option?: LaunchingOption,
 	): Array<StoragePath> {
-		let [temporary_directory, temporary_directory_finalizer] = StorageHelper.temporary();
-		using temporary_directory_using = temporary_directory_finalizer;
 		let process_result = launch_process(
 			'security',
 			[
@@ -1356,8 +1350,6 @@ namespace Twinning.Script.ExternalHelper {
 		keychain_file: StoragePath,
 		option?: LaunchingOption,
 	): string {
-		let [temporary_directory, temporary_directory_finalizer] = StorageHelper.temporary();
-		using temporary_directory_using = temporary_directory_finalizer;
 		let process_result = launch_process(
 			'security',
 			[
@@ -1388,9 +1380,9 @@ namespace Twinning.Script.ExternalHelper {
 	): void {
 		let [temporary_directory, temporary_directory_finalizer] = StorageHelper.temporary();
 		using temporary_directory_using = temporary_directory_finalizer;
-		let temporary_package_file = temporary_directory.join('package.dmg');
+		let temporary_package_file = temporary_directory.join(`package.dmg`);
 		let temporary_content_directory = temporary_directory.join(`${name}.app`);
-		StorageHelper.copy(content_directory, temporary_content_directory, true);
+		StorageHelper.copy(content_directory, temporary_content_directory, false);
 		let process_result = launch_process(
 			'create-dmg',
 			[
@@ -1429,7 +1421,7 @@ namespace Twinning.Script.ExternalHelper {
 		let [temporary_directory, temporary_directory_finalizer] = StorageHelper.temporary();
 		using temporary_directory_using = temporary_directory_finalizer;
 		let temporary_zip_file = temporary_directory.join(`file.zip`);
-		let temporary_aligned_zip_file = temporary_directory.join('aligned.zip');
+		let temporary_aligned_zip_file = temporary_directory.join(`aligned.zip`);
 		StorageHelper.copy(zip_file, temporary_zip_file, false);
 		let process_result = launch_process(
 			'zipalign',
@@ -1463,7 +1455,7 @@ namespace Twinning.Script.ExternalHelper {
 		let [temporary_directory, temporary_directory_finalizer] = StorageHelper.temporary();
 		using temporary_directory_using = temporary_directory_finalizer;
 		let temporary_apk_file = temporary_directory.join(`file.apk`);
-		let temporary_keystore_file = temporary_directory.join(`keystore`);
+		let temporary_keystore_file = temporary_directory.join(`keystore.p12`);
 		StorageHelper.copy(apk_file, temporary_apk_file, false);
 		StorageHelper.copy(keystore_file, temporary_keystore_file, false);
 		let process_result = launch_process(

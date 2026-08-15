@@ -16,7 +16,7 @@ def fs_copy(
 	follow_link: bool = False,
 ) -> None:
 	if not pathlib.Path(target).exists():
-		raise RuntimeError(f'invalid source \'{target}\'')
+		raise RuntimeError(f'invalid target \'{target}\'')
 	if pathlib.Path(placement).exists():
 		fs_remove(placement)
 	if not pathlib.Path(placement).parent.exists():
@@ -24,7 +24,7 @@ def fs_copy(
 	if pathlib.Path(target).is_file():
 		shutil.copy(target, placement, follow_symlinks=follow_link)
 	if pathlib.Path(target).is_dir():
-		shutil.copytree(target, placement, symlinks=follow_link, dirs_exist_ok=True)
+		shutil.copytree(target, placement, symlinks=not follow_link, dirs_exist_ok=True)
 	return
 
 def fs_remove(
@@ -154,13 +154,11 @@ def ex_archive_pack_zip(
 	package: str,
 	content: str,
 	root: str | None,
-	follow_link: bool = False,
 ) -> None:
 	with fs_temporary() as temporary:
 		fs_copy(
 			f'{content}',
 			f'{temporary}/content{'' if root == None else f'/{root}'}',
-			follow_link=follow_link,
 		)
 		shutil.make_archive(
 			f'{temporary}/package',
@@ -192,7 +190,6 @@ def ex_archive_unpack_zip(
 		fs_copy(
 			f'{temporary}/content{'' if root == None else f'/{root}'}',
 			f'{content}',
-			follow_link=True,
 		)
 	return
 
@@ -256,7 +253,6 @@ def ex_windows_pack_msix(
 		fs_copy(
 			f'{content}',
 			f'{temporary}/content',
-			follow_link=True,
 		)
 		sh_execute_command(temporary, [
 			'makeappx',
@@ -291,7 +287,6 @@ def ex_windows_unpack_msix(
 		fs_copy(
 			f'{temporary}/content',
 			f'{content}',
-			follow_link=True,
 		)
 	return
 
@@ -371,7 +366,6 @@ def ex_linux_pack_appimage(
 		fs_copy(
 			f'{content}',
 			f'{temporary}/content.AppDir',
-			follow_link=True,
 		)
 		sh_execute_command(temporary, [
 			'appimagetool',
@@ -452,7 +446,6 @@ def ex_macintosh_sign(
 		fs_copy(
 			f'{target}',
 			f'{temporary}/target',
-			follow_link=True,
 		)
 		target_item_list: list[str] = []
 		target_item_list += fs_find(f'{temporary}/target/Contents/Frameworks/*.framework')
@@ -487,7 +480,6 @@ def ex_macintosh_sign(
 		fs_copy(
 			f'{temporary}/target',
 			f'{target}',
-			follow_link=True,
 		)
 	return
 
@@ -500,7 +492,6 @@ def ex_macintosh_pack_dmg(
 		fs_copy(
 			f'{content}',
 			f'{temporary}/content/{name}.app',
-			follow_link=True,
 		)
 		sh_execute_command(temporary, [
 			'create-dmg',
@@ -569,23 +560,7 @@ def ex_iphone_pack_ipa(
 	content: str,
 	name: str,
 ) -> None:
-	with fs_temporary() as temporary:
-		fs_copy(
-			f'{content}',
-			f'{temporary}/content/Payload/{name}.app',
-			follow_link=True,
-		)
-		shutil.make_archive(
-			f'{temporary}/package',
-			'zip',
-			f'{temporary}/content',
-			f'',
-		)
-		fs_copy(
-			f'{temporary}/package.zip',
-			f'{package}',
-		)
-	return
+	return ex_archive_pack_zip(package, content, f'Payload/{name}.app')
 
 # ----------------
 

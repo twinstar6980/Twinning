@@ -84,7 +84,7 @@ def build(
 	utility.ex_archive_pack_zip(
 		f'{temporary}/artifact.zip',
 		f'{temporary}/artifact',
-		'Twinning',
+		f'Twinning',
 	)
 	destination = ('.zip', f'{temporary}/artifact.zip')
 	return destination

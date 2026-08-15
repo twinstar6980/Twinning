@@ -8,13 +8,10 @@
 # general - script
 /**/*.sh                                     text eol=lf
 /**/*.ps1                                    text eol=lf
-/**/*.cmd                                    text eol=crlf
-/**/*.bat                                    text eol=crlf
 
 # general - configuration
 /**/*.json                                   text eol=lf
 /**/*.yaml                                   text eol=lf
-/**/*.yml                                    text eol=lf
 /**/*.xml                                    text eol=lf
 /**/*.plist                                  text eol=lf
 /**/*.properties                             text eol=lf
@@ -25,31 +22,24 @@
 /**/*.png                                    binary
 /**/*.svg                                    text eol=lf
 
-# general - program
-/**/*.so                                     binary
-/**/*.dll                                    binary
-/**/*.jar                                    binary
-
 # language - c/c++
+/**/*.h                                      text eol=lf
+/**/*.c                                      text eol=lf
+/**/*.cc                                     text eol=lf
 /**/*.hpp                                    text eol=lf
 /**/*.cpp                                    text eol=lf
 /**/*.cppm                                   text eol=lf
 
 # language - typescript
 /**/*.ts                                     text eol=lf
+/**/tsconfig.json                            text eol=lf
 
 # language - dart
 /**/*.dart                                   text eol=lf
 
-# language - java
-/**/*.java                                   text eol=lf
-
 # language - kotlin
 /**/*.kt                                     text eol=lf
 /**/*.kts                                    text eol=lf
-
-# language - objective-c
-/**/*.m                                      text eol=lf
 
 # language - swift
 /**/*.swift                                  text eol=lf
@@ -75,7 +65,6 @@
 
 # environment - node.js
 /**/package.json                             text eol=lf
-/**/tsconfig.json                            text eol=lf
 
 # environment - gradle
 /**/gradlew                                  text eol=lf
@@ -92,23 +81,11 @@
 /**/devtools_options.yaml                    text eol=lf
 
 # environment - visual studio
-/**/*.slnx                                   text eol=crlf
-/**/*.vcxproj                                text eol=crlf
-/**/*.vcxproj.filters                        text eol=crlf
-/**/*.csproj                                 text eol=crlf
-/**/*.csproj.filters                         text eol=crlf
-/**/Directory.Packages.props                 text eol=crlf
-/**/Directory.Build.props                    text eol=crlf
-/**/Directory.Build.targets                  text eol=crlf
 /**/*.rc                                     text eol=crlf
 /**/*.def                                    text eol=crlf
 /**/*.manifest                               text eol=crlf
 /**/*.appxmanifest                           text eol=crlf
 /**/AppxManifest.xml                         text eol=crlf
-/**/NativeMethods.txt                        text eol=crlf
-/**/NativeMethods.json                       text eol=crlf
-/**/*.pubxml                                 text eol=crlf
-/**/launchSettings.json                      text eol=crlf
 
 # environment - xcode
 /**/*.pbxproj                                text eol=lf

@@ -58,7 +58,6 @@ def build(
 		utility.fs_copy(
 			f'{source}/build/linux/x64/release/bundle',
 			f'{temporary}/artifact',
-			follow_link=True,
 		)
 		utility.ex_linux_pack_appimage(
 			f'{temporary}/artifact.AppImage',
@@ -79,7 +78,6 @@ def build(
 		utility.fs_copy(
 			f'{source}/build/macos/Build/Products/Release/Runner.app',
 			f'{temporary}/artifact.app',
-			follow_link=True,
 		)
 		utility.ex_macintosh_sign(
 			f'{temporary}/artifact.app',
@@ -132,7 +130,6 @@ def build(
 		utility.fs_copy(
 			f'{source}/build/ios/iphoneos/Runner.app',
 			f'{temporary}/artifact.app',
-			follow_link=True,
 		)
 		utility.ex_iphone_sign(
 			f'{temporary}/artifact.app',

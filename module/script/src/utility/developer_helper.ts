@@ -144,11 +144,9 @@ namespace Twinning.Script.DeveloperHelper {
 		if (type === 'msix') {
 			let [temporary_directory, temporary_directory_finalizer] = StorageHelper.temporary();
 			using temporary_directory_using = temporary_directory_finalizer;
-			let temporary_target = temporary_directory.join(`target`);
 			let temporary_package_directory = temporary_directory.join(`package`);
-			StorageHelper.copy(target, temporary_target, true);
 			ExternalHelper.run_makeappx_unpack(
-				temporary_target,
+				target,
 				temporary_package_directory,
 			);
 			let temporary_manifest_file = temporary_package_directory.join(`AppxManifest.xml`);
@@ -158,19 +156,19 @@ namespace Twinning.Script.DeveloperHelper {
 				`$1${keystore_information.subject.replaceAll('$', '$$')}$3`,
 			);
 			StorageHelper.write_file_text(temporary_manifest_file, manifest_content);
-			StorageHelper.remove(temporary_target);
+			let temporary_target_file = temporary_directory.join(`target`);
 			ExternalHelper.run_makeappx_pack(
-				temporary_target,
+				temporary_target_file,
 				temporary_package_directory,
 			);
 			ExternalHelper.run_signtool_sign(
-				temporary_target,
+				temporary_target_file,
 				'msix',
 				keystore[0],
 				keystore[1],
 			);
 			StorageHelper.remove(target);
-			StorageHelper.copy(temporary_target, target, false);
+			StorageHelper.copy(temporary_target_file, target, false);
 		}
 		return;
 	}
@@ -335,55 +333,53 @@ namespace Twinning.Script.DeveloperHelper {
 			temporary_keychain_file,
 			temporary_keychain_password,
 		);
-		let current_keychain_file_list = ExternalHelper.run_security_list_keychain(
-			null,
-		);
-		ExternalHelper.run_security_list_keychain(
-			[...current_keychain_file_list, temporary_keychain_file],
-		);
+		ExternalHelper.run_security_list_keychain([
+			...ExternalHelper.run_security_list_keychain(null),
+			temporary_keychain_file,
+		]);
 		let keystore_name = ExternalHelper.run_security_find_identity(
 			temporary_keychain_file,
 		);
-		let default_entitlement_file = temporary_directory.join('default.entitlements');
+		let default_entitlement_file = temporary_directory.join(`default.entitlements`);
 		StorageHelper.write_file_text(default_entitlement_file, `<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"><plist version="1.0"><dict></dict></plist>`);
-		let sign_list = [] as Array<StoragePath>;
-		let temporary_binary_file = temporary_directory.join('binary');
-		StorageHelper.copy(target, temporary_binary_file, false);
+		let temporary_target = temporary_directory.join(`target`);
+		StorageHelper.copy(target, temporary_target, false);
+		let content_list = [] as Array<StoragePath>;
 		if (type === 'macho') {
-			sign_list.push(new StoragePath());
+			content_list.push(new StoragePath());
 		}
 		if (type === 'app') {
-			let search_embedded = (path: StoragePath) => {
-				if (StorageHelper.exist_directory(temporary_binary_file.push(path))) {
-					let item = StorageHelper.list_directory(temporary_binary_file.push(path), 1n, false, false, false, true)
+			let search_embedded = (path: StoragePath): Array<StoragePath> => {
+				return !StorageHelper.exist_directory(temporary_target.push(path))
+					? []
+					: StorageHelper.list_directory(temporary_target.push(path), 1n, false, false, false, true)
 						.filter((it) => it.extension()?.toLowerCase() === 'framework')
 						.map((it) => path.push(it));
-					sign_list.push(...item);
-				}
-				return;
 			};
-			search_embedded(new StoragePath().join('Frameworks'));
-			search_embedded(new StoragePath().join('PlugIns'));
-			search_embedded(new StoragePath().join('Contents').join('Frameworks'));
-			search_embedded(new StoragePath().join('Contents').join('PlugIns'));
-			sign_list.push(new StoragePath());
+			content_list.push(...search_embedded(new StoragePath().join('Frameworks')));
+			content_list.push(...search_embedded(new StoragePath().join('PlugIns')));
+			content_list.push(...search_embedded(new StoragePath().join('Contents').join('Frameworks')));
+			content_list.push(...search_embedded(new StoragePath().join('Contents').join('PlugIns')));
+			content_list.push(new StoragePath());
 		}
-		for (let item_file of sign_list) {
-			let item_entitlement_file = temporary_directory.join(`original.${item_file.emit_posix().replaceAll('/', '_')}.entitlements`);
+		for (let content_item of content_list) {
+			let actual_entitlement_file = temporary_directory.join(`original.${content_item.emit_posix().replaceAll('/', '_')}.entitlements`);
 			ExternalHelper.run_codesign_export_entitlement(
-				temporary_binary_file.push(item_file),
-				item_entitlement_file,
+				temporary_target.push(content_item),
+				actual_entitlement_file,
 			);
-			if (!StorageHelper.exist_file(item_entitlement_file)) {
-				item_entitlement_file = default_entitlement_file;
+			if (!StorageHelper.exist_file(actual_entitlement_file)) {
+				actual_entitlement_file = default_entitlement_file;
 			}
 			ExternalHelper.run_codesign_sign(
-				temporary_binary_file.push(item_file),
-				item_entitlement_file,
+				temporary_target.push(content_item),
+				actual_entitlement_file,
 				keystore_name,
 				temporary_keychain_file,
 			);
 		}
+		StorageHelper.remove(target);
+		StorageHelper.copy(temporary_target, target, false);
 		return;
 	}
 
