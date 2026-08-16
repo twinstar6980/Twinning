@@ -1169,7 +1169,9 @@ namespace Twinning.Script.ExternalHelper {
 		if (process_result.code !== 0n) {
 			ProcessHelper.throw_execution_exception(process_result);
 		}
-		StorageHelper.copy(temporary_entitlement_file, entitlement_file, false);
+		if (StorageHelper.exist_file(temporary_entitlement_file)) {
+			StorageHelper.copy(temporary_entitlement_file, entitlement_file, false);
+		}
 		return;
 	}
 
