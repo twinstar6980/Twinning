@@ -349,17 +349,17 @@ namespace Twinning.Script.DeveloperHelper {
 			content_list.push(new StoragePath());
 		}
 		if (type === 'app') {
-			let search_embedded = (path: StoragePath): Array<StoragePath> => {
+			let search_embedded = (path: StoragePath, extension: string): Array<StoragePath> => {
 				return !StorageHelper.exist_directory(temporary_target.push(path))
 					? []
 					: StorageHelper.list_directory(temporary_target.push(path), 1n, false, false, false, true)
-						.filter((it) => it.extension()?.toLowerCase() === 'framework')
+						.filter((it) => it.extension()?.toLowerCase() === extension)
 						.map((it) => path.push(it));
 			};
-			content_list.push(...search_embedded(new StoragePath().join('Frameworks')));
-			content_list.push(...search_embedded(new StoragePath().join('PlugIns')));
-			content_list.push(...search_embedded(new StoragePath().join('Contents').join('Frameworks')));
-			content_list.push(...search_embedded(new StoragePath().join('Contents').join('PlugIns')));
+			content_list.push(...search_embedded(new StoragePath().join('Frameworks'), 'framework'));
+			content_list.push(...search_embedded(new StoragePath().join('PlugIns'), 'appex'));
+			content_list.push(...search_embedded(new StoragePath().join('Contents').join('Frameworks'), 'framework'));
+			content_list.push(...search_embedded(new StoragePath().join('Contents').join('PlugIns'), 'appex'));
 			content_list.push(new StoragePath());
 		}
 		for (let content_item of content_list) {

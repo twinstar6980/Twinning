@@ -447,19 +447,22 @@ def ex_macintosh_sign(
 			f'{target}',
 			f'{temporary}/target',
 		)
-		target_item_list: list[str] = []
-		target_item_list += fs_find(f'{temporary}/target/Contents/Frameworks/*.framework')
-		target_item_list += fs_find(f'{temporary}/target/Contents/PlugIns/*.appex')
-		target_item_list += fs_find(f'{temporary}/target/Frameworks/*.framework')
-		target_item_list += fs_find(f'{temporary}/target/PlugIns/*.appex')
-		target_item_list += [f'{temporary}/target']
-		for target_item in target_item_list:
-			target_item_entitlements = f'{temporary}/original.{str(pathlib.Path(target_item).relative_to(f'{temporary}/target')).replace('/', '_')}.entitlements'
+		content_list: list[str] = []
+		if type == 'macho':
+			content_list += [f'{temporary}/target']
+		if type == 'app':
+			content_list += fs_find(f'{temporary}/target/Contents/Frameworks/*.framework')
+			content_list += fs_find(f'{temporary}/target/Contents/PlugIns/*.appex')
+			content_list += fs_find(f'{temporary}/target/Frameworks/*.framework')
+			content_list += fs_find(f'{temporary}/target/PlugIns/*.appex')
+			content_list += [f'{temporary}/target']
+		for content_item in content_list:
+			target_item_entitlements = f'{temporary}/original.{str(pathlib.Path(content_item).relative_to(f'{temporary}/target')).replace('/', '_')}.entitlements'
 			sh_execute_command(temporary, [
 				'codesign',
 				'-d',
 				'--entitlements', f':{target_item_entitlements}',
-				f'{target_item}',
+				f'{content_item}',
 			], ensure_ok=False)
 			if not pathlib.Path(target_item_entitlements).exists():
 				target_item_entitlements = default_entitlements
@@ -469,7 +472,7 @@ def ex_macintosh_sign(
 				'--keychain', f'{keychain_file}',
 				'--entitlements', f'{target_item_entitlements}',
 				'--force',
-				f'{target_item}',
+				f'{content_item}',
 			])
 		if keystore != None:
 			sh_execute_command(temporary, [
