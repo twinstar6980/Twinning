@@ -284,6 +284,7 @@ namespace Twinning.Script.ExternalHelper {
 		let [temporary_directory, temporary_directory_finalizer] = StorageHelper.temporary();
 		using temporary_directory_using = temporary_directory_finalizer;
 		let temporary_content_directory = temporary_directory.join(`content`);
+		StorageHelper.create_directory(temporary_content_directory);
 		let process_result = launch_process(
 			'7z',
 			[
@@ -315,7 +316,10 @@ namespace Twinning.Script.ExternalHelper {
 	): void {
 		let [temporary_directory, temporary_directory_finalizer] = StorageHelper.temporary();
 		using temporary_directory_using = temporary_directory_finalizer;
+		let temporary_zip_file = temporary_directory.join(`file.zip`);
+		StorageHelper.copy(zip_file, temporary_zip_file, false);
 		let temporary_content_directory = temporary_directory.join(`content`);
+		StorageHelper.create_directory(temporary_content_directory);
 		for (let content_item of content) {
 			StorageHelper.copy(content_item.placement, temporary_content_directory.push(content_item.location), false);
 		}
@@ -326,7 +330,7 @@ namespace Twinning.Script.ExternalHelper {
 				`-sccUTF-8`,
 				`-tzip`,
 				`-aoa`,
-				`${zip_file.emit_native()}`,
+				`${temporary_zip_file.emit_native()}`,
 				`${temporary_content_directory.join('*').emit_native()}`,
 			],
 			null,
@@ -337,6 +341,8 @@ namespace Twinning.Script.ExternalHelper {
 		if (process_result.code !== 0n) {
 			ProcessHelper.throw_execution_exception(process_result);
 		}
+		StorageHelper.remove(zip_file);
+		StorageHelper.copy(temporary_zip_file, zip_file, false);
 		return;
 	}
 
@@ -760,8 +766,8 @@ namespace Twinning.Script.ExternalHelper {
 	): Array<string> {
 		let [temporary_directory, temporary_directory_finalizer] = StorageHelper.temporary();
 		using temporary_directory_using = temporary_directory_finalizer;
-		let temporary_program_file = temporary_directory.join(`program`);
-		let temporary_metadata_file = temporary_directory.join(`metadata`);
+		let temporary_program_file = temporary_directory.join(`program.bin`);
+		let temporary_metadata_file = temporary_directory.join(`metadata.dat`);
 		let temporary_dump_directory = temporary_directory.join(`dump`);
 		StorageHelper.copy(program_file, temporary_program_file, false);
 		StorageHelper.copy(metadata_file, temporary_metadata_file, false);
@@ -919,8 +925,8 @@ namespace Twinning.Script.ExternalHelper {
 	): void {
 		let [temporary_directory, temporary_directory_finalizer] = StorageHelper.temporary();
 		using temporary_directory_using = temporary_directory_finalizer;
-		let temporary_executable_file = temporary_directory.join(`executable`);
-		let temporary_manifest_file = temporary_directory.join(`manifest`);
+		let temporary_executable_file = temporary_directory.join(`executable.bin`);
+		let temporary_manifest_file = temporary_directory.join(`manifest.manifest`);
 		StorageHelper.copy(executable_file, temporary_executable_file, false);
 		StorageHelper.copy(manifest_file, temporary_manifest_file, false);
 		let process_result = launch_process(
@@ -951,8 +957,8 @@ namespace Twinning.Script.ExternalHelper {
 	): void {
 		let [temporary_directory, temporary_directory_finalizer] = StorageHelper.temporary();
 		using temporary_directory_using = temporary_directory_finalizer;
-		let temporary_executable_file = temporary_directory.join(`executable`);
-		let temporary_manifest_file = temporary_directory.join(`manifest`);
+		let temporary_executable_file = temporary_directory.join(`executable.bin`);
+		let temporary_manifest_file = temporary_directory.join(`manifest.manifest`);
 		StorageHelper.copy(executable_file, temporary_executable_file, false);
 		let process_result = launch_process(
 			'mt',
@@ -1147,11 +1153,12 @@ namespace Twinning.Script.ExternalHelper {
 	): void {
 		let [temporary_directory, temporary_directory_finalizer] = StorageHelper.temporary();
 		using temporary_directory_using = temporary_directory_finalizer;
+		let temporary_entitlement_file = temporary_directory.join(`entitlement.entitlements`);
 		let process_result = launch_process(
 			'codesign',
 			[
 				`-d`,
-				`--entitlements`, `:${entitlement_file.emit_native()}`,
+				`--entitlements`, `:${temporary_entitlement_file.emit_native()}`,
 				`${target_file.emit_native()}`,
 			],
 			null,
@@ -1162,6 +1169,7 @@ namespace Twinning.Script.ExternalHelper {
 		if (process_result.code !== 0n) {
 			ProcessHelper.throw_execution_exception(process_result);
 		}
+		StorageHelper.copy(temporary_entitlement_file, entitlement_file, false);
 		return;
 	}
 
@@ -1174,12 +1182,14 @@ namespace Twinning.Script.ExternalHelper {
 	): void {
 		let [temporary_directory, temporary_directory_finalizer] = StorageHelper.temporary();
 		using temporary_directory_using = temporary_directory_finalizer;
+		let temporary_entitlement_file = temporary_directory.join(`entitlement.entitlements`);
+		StorageHelper.copy(entitlement_file, temporary_entitlement_file, false);
 		let process_result = launch_process(
 			'codesign',
 			[
 				`-s`, `${keystore_name}`,
 				`--keychain`, `${keychain_file.emit_native()}`,
-				`--entitlements`, `${entitlement_file.emit_native()}`,
+				`--entitlements`, `${temporary_entitlement_file.emit_native()}`,
 				`--force`,
 				`${target_file.emit_native()}`,
 			],

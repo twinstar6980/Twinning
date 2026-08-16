@@ -133,43 +133,39 @@ namespace Twinning.Script.DeveloperHelper {
 		type: WindowsSignatureType,
 	): void {
 		let keystore_information = keystore_query(keystore[0], keystore[1]);
+		let [temporary_directory, temporary_directory_finalizer] = StorageHelper.temporary();
+		using temporary_directory_using = temporary_directory_finalizer;
+		let temporary_target = temporary_directory.join(`target`);
+		StorageHelper.copy(target, temporary_target, false);
 		if (type === 'pe') {
-			ExternalHelper.run_signtool_sign(
-				target,
-				'exe',
-				keystore[0],
-				keystore[1],
-			);
 		}
 		if (type === 'msix') {
-			let [temporary_directory, temporary_directory_finalizer] = StorageHelper.temporary();
-			using temporary_directory_using = temporary_directory_finalizer;
-			let temporary_package_directory = temporary_directory.join(`package`);
+			let temporary_content_directory = temporary_directory.join(`content`);
 			ExternalHelper.run_makeappx_unpack(
-				target,
-				temporary_package_directory,
+				temporary_target,
+				temporary_content_directory,
 			);
-			let temporary_manifest_file = temporary_package_directory.join(`AppxManifest.xml`);
+			let temporary_manifest_file = temporary_content_directory.join(`AppxManifest.xml`);
 			let manifest_content = StorageHelper.read_file_text(temporary_manifest_file);
 			manifest_content = manifest_content.replace(
 				/(<Identity\s*.*\s*Publisher\s*=\s*")([^"]*)("\s.*\/>)/m,
 				`$1${keystore_information.subject.replaceAll('$', '$$')}$3`,
 			);
 			StorageHelper.write_file_text(temporary_manifest_file, manifest_content);
-			let temporary_target_file = temporary_directory.join(`target`);
+			StorageHelper.remove(temporary_target);
 			ExternalHelper.run_makeappx_pack(
-				temporary_target_file,
-				temporary_package_directory,
+				temporary_target,
+				temporary_content_directory,
 			);
-			ExternalHelper.run_signtool_sign(
-				temporary_target_file,
-				'msix',
-				keystore[0],
-				keystore[1],
-			);
-			StorageHelper.remove(target);
-			StorageHelper.copy(temporary_target_file, target, false);
 		}
+		ExternalHelper.run_signtool_sign(
+			temporary_target,
+			type === 'pe' ? 'exe' : type,
+			keystore[0],
+			keystore[1],
+		);
+		StorageHelper.remove(target);
+		StorageHelper.copy(temporary_target, target, false);
 		return;
 	}
 
@@ -259,9 +255,15 @@ namespace Twinning.Script.DeveloperHelper {
 		type: LinuxSignatureType,
 	): void {
 		let keystore_information = keystore_query(keystore[0], keystore[1]);
+		let [temporary_directory, temporary_directory_finalizer] = StorageHelper.temporary();
+		using temporary_directory_using = temporary_directory_finalizer;
+		let temporary_target = temporary_directory.join(`target`);
+		StorageHelper.copy(target, temporary_target, false);
 		if (type === 'elf') {
 			throw new UnsupportedException();
 		}
+		StorageHelper.remove(target);
+		StorageHelper.copy(temporary_target, target, false);
 		return;
 	}
 
@@ -346,33 +348,33 @@ namespace Twinning.Script.DeveloperHelper {
 		StorageHelper.copy(target, temporary_target, false);
 		let content_list = [] as Array<StoragePath>;
 		if (type === 'macho') {
-			content_list.push(new StoragePath());
+			content_list.push(temporary_target);
 		}
 		if (type === 'app') {
 			let search_embedded = (path: StoragePath, extension: string): Array<StoragePath> => {
-				return !StorageHelper.exist_directory(temporary_target.push(path))
+				return !StorageHelper.exist_directory(path)
 					? []
-					: StorageHelper.list_directory(temporary_target.push(path), 1n, false, false, false, true)
+					: StorageHelper.list_directory(path, 1n, false, false, false, true)
 						.filter((it) => it.extension()?.toLowerCase() === extension)
 						.map((it) => path.push(it));
 			};
-			content_list.push(...search_embedded(new StoragePath().join('Frameworks'), 'framework'));
-			content_list.push(...search_embedded(new StoragePath().join('PlugIns'), 'appex'));
-			content_list.push(...search_embedded(new StoragePath().join('Contents').join('Frameworks'), 'framework'));
-			content_list.push(...search_embedded(new StoragePath().join('Contents').join('PlugIns'), 'appex'));
-			content_list.push(new StoragePath());
+			content_list.push(...search_embedded(temporary_target.join('Frameworks'), 'framework'));
+			content_list.push(...search_embedded(temporary_target.join('PlugIns'), 'appex'));
+			content_list.push(...search_embedded(temporary_target.join('Contents').join('Frameworks'), 'framework'));
+			content_list.push(...search_embedded(temporary_target.join('Contents').join('PlugIns'), 'appex'));
+			content_list.push(temporary_target);
 		}
 		for (let content_item of content_list) {
 			let actual_entitlement_file = temporary_directory.join(`original.${content_item.emit_posix().replaceAll('/', '_')}.entitlements`);
 			ExternalHelper.run_codesign_export_entitlement(
-				temporary_target.push(content_item),
+				content_item,
 				actual_entitlement_file,
 			);
 			if (!StorageHelper.exist_file(actual_entitlement_file)) {
 				actual_entitlement_file = default_entitlement_file;
 			}
 			ExternalHelper.run_codesign_sign(
-				temporary_target.push(content_item),
+				content_item,
 				actual_entitlement_file,
 				keystore_name,
 				temporary_keychain_file,
@@ -426,37 +428,43 @@ namespace Twinning.Script.DeveloperHelper {
 		signature_version: [boolean, boolean, boolean],
 	): void {
 		let keystore_information = keystore_query(keystore[0], keystore[1]);
+		let [temporary_directory, temporary_directory_finalizer] = StorageHelper.temporary();
+		using temporary_directory_using = temporary_directory_finalizer;
+		let temporary_target = temporary_directory.join(`target`);
+		StorageHelper.copy(target, temporary_target, false);
+		let archive_content_list: null | ArchiveContentDescriptor = null;
+		let content_list = [] as Array<StoragePath>;
 		if (type === 'elf') {
 			throw new UnsupportedException();
 		}
 		if (type === 'apk') {
+			content_list.push(temporary_target);
+		}
+		if (type === 'apks') {
+			let temporary_content_directory = temporary_directory.join(`content`);
+			archive_content_list = archive_list(temporary_target)
+				.filter((it) => it.extension()?.toLowerCase() === 'apk')
+				.map((it) => ({
+					location: it,
+					placement: temporary_content_directory.push(it),
+				}));
+			archive_extract(temporary_target, archive_content_list);
+			content_list.push(...archive_content_list.map((it) => it.placement));
+		}
+		for (let content_item of content_list) {
 			ExternalHelper.run_apksigner_sign(
-				target,
+				content_item,
 				signature_version,
 				keystore[0],
 				keystore[1],
 			);
 		}
 		if (type === 'apks') {
-			let [temporary_directory, temporary_directory_finalizer] = StorageHelper.temporary();
-			using temporary_directory_using = temporary_directory_finalizer;
-			let content_list: ArchiveContentDescriptor = archive_list(target)
-				.filter((it) => it.extension()?.toLowerCase() === 'apk')
-				.map((it) => ({
-					location: it,
-					placement: temporary_directory.join(it.name()!),
-				}));
-			archive_extract(target, content_list);
-			for (let content_item of content_list) {
-				ExternalHelper.run_apksigner_sign(
-					content_item.placement,
-					signature_version,
-					keystore[0],
-					keystore[1],
-				);
-			}
-			archive_modify(target, content_list);
+			assert_test(archive_content_list !== null);
+			archive_modify(temporary_target, archive_content_list);
 		}
+		StorageHelper.remove(target);
+		StorageHelper.copy(temporary_target, target, false);
 		return;
 	}
 
@@ -482,28 +490,37 @@ namespace Twinning.Script.DeveloperHelper {
 		package_file: StoragePath,
 		type: AndroidPackageType,
 	): void {
+		let [temporary_directory, temporary_directory_finalizer] = StorageHelper.temporary();
+		using temporary_directory_using = temporary_directory_finalizer;
+		let temporary_package_file = temporary_directory.join(`package`);
+		StorageHelper.copy(package_file, temporary_package_file, false);
+		let archive_content_list: null | ArchiveContentDescriptor = null;
+		let content_list = [] as Array<StoragePath>;
 		if (type === 'apk') {
-			ExternalHelper.run_zipalign_align(
-				package_file,
-			);
+			content_list.push(temporary_package_file);
 		}
 		if (type === 'apks') {
-			let [temporary_directory, temporary_directory_finalizer] = StorageHelper.temporary();
-			using temporary_directory_using = temporary_directory_finalizer;
-			let content_list: ArchiveContentDescriptor = archive_list(package_file)
+			let temporary_content_directory = temporary_directory.join(`content`);
+			archive_content_list = archive_list(temporary_package_file)
 				.filter((it) => it.extension()?.toLowerCase() === 'apk')
 				.map((it) => ({
 					location: it,
-					placement: temporary_directory.join(it.name()!),
+					placement: temporary_content_directory.push(it),
 				}));
-			archive_extract(package_file, content_list);
-			for (let content_item of content_list) {
-				ExternalHelper.run_zipalign_align(
-					content_item.placement,
-				);
-			}
-			archive_modify(package_file, content_list);
+			archive_extract(temporary_package_file, archive_content_list);
+			content_list.push(...archive_content_list.map((it) => it.placement));
 		}
+		for (let content_item of content_list) {
+			ExternalHelper.run_zipalign_align(
+				content_item,
+			);
+		}
+		if (type === 'apks') {
+			assert_test(archive_content_list !== null);
+			archive_modify(temporary_package_file, archive_content_list);
+		}
+		StorageHelper.remove(package_file);
+		StorageHelper.copy(temporary_package_file, package_file, false);
 		return;
 	}
 

@@ -212,10 +212,10 @@ def ex_windows_sign(
 			keystore_subject = ex_keystore_query(keystore_file, keystore_password)[0]
 			ex_windows_unpack_msix(
 				f'{temporary}/target.{type}',
-				f'{temporary}/package',
+				f'{temporary}/content',
 			)
 			manifest_content = fs_read_file(
-				f'{temporary}/package/AppxManifest.xml',
+				f'{temporary}/content/AppxManifest.xml',
 			)
 			manifest_content = re.sub(
 				r'(<Identity\s.*Publisher\s*=\s*")([^"]*)("\s.*/>)',
@@ -224,12 +224,12 @@ def ex_windows_sign(
 				re.RegexFlag.MULTILINE,
 			)
 			fs_write_file(
-				f'{temporary}/package/AppxManifest.xml',
+				f'{temporary}/content/AppxManifest.xml',
 				manifest_content,
 			)
 			ex_windows_pack_msix(
 				f'{temporary}/target.{type}',
-				f'{temporary}/package',
+				f'{temporary}/content',
 			)
 		sh_execute_command(temporary, [
 			'signtool',
@@ -296,15 +296,15 @@ def ex_windows_strip_executable(
 	with fs_temporary() as temporary:
 		fs_copy(
 			f'{executable}',
-			f'{temporary}/executable',
+			f'{temporary}/executable.bin',
 		)
 		sh_execute_command(temporary, [
 			'llvm-strip',
 			'--strip-all',
-			f'{temporary}/executable',
+			f'{temporary}/executable.bin',
 		])
 		fs_copy(
-			f'{temporary}/executable',
+			f'{temporary}/executable.bin',
 			f'{executable}',
 		)
 	return
@@ -317,20 +317,20 @@ def ex_windows_import_manifest(
 	with fs_temporary() as temporary:
 		fs_copy(
 			f'{executable}',
-			f'{temporary}/executable',
+			f'{temporary}/executable.bin',
 		)
 		fs_copy(
 			f'{manifest}',
-			f'{temporary}/manifest',
+			f'{temporary}/manifest.manifest',
 		)
 		sh_execute_command(temporary, [
 			'mt',
-			'-manifest', f'{temporary}/manifest',
-			f'-outputresource:{temporary}/executable;#{resource_identifier}',
+			'-manifest', f'{temporary}/manifest.manifest',
+			f'-outputresource:{temporary}/executable.bin;#{resource_identifier}',
 			'-verbose',
 		])
 		fs_copy(
-			f'{temporary}/executable',
+			f'{temporary}/executable.bin',
 			f'{executable}',
 		)
 	return
@@ -438,9 +438,9 @@ def ex_macintosh_sign(
 			if find_identity_match == None:
 				raise RuntimeError(f'could not import keystore')
 			keystore_name = find_identity_match.group(1)
-		default_entitlements = f'{temporary}/default.entitlements'
+		default_entitlement_file = f'{temporary}/default.entitlements'
 		fs_write_file(
-			default_entitlements,
+			default_entitlement_file,
 			'<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"><plist version="1.0"><dict></dict></plist>',
 		)
 		fs_copy(
@@ -457,20 +457,20 @@ def ex_macintosh_sign(
 			content_list += fs_find(f'{temporary}/target/PlugIns/*.appex')
 			content_list += [f'{temporary}/target']
 		for content_item in content_list:
-			target_item_entitlements = f'{temporary}/original.{str(pathlib.Path(content_item).relative_to(f'{temporary}/target')).replace('/', '_')}.entitlements'
+			actual_entitlement_file = f'{temporary}/original.{str(pathlib.Path(content_item).relative_to(f'{temporary}/target')).replace('/', '_')}.entitlements'
 			sh_execute_command(temporary, [
 				'codesign',
 				'-d',
-				'--entitlements', f':{target_item_entitlements}',
+				'--entitlements', f':{actual_entitlement_file}',
 				f'{content_item}',
 			], ensure_ok=False)
-			if not pathlib.Path(target_item_entitlements).exists():
-				target_item_entitlements = default_entitlements
+			if not pathlib.Path(actual_entitlement_file).exists():
+				actual_entitlement_file = default_entitlement_file
 			sh_execute_command(temporary, [
 				'codesign',
 				'-s', f'{keystore_name}',
 				'--keychain', f'{keychain_file}',
-				'--entitlements', f'{target_item_entitlements}',
+				'--entitlements', f'{actual_entitlement_file}',
 				'--force',
 				f'{content_item}',
 			])
