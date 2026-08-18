@@ -205,7 +205,7 @@ export namespace Twinning::Kernel {
 						throw ConversionException{typeid(TSource), typeid(TDestination)};
 					}
 				}
-				if constexpr (will_lose_digit) {
+				if constexpr (will_lose_digit || std::numeric_limits<SourceValue>::digits == std::numeric_limits<DestinationValue>::digits) {
 					if (source_value > static_cast<SourceValue>(std::numeric_limits<DestinationValue>::max())) {
 						throw ConversionException{typeid(TSource), typeid(TDestination)};
 					}
