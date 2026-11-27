@@ -24,6 +24,8 @@ export namespace Twinning::Kernel::Trait {
 			&& (t_index < size)
 		using Element = AsSelect<t_index, TElement ...>;
 
+		// ----------------
+
 		template <typename TValue> requires
 			CategoryConstraint<>
 		inline static constexpr auto has(
@@ -42,29 +44,29 @@ export namespace Twinning::Kernel::Trait {
 
 	#pragma region utility
 
-	template <typename TPackage, auto t_begin, auto t_size> requires
+	template <typename TPackage, auto t_begin, auto t_count> requires
 		CategoryConstraint<IsPureInstance<TPackage>>
-		&& (IsTypePackage<TPackage> && IsSameOf<t_begin, ZSize> && IsSameOf<t_size, ZSize>)
-		&& (t_begin + t_size <= TPackage::size)
+		&& (IsTypePackage<TPackage> && IsSameOf<t_begin, ZSize> && IsSameOf<t_count, ZSize>)
+		&& (t_begin + t_count <= TPackage::size)
 	using AsTypePackageSub = decltype(
 		[]<auto ... t_index>(
 		std::index_sequence<t_index ...>
 	) -> TypePackage<typename TPackage::template Element<t_begin + t_index> ...> {
 			return {};
-		}(std::make_index_sequence<t_size>{})
+		}(std::make_index_sequence<t_count>{})
 	);
 
-	template <typename TPackage, auto t_size> requires
+	template <typename TPackage, auto t_count> requires
 		CategoryConstraint<IsPureInstance<TPackage>>
-		&& (IsTypePackage<TPackage> && IsSameOf<t_size, ZSize>)
-		&& (t_size <= TPackage::size)
-	using AsTypePackageRemoveHead = AsTypePackageSub<TPackage, t_size, TPackage::size - t_size>;
+		&& (IsTypePackage<TPackage> && IsSameOf<t_count, ZSize>)
+		&& (t_count <= TPackage::size)
+	using AsTypePackageRemoveHead = AsTypePackageSub<TPackage, t_count, TPackage::size - t_count>;
 
-	template <typename TPackage, auto t_size> requires
+	template <typename TPackage, auto t_count> requires
 		CategoryConstraint<IsPureInstance<TPackage>>
-		&& (IsTypePackage<TPackage> && IsSameOf<t_size, ZSize>)
-		&& (t_size <= TPackage::size)
-	using AsTypePackageRemoveTail = AsTypePackageSub<TPackage, 1_ixz, TPackage::size - t_size>;
+		&& (IsTypePackage<TPackage> && IsSameOf<t_count, ZSize>)
+		&& (t_count <= TPackage::size)
+	using AsTypePackageRemoveTail = AsTypePackageSub<TPackage, 1_ixz, TPackage::size - t_count>;
 
 	// ----------------
 
@@ -94,6 +96,7 @@ export namespace Twinning::Kernel::Trait {
 
 	template <typename TPackage, template <typename ...> typename TTransformer> requires
 		CategoryConstraint<IsPureInstance<TPackage>>
+		&& (IsTypePackage<TPackage>)
 	using AsTypePackageTransform = decltype([] {
 		return [&]<auto ... t_index>(
 			std::index_sequence<t_index ...>

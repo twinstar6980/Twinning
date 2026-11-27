@@ -1,42 +1,39 @@
--- libsquish
--- 1.15.1.4 4f48f6752814e3e62e75087fc09b816ac0e1f0f0
--- https://github.com/oblivioncth/libsquish
-
 target('dependency.libsquish', function()
 	set_group('source/dependency')
 	set_kind('static')
 	add_headerfiles(
-		'lib/src/alpha.h',
-		'lib/src/clusterfit.h',
-		'lib/src/colourblock.h',
-		'lib/src/colourfit.h',
-		'lib/src/colourset.h',
-		'lib/src/config.h',
-		'lib/src/maths.h',
-		'lib/src/rangefit.h',
-		'lib/src/simd.h',
-		'lib/src/simd_float.h',
-		'lib/src/simd_sse.h',
-		'lib/src/simd_ve.h',
-		'lib/src/singlecolourfit.h',
-		'lib/src/singlecolourlookup.inl',
-		'lib/include/squish/squish.h',
+		'origin/lib/src/alpha.h',
+		'origin/lib/src/clusterfit.h',
+		'origin/lib/src/colourblock.h',
+		'origin/lib/src/colourfit.h',
+		'origin/lib/src/colourset.h',
+		'origin/lib/src/config.h',
+		'origin/lib/src/maths.h',
+		'origin/lib/src/rangefit.h',
+		'origin/lib/src/simd.h',
+		'origin/lib/src/simd_float.h',
+		'origin/lib/src/simd_sse.h',
+		'origin/lib/src/simd_ve.h',
+		'origin/lib/src/singlecolourfit.h',
+		'origin/lib/src/singlecolourlookup.inl',
+		'origin/lib/include/squish/squish.h',
+		'origin/lib/include/squish/squish_export.h',
 		{ install = false }
 	)
 	add_files(
-		'lib/src/alpha.cpp',
-		'lib/src/clusterfit.cpp',
-		'lib/src/colourblock.cpp',
-		'lib/src/colourfit.cpp',
-		'lib/src/colourset.cpp',
-		'lib/src/maths.cpp',
-		'lib/src/rangefit.cpp',
-		'lib/src/singlecolourfit.cpp',
-		'lib/src/squish.cpp',
+		'origin/lib/src/alpha.cpp',
+		'origin/lib/src/clusterfit.cpp',
+		'origin/lib/src/colourblock.cpp',
+		'origin/lib/src/colourfit.cpp',
+		'origin/lib/src/colourset.cpp',
+		'origin/lib/src/maths.cpp',
+		'origin/lib/src/rangefit.cpp',
+		'origin/lib/src/singlecolourfit.cpp',
+		'origin/lib/src/squish.cpp',
 		{}
 	)
 	add_includedirs(
-		'lib/include',
+		'origin/lib/include',
 		{ public = true }
 	)
 	add_defines(

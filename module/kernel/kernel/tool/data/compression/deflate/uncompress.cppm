@@ -17,34 +17,34 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Deflate {
 		// ----------------
 
 		inline static auto process_whole(
-			OutputByteStreamView & raw,
-			InputByteStreamView &  ripe,
-			Integer const &        window_exponent,
-			WrapperType const &    wrapper_type
+			OutputBinaryStreamView & raw,
+			InputBinaryStreamView &  ripe,
+			Container const &        container,
+			Integer const &          window_exponent
 		) -> Void {
 			assert_test(Math::between(window_exponent, 8_i, make_box<Integer>(Dependency::zlib::$MAX_WBITS)));
 			auto z_state = int{};
 			auto z_window_exponent = unmake_box<int>(window_exponent);
-			switch (wrapper_type.value) {
-				case WrapperType::Constant::none().value: {
+			switch (container.value) {
+				case Container::Constant::none().value: {
 					z_window_exponent = -z_window_exponent;
 					break;
 				}
-				case WrapperType::Constant::zlib().value: {
+				case Container::Constant::zlib().value: {
 					z_window_exponent = +z_window_exponent;
 					break;
 				}
-				case WrapperType::Constant::gzip().value: {
+				case Container::Constant::gzip().value: {
 					z_window_exponent = +z_window_exponent + 16;
 					break;
 				}
 				default: throw UnreachableException{};
 			}
 			auto z_stream = Dependency::zlib::$z_stream{
-				.next_in = unmake_pointer_unsafe<Dependency::zlib::$Bytef>(ripe.current_pointer()),
+				.next_in = unmake_pointer_unsafe<Dependency::zlib::$Bytef>(ripe.current()),
 				.avail_in = unmake_box<unsigned>(ripe.reserve()),
 				.total_in = 0,
-				.next_out = unmake_pointer_unsafe<Dependency::zlib::$Bytef>(raw.current_pointer()),
+				.next_out = unmake_pointer_unsafe<Dependency::zlib::$Bytef>(raw.current()),
 				.avail_out = unmake_box<unsigned>(raw.reserve()),
 				.total_out = 0,
 				.msg = nullptr,
@@ -60,7 +60,7 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Deflate {
 				&z_stream,
 				z_window_exponent,
 				Dependency::zlib::$ZLIB_VERSION,
-				unmake_box<int>(k_type_size<Dependency::zlib::$z_stream>)
+				unmake_box<int>(type_byte_size_of<Dependency::zlib::$z_stream>())
 			);
 			assert_test(z_state == Dependency::zlib::$Z_OK);
 			z_state = Dependency::zlib::$inflate(
@@ -80,14 +80,14 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Deflate {
 		// ----------------
 
 		inline static auto process(
-			OutputByteStreamView & raw_,
-			InputByteStreamView &  ripe_,
-			Integer const &        window_exponent,
-			WrapperType const &    wrapper_type
+			OutputBinaryStreamView & raw_,
+			InputBinaryStreamView &  ripe_,
+			Container const &        container,
+			Integer const &          window_exponent
 		) -> Void {
-			M_use_zps_of(raw);
-			M_use_zps_of(ripe);
-			return process_whole(raw, ripe, window_exponent, wrapper_type);
+			M_use_split_stream_of(raw);
+			M_use_split_stream_of(ripe);
+			return process_whole(raw, ripe, container, window_exponent);
 		}
 
 	};

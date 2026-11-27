@@ -4,8 +4,7 @@ module;
 
 export module twinning.kernel.utility.trait.base;
 import twinning.kernel.utility.builtin;
-import twinning.kernel.utility.exception.exception;
-import twinning.kernel.utility.exception.utility;
+import twinning.kernel.utility.exception;
 
 export namespace Twinning::Kernel::Trait {
 
@@ -32,12 +31,6 @@ export namespace Twinning::Kernel::Trait {
 	#pragma endregion
 
 	#pragma region utility
-
-	template <typename> requires
-		NoneConstraint
-	inline constexpr auto k_static_assert_fail = bool{false};
-
-	// ----------------
 
 	template <typename TIt> requires
 		NoneConstraint

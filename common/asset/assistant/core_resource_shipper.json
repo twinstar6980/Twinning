@@ -28,7 +28,7 @@
 			],
 		},
 		{
-			"name": "Utility",
+			"name": "Common Utility",
 			"icon": "handyman",
 			"item": [
 				{
@@ -39,15 +39,15 @@
 					"method": "common.utility.update_global_setting",
 					"preset": [
 						{
-							"name": "Byte Endian - Little",
+							"name": "Binary Stream Endian - Little",
 							"argument": {
-								"data": "{\"byte_stream_use_big_endian\":false}",
+								"data": "{\"binary_stream_endian\":\"little\"}",
 							},
 						},
 						{
-							"name": "Byte Endian - Big",
+							"name": "Binary Stream Endian - Big",
 							"argument": {
-								"data": "{\"byte_stream_use_big_endian\":true}",
+								"data": "{\"binary_stream_endian\":\"big\"}",
 							},
 						},
 						null,
@@ -140,6 +140,12 @@
 								"target_name": "UnpackRsbLenient",
 							},
 						},
+						{
+							"name": "GenerateAssistantConfiguration",
+							"argument": {
+								"target_name": "GenerateAssistantConfiguration",
+							},
+						},
 					],
 				},
 				{
@@ -169,21 +175,9 @@
 			],
 		},
 		{
-			"name": "Data",
+			"name": "Data Hashing",
 			"icon": "draft",
 			"item": [
-				{
-					"name": "MD5 Hash",
-					"icon": "check_box",
-					"filter": {
-						"type": "file",
-						"name": "()$",
-					},
-					"batch": true,
-					"method": "data.hashing.md5.hash",
-					"preset": [
-					],
-				},
 				{
 					"name": "FNV Hash",
 					"icon": "check_box",
@@ -194,32 +188,299 @@
 					"batch": true,
 					"method": "data.hashing.fnv.hash",
 					"preset": [
+						{
+							"name": "V0-32",
+							"argument": {
+								"mode": "v0",
+								"length": 32,
+							},
+						},
+						{
+							"name": "V0-64",
+							"argument": {
+								"mode": "v0",
+								"length": 64,
+							},
+						},
+						{
+							"name": "V1-32",
+							"argument": {
+								"mode": "v1",
+								"length": 32,
+							},
+						},
+						{
+							"name": "V1-64",
+							"argument": {
+								"mode": "v1",
+								"length": 64,
+							},
+						},
+						{
+							"name": "V1A-32",
+							"argument": {
+								"mode": "v1a",
+								"length": 32,
+							},
+						},
+						{
+							"name": "V1A-64",
+							"argument": {
+								"mode": "v1a",
+								"length": 64,
+							},
+						},
 					],
 				},
 				{
-					"name": "Base64 Encode",
+					"name": "CRC Hash",
+					"icon": "check_box",
+					"filter": {
+						"type": "file",
+						"name": "()$",
+					},
+					"batch": true,
+					"method": "data.hashing.crc.hash",
+					"preset": [
+						{
+							"name": "Standard-32",
+							"argument": {
+								"mode": "standard",
+								"length": 32,
+							},
+						},
+						{
+							"name": "Castagnoli-32",
+							"argument": {
+								"mode": "castagnoli",
+								"length": 32,
+							},
+						},
+					],
+				},
+				{
+					"name": "Adler Hash",
+					"icon": "check_box",
+					"filter": {
+						"type": "file",
+						"name": "()$",
+					},
+					"batch": true,
+					"method": "data.hashing.adler.hash",
+					"preset": [
+						{
+							"name": "Standard-32",
+							"argument": {
+								"mode": "standard",
+								"length": 32,
+							},
+						},
+					],
+				},
+				{
+					"name": "MD Hash",
+					"icon": "check_box",
+					"filter": {
+						"type": "file",
+						"name": "()$",
+					},
+					"batch": true,
+					"method": "data.hashing.md.hash",
+					"preset": [
+						{
+							"name": "V2-128",
+							"argument": {
+								"mode": "v2",
+								"length": 128,
+							},
+						},
+						{
+							"name": "V4-128",
+							"argument": {
+								"mode": "v4",
+								"length": 128,
+							},
+						},
+						{
+							"name": "V5-128",
+							"argument": {
+								"mode": "v5",
+								"length": 128,
+							},
+						},
+					],
+				},
+				{
+					"name": "SHA Hash",
+					"icon": "check_box",
+					"filter": {
+						"type": "file",
+						"name": "()$",
+					},
+					"batch": true,
+					"method": "data.hashing.sha.hash",
+					"preset": [
+						{
+							"name": "V1-160",
+							"argument": {
+								"mode": "v1",
+								"length": 160,
+							},
+						},
+						{
+							"name": "V2-224",
+							"argument": {
+								"mode": "v2",
+								"length": 224,
+							},
+						},
+						{
+							"name": "V2-256",
+							"argument": {
+								"mode": "v2",
+								"length": 256,
+							},
+						},
+						{
+							"name": "V2-384",
+							"argument": {
+								"mode": "v2",
+								"length": 384,
+							},
+						},
+						{
+							"name": "V2-512",
+							"argument": {
+								"mode": "v2",
+								"length": 512,
+							},
+						},
+						{
+							"name": "V3-224",
+							"argument": {
+								"mode": "v3",
+								"length": 224,
+							},
+						},
+						{
+							"name": "V3-256",
+							"argument": {
+								"mode": "v3",
+								"length": 256,
+							},
+						},
+						{
+							"name": "V3-384",
+							"argument": {
+								"mode": "v3",
+								"length": 384,
+							},
+						},
+						{
+							"name": "V3-512",
+							"argument": {
+								"mode": "v3",
+								"length": 512,
+							},
+						},
+					],
+				},
+			],
+		},
+		{
+			"name": "Data Encoding",
+			"icon": "draft",
+			"item": [
+				{
+					"name": "Base Encode",
 					"icon": "skip_next",
 					"filter": {
 						"type": "file",
 						"name": "()$",
 					},
 					"batch": true,
-					"method": "data.encoding.base64.encode",
+					"method": "data.encoding.base.encode",
 					"preset": [
+						{
+							"name": "V16-STD",
+							"argument": {
+								"mode": "v16_std",
+							},
+						},
+						{
+							"name": "V32-STD",
+							"argument": {
+								"mode": "v32_std",
+							},
+						},
+						{
+							"name": "V32-HEX",
+							"argument": {
+								"mode": "v32_hex",
+							},
+						},
+						{
+							"name": "V64-STD",
+							"argument": {
+								"mode": "v64_std",
+							},
+						},
+						{
+							"name": "V64-URL",
+							"argument": {
+								"mode": "v64_url",
+							},
+						},
 					],
 				},
 				{
-					"name": "Base64 Decode",
+					"name": "Base Decode",
 					"icon": "skip_previous",
 					"filter": {
 						"type": "file",
 						"name": "()$",
 					},
 					"batch": true,
-					"method": "data.encoding.base64.decode",
+					"method": "data.encoding.base.decode",
 					"preset": [
+						{
+							"name": "V16-STD",
+							"argument": {
+								"mode": "v16_std",
+							},
+						},
+						{
+							"name": "V32-STD",
+							"argument": {
+								"mode": "v32_std",
+							},
+						},
+						{
+							"name": "V32-HEX",
+							"argument": {
+								"mode": "v32_hex",
+							},
+						},
+						{
+							"name": "V64-STD",
+							"argument": {
+								"mode": "v64_std",
+							},
+						},
+						{
+							"name": "V64-URL",
+							"argument": {
+								"mode": "v64_url",
+							},
+						},
 					],
 				},
+			],
+		},
+		{
+			"name": "Data Encryption",
+			"icon": "draft",
+			"item": [
 				{
 					"name": "EXOR Encrypt",
 					"icon": "lock",
@@ -256,6 +517,12 @@
 					"preset": [
 					],
 				},
+			],
+		},
+		{
+			"name": "Data Compression",
+			"icon": "draft",
+			"item": [
 				{
 					"name": "Deflate Compress",
 					"icon": "close_fullscreen",
@@ -266,6 +533,24 @@
 					"batch": true,
 					"method": "data.compression.deflate.compress",
 					"preset": [
+						{
+							"name": "None",
+							"argument": {
+								"container": "none",
+							},
+						},
+						{
+							"name": "Zlib",
+							"argument": {
+								"container": "zlib",
+							},
+						},
+						{
+							"name": "Gzip",
+							"argument": {
+								"container": "gzip",
+							},
+						},
 					],
 				},
 				{
@@ -278,54 +563,24 @@
 					"batch": true,
 					"method": "data.compression.deflate.uncompress",
 					"preset": [
-					],
-				},
-				{
-					"name": "ZLib Compress",
-					"icon": "close_fullscreen",
-					"filter": {
-						"type": "file",
-						"name": "()$",
-					},
-					"batch": true,
-					"method": "data.compression.zlib.compress",
-					"preset": [
-					],
-				},
-				{
-					"name": "ZLib Uncompress",
-					"icon": "open_in_full",
-					"filter": {
-						"type": "file",
-						"name": "()$",
-					},
-					"batch": true,
-					"method": "data.compression.zlib.uncompress",
-					"preset": [
-					],
-				},
-				{
-					"name": "GZip Compress",
-					"icon": "close_fullscreen",
-					"filter": {
-						"type": "file",
-						"name": "()$",
-					},
-					"batch": true,
-					"method": "data.compression.gzip.compress",
-					"preset": [
-					],
-				},
-				{
-					"name": "GZip Uncompress",
-					"icon": "open_in_full",
-					"filter": {
-						"type": "file",
-						"name": "()$",
-					},
-					"batch": true,
-					"method": "data.compression.gzip.uncompress",
-					"preset": [
+						{
+							"name": "None",
+							"argument": {
+								"container": "none",
+							},
+						},
+						{
+							"name": "Zlib",
+							"argument": {
+								"container": "zlib",
+							},
+						},
+						{
+							"name": "Gzip",
+							"argument": {
+								"container": "gzip",
+							},
+						},
 					],
 				},
 				{
@@ -338,6 +593,12 @@
 					"batch": true,
 					"method": "data.compression.bzip2.compress",
 					"preset": [
+						{
+							"name": "None",
+							"argument": {
+								"container": "none",
+							},
+						},
 					],
 				},
 				{
@@ -350,32 +611,272 @@
 					"batch": true,
 					"method": "data.compression.bzip2.uncompress",
 					"preset": [
+						{
+							"name": "None",
+							"argument": {
+								"container": "none",
+							},
+						},
 					],
 				},
 				{
-					"name": "Lzma Compress",
+					"name": "Lzma1 Compress",
 					"icon": "close_fullscreen",
 					"filter": {
 						"type": "file",
 						"name": "()$",
 					},
 					"batch": true,
-					"method": "data.compression.lzma.compress",
+					"method": "data.compression.lzma1.compress",
 					"preset": [
+						{
+							"name": "Alone",
+							"argument": {
+								"container": "alone",
+							},
+						},
 					],
 				},
 				{
-					"name": "Lzma Uncompress",
+					"name": "Lzma1 Uncompress",
 					"icon": "open_in_full",
 					"filter": {
 						"type": "file",
 						"name": "()$",
 					},
 					"batch": true,
-					"method": "data.compression.lzma.uncompress",
+					"method": "data.compression.lzma1.uncompress",
 					"preset": [
+						{
+							"name": "Alone",
+							"argument": {
+								"container": "alone",
+							},
+						},
 					],
 				},
+				{
+					"name": "Lzma2 Compress",
+					"icon": "close_fullscreen",
+					"filter": {
+						"type": "file",
+						"name": "()$",
+					},
+					"batch": true,
+					"method": "data.compression.lzma2.compress",
+					"preset": [
+						{
+							"name": "XZ",
+							"argument": {
+								"container": "xz",
+							},
+						},
+					],
+				},
+				{
+					"name": "Lzma2 Uncompress",
+					"icon": "open_in_full",
+					"filter": {
+						"type": "file",
+						"name": "()$",
+					},
+					"batch": true,
+					"method": "data.compression.lzma2.uncompress",
+					"preset": [
+						{
+							"name": "XZ",
+							"argument": {
+								"container": "xz",
+							},
+						},
+					],
+				},
+				{
+					"name": "Lz4 Compress",
+					"icon": "close_fullscreen",
+					"filter": {
+						"type": "file",
+						"name": "()$",
+					},
+					"batch": true,
+					"method": "data.compression.lz4.compress",
+					"preset": [
+						{
+							"name": "None",
+							"argument": {
+								"container": "none",
+							},
+						},
+					],
+				},
+				{
+					"name": "Lz4 Uncompress",
+					"icon": "open_in_full",
+					"filter": {
+						"type": "file",
+						"name": "()$",
+					},
+					"batch": true,
+					"method": "data.compression.lz4.uncompress",
+					"preset": [
+						{
+							"name": "None",
+							"argument": {
+								"container": "none",
+							},
+						},
+					],
+				},
+				{
+					"name": "Lzo Compress",
+					"icon": "close_fullscreen",
+					"filter": {
+						"type": "file",
+						"name": "()$",
+					},
+					"batch": true,
+					"method": "data.compression.lzo.compress",
+					"preset": [
+						{
+							"name": "None",
+							"argument": {
+								"container": "none",
+							},
+						},
+					],
+				},
+				{
+					"name": "Lzo Uncompress",
+					"icon": "open_in_full",
+					"filter": {
+						"type": "file",
+						"name": "()$",
+					},
+					"batch": true,
+					"method": "data.compression.lzo.uncompress",
+					"preset": [
+						{
+							"name": "None",
+							"argument": {
+								"container": "none",
+							},
+						},
+					],
+				},
+				{
+					"name": "Brotli Compress",
+					"icon": "close_fullscreen",
+					"filter": {
+						"type": "file",
+						"name": "()$",
+					},
+					"batch": true,
+					"method": "data.compression.brotli.compress",
+					"preset": [
+						{
+							"name": "None",
+							"argument": {
+								"container": "none",
+							},
+						},
+					],
+				},
+				{
+					"name": "Brotli Uncompress",
+					"icon": "open_in_full",
+					"filter": {
+						"type": "file",
+						"name": "()$",
+					},
+					"batch": true,
+					"method": "data.compression.brotli.uncompress",
+					"preset": [
+						{
+							"name": "None",
+							"argument": {
+								"container": "none",
+							},
+						},
+					],
+				},
+				{
+					"name": "Snappy Compress",
+					"icon": "close_fullscreen",
+					"filter": {
+						"type": "file",
+						"name": "()$",
+					},
+					"batch": true,
+					"method": "data.compression.snappy.compress",
+					"preset": [
+						{
+							"name": "None",
+							"argument": {
+								"container": "none",
+							},
+						},
+					],
+				},
+				{
+					"name": "Snappy Uncompress",
+					"icon": "open_in_full",
+					"filter": {
+						"type": "file",
+						"name": "()$",
+					},
+					"batch": true,
+					"method": "data.compression.snappy.uncompress",
+					"preset": [
+						{
+							"name": "None",
+							"argument": {
+								"container": "none",
+							},
+						},
+					],
+				},
+				{
+					"name": "Zstd Compress",
+					"icon": "close_fullscreen",
+					"filter": {
+						"type": "file",
+						"name": "()$",
+					},
+					"batch": true,
+					"method": "data.compression.zstd.compress",
+					"preset": [
+						{
+							"name": "None",
+							"argument": {
+								"container": "none",
+							},
+						},
+					],
+				},
+				{
+					"name": "Zstd Uncompress",
+					"icon": "open_in_full",
+					"filter": {
+						"type": "file",
+						"name": "()$",
+					},
+					"batch": true,
+					"method": "data.compression.zstd.uncompress",
+					"preset": [
+						{
+							"name": "None",
+							"argument": {
+								"container": "none",
+							},
+						},
+					],
+				},
+			],
+		},
+		{
+			"name": "Data Differentiation",
+			"icon": "draft",
+			"item": [
 				{
 					"name": "VCDiff Encode",
 					"icon": "skip_next",
@@ -403,7 +904,7 @@
 			],
 		},
 		{
-			"name": "Notation",
+			"name": "Notation JSON",
 			"icon": "description",
 			"item": [
 				{
@@ -455,6 +956,12 @@
 						},
 					],
 				},
+			],
+		},
+		{
+			"name": "Notation XML",
+			"icon": "description",
+			"item": [
 				{
 					"name": "XML Format",
 					"icon": "format_list_bulleted",
@@ -470,7 +977,7 @@
 			],
 		},
 		{
-			"name": "Texture",
+			"name": "Texture Transformation",
 			"icon": "imagesmode",
 			"item": [
 				{
@@ -682,6 +1189,12 @@
 					"preset": [
 					],
 				},
+			],
+		},
+		{
+			"name": "Texture Encoding",
+			"icon": "imagesmode",
+			"item": [
 				{
 					"name": "Encode",
 					"icon": "skip_next",
@@ -924,6 +1437,12 @@
 						},
 					],
 				},
+			],
+		},
+		{
+			"name": "Texture Compression",
+			"icon": "imagesmode",
+			"item": [
 				{
 					"name": "Compress",
 					"icon": "close_fullscreen",
@@ -1278,8 +1797,14 @@
 						},
 					],
 				},
+			],
+		},
+		{
+			"name": "Texture Atlas",
+			"icon": "imagesmode",
+			"item": [
 				{
-					"name": "Atlas Pack",
+					"name": "Pack",
 					"icon": "inventory_2",
 					"filter": {
 						"type": "file",
@@ -1291,7 +1816,7 @@
 					],
 				},
 				{
-					"name": "Atlas Unpack",
+					"name": "Unpack",
 					"icon": "orders",
 					"filter": {
 						"type": "file",
@@ -1303,7 +1828,7 @@
 					],
 				},
 				{
-					"name": "Atlas Pack By Automatic",
+					"name": "Pack By Automatic",
 					"icon": "inventory_2",
 					"filter": {
 						"type": "directory",
@@ -1641,7 +2166,7 @@
 			],
 		},
 		{
-			"name": "PopCap ZLib",
+			"name": "PopCap Zlib",
 			"icon": "folder_zip",
 			"item": [
 				{
@@ -3713,7 +4238,7 @@
 			],
 		},
 		{
-			"name": "PopCap PvZ-2 Text-Table",
+			"name": "PvZ-2 Text-Table",
 			"icon": "description",
 			"item": [
 				{
@@ -3749,7 +4274,7 @@
 			],
 		},
 		{
-			"name": "PopCap PvZ-2 Resource-Manifest",
+			"name": "PvZ-2 Resource-Manifest",
 			"icon": "description",
 			"item": [
 				{
@@ -3815,7 +4340,7 @@
 			],
 		},
 		{
-			"name": "PopCap PvZ-2 Package-Project",
+			"name": "PvZ-2 Package-Project",
 			"icon": "deployed_code",
 			"item": [
 				{
@@ -4055,7 +4580,7 @@
 			],
 		},
 		{
-			"name": "PopCap PvZ-2 Remote-Project",
+			"name": "PvZ-2 Remote-Project",
 			"icon": "cloud",
 			"item": [
 				{

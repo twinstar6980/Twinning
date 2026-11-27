@@ -18,15 +18,15 @@ export namespace Twinning::Kernel::Tool::Miscellaneous::Pvz2cnCryptData {
 		// ----------------
 
 		inline static auto process_whole(
-			OutputByteStreamView & raw,
-			InputByteStreamView &  ripe,
-			String const &         key
+			OutputBinaryStreamView & raw,
+			InputBinaryStreamView &  ripe,
+			String const &           key
 		) -> Void {
 			auto rijndael_data_size = Size{};
 			estimate_whole(rijndael_data_size, ripe.reserve());
 			ripe.read_constant(k_magic_marker);
-			auto rijndael_ripe = InputByteStreamView{ripe.forward_view(rijndael_data_size)};
-			auto rijndael_raw = OutputByteStreamView{raw.forward_view(rijndael_data_size)};
+			auto rijndael_ripe = ripe.split_forward(rijndael_data_size);
+			auto rijndael_raw = raw.split_forward(rijndael_data_size);
 			auto rijndael_key = compute_rijndael_key(key);
 			auto rijndael_initialization_vector = compute_rijndael_initialization_vector(rijndael_key);
 			Data::Encryption::Rijndael::Decrypt::process(rijndael_raw, rijndael_ripe, Data::Encryption::Rijndael::Mode::Constant::cbc(), k_rijndael_block_size, rijndael_key, rijndael_initialization_vector);
@@ -40,8 +40,8 @@ export namespace Twinning::Kernel::Tool::Miscellaneous::Pvz2cnCryptData {
 			Size const & ripe_size
 		) -> Void {
 			raw_size = 0_sz;
-			assert_test(ripe_size >= bs_static_size<MagicMarker>());
-			auto rijndael_data_size = ripe_size - bs_static_size<MagicMarker>();
+			assert_test(ripe_size >= binary_static_size_of<MagicMarker>());
+			auto rijndael_data_size = ripe_size - binary_static_size_of<MagicMarker>();
 			assert_test(Math::is_padded_size(rijndael_data_size, cast_box<Size>(k_rijndael_block_size)));
 			raw_size += rijndael_data_size;
 			return;
@@ -50,12 +50,12 @@ export namespace Twinning::Kernel::Tool::Miscellaneous::Pvz2cnCryptData {
 		// ----------------
 
 		inline static auto process(
-			OutputByteStreamView & raw_,
-			InputByteStreamView &  ripe_,
-			String const &         key
+			OutputBinaryStreamView & raw_,
+			InputBinaryStreamView &  ripe_,
+			String const &           key
 		) -> Void {
-			M_use_zps_of(raw);
-			M_use_zps_of(ripe);
+			M_use_split_stream_of(raw);
+			M_use_split_stream_of(ripe);
 			return process_whole(raw, ripe, key);
 		}
 

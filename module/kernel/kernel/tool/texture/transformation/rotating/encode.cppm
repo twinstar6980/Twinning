@@ -34,8 +34,8 @@ export namespace Twinning::Kernel::Tool::Texture::Transformation::Rotating {
 						ripe_x = ripe.size().width - 1_sz - ripe_x;
 						ripe_y = ripe.size().height - 1_sz - ripe_y;
 					}
-					auto & raw_pixel = raw[y][x];
-					auto & ripe_pixel = ripe[ripe_y][ripe_x];
+					auto & raw_pixel = raw[x, y];
+					auto & ripe_pixel = ripe[ripe_x, ripe_y];
 					ripe_pixel = raw_pixel;
 				}
 			}

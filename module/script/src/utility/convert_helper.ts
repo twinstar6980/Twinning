@@ -147,24 +147,34 @@ namespace Twinning.Script.ConvertHelper {
 		return `${value}`;
 	}
 
+	export function parse_integer_from_string(
+		text: string,
+	): bigint {
+		return BigInt(text);
+	}
+
+	export function parse_integer_from_string_radix(
+		text: string,
+		radix: number,
+	): bigint {
+		return BigInt(Number.parseInt(text, radix));
+	}
+
 	// ----------------
 
 	export function make_integer_to_byte_array(
 		value: bigint,
 		size: null | number,
-		endian: 'little' | 'big' | 'current' = 'current',
+		endian: Endian,
 	): Array<bigint> {
 		let array = [] as Array<bigint>;
-		if (endian === 'current') {
-			endian = Kernel.Miscellaneous.g_context.query_byte_stream_use_big_endian().value ? 'big' : 'little';
-		}
 		assert_test(value >= 0n);
 		while (value !== 0n) {
 			array.push(value & 0xFFn);
 			value >>= 8n;
 		}
 		if (size !== null) {
-			array = array.slice(0, Math.min(array.length, size));
+			assert_test(array.length <= size);
 			array.push(...new Array<bigint>(size - array.length).fill(0n));
 		}
 		if (endian === 'big') {
@@ -176,12 +186,9 @@ namespace Twinning.Script.ConvertHelper {
 	export function parse_integer_from_byte_array(
 		array: Array<bigint>,
 		size: null | number,
-		endian: 'little' | 'big' | 'current' = 'current',
+		endian: Endian,
 	): bigint {
 		let value = 0n;
-		if (endian === 'current') {
-			endian = Kernel.Miscellaneous.g_context.query_byte_stream_use_big_endian().value ? 'big' : 'little';
-		}
 		if (endian === 'big') {
 			array = array.reverse();
 		}
@@ -211,7 +218,45 @@ namespace Twinning.Script.ConvertHelper {
 	export function make_floater_to_string(
 		value: number,
 	): string {
-		return `${value}${Number.isInteger(value) ? '.0' : ''}`;
+		let text = '';
+		do {
+			if (Number.isNaN(value)) {
+				text += 'NaN';
+				break;
+			}
+			if (!Number.isFinite(value)) {
+				if (value < 0.0) {
+					text += '-';
+				}
+				text += 'Inf';
+				break;
+			}
+			text += `${value}`;
+			if (Number.isInteger(value)) {
+				text += '.0';
+			}
+		}
+		while (false);
+		return text;
+	}
+
+	export function parse_floater_from_string(
+		text: string,
+	): number {
+		let value = 0.0;
+		do {
+			if (text === 'NaN') {
+				value = Number.NaN;
+				break;
+			}
+			if (text === 'Inf' || text === '+Inf' || text === '-Inf') {
+				value = text === '-Inf' ? Number.NEGATIVE_INFINITY : Number.POSITIVE_INFINITY;
+				break;
+			}
+			value = Number.parseFloat(text);
+		}
+		while (false);
+		return value;
 	}
 
 	// #endregion
@@ -222,6 +267,7 @@ namespace Twinning.Script.ConvertHelper {
 		value: bigint,
 		unit: bigint,
 	): boolean {
+		assert_test(unit !== 0n);
 		return value % unit === 0n;
 	}
 
@@ -229,6 +275,7 @@ namespace Twinning.Script.ConvertHelper {
 		value: bigint,
 		unit: bigint,
 	): bigint {
+		assert_test(unit !== 0n);
 		return is_padded_size(value, unit) ? (value) : ((value / unit + 1n) * unit);
 	}
 
@@ -340,7 +387,7 @@ namespace Twinning.Script.ConvertHelper {
 		let array = [] as Array<bigint>;
 		assert_test(value.length % 2 === 0);
 		for (let key_index = 0; key_index < value.length / 2; key_index++) {
-			array.push(BigInt(Number.parseInt(value.substring(key_index * 2, key_index * 2 + 2), 16)));
+			array.push(parse_integer_from_string_radix(value.substring(key_index * 2, key_index * 2 + 2), 16));
 		}
 		return array;
 	}
@@ -360,9 +407,91 @@ namespace Twinning.Script.ConvertHelper {
 		return source.byteLength >= 2 && [0xFFFE, 0xFEFF].includes(new DataView(source).getUint16(0, true));
 	}
 
+	// ----------------
+
+	export function parse_format_string(
+		format: string,
+		allow_inner: boolean,
+	): Array<string | [string]> {
+		let segment = [''] as Array<string | [string]>;
+		let index = 0;
+		while (index < format.length) {
+			let first_character = format[index++];
+			if (first_character !== '{' && first_character !== '}') {
+				segment[segment.length - 1] += first_character;
+				continue;
+			}
+			assert_test(index < format.length);
+			let second_character = format[index++];
+			if (second_character === first_character) {
+				segment[segment.length - 1] += first_character;
+				continue;
+			}
+			if (first_character !== '{') {
+				throw new Error(`invalid format string`);
+			}
+			let name = '';
+			if (second_character !== '}') {
+				if (!allow_inner) {
+					throw new Error(`invalid format string`);
+				}
+				name += second_character;
+				while (index <= format.length) {
+					if (index === format.length) {
+						throw new Error(`invalid format string`);
+					}
+					let inner_character = format[index++];
+					if (inner_character !== '{' && inner_character !== '}') {
+						name += inner_character;
+						continue;
+					}
+					if (inner_character !== '}') {
+						throw new Error(`invalid format string`);
+					}
+					break;
+				}
+			}
+			segment.push([name]);
+			segment.push('');
+		}
+		return segment;
+	}
+
+	export function realize_format_string(
+		segment: Array<string | [string]>,
+		lookup: (index: number, name: string) => string,
+	): string {
+		let content = [...segment];
+		let argument_index = 0;
+		for (let index in content) {
+			if (CheckHelper.is_string(content[index])) {
+				continue;
+			}
+			content[index] = lookup(argument_index, content[index][0]);
+			argument_index++;
+		}
+		return content.join('');
+	}
+
 	// #endregion
 
 	// #region path
+
+	export function check_path_extension(
+		source: StoragePath,
+		expected_extension: Array<string>,
+		ignore_case: boolean,
+	): boolean {
+		let extension = source.extension();
+		if (extension === null) {
+			return false;
+		}
+		if (ignore_case) {
+			expected_extension = expected_extension.map((it) => it.toLowerCase());
+			extension = extension?.toLowerCase();
+		}
+		return expected_extension.includes(extension);
+	}
 
 	export function replace_path_name(
 		source: StoragePath,
@@ -409,10 +538,39 @@ namespace Twinning.Script.ConvertHelper {
 
 	// #endregion
 
+	// #region progress
+
+	export function make_progress_text(
+		style: 'percent' | 'fraction',
+		no_bar: boolean,
+		length: number,
+		limit: number,
+		current: number,
+	): string {
+		assert_test(limit >= 0 && 0 <= current && current <= limit);
+		let result = '';
+		let current_length = Math.floor(current * length / limit);
+		let number_text: string;
+		switch (style) {
+			case 'percent': {
+				number_text = `${(Math.floor(current / limit) * 100.0).toString().padStart(3, ' ')}%`;
+				break;
+			}
+			case 'fraction': {
+				number_text = `${current.toString().padStart(`${limit}`.length, ' ')}/${limit}`;
+				break;
+			}
+		}
+		result += `${no_bar ? '' : `[${'#'.repeat(current_length)}${'-'.repeat(length - current_length)}] `}${number_text}`;
+		return result;
+	}
+
+	// #endregion
+
 	// #region stream
 
 	export function write_utf8_character(
-		stream: ByteStreamView,
+		stream: BinaryStreamView,
 		value: bigint,
 	): bigint {
 		let extra_size = 0;
@@ -443,7 +601,7 @@ namespace Twinning.Script.ConvertHelper {
 	}
 
 	export function read_utf8_character(
-		stream: ByteStreamView,
+		stream: BinaryStreamView,
 		size: {value: number},
 	): bigint {
 		let character = 0n;
@@ -508,7 +666,7 @@ namespace Twinning.Script.ConvertHelper {
 	// ----------------
 
 	export function write_utf8_string(
-		stream: ByteStreamView,
+		stream: BinaryStreamView,
 		value: string,
 	): void {
 		for (let current of [...value]) {
@@ -518,7 +676,7 @@ namespace Twinning.Script.ConvertHelper {
 	}
 
 	export function read_utf8_string(
-		stream: ByteStreamView,
+		stream: BinaryStreamView,
 		length: bigint,
 		size: {value: number},
 	): string {
@@ -534,7 +692,7 @@ namespace Twinning.Script.ConvertHelper {
 	}
 
 	export function read_utf8_string_by_size(
-		stream: ByteStreamView,
+		stream: BinaryStreamView,
 		size: bigint,
 	): string {
 		let value = ``;

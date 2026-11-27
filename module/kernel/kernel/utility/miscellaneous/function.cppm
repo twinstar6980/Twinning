@@ -6,7 +6,7 @@ export module twinning.kernel.utility.miscellaneous.function;
 import twinning.kernel.utility.builtin;
 import twinning.kernel.utility.trait;
 import twinning.kernel.utility.box;
-import twinning.kernel.utility.exception.utility;
+import twinning.kernel.utility.exception;
 
 export namespace Twinning::Kernel {
 
@@ -78,10 +78,9 @@ export namespace Twinning::Kernel {
 
 		auto call(
 			TArgument ... argument
-		) -> Void {
+		) -> TResult {
 			assert_test(thiz.m_value != nullptr);
-			thiz.m_value(as_forward<TArgument>(argument) ...);
-			return;
+			return thiz.m_value(as_forward<TArgument>(argument) ...);
 		}
 
 		#pragma endregion

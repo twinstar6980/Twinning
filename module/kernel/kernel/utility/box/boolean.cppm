@@ -35,7 +35,10 @@ export namespace Twinning::Kernel {
 		// ----------------
 
 		constexpr BooleanBox(
-		) = default;
+		) :
+			BaseBox{} {
+			return;
+		}
 
 		constexpr BooleanBox(
 			BooleanBox const & that
@@ -118,7 +121,7 @@ export namespace Twinning::Kernel {
 
 	#pragma endregion
 
-	#pragma region regular type
+	#pragma region regular
 
 	M_simple_derived_class(Boolean, Boolean8, Boolean8);
 

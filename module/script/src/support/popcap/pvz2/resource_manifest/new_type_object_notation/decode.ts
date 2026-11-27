@@ -3,13 +3,13 @@ namespace Twinning.Script.Support.Popcap.Pvz2.ResourceManifest.NewTypeObjectNota
 	// #region utility
 
 	function read_enumeration(
-		data: ByteStreamView,
+		data: BinaryStreamView,
 	): bigint {
 		return data.u8();
 	}
 
 	function read_boolean(
-		data: ByteStreamView,
+		data: BinaryStreamView,
 	): boolean {
 		let value: boolean;
 		switch (data.u8()) {
@@ -29,13 +29,13 @@ namespace Twinning.Script.Support.Popcap.Pvz2.ResourceManifest.NewTypeObjectNota
 	}
 
 	function read_integer(
-		data: ByteStreamView,
+		data: BinaryStreamView,
 	): bigint {
 		return data.i32();
 	}
 
 	function read_string(
-		data: ByteStreamView,
+		data: BinaryStreamView,
 	): string {
 		let size = data.u32();
 		return ConvertHelper.read_utf8_string_by_size(data, size);
@@ -44,7 +44,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.ResourceManifest.NewTypeObjectNota
 	// ----------------
 
 	export function process(
-		data: ByteStreamView,
+		data: BinaryStreamView,
 	): ResourceManifest.Package {
 		let definition: ResourceManifest.Package = {
 			slot_count: undefined!,
@@ -176,7 +176,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.ResourceManifest.NewTypeObjectNota
 		definition_file: StoragePath,
 	): void {
 		let data = StorageHelper.read_file_data(data_file);
-		let definition = process(new ByteStreamView(data.view().value));
+		let definition = process(new BinaryStreamView(new DataView(data.view().value)));
 		JsonHelper.encode_file(definition_file, definition);
 		return;
 	}

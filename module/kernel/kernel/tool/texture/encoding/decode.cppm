@@ -19,49 +19,49 @@ export namespace Twinning::Kernel::Tool::Texture::Encoding {
 			CategoryConstraint<>
 			&& (IsSameOf<t_size, Size>)
 		inline static auto process_pixel(
-			InputByteStreamView & data,
-			Image::Pixel &        pixel,
-			Format const &        format
+			InputBinaryStreamView & data,
+			Image::Pixel &          pixel,
+			Format const &          format
 		) -> Void {
 			auto block = IntegerU32{};
 			if (!format.endian) {
 				if constexpr (t_size == 1_sz) {
-					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 1_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>);
+					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 1_ix * type_bit_size_of<Byte>(), type_bit_size_of<Byte>());
 				}
 				if constexpr (t_size == 2_sz) {
-					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 1_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>);
-					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 2_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>);
+					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 1_ix * type_bit_size_of<Byte>(), type_bit_size_of<Byte>());
+					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 2_ix * type_bit_size_of<Byte>(), type_bit_size_of<Byte>());
 				}
 				if constexpr (t_size == 3_sz) {
-					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 1_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>);
-					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 2_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>);
-					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 3_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>);
+					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 1_ix * type_bit_size_of<Byte>(), type_bit_size_of<Byte>());
+					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 2_ix * type_bit_size_of<Byte>(), type_bit_size_of<Byte>());
+					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 3_ix * type_bit_size_of<Byte>(), type_bit_size_of<Byte>());
 				}
 				if constexpr (t_size == 4_sz) {
-					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 1_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>);
-					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 2_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>);
-					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 3_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>);
-					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 4_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>);
+					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 1_ix * type_bit_size_of<Byte>(), type_bit_size_of<Byte>());
+					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 2_ix * type_bit_size_of<Byte>(), type_bit_size_of<Byte>());
+					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 3_ix * type_bit_size_of<Byte>(), type_bit_size_of<Byte>());
+					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 4_ix * type_bit_size_of<Byte>(), type_bit_size_of<Byte>());
 				}
 			}
 			else {
 				if constexpr (t_size == 1_sz) {
-					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 1_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>);
+					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 1_ix * type_bit_size_of<Byte>(), type_bit_size_of<Byte>());
 				}
 				if constexpr (t_size == 2_sz) {
-					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 2_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>);
-					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 1_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>);
+					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 2_ix * type_bit_size_of<Byte>(), type_bit_size_of<Byte>());
+					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 1_ix * type_bit_size_of<Byte>(), type_bit_size_of<Byte>());
 				}
 				if constexpr (t_size == 3_sz) {
-					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 3_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>);
-					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 2_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>);
-					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 1_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>);
+					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 3_ix * type_bit_size_of<Byte>(), type_bit_size_of<Byte>());
+					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 2_ix * type_bit_size_of<Byte>(), type_bit_size_of<Byte>());
+					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 1_ix * type_bit_size_of<Byte>(), type_bit_size_of<Byte>());
 				}
 				if constexpr (t_size == 4_sz) {
-					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 4_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>);
-					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 3_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>);
-					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 2_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>);
-					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 1_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>);
+					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 4_ix * type_bit_size_of<Byte>(), type_bit_size_of<Byte>());
+					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 3_ix * type_bit_size_of<Byte>(), type_bit_size_of<Byte>());
+					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 2_ix * type_bit_size_of<Byte>(), type_bit_size_of<Byte>());
+					block |= Bitwise::infuse(cast_box_unsafe<IntegerU32>(data.read_of<IntegerU8>()), 1_ix * type_bit_size_of<Byte>(), type_bit_size_of<Byte>());
 				}
 			}
 			for (auto & channel : Range::make_reverse_range_of(format.channel)) {
@@ -106,36 +106,40 @@ export namespace Twinning::Kernel::Tool::Texture::Encoding {
 		// ----------------
 
 		inline static auto process_image(
-			InputByteStreamView &            data,
+			InputBinaryStreamView &          data,
 			Image::VariableImageView const & image,
 			Format const &                   format
 		) -> Void {
 			assert_test(is_valid_format(format));
 			auto byte_count = get_pixel_byte_count(format);
 			if (byte_count == 1_sz) {
-				for (auto & row : image.data()) {
-					for (auto & pixel : row) {
+				for (auto & y : SizeRange{image.size().height}) {
+					for (auto & x : SizeRange{image.size().width}) {
+						auto & pixel = image[x, y];
 						process_pixel<1_sz>(data, pixel, format);
 					}
 				}
 			}
 			if (byte_count == 2_sz) {
-				for (auto & row : image.data()) {
-					for (auto & pixel : row) {
+				for (auto & y : SizeRange{image.size().height}) {
+					for (auto & x : SizeRange{image.size().width}) {
+						auto & pixel = image[x, y];
 						process_pixel<2_sz>(data, pixel, format);
 					}
 				}
 			}
 			if (byte_count == 3_sz) {
-				for (auto & row : image.data()) {
-					for (auto & pixel : row) {
+				for (auto & y : SizeRange{image.size().height}) {
+					for (auto & x : SizeRange{image.size().width}) {
+						auto & pixel = image[x, y];
 						process_pixel<3_sz>(data, pixel, format);
 					}
 				}
 			}
 			if (byte_count == 4_sz) {
-				for (auto & row : image.data()) {
-					for (auto & pixel : row) {
+				for (auto & y : SizeRange{image.size().height}) {
+					for (auto & x : SizeRange{image.size().width}) {
+						auto & pixel = image[x, y];
 						process_pixel<4_sz>(data, pixel, format);
 					}
 				}
@@ -146,11 +150,11 @@ export namespace Twinning::Kernel::Tool::Texture::Encoding {
 		// ----------------
 
 		inline static auto process(
-			InputByteStreamView &            data_,
+			InputBinaryStreamView &          data_,
 			Image::VariableImageView const & image,
 			Format const &                   format
 		) -> Void {
-			M_use_zps_of(data);
+			M_use_split_stream_of(data);
 			return process_image(data, image, format);
 		}
 

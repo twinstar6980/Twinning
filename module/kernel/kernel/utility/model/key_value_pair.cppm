@@ -6,7 +6,7 @@ export module twinning.kernel.utility.model.key_value_pair;
 import twinning.kernel.utility.builtin;
 import twinning.kernel.utility.trait;
 import twinning.kernel.utility.box;
-import twinning.kernel.utility.exception.utility;
+import twinning.kernel.utility.exception;
 
 export namespace Twinning::Kernel {
 

@@ -6,14 +6,14 @@ export module twinning.kernel.tool.popcap.trail.decode;
 import twinning.kernel.utility;
 import twinning.kernel.tool.popcap.trail.version;
 import twinning.kernel.tool.popcap.trail.common;
-import twinning.kernel.tool.common.byte_stream;
+import twinning.kernel.tool.common.binary_stream;
 
 export namespace Twinning::Kernel::Tool::Popcap::Trail {
 
 	template <auto t_version> requires (check_version(t_version, {}, {}))
 	struct Decode :
 		Common<t_version>,
-		CommonByteStreamExchangeForInput {
+		CommonBinaryStreamExchangeForInput {
 
 		using Common = Common<t_version>;
 
@@ -28,7 +28,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Trail {
 		// ----------------
 
 		inline static auto exchange_track_node_list(
-			InputByteStreamView &                  data,
+			InputBinaryStreamView &                data,
 			List<typename Definition::TrackNode> & value_list
 		) -> Void {
 			exchange_list_size(data, value_list, &exchange_size_fixed<IntegerU32>);
@@ -43,8 +43,8 @@ export namespace Twinning::Kernel::Tool::Popcap::Trail {
 		}
 
 		inline static auto exchange_trail(
-			InputByteStreamView & data,
-			Definition::Trail &   value
+			InputBinaryStreamView & data,
+			Definition::Trail &     value
 		) -> Void {
 			auto ignored = Integer{0_i};
 			exchange_integer_fixed<IntegerOfPlatform>(data, ignored);
@@ -78,8 +78,8 @@ export namespace Twinning::Kernel::Tool::Popcap::Trail {
 		// ----------------
 
 		inline static auto process_whole(
-			InputByteStreamView & data,
-			Definition::Trail &   value
+			InputBinaryStreamView & data,
+			Definition::Trail &     value
 		) -> Void {
 			data.read_constant(k_magic_marker);
 			exchange_trail(data, value);
@@ -89,10 +89,10 @@ export namespace Twinning::Kernel::Tool::Popcap::Trail {
 		// ----------------
 
 		inline static auto process(
-			InputByteStreamView & data_,
-			Definition::Trail &   value
+			InputBinaryStreamView & data_,
+			Definition::Trail &     value
 		) -> Void {
-			M_use_zps_of(data);
+			M_use_split_stream_of(data);
 			restruct(value);
 			return process_whole(data, value);
 		}

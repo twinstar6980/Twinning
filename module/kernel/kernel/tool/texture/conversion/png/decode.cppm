@@ -17,7 +17,7 @@ export namespace Twinning::Kernel::Tool::Texture::Conversion::Png {
 		// ----------------
 
 		inline static auto process_image(
-			InputByteStreamView &            data,
+			InputBinaryStreamView &          data,
 			Image::VariableImageView const & image
 		) -> Void {
 			auto png_struct = Dependency::libpng::$png_create_read_struct(Dependency::libpng::$PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
@@ -80,8 +80,8 @@ export namespace Twinning::Kernel::Tool::Texture::Conversion::Png {
 			else {
 				Dependency::libpng::$png_set_gamma(png_struct, Dependency::libpng::$PNG_DEFAULT_sRGB, 0.45455);
 			}
-			for (auto & row : image.data()) {
-				Dependency::libpng::$png_read_row(png_struct, unmake_pointer_unsafe<Dependency::libpng::$png_byte>(row.begin()), nullptr);
+			for (auto & y : SizeRange{image.size().height}) {
+				Dependency::libpng::$png_read_row(png_struct, unmake_pointer_unsafe<Dependency::libpng::$png_byte>(image.row(y).data()), nullptr);
 			}
 			Dependency::libpng::$png_read_end(png_struct, png_info);
 			Dependency::libpng::$png_destroy_read_struct(&png_struct, &png_info, nullptr);
@@ -91,13 +91,12 @@ export namespace Twinning::Kernel::Tool::Texture::Conversion::Png {
 		// ----------------
 
 		inline static auto estimate_image(
-			ConstantByteListView const & data,
-			Image::ImageSize &           image_size
+			InputBinaryStreamView & data,
+			Image::ImageSize &      image_size
 		) -> Void {
-			auto stream = InputByteStreamView{data};
 			auto png_struct = Dependency::libpng::$png_create_read_struct(Dependency::libpng::$PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
 			Dependency::libpng::$png_set_error_fn(png_struct, nullptr, &png_error, &png_warning);
-			Dependency::libpng::$png_set_read_fn(png_struct, &stream, &png_read_data);
+			Dependency::libpng::$png_set_read_fn(png_struct, &data, &png_read_data);
 			auto png_info = Dependency::libpng::$png_create_info_struct(png_struct);
 			Dependency::libpng::$png_read_info(png_struct, png_info);
 			image_size = Image::ImageSize{make_box<Size>(Dependency::libpng::$png_get_image_width(png_struct, png_info)), make_box<Size>(Dependency::libpng::$png_get_image_height(png_struct, png_info))};
@@ -108,17 +107,18 @@ export namespace Twinning::Kernel::Tool::Texture::Conversion::Png {
 		// ----------------
 
 		inline static auto process(
-			InputByteStreamView &            data_,
+			InputBinaryStreamView &          data_,
 			Image::VariableImageView const & image
 		) -> Void {
-			M_use_zps_of(data);
+			M_use_split_stream_of(data);
 			return process_image(data, image);
 		}
 
 		inline static auto estimate(
-			ConstantByteListView const & data,
-			Image::ImageSize &           image_size
+			InputBinaryStreamView & data_,
+			Image::ImageSize &      image_size
 		) -> Void {
+			M_use_split_stream_of(data);
 			restruct(image_size);
 			return estimate_image(data, image_size);
 		}

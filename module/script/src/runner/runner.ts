@@ -27,11 +27,11 @@ namespace Twinning.Script.Runner {
 			los('runner:all_command_count', command.length),
 		]);
 		let duration = 0;
-		let progress = new TextGenerator.Progress('fraction', true, 40, command.length);
+		let progress = 0;
 		let command_log = '';
 		for (let item of command) {
-			progress.increase();
-			Console.information(los('runner:current_command_execute', progress), [
+			progress++;
+			Console.information(los('runner:current_command_execute', ConvertHelper.make_progress_text('fraction', true, 40, command.length, progress)), [
 				item.input,
 				item.method,
 				...ConvertHelper.record_to_array(item.argument, (key, value) => `${key}: ${JsonHelper.encode_text(value, true, true, true, true)}`),

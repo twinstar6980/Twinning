@@ -20,6 +20,8 @@ export module twinning.shell.dependency.system.posix;
 
 export namespace Twinning::Shell::Dependency::system::posix {
 
+	using $ssize_t = ssize_t;
+
 	inline constexpr auto $read = read;
 
 	inline constexpr auto $write = write;

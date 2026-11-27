@@ -30,6 +30,8 @@ export namespace Twinning::Kernel::Trait {
 			&& (t_index < size)
 		inline static constexpr auto element = t_element...[t_index];
 
+		// ----------------
+
 		template <typename TValue> requires
 			CategoryConstraint<>
 		inline static constexpr auto has(
@@ -61,29 +63,29 @@ export namespace Twinning::Kernel::Trait {
 
 	#pragma region utility
 
-	template <typename TPackage, auto t_begin, auto t_size> requires
+	template <typename TPackage, auto t_begin, auto t_count> requires
 		CategoryConstraint<IsPureInstance<TPackage>>
-		&& (IsValuePackage<TPackage> && IsSameOf<t_begin, ZSize> && IsSameOf<t_size, ZSize>)
-		&& (t_begin + t_size <= TPackage::size)
+		&& (IsValuePackage<TPackage> && IsSameOf<t_begin, ZSize> && IsSameOf<t_count, ZSize>)
+		&& (t_begin + t_count <= TPackage::size)
 	using AsValuePackageSub = decltype(
 		[]<auto ... t_index>(
 		std::index_sequence<t_index ...>
-	) -> ValuePackage<TPackage::template value<t_begin + t_index> ...> {
+	) -> ValuePackage<TPackage::template element<t_begin + t_index> ...> {
 			return {};
-		}(std::make_index_sequence<t_size>{})
+		}(std::make_index_sequence<t_count>{})
 	);
 
-	template <typename TPackage, auto t_size> requires
+	template <typename TPackage, auto t_count> requires
 		CategoryConstraint<IsPureInstance<TPackage>>
-		&& (IsValuePackage<TPackage> && IsSameOf<t_size, ZSize>)
-		&& (t_size <= TPackage::size)
-	using AsValuePackageRemoveHead = AsValuePackageSub<TPackage, t_size, TPackage::size - t_size>;
+		&& (IsValuePackage<TPackage> && IsSameOf<t_count, ZSize>)
+		&& (t_count <= TPackage::size)
+	using AsValuePackageRemoveHead = AsValuePackageSub<TPackage, t_count, TPackage::size - t_count>;
 
-	template <typename TPackage, auto t_size> requires
+	template <typename TPackage, auto t_count> requires
 		CategoryConstraint<IsPureInstance<TPackage>>
-		&& (IsValuePackage<TPackage> && IsSameOf<t_size, ZSize>)
-		&& (t_size <= TPackage::size)
-	using AsValuePackageRemoveTail = AsValuePackageSub<TPackage, 1_ixz, TPackage::size - t_size>;
+		&& (IsValuePackage<TPackage> && IsSameOf<t_count, ZSize>)
+		&& (t_count <= TPackage::size)
+	using AsValuePackageRemoveTail = AsValuePackageSub<TPackage, 1_ixz, TPackage::size - t_count>;
 
 	// ----------------
 
@@ -94,7 +96,7 @@ export namespace Twinning::Kernel::Trait {
 		[]<auto ... t_index_1, auto ... t_index_2>(
 		std::index_sequence<t_index_1 ...>,
 		std::index_sequence<t_index_2 ...>
-	) -> ValuePackage<TPackage1::template value<t_index_1> ..., TPackage2::template value<t_index_2> ...> {
+	) -> ValuePackage<TPackage1::template element<t_index_1> ..., TPackage2::template element<t_index_2> ...> {
 			return {};
 		}(std::make_index_sequence<TPackage1::size>{}, std::make_index_sequence<TPackage2::size>{})
 	);

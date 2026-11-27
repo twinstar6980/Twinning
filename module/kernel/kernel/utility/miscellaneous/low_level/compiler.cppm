@@ -15,7 +15,7 @@ export namespace Twinning::Kernel::LowLevel::Compiler {
 	) -> std::string {
 		auto status = int{};
 		auto data = abi::__cxa_demangle(source.data(), nullptr, nullptr, &status);
-		assert_test(status == 0);
+		assert_test(status == 0zu);
 		auto result = std::string{data};
 		std::free(data);
 		return result;

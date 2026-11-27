@@ -19,6 +19,7 @@ import android.provider.DocumentsContract
 import android.provider.Settings
 import android.view.DragEvent
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.core.database.getFloatOrNull
 import androidx.core.database.getLongOrNull
 import androidx.core.database.getStringOrNull
@@ -29,12 +30,13 @@ import io.flutter.plugin.common.MethodChannel
 import java.nio.ByteBuffer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import java.util.Date
+import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.roundToLong
 import kotlin.properties.Delegates
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.Deferred
 
 class PlatformIntegrationManager {
 
@@ -44,7 +46,7 @@ class PlatformIntegrationManager {
 
   private var activity: MainActivity by Delegates.notNull()
 
-  private val continuation: Channel<Any?>
+  private val continuation: ConcurrentHashMap<Int, CompletableDeferred<Any?>>
 
   // endregion
 
@@ -52,7 +54,7 @@ class PlatformIntegrationManager {
 
   private constructor(
   ) {
-    this.continuation = Channel()
+    this.continuation = ConcurrentHashMap()
     return
   }
 
@@ -81,10 +83,7 @@ class PlatformIntegrationManager {
     with_flutterEngine: FlutterEngine,
   ): Unit {
     return this.executePlatformTask(
-      false,
-      {
-        return@executePlatformTask
-      },
+      null,
       {
         this.activity = host
         this.channel = MethodChannel(
@@ -92,19 +91,24 @@ class PlatformIntegrationManager {
           "${this.queryApplicationIdentifier()}/PlatformIntegrationManager",
         )
         this.channel.setMethodCallHandler({ call, result ->
-          this.executePlatformTaskSwitch(false, {
-            try {
-              val callMethod = call.method
-              @Suppress("UNCHECKED_CAST")
-              val callArgument = call.arguments as MutableMap<Any?, Any?>
-              val callResult = this@PlatformIntegrationManager.handle(callMethod, callArgument)
-              result.success(callResult)
-            }
-            catch (e: Exception) {
-              val callException = e.stackTraceToString()
-              result.error("", callException, null)
-            }
-          })
+          this.executePlatformTaskSwitch(
+            false,
+            true,
+            {
+              try {
+                val callMethod = call.method
+                @Suppress("UNCHECKED_CAST")
+                val callArgument = call.arguments as MutableMap<Any?, Any?>
+                val callResult = this.handle(callMethod, callArgument)
+                result.success(callResult)
+              }
+              catch (e: Exception) {
+                val callException = e.stackTraceToString()
+                result.error("", callException, null)
+              }
+              return@executePlatformTaskSwitch
+            },
+          )
           return@setMethodCallHandler
         })
         return@executePlatformTask
@@ -118,17 +122,26 @@ class PlatformIntegrationManager {
     with_savedInstanceState: Bundle?,
   ): Unit {
     return this.executePlatformTask(
-      false,
+      null,
       {
-        return@executePlatformTask
-      },
-      {
-        this.registerNotificationSupport()
-        this.registerDragDropSupport()
+        this.executePlatformTaskSwitch(
+          true,
+          true,
+          {
+            this.registerNotificationSupport()
+            this.registerDragDropSupport()
+          }
+        )
         val intent = this.activity.intent
         if (intent.action == Intent.ACTION_VIEW && intent.data != null && intent.data!!.scheme == this.queryApplicationIdentifier()) {
           val link = intent.data!!.toString()
-          this@PlatformIntegrationManager.invokeReceiveApplicationLink(link)
+          this.executePlatformTaskSwitch(
+            false,
+            true,
+            {
+              this.invokeReceiveApplicationLink(link)
+            }
+          )
         }
         return@executePlatformTask
       },
@@ -142,7 +155,6 @@ class PlatformIntegrationManager {
     with_caller: ComponentCaller,
   ): Unit {
     return this.executePlatformTask(
-      true,
       {
         return@executePlatformTask
       },
@@ -150,7 +162,13 @@ class PlatformIntegrationManager {
         val intent = with_intent
         if (intent.action == Intent.ACTION_VIEW && intent.data != null && intent.data!!.scheme == this.queryApplicationIdentifier()) {
           val link = intent.data!!.toString()
-          this@PlatformIntegrationManager.invokeReceiveApplicationLink(link)
+          this.executePlatformTaskSwitch(
+            false,
+            true,
+            {
+              this.invokeReceiveApplicationLink(link)
+            }
+          )
         }
         return@executePlatformTask
       },
@@ -165,7 +183,6 @@ class PlatformIntegrationManager {
     with_data: Intent?,
   ): Unit {
     return this.executePlatformTask(
-      true,
       {
         return@executePlatformTask
       },
@@ -183,13 +200,13 @@ class PlatformIntegrationManager {
                 }
               }
             }
-            this@PlatformIntegrationManager.continuation.send(value)
+            this.continuation[with_requestCode]!!.complete(value)
           }
           this.requestForToggleStoragePermission -> {
-            this@PlatformIntegrationManager.continuation.send(null)
+            this.continuation[with_requestCode]!!.complete(null)
           }
           this.requestForToggleNotificationPermission -> {
-            this@PlatformIntegrationManager.continuation.send(null)
+            this.continuation[with_requestCode]!!.complete(null)
           }
         }
         return@executePlatformTask
@@ -340,22 +357,40 @@ class PlatformIntegrationManager {
   ): Unit {
     check(name == "storage" || name == "notification")
     if (name == "storage") {
-      this.activity.startActivityForResult(
-        Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION).also {
-          it.setData("package:${this.activity.packageName}".toUri())
-        },
-        this.requestForToggleStoragePermission,
-      )
-      this.continuation.receive()
+      check(this.continuation.put(this.requestForToggleStoragePermission, CompletableDeferred<Any?>()) == null)
+      this.executePlatformTaskSwitch(
+        true,
+        false,
+        {
+          this.activity.startActivityForResult(
+            Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION).also {
+              it.setData("package:${this.activity.packageName}".toUri())
+            },
+            this.requestForToggleStoragePermission,
+          )
+          return@executePlatformTaskSwitch
+        }
+      ).await()
+      this.continuation[this.requestForToggleStoragePermission]!!.await()
+      this.continuation.remove(this.requestForToggleStoragePermission)
     }
     if (name == "notification") {
-      this.activity.startActivityForResult(
-        Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).also {
-          it.putExtra(Settings.EXTRA_APP_PACKAGE, this.activity.packageName)
-        },
-        this.requestForToggleNotificationPermission,
-      )
-      this.continuation.receive()
+      check(this.continuation.put(this.requestForToggleNotificationPermission, CompletableDeferred<Any?>()) == null)
+      this.executePlatformTaskSwitch(
+        true,
+        false,
+        {
+          this.activity.startActivityForResult(
+            Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).also {
+              it.putExtra(Settings.EXTRA_APP_PACKAGE, this.activity.packageName)
+            },
+            this.requestForToggleNotificationPermission,
+          )
+          return@executePlatformTaskSwitch
+        }
+      ).await()
+      this.continuation[this.requestForToggleNotificationPermission]!!.await()
+      this.continuation.remove(this.requestForToggleNotificationPermission)
     }
     return
   }
@@ -433,7 +468,14 @@ class PlatformIntegrationManager {
     intent.setAction(Intent.ACTION_VIEW)
     intent.setData("content://com.android.externalstorage.documents/document/primary%3A${Uri.encode(targetSegment)}".toUri())
     intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-    this.activity.startActivity(intent)
+    this.executePlatformTaskSwitch(
+      true,
+      false,
+      {
+        this.activity.startActivity(intent)
+        return@executePlatformTaskSwitch
+      }
+    ).await()
     return
   }
 
@@ -473,9 +515,18 @@ class PlatformIntegrationManager {
       intent.putExtra(Intent.EXTRA_TITLE, name)
     }
     val timeBeforePick = Date().time
-    this.activity.startActivityForResult(intent, this.requestCodeForPickStorageItem)
+    check(this.continuation.put(this.requestCodeForPickStorageItem, CompletableDeferred<Any?>()) == null)
+    this.executePlatformTaskSwitch(
+      true,
+      false,
+      {
+        this.activity.startActivityForResult(intent, this.requestCodeForPickStorageItem)
+        return@executePlatformTaskSwitch
+      }
+    ).await()
     @Suppress("UNCHECKED_CAST")
-    val targetUri = this.continuation.receive() as List<Uri>
+    val targetUri = this.continuation[this.requestCodeForPickStorageItem]!!.await() as List<Uri>
+    this.continuation.remove(this.requestCodeForPickStorageItem)
     if (type == "save_file" && !targetUri.isEmpty()) {
       if (this.queryDatabaseOfContentUri<Long>(targetUri.first(), DocumentsContract.Document.COLUMN_LAST_MODIFIED)!! > timeBeforePick) {
         check(DocumentsContract.deleteDocument(this.activity.contentResolver, targetUri.first()))
@@ -491,7 +542,7 @@ class PlatformIntegrationManager {
   ): Long? {
     var accentColor = null as Long?
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-      accentColor = android.R.color.system_accent1_0.toLong()
+      accentColor = ContextCompat.getColor(this.activity, android.R.color.system_accent1_600).toUInt().toLong()
     }
     val accent = accentColor
     return accent
@@ -601,11 +652,37 @@ class PlatformIntegrationManager {
   private suspend fun invoke(
     method: String,
     argument: Map<String, Any?>,
-  ): Unit {
-    this.executePlatformTaskSwitch(true, {
-      this.channel.invokeMethod(method, argument)
-    })
-    return
+  ): MutableMap<Any?, Any?> {
+    val rawResultGuard = CompletableDeferred<Any?>()
+    this.executePlatformTaskSwitch(
+      true,
+      false,
+      {
+        this.channel.invokeMethod(
+          method,
+          argument,
+          object : MethodChannel.Result {
+            override fun success(result: Any?) {
+              rawResultGuard.complete(result)
+              return
+            }
+            override fun error(errorCode: String, errorMessage: String?, errorDetails: Any?) {
+              rawResultGuard.completeExceptionally(Exception("${errorCode}: ${errorMessage}"))
+              return
+            }
+            override fun notImplemented() {
+              rawResultGuard.completeExceptionally(Exception("unimplemented"))
+              return
+            }
+          },
+        )
+        return@executePlatformTaskSwitch
+      },
+    ).await()
+    val rawResult = rawResultGuard.await()
+    @Suppress("UNCHECKED_CAST")
+    val result = rawResult as MutableMap<Any?, Any?>
+    return result
   }
 
   // ----------------
@@ -613,9 +690,10 @@ class PlatformIntegrationManager {
   private suspend fun invokeReceivePlatformException(
     message: String,
   ): Unit {
-    return this.invoke("receive_platform_exception", mapOf(
+    val detail = this.invoke("receive_platform_exception", mapOf(
       "message" to this.encodeFlutterValue(message),
     ))
+    return
   }
 
   // ----------------
@@ -623,41 +701,46 @@ class PlatformIntegrationManager {
   private suspend fun invokeReceiveApplicationLink(
     target: String,
   ): Unit {
-    return this.invoke("receive_application_link", mapOf(
+    val detail = this.invoke("receive_application_link", mapOf(
       "target" to this.encodeFlutterValue(target),
     ))
+    return
   }
 
   // ----------------
 
   private suspend fun invokeReceiveApplicationDragEnter(
   ): Unit {
-    return this.invoke("receive_application_drag_enter", mapOf(
+    val detail = this.invoke("receive_application_drag_enter", mapOf(
     ))
+    return
   }
 
   private suspend fun invokeReceiveApplicationDragOver(
     locationX: Long,
     locationY: Long,
   ): Unit {
-    return this.invoke("receive_application_drag_over", mapOf(
+    val detail = this.invoke("receive_application_drag_over", mapOf(
       "location_x" to this.encodeFlutterValue(locationX),
       "location_y" to this.encodeFlutterValue(locationY),
     ))
+    return
   }
 
   private suspend fun invokeReceiveApplicationDragLeave(
   ): Unit {
-    return this.invoke("receive_application_drag_leave", mapOf(
+    val detail = this.invoke("receive_application_drag_leave", mapOf(
     ))
+    return
   }
 
   private suspend fun invokeReceiveApplicationDragDrop(
     target: List<String>,
   ): Unit {
-    return this.invoke("receive_application_drag_drop", mapOf(
+    val detail = this.invoke("receive_application_drag_drop", mapOf(
       "target" to this.encodeFlutterValue(target),
     ))
+    return
   }
 
   // endregion
@@ -680,24 +763,41 @@ class PlatformIntegrationManager {
   private suspend fun registerDragDropSupport(
   ): Unit {
     this.activity.findViewById<View>(android.R.id.content).setOnDragListener({ _, event ->
-      return@setOnDragListener this@PlatformIntegrationManager.executePlatformTask(
-        true,
+      return@setOnDragListener this.executePlatformTask(
         {
           return@executePlatformTask true
         },
         {
           when (event.action) {
             DragEvent.ACTION_DRAG_ENTERED -> {
-              this@PlatformIntegrationManager.invokeReceiveApplicationDragEnter()
+              this.executePlatformTaskSwitch(
+                false,
+                true,
+                {
+                  this.invokeReceiveApplicationDragEnter()
+                }
+              )
             }
             DragEvent.ACTION_DRAG_LOCATION -> {
               val displayDensity = this.queryDisplayDensity()
               val locationX = (event.x / displayDensity).roundToLong()
               val locationY = (event.y / displayDensity).roundToLong()
-              this@PlatformIntegrationManager.invokeReceiveApplicationDragOver(locationX, locationY)
+              this.executePlatformTaskSwitch(
+                false,
+                true,
+                {
+                  this.invokeReceiveApplicationDragOver(locationX, locationY)
+                }
+              )
             }
             DragEvent.ACTION_DRAG_EXITED -> {
-              this@PlatformIntegrationManager.invokeReceiveApplicationDragLeave()
+              this.executePlatformTaskSwitch(
+                false,
+                true,
+                {
+                  this.invokeReceiveApplicationDragLeave()
+                }
+              )
             }
             DragEvent.ACTION_DROP -> {
               val target = mutableListOf<String>()
@@ -713,7 +813,13 @@ class PlatformIntegrationManager {
                 }
                 target.add(targetItem)
               }
-              this@PlatformIntegrationManager.invokeReceiveApplicationDragDrop(target)
+              this.executePlatformTaskSwitch(
+                false,
+                true,
+                {
+                  this.invokeReceiveApplicationDragDrop(target)
+                }
+              )
             }
           }
           return@executePlatformTask true
@@ -736,40 +842,57 @@ class PlatformIntegrationManager {
   // ----------------
 
   private fun <TResult> executePlatformTask(
-    handleException: Boolean,
-    fallbackAction: () -> TResult,
-    taskAction: suspend () -> TResult,
+    fallbackAction: (() -> TResult)?,
+    taskAction: () -> TResult,
   ): TResult {
-    val task = suspend task@{
+    val task = task@{
       try {
         return@task taskAction()
       }
       catch (e: Exception) {
-        if (!handleException) {
+        if (fallbackAction == null) {
           throw e
         }
-        this.invokeReceivePlatformException(e.stackTraceToString())
+        this.executePlatformTaskSwitch(
+          false,
+          false,
+          {
+            this.invokeReceivePlatformException(e.stackTraceToString())
+          }
+        )
         return@task fallbackAction()
       }
     }
-    return runBlocking { task() }
+    return task()
   }
 
-  private fun executePlatformTaskSwitch(
+  private fun <TResult> executePlatformTaskSwitch(
     onMain: Boolean,
-    taskAction: suspend () -> Unit,
-  ): Unit {
+    allowReport: Boolean,
+    taskAction: suspend () -> TResult,
+  ): Deferred<TResult> {
+    val result = CompletableDeferred<TResult>()
     val task = suspend task@{
       try {
-        taskAction()
+        result.complete(taskAction())
+        return@task
       }
       catch (e: Exception) {
-        this.invokeReceivePlatformException(e.stackTraceToString())
+        result.completeExceptionally(e)
+        if (allowReport) {
+          this.executePlatformTaskSwitch(
+            false,
+            false,
+            {
+              this.invokeReceivePlatformException(e.stackTraceToString())
+            }
+          )
+        }
+        return@task
       }
-      return@task
     }
     CoroutineScope(if (onMain) Dispatchers.Main else Dispatchers.IO).launch { task() }
-    return
+    return result
   }
 
   // ----------------

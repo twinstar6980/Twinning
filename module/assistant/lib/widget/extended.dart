@@ -448,7 +448,7 @@ class NavigationDrawerDivider extends StatelessWidget {
 
   @override
   build(context) {
-    return StyledDivider.standard(indent: 28);
+    return StyledDivider.standard(direction: .horizontal, indent: 28);
   }
 
 }

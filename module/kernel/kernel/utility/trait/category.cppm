@@ -256,6 +256,7 @@ export namespace Twinning::Kernel::Trait {
 	inline constexpr auto as_forward(
 		AsUnmakeReference<TIt> && it
 	) -> TIt && {
+		static_assert(!IsLeftReference<TIt>);
 		return static_cast<TIt &&>(it);
 	}
 
@@ -292,7 +293,7 @@ export namespace Twinning::Kernel::Trait {
 	template <typename TIt, auto t_condition> requires
 		CategoryConstraint<IsAnything<TIt>>
 		&& (IsSameOf<t_condition, ZBoolean>)
-	using AsConstantIf = AsSwitch<t_condition, AsMakeConstant<TIt>, TIt>;
+	using AsConstantIf = AsSwitch<!t_condition, TIt, AsMakeConstant<TIt>>;
 
 	#pragma endregion
 

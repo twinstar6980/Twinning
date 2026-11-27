@@ -7,14 +7,14 @@ import twinning.kernel.utility;
 import twinning.kernel.tool.popcap.render_effect.version;
 import twinning.kernel.tool.popcap.render_effect.definition;
 import twinning.kernel.tool.popcap.render_effect.common;
-import twinning.kernel.tool.common.byte_stream;
+import twinning.kernel.tool.common.binary_stream;
 
 export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 
 	template <auto t_version> requires (check_version(t_version, {}, {}))
 	struct Encode :
 		Common<t_version>,
-		CommonByteStreamExchangeForOutput {
+		CommonBinaryStreamExchangeForOutput {
 
 		using Common = Common<t_version>;
 
@@ -29,7 +29,7 @@ export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 		// ----------------
 
 		inline static auto exchange_block(
-			OutputByteStreamView &     data,
+			OutputBinaryStreamView &   data,
 			Definition::Block1 const & value
 		) -> Void {
 			exchange_integer_fixed<IntegerU32>(data, value.unknown_1);
@@ -42,7 +42,7 @@ export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 		}
 
 		inline static auto exchange_block(
-			OutputByteStreamView &     data,
+			OutputBinaryStreamView &   data,
 			Definition::Block2 const & value
 		) -> Void {
 			exchange_integer_fixed<IntegerU32>(data, value.unknown_1);
@@ -54,15 +54,15 @@ export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 		}
 
 		inline static auto exchange_block(
-			OutputByteStreamView &                             data,
-			Definition::Block3 const &                         value,
-			VariableOptionalView<OutputByteStreamView> const & string_chunk_data
+			OutputBinaryStreamView &                                  data,
+			Definition::Block3 const &                                value,
+			Optional<VariablePointer<OutputBinaryStreamView>> const & string_chunk_data
 		) -> Void {
 			auto string_offset = 0_sz;
 			auto string_size = value.string.size();
 			if (string_chunk_data.has()) {
-				string_offset = string_chunk_data.get().position();
-				exchange_string_block<Void>(string_chunk_data.get(), value.string);
+				string_offset = string_chunk_data.get().dereference().position();
+				exchange_string_block<Void>(string_chunk_data.get().dereference(), value.string);
 			}
 			exchange_size_fixed<IntegerU32>(data, string_size);
 			exchange_integer_fixed<IntegerU32>(data, value.unknown_2);
@@ -71,7 +71,7 @@ export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 		}
 
 		inline static auto exchange_block(
-			OutputByteStreamView &     data,
+			OutputBinaryStreamView &   data,
 			Definition::Block4 const & value
 		) -> Void {
 			exchange_integer_fixed<IntegerU32>(data, value.unknown_1);
@@ -83,7 +83,7 @@ export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 		}
 
 		inline static auto exchange_block(
-			OutputByteStreamView &     data,
+			OutputBinaryStreamView &   data,
 			Definition::Block5 const & value
 		) -> Void {
 			exchange_integer_fixed<IntegerU32>(data, value.unknown_1);
@@ -97,7 +97,7 @@ export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 		}
 
 		inline static auto exchange_block(
-			OutputByteStreamView &     data,
+			OutputBinaryStreamView &   data,
 			Definition::Block6 const & value
 		) -> Void {
 			exchange_integer_fixed<IntegerU32>(data, value.unknown_1);
@@ -109,7 +109,7 @@ export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 		}
 
 		inline static auto exchange_block(
-			OutputByteStreamView &     data,
+			OutputBinaryStreamView &   data,
 			Definition::Block7 const & value
 		) -> Void {
 			if constexpr (check_version(t_version, {}, {3})) {
@@ -120,7 +120,7 @@ export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 		}
 
 		inline static auto exchange_block(
-			OutputByteStreamView &     data,
+			OutputBinaryStreamView &   data,
 			Definition::Block8 const & value
 		) -> Void {
 			exchange_integer_fixed<IntegerU32>(data, value.unknown_1);
@@ -138,14 +138,14 @@ export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 		template <typename TBlock, typename ... TExtraArgument> requires
 			CategoryConstraint<IsPureInstance<TBlock> && IsValid<TExtraArgument ...>>
 		inline static auto exchange_section(
-			OutputByteStreamView & section_information_data,
-			OutputByteStreamView & section_data,
-			List<TBlock> const &   section_value,
-			Size const &           section_index,
-			Size const &           block_size_constant,
-			TExtraArgument && ...  extra_argument
+			OutputBinaryStreamView & section_information_data,
+			OutputBinaryStreamView & section_data,
+			List<TBlock> const &     section_value,
+			Size const &             section_index,
+			Size const &             block_size_constant,
+			TExtraArgument && ...    extra_argument
 		) -> Void {
-			section_information_data.set_position(bs_static_size<List<IntegerU32>>(3_sz) * section_index);
+			section_information_data.set_position(binary_static_size_of<List<IntegerU32>>(3_sz) * section_index);
 			exchange_size_fixed<IntegerU32>(section_information_data, section_value.size());
 			exchange_size_fixed<IntegerU32>(section_information_data, section_data.position());
 			exchange_size_fixed<IntegerU32>(section_information_data, block_size_constant);
@@ -156,7 +156,7 @@ export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 		}
 
 		inline static auto exchange_effect(
-			OutputByteStreamView &     data,
+			OutputBinaryStreamView &   data,
 			Definition::Effect const & value
 		) -> Void {
 			auto section_count = 0_sz;
@@ -166,48 +166,48 @@ export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 			if constexpr (check_version(t_version, {}, {3})) {
 				section_count = 8_sz;
 			}
-			auto section_information_data = OutputByteStreamView{data.forward_view(bs_static_size<List<IntegerU32>>(3_sz) * section_count)};
-			auto string_chunk_offset_data = OutputByteStreamView{data.forward_view(bs_static_size<IntegerU32>())};
-			auto section_list_data = OutputByteStreamView{data.view(), data.position()};
+			auto section_information_data = data.split_forward(binary_static_size_of<List<IntegerU32>>(3_sz) * section_count);
+			auto string_chunk_offset_data = data.split_forward(binary_static_size_of<IntegerU32>());
+			auto section_list_data = data.split_copy();
 			if constexpr (check_version(t_version, {}, {1})) {
-				exchange_section(section_information_data, section_list_data, value.block_1, 1_ix, bs_static_size<List<IntegerU32>>(6_sz));
+				exchange_section(section_information_data, section_list_data, value.block_1, 1_ix, binary_static_size_of<List<IntegerU32>>(6_sz));
 			}
 			if constexpr (check_version(t_version, {}, {1})) {
-				exchange_section(section_information_data, section_list_data, value.block_5, 5_ix, bs_static_size<List<IntegerU32>>(7_sz));
+				exchange_section(section_information_data, section_list_data, value.block_5, 5_ix, binary_static_size_of<List<IntegerU32>>(7_sz));
 			}
 			if constexpr (check_version(t_version, {}, {1})) {
-				exchange_section(section_information_data, section_list_data, value.block_6, 6_ix, bs_static_size<List<IntegerU32>>(5_sz));
+				exchange_section(section_information_data, section_list_data, value.block_6, 6_ix, binary_static_size_of<List<IntegerU32>>(5_sz));
 			}
 			if constexpr (check_version(t_version, {}, {1, 2})) {
-				exchange_section(section_information_data, section_list_data, value.block_2, 2_ix, bs_static_size<List<IntegerU32>>(3_sz));
+				exchange_section(section_information_data, section_list_data, value.block_2, 2_ix, binary_static_size_of<List<IntegerU32>>(3_sz));
 			}
 			if constexpr (check_version(t_version, {}, {2})) {
-				exchange_section(section_information_data, section_list_data, value.block_2, 2_ix, bs_static_size<List<IntegerU32>>(2_sz));
+				exchange_section(section_information_data, section_list_data, value.block_2, 2_ix, binary_static_size_of<List<IntegerU32>>(2_sz));
 			}
 			auto section_information_offset_3 = section_information_data.position();
 			auto section_list_offset_3 = section_list_data.position();
 			if constexpr (check_version(t_version, {}, {1})) {
-				exchange_section(section_information_data, section_list_data, value.block_3, 3_ix, bs_static_size<List<IntegerU32>>(3_sz), VariableOptionalView<OutputByteStreamView>{});
+				exchange_section(section_information_data, section_list_data, value.block_3, 3_ix, binary_static_size_of<List<IntegerU32>>(3_sz), make_optional_null<VariablePointer<OutputBinaryStreamView>>());
 			}
 			if constexpr (check_version(t_version, {}, {1})) {
-				exchange_section(section_information_data, section_list_data, value.block_4, 4_ix, bs_static_size<List<IntegerU32>>(5_sz));
+				exchange_section(section_information_data, section_list_data, value.block_4, 4_ix, binary_static_size_of<List<IntegerU32>>(5_sz));
 			}
 			if constexpr (check_version(t_version, {}, {3})) {
-				exchange_section(section_information_data, section_list_data, value.block_7, 7_ix, bs_static_size<List<IntegerU32>>(2_sz));
+				exchange_section(section_information_data, section_list_data, value.block_7, 7_ix, binary_static_size_of<List<IntegerU32>>(2_sz));
 			}
 			if constexpr (check_version(t_version, {}, {1, 3})) {
-				exchange_section(section_information_data, section_list_data, value.block_8, 7_ix, bs_static_size<List<IntegerU32>>(3_sz));
+				exchange_section(section_information_data, section_list_data, value.block_8, 7_ix, binary_static_size_of<List<IntegerU32>>(3_sz));
 			}
 			if constexpr (check_version(t_version, {}, {3})) {
-				exchange_section(section_information_data, section_list_data, value.block_8, 8_ix, bs_static_size<List<IntegerU32>>(5_sz));
+				exchange_section(section_information_data, section_list_data, value.block_8, 8_ix, binary_static_size_of<List<IntegerU32>>(5_sz));
 			}
 			data.set_position(section_list_data.position());
 			exchange_size_fixed<IntegerU32>(string_chunk_offset_data, data.position());
-			auto string_chunk_data = OutputByteStreamView{data.reserve_view()};
+			auto string_chunk_data = data.split_reserve();
 			if constexpr (check_version(t_version, {}, {1})) {
 				section_information_data.set_position(section_information_offset_3);
 				section_list_data.set_position(section_list_offset_3);
-				exchange_section(section_information_data, section_list_data, value.block_3, 3_ix, bs_static_size<List<IntegerU32>>(3_sz), VariableOptionalView<OutputByteStreamView>{string_chunk_data});
+				exchange_section(section_information_data, section_list_data, value.block_3, 3_ix, binary_static_size_of<List<IntegerU32>>(3_sz), make_optional_of(make_pointer(&string_chunk_data)));
 			}
 			data.forward(string_chunk_data.position());
 			return;
@@ -216,7 +216,7 @@ export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 		// ----------------
 
 		inline static auto process_whole(
-			OutputByteStreamView &     data,
+			OutputBinaryStreamView &   data,
 			Definition::Effect const & definition
 		) -> Void {
 			data.write_constant(k_magic_marker);
@@ -228,10 +228,10 @@ export namespace Twinning::Kernel::Tool::Popcap::RenderEffect {
 		// ----------------
 
 		inline static auto process(
-			OutputByteStreamView &     data_,
+			OutputBinaryStreamView &   data_,
 			Definition::Effect const & definition
 		) -> Void {
-			M_use_zps_of(data);
+			M_use_split_stream_of(data);
 			return process_whole(data, definition);
 		}
 

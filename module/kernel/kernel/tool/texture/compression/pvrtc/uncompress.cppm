@@ -20,7 +20,7 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Pvrtc {
 		// ----------------
 
 		inline static auto process_image(
-			InputByteStreamView &            data,
+			InputBinaryStreamView &          data,
 			Image::VariableImageView const & image,
 			Generation const &               generation,
 			Image::ImageSize const &         block_size,
@@ -38,7 +38,7 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Pvrtc {
 				}
 				else {
 					if (!with_alpha) {
-						auto ripe_data_size = block_count * k_block_bit_count_4 / k_type_bit_count<Byte>;
+						auto ripe_data_size = block_count * k_block_bit_count_4 / type_bit_size_of<Byte>();
 						assert_test(ripe_data_size <= data.reserve());
 						auto raw_format = Encoding::Format{
 							.endian = k_false,
@@ -48,17 +48,17 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Pvrtc {
 								make_tuple_of(Encoding::Channel::Constant::blue(), 8_sz)
 							),
 						};
-						auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
+						auto raw_data = Binary{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
 						Dependency::PVRTCCompressor::PvrTcDecoder::DecodeRgb4Bpp(
-							unmake_pointer_unsafe<Dependency::PVRTCCompressor::ColorRgb<unsigned char>>(raw_data.begin()),
+							unmake_pointer_unsafe<Dependency::PVRTCCompressor::ColorRgb<unsigned char>>(raw_data.data()),
 							Dependency::PVRTCCompressor::Point2<int>{unmake_box<int>(image.size().width), unmake_box<int>(image.size().height)},
-							unmake_pointer_unsafe<void>(data.current_pointer())
+							unmake_pointer_unsafe<void>(data.current())
 						);
 						data.forward(ripe_data_size);
-						Encoding::Decode::process(as_left(InputByteStreamView{raw_data.view()}), image, raw_format);
+						Encoding::Decode::process(as_left(InputBinaryStreamView{raw_data.as_view()}), image, raw_format);
 					}
 					else {
-						auto ripe_data_size = block_count * k_block_bit_count_4 / k_type_bit_count<Byte>;
+						auto ripe_data_size = block_count * k_block_bit_count_4 / type_bit_size_of<Byte>();
 						assert_test(ripe_data_size <= data.reserve());
 						auto raw_format = Encoding::Format{
 							.endian = k_false,
@@ -69,14 +69,14 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Pvrtc {
 								make_tuple_of(Encoding::Channel::Constant::blue(), 8_sz)
 							),
 						};
-						auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
+						auto raw_data = Binary{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
 						Dependency::PVRTCCompressor::PvrTcDecoder::DecodeRgba4Bpp(
-							unmake_pointer_unsafe<Dependency::PVRTCCompressor::ColorRgba<unsigned char>>(raw_data.begin()),
+							unmake_pointer_unsafe<Dependency::PVRTCCompressor::ColorRgba<unsigned char>>(raw_data.data()),
 							Dependency::PVRTCCompressor::Point2<int>{unmake_box<int>(image.size().width), unmake_box<int>(image.size().height)},
-							unmake_pointer_unsafe<void>(data.current_pointer())
+							unmake_pointer_unsafe<void>(data.current())
 						);
 						data.forward(ripe_data_size);
-						Encoding::Decode::process(as_left(InputByteStreamView{raw_data.view()}), image, raw_format);
+						Encoding::Decode::process(as_left(InputBinaryStreamView{raw_data.as_view()}), image, raw_format);
 					}
 				}
 			}
@@ -89,14 +89,14 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Pvrtc {
 		// ----------------
 
 		inline static auto process(
-			InputByteStreamView &            data_,
+			InputBinaryStreamView &          data_,
 			Image::VariableImageView const & image,
 			Generation const &               generation,
 			Image::ImageSize const &         block_size,
 			Boolean const &                  use_bpp4,
 			Boolean const &                  with_alpha
 		) -> Void {
-			M_use_zps_of(data);
+			M_use_split_stream_of(data);
 			return process_image(data, image, generation, block_size, use_bpp4, with_alpha);
 		}
 

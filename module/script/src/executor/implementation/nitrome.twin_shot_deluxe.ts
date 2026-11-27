@@ -46,12 +46,12 @@ namespace Twinning.Script.Executor.Implementation.Nitrome.TwinShotDeluxe {
 						checker: null,
 						automatic: (argument: {definition_file: StoragePath}) => ConvertHelper.replace_path_name(argument.definition_file, /()?$/i, '.encode'),
 						condition: null,
-						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /(\.reanim\.json)?$/i, '.reanim.compiled'),
+						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /(\.dat\.json)?$/i, '.dat'),
 					}),
 				],
-				worker: ({definition_file, data_file, buffer_size}, store: {buffer: Kernel.ByteArray}) => {
+				worker: ({definition_file, data_file, buffer_size}, store: {buffer: Kernel.Binary}) => {
 					if (store.buffer === undefined) {
-						store.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size.value()));
+						store.buffer = Kernel.Binary.allocate(Kernel.Size.value(buffer_size.value()));
 					}
 					Support.Nitrome.TwinShotDeluxe.Record.Encode.process_fs(data_file, definition_file, store.buffer);
 					return;
@@ -91,7 +91,7 @@ namespace Twinning.Script.Executor.Implementation.Nitrome.TwinShotDeluxe {
 						checker: null,
 						automatic: (argument: {data_file: StoragePath}) => ConvertHelper.replace_path_name(argument.data_file, /()?$/i, '.decode'),
 						condition: null,
-						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /(\.reanim\.compiled)?$/i, '.reanim.json'),
+						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /(\.dat)?$/i, '.dat.json'),
 					}),
 				],
 				worker: ({data_file, definition_file}, store: {}) => {

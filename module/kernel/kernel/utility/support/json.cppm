@@ -6,23 +6,24 @@ export module twinning.kernel.utility.support.json;
 import twinning.kernel.utility.builtin;
 import twinning.kernel.utility.trait;
 import twinning.kernel.utility.box;
-import twinning.kernel.utility.exception.utility;
-import twinning.kernel.utility.container.wrapper.wrapper;
+import twinning.kernel.utility.exception;
+import twinning.kernel.utility.container.wrapper;
 import twinning.kernel.utility.model.dimension;
 import twinning.kernel.utility.model.record;
 import twinning.kernel.utility.notation.json.value;
 import twinning.kernel.utility.notation.json.value_adapter;
-import twinning.kernel.utility.container.variant.variant;
-import twinning.kernel.utility.container.variant.enumerable_variant;
-import twinning.kernel.utility.container.optional.optional;
-import twinning.kernel.utility.container.tuple.tuple;
-import twinning.kernel.utility.container.list.list;
-import twinning.kernel.utility.container.map.map;
+import twinning.kernel.utility.container.variant;
+import twinning.kernel.utility.container.enumerable_variant;
+import twinning.kernel.utility.container.optional;
+import twinning.kernel.utility.container.tuple;
+import twinning.kernel.utility.container.list;
+import twinning.kernel.utility.container.map;
 import twinning.kernel.utility.string.string;
 import twinning.kernel.utility.storage.path;
-import twinning.kernel.utility.miscellaneous.byte_series.container;
-import twinning.kernel.utility.miscellaneous.byte_series.stream;
-import twinning.kernel.utility.support.string;
+import twinning.kernel.utility.binary.binary;
+import twinning.kernel.utility.binary.basic_binary_stream_view;
+import twinning.kernel.utility.support.string_stream;
+import twinning.kernel.utility.support.string_stream.extend;
 
 export namespace Twinning::Kernel::Notation::Json {
 
@@ -204,7 +205,7 @@ export namespace Twinning::Kernel::Notation::Json {
 			This &       thix,
 			That const & that
 		) -> Void {
-			thix.set_string().from(that);
+			string_from(thix.set_string(), that);
 			return;
 		}
 
@@ -212,7 +213,7 @@ export namespace Twinning::Kernel::Notation::Json {
 			This const & thix,
 			That &       that
 		) -> Void {
-			thix.get_string().to(that);
+			string_to(thix.get_string(), that);
 			return;
 		}
 
@@ -233,7 +234,7 @@ export namespace Twinning::Kernel::Notation::Json {
 			This &       thix,
 			That const & that
 		) -> Void {
-			thix.set_string().from(that);
+			string_from(thix.set_string(), that);
 			return;
 		}
 
@@ -241,7 +242,7 @@ export namespace Twinning::Kernel::Notation::Json {
 			This const & thix,
 			That &       that
 		) -> Void {
-			thix.get_string().to(that);
+			string_to(thix.get_string(), that);
 			return;
 		}
 
@@ -266,7 +267,7 @@ export namespace Twinning::Kernel::Notation::Json {
 			This &       thix,
 			That const & that
 		) -> Void {
-			thix.set_string().from(that);
+			string_from(thix.set_string(), that);
 			return;
 		}
 
@@ -274,7 +275,7 @@ export namespace Twinning::Kernel::Notation::Json {
 			This const & thix,
 			That &       that
 		) -> Void {
-			thix.get_string().to(that);
+			string_to(thix.get_string(), that);
 			return;
 		}
 
@@ -594,7 +595,7 @@ export namespace Twinning::Kernel::Notation::Json {
 			thix_object.convert(
 				that,
 				[](auto & thix_member, auto & that_member) -> auto {
-					thix_member.key.from(that_member.key);
+					string_from(thix_member.key, that_member.key);
 					thix_member.value.from(that_member.value);
 					return;
 				}
@@ -610,7 +611,7 @@ export namespace Twinning::Kernel::Notation::Json {
 			that.convert(
 				thix_object,
 				[](auto & that_member, auto & thix_member) -> auto {
-					thix_member.key.to(that_member.key);
+					string_to(thix_member.key, that_member.key);
 					thix_member.value.to(that_member.value);
 					return;
 				}
@@ -688,7 +689,7 @@ export namespace Twinning::Kernel::Notation::Json {
 			thix_object.allocate_full(make_box<Size>(FieldPackage::size));
 			Generalization::each<FieldPackage>(
 				[&]<auto t_index, typename TField>(ValuePackage<t_index>, TypePackage<TField>) {
-					thix_object.at(make_box<Size>(t_index)).key = make_string_view(TField::name.view());
+					thix_object.at(make_box<Size>(t_index)).key = make_string_view_from_reflection(TField::name);
 					thix_object.at(make_box<Size>(t_index)).value.from(TField::value_of(that));
 				}
 			);
@@ -703,7 +704,7 @@ export namespace Twinning::Kernel::Notation::Json {
 			assert_test(thix_object.size() == make_box<Size>(FieldPackage::size));
 			Generalization::each<FieldPackage>(
 				[&]<auto t_index, typename TField>(ValuePackage<t_index>, TypePackage<TField>) {
-					assert_test(thix_object.at(make_box<Size>(t_index)).key == make_string_view(TField::name.view()));
+					assert_test(thix_object.at(make_box<Size>(t_index)).key == make_string_view_from_reflection(TField::name));
 					thix_object.at(make_box<Size>(t_index)).value.to(TField::value_of(that));
 				}
 			);
@@ -797,7 +798,7 @@ export namespace Twinning::Kernel::Notation::Json {
 			This &       thix,
 			That const & that
 		) -> Void {
-			thix.set_string().from(that);
+			string_from(thix.set_string(), that);
 			return;
 		}
 
@@ -805,7 +806,7 @@ export namespace Twinning::Kernel::Notation::Json {
 			This const & thix,
 			That &       that
 		) -> Void {
-			thix.get_string().to(that);
+			string_to(thix.get_string(), that);
 			return;
 		}
 
@@ -814,11 +815,11 @@ export namespace Twinning::Kernel::Notation::Json {
 	// ----------------
 
 	template <>
-	struct ValueAdapter<ByteList> {
+	struct ValueAdapter<Binary> {
 
 		using This = Value;
 
-		using That = ByteList;
+		using That = Binary;
 
 		// ----------------
 
@@ -826,7 +827,7 @@ export namespace Twinning::Kernel::Notation::Json {
 			This &       thix,
 			That const & that
 		) -> Void {
-			thix.set_string().from(that);
+			string_from(thix.set_string(), that);
 			return;
 		}
 
@@ -834,7 +835,7 @@ export namespace Twinning::Kernel::Notation::Json {
 			This const & thix,
 			That &       that
 		) -> Void {
-			thix.get_string().to(that);
+			string_to(thix.get_string(), that);
 			return;
 		}
 
@@ -1063,7 +1064,7 @@ export namespace Twinning::Kernel::Notation::Json {
 			This &       thix,
 			That const & that
 		) -> Void {
-			thix.set_string().from(that);
+			string_from(thix.set_string(), that);
 			return;
 		}
 
@@ -1071,7 +1072,7 @@ export namespace Twinning::Kernel::Notation::Json {
 			This const & thix,
 			That &       that
 		) -> Void {
-			thix.get_string().to(that);
+			string_to(thix.get_string(), that);
 			return;
 		}
 

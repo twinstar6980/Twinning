@@ -3,10 +3,9 @@ module;
 #include "kernel/common.hpp"
 
 export module twinning.kernel.utility.box.base;
-import twinning.kernel.utility.exception.exception;
-import twinning.kernel.utility.exception.utility;
 import twinning.kernel.utility.builtin;
 import twinning.kernel.utility.trait;
+import twinning.kernel.utility.exception;
 
 export namespace Twinning::Kernel {
 

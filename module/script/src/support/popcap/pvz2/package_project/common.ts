@@ -33,11 +33,11 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject {
 		try {
 			let version_file = make_scope_child_path(project_directory, 'version.txt');
 			let version_data = StorageHelper.read_file_data(version_file);
-			let version_text = Kernel.Miscellaneous.cast_CharacterListView_to_JS_String(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(version_data.view()));
+			let version_text = Kernel.Miscellaneous.cast_StringView_to_RawString(Kernel.Miscellaneous.cast_BinaryView_to_StringView(version_data.view()));
 			assert_test(version_text === k_version.toString());
 		}
 		catch (e) {
-			throw new Error(`failed to check version.txt, excepted '${k_version}'`);
+			throw new Error(`failed to check version.txt, expected '${k_version}'`);
 		}
 		return;
 	}
@@ -198,43 +198,29 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject {
 	export function find_variable_value(
 		list: Array<Variable>,
 		name: string,
+		chain: Array<string>,
 	): null | string {
+		assert_test(!chain.includes(name));
 		let result = list.find((value) => (value.name === name));
-		return result === undefined ? null : parse_variable_string(result.value, list);
+		return result === undefined ? null : parse_variable_string(result.value, list, [...chain, name]);
 	}
 
 	export function parse_variable_string(
 		format: string,
-		variable_list: Array<Variable>,
+		list: Array<Variable>,
+		chain: Array<string>,
 	): string {
-		let result = '';
-		let variable_name: null | string = null;
 		format = format.slice(0, CheckHelper.not_or(format.indexOf('~'), -1, undefined));
-		for (let index = 0; index < format.length; index++) {
-			let character = format[index];
-			if (character === '{') {
-				assert_test(variable_name === null);
-				variable_name = '';
-				continue;
-			}
-			if (character === '}') {
-				assert_test(variable_name !== null);
-				let variable_value = find_variable_value(variable_list, variable_name);
-				if (variable_value === null) {
-					throw new Error(`could not find variable '${variable_name}'`);
+		return ConvertHelper.realize_format_string(
+			ConvertHelper.parse_format_string(format, true),
+			(index, name) => {
+				let value = find_variable_value(list, name, chain);
+				if (value === null) {
+					throw new Error(`could not find variable '${name}'`);
 				}
-				result += variable_value;
-				variable_name = null;
-				continue;
-			}
-			if (variable_name !== null) {
-				variable_name += character;
-			}
-			else {
-				result += character;
-			}
-		}
-		return result;
+				return value;
+			},
+		);
 	}
 
 	// #endregion

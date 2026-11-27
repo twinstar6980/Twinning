@@ -1959,7 +1959,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			M_nested_template_definition_name(UnknownHierarchy),
 			M_wrap(
 				(Integer) type,
-				(ByteList) data,
+				(Binary) data,
 			),
 		);
 
@@ -3095,7 +3095,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) plug_in,
-				(ByteList) expand,
+				(Binary) expand,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 			),
 		);
@@ -3106,7 +3106,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) plug_in,
-				(ByteList) expand,
+				(Binary) expand,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(List<EffectU1>) u1,
 			),
@@ -3118,7 +3118,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) plug_in,
-				(ByteList) expand,
+				(Binary) expand,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
 				(List<EffectU1>) u1,
@@ -3135,7 +3135,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) plug_in,
-				(ByteList) expand,
+				(Binary) expand,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 			),
 		);
@@ -3146,7 +3146,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) plug_in,
-				(ByteList) expand,
+				(Binary) expand,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(List<EffectU1>) u1,
 			),
@@ -3158,7 +3158,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) plug_in,
-				(ByteList) expand,
+				(Binary) expand,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
 				(List<EffectU1>) u1,
@@ -3175,7 +3175,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) plug_in,
-				(ByteList) expand,
+				(Binary) expand,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
 				(List<EffectU1>) u1,
@@ -3188,7 +3188,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) plug_in,
-				(ByteList) expand,
+				(Binary) expand,
 				(RealTimeParameterControlSetting) real_time_parameter_control,
 				(StateSetting) state,
 				(List<EffectU1>) u1,
@@ -6791,7 +6791,7 @@ export namespace Twinning::Kernel::Tool::Wwise::SoundBank {
 			M_wrap(
 				(Identifier) identifier,
 				(Identifier) language,
-				(ByteList) header_expand,
+				(Binary) header_expand,
 				(List<Identifier>) embedded_media,
 				(List<SoundBankReference>) reference,
 				(Optional<Setting>) setting,

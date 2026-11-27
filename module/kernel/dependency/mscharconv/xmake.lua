@@ -1,21 +1,17 @@
--- mscharconv
--- 1.2.3 5d2e3a6e9663a41207561c9510ad1e3d557b5c5e
--- https://github.com/iboB/mscharconv
-
 target('dependency.mscharconv', function()
 	set_group('source/dependency')
 	set_kind('headeronly')
 	add_headerfiles(
-		'include/msstl/converted/charconv.inl',
-		'include/msstl/converted/m_floating_type_traits.inl',
-		'include/msstl/converted/xbit_ops.h.inl',
-		'include/msstl/converted/xcharconv.h.inl',
-		'include/msstl/converted/xcharconv_ryu.h.inl',
-		'include/msstl/converted/xcharconv_ryu_tables.h.inl',
-		'include/msstl/charconv.hpp',
-		'include/msstl/charconv_fwd.hpp',
-		'include/msstl/charconv_impl.inl',
-		'include/msstl/util.hpp',
+		'origin/include/msstl/converted/charconv.inl',
+		'origin/include/msstl/converted/m_floating_type_traits.inl',
+		'origin/include/msstl/converted/xbit_ops.h.inl',
+		'origin/include/msstl/converted/xcharconv.h.inl',
+		'origin/include/msstl/converted/xcharconv_ryu.h.inl',
+		'origin/include/msstl/converted/xcharconv_ryu_tables.h.inl',
+		'origin/include/msstl/charconv.hpp',
+		'origin/include/msstl/charconv_fwd.hpp',
+		'origin/include/msstl/charconv_impl.inl',
+		'origin/include/msstl/util.hpp',
 		{ install = false }
 	)
 	add_files(

@@ -11,10 +11,13 @@ namespace Twinning.Script.Support.Wwise.Media.Encode {
 		using temporary_directory_using = temporary_directory_finalizer;
 		let wwise_project_directory = temporary_directory.join('Sample');
 		let wwise_wproj_file = wwise_project_directory.join('Sample.wproj');
-		while (true) {
+		for (let retry_count = 1; true; retry_count++) {
 			ExternalHelper.run_wwise_create_new_project(wwise_wproj_file, ExternalHelper.do_wwise_get_all_platform());
 			if (StorageHelper.exist_file(wwise_wproj_file)) {
 				break;
+			}
+			if (retry_count === 3) {
+				throw new Error(`failed to create wwise project`);
 			}
 			Console.warning(`failed to create wwise project, retry ...`, [wwise_wproj_file.emit()]);
 		}

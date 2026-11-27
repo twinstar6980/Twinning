@@ -265,9 +265,9 @@
 
 * `<configuration>`
 
-	* `byte_stream_use_big_endian` : `boolean` = `false`
+	* `binary_stream_endian` : `null | string` = `null`
 
-	  内部字节流操作时使用大端序。这个选项对一些大端序文件的处理是必要的。默认禁用，因为大多数时候用户处理的都是小端序文件。
+	  内部字节流操作时使用的端序。设置为 `null` 时使用本机端序，可以显式设置为 `little` 或 `big` 。
 
 	* `common_buffer_size` : `string` = `64.0m`
 

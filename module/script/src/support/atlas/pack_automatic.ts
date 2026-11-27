@@ -113,6 +113,7 @@ namespace Twinning.Script.Support.Atlas.PackAutomatic {
 		square: boolean,
 		expand_value: number,
 	): (it: Box, step: number) => void {
+		assert_test(expand_value > 0);
 		return (it, step) => {
 			if (square) {
 				it.width += expand_value;

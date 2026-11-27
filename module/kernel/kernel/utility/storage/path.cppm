@@ -6,14 +6,14 @@ export module twinning.kernel.utility.storage.path;
 import twinning.kernel.utility.builtin;
 import twinning.kernel.utility.trait;
 import twinning.kernel.utility.box;
-import twinning.kernel.utility.exception.utility;
-import twinning.kernel.utility.container.optional.optional;
-import twinning.kernel.utility.container.list.list;
+import twinning.kernel.utility.exception;
+import twinning.kernel.utility.container.optional;
+import twinning.kernel.utility.container.list;
 import twinning.kernel.utility.string.basic_string;
 import twinning.kernel.utility.string.string;
-import twinning.kernel.utility.string.character_type;
+import twinning.kernel.utility.string.utility;
 import twinning.kernel.utility.range.generic_range;
-import twinning.kernel.utility.range.number_range;
+import twinning.kernel.utility.range.integer_range;
 import twinning.kernel.utility.range.algorithm;
 
 export namespace Twinning::Kernel::Storage {
@@ -134,7 +134,7 @@ export namespace Twinning::Kernel::Storage {
 				result.set();
 				result.get().m_type = thiz.m_type;
 				result.get().m_root = thiz.m_root;
-				result.get().m_segment = thiz.m_segment.head(thiz.m_segment.size() - 1_sz);
+				result.get().m_segment = make_list_of<String>(Range::slice_head(thiz.m_segment, thiz.m_segment.size() - 1_sz));
 			}
 			return result;
 		}
@@ -155,7 +155,7 @@ export namespace Twinning::Kernel::Storage {
 			auto result = Optional<String>{};
 			if (!thiz.m_segment.empty()) {
 				auto & segment = thiz.m_segment.last();
-				auto   position = Range::find_index(Range::make_reverse_range_of(segment), CharacterType::k_path_dot);
+				auto   position = Range::find_index(Range::make_reverse_range_of(segment), StringUtility::k_path_dot_character);
 				if (position.has()) {
 					result.set(segment.head(segment.size() - 1_sz - position.get()));
 				}
@@ -171,7 +171,7 @@ export namespace Twinning::Kernel::Storage {
 			auto result = Optional<String>{};
 			if (!thiz.m_segment.empty()) {
 				auto & segment = thiz.m_segment.last();
-				auto   position = Range::find_index(Range::make_reverse_range_of(segment), CharacterType::k_path_dot);
+				auto   position = Range::find_index(Range::make_reverse_range_of(segment), StringUtility::k_path_dot_character);
 				if (position.has()) {
 					result.set(segment.tail(position.get()));
 				}
@@ -190,7 +190,7 @@ export namespace Twinning::Kernel::Storage {
 			result.m_type = thiz.m_type;
 			result.m_root = thiz.m_root;
 			result.m_segment.allocate(thiz.m_segment.size() + 1_sz);
-			result.m_segment.append_list(thiz.m_segment);
+			result.m_segment.append_range(thiz.m_segment);
 			result.m_segment.append(as_moveable(other));
 			return result;
 		}
@@ -209,8 +209,8 @@ export namespace Twinning::Kernel::Storage {
 			result.m_type = thiz.m_type;
 			result.m_root = thiz.m_root;
 			result.m_segment.allocate(thiz.m_segment.size() + other.m_segment.size());
-			result.m_segment.append_list(thiz.m_segment);
-			result.m_segment.append_list(Range::make_moveable_range_of(other.m_segment));
+			result.m_segment.append_range(thiz.m_segment);
+			result.m_segment.append_range(Range::make_moveable_range_of(other.m_segment));
 			return result;
 		}
 
@@ -231,9 +231,9 @@ export namespace Twinning::Kernel::Storage {
 			thiz.m_root.reset();
 			thiz.m_segment.reset();
 			auto position = 0_sz;
-			if (text.size() >= 2_sz && CharacterType::is_letter(text[1_ix]) && CharacterType::is_path_volume_separator(text[2_ix])) {
+			if (text.size() >= 2_sz && StringUtility::is_letter_character(text[1_ix]) && StringUtility::is_path_volume_separator_character(text[2_ix])) {
 				position += 2_sz;
-				if (position < text.size() && CharacterType::is_path_directory_separator(text[position])) {
+				if (position < text.size() && StringUtility::is_path_directory_separator_character(text[position])) {
 					thiz.m_type = PathType::Constant::absolute();
 					thiz.m_root.set(text.sub(1_ix, position));
 					position += 1_sz;
@@ -243,35 +243,35 @@ export namespace Twinning::Kernel::Storage {
 					thiz.m_root.set(text.sub(1_ix, position));
 				}
 			}
-			else if (text.size() >= 2_sz && CharacterType::is_path_directory_separator(text[1_ix]) && CharacterType::is_path_directory_separator(text[2_ix])) {
+			else if (text.size() >= 2_sz && StringUtility::is_path_directory_separator_character(text[1_ix]) && StringUtility::is_path_directory_separator_character(text[2_ix])) {
 				position += 2_sz;
 				for (; position < text.size(); ++position) {
-					if (CharacterType::is_path_directory_separator(text[position])) {
+					if (StringUtility::is_path_directory_separator_character(text[position])) {
 						break;
 					}
 				}
 				thiz.m_type = PathType::Constant::absolute();
 				thiz.m_root.set("//"_s + text.sub(3_ix, position - 3_ix));
-				if (position < text.size() && CharacterType::is_path_directory_separator(text[position])) {
+				if (position < text.size() && StringUtility::is_path_directory_separator_character(text[position])) {
 					position += 1_sz;
 				}
 			}
-			else if (text.size() >= 1_sz && CharacterType::is_path_directory_separator(text[1_ix])) {
+			else if (text.size() >= 1_sz && StringUtility::is_path_directory_separator_character(text[1_ix])) {
 				position += 1_sz;
 				thiz.m_type = PathType::Constant::absolute();
 				thiz.m_root.set();
 			}
-			else if (text.size() >= 2_sz && CharacterType::is_path_dot(text[1_ix]) && CharacterType::is_path_dot(text[2_ix])) {
+			else if (text.size() >= 2_sz && StringUtility::is_path_dot_character(text[1_ix]) && StringUtility::is_path_dot_character(text[2_ix])) {
 				position += 2_sz;
-				if (position == text.size() || CharacterType::is_path_directory_separator(text[position])) {
+				if (position == text.size() || StringUtility::is_path_directory_separator_character(text[position])) {
 					thiz.m_type = PathType::Constant::relative();
 					thiz.m_root.set();
 				}
 				position = 0_sz;
 			}
-			else if (text.size() >= 1_sz && CharacterType::is_path_dot(text[1_ix])) {
+			else if (text.size() >= 1_sz && StringUtility::is_path_dot_character(text[1_ix])) {
 				position += 1_sz;
-				if (position == text.size() || CharacterType::is_path_directory_separator(text[position])) {
+				if (position == text.size() || StringUtility::is_path_directory_separator_character(text[position])) {
 					thiz.m_type = PathType::Constant::relative();
 					thiz.m_root.set();
 					if (position < text.size()) {
@@ -284,7 +284,7 @@ export namespace Twinning::Kernel::Storage {
 			}
 			auto location = position;
 			for (; position <= text.size(); ++position) {
-				if (position == text.size() || CharacterType::is_path_directory_separator(text[position])) {
+				if (position == text.size() || StringUtility::is_path_directory_separator_character(text[position])) {
 					auto segment = text.sub(location, position - location);
 					if (!segment.empty()) {
 						thiz.m_segment.append(segment);
@@ -300,11 +300,11 @@ export namespace Twinning::Kernel::Storage {
 			Boolean const &   rectify = k_false
 		) const -> String {
 			auto text = String{};
-			auto path_dot = CharacterType::k_path_dot;
-			auto path_directory_separator = style == PathStyle::Constant::posix() ? CharacterType::k_path_directory_separator_poisx : CharacterType::k_path_directory_separator_windows;
+			auto path_dot = StringUtility::k_path_dot_character;
+			auto path_directory_separator = style == PathStyle::Constant::posix() ? StringUtility::k_path_directory_separator_posix_character : StringUtility::k_path_directory_separator_windows_character;
 			if (thiz.m_type != PathType::Constant::detached()) {
 				for (auto & index : SizeRange{thiz.m_root.get().size()}) {
-					text.append(!CharacterType::is_path_directory_separator(thiz.m_root.get()[index]) ? thiz.m_root.get()[index] : path_directory_separator);
+					text.append(!StringUtility::is_path_directory_separator_character(thiz.m_root.get()[index]) ? thiz.m_root.get()[index] : path_directory_separator);
 				}
 				if (thiz.m_type == PathType::Constant::relative()) {
 					text.append(path_dot);
@@ -317,11 +317,11 @@ export namespace Twinning::Kernel::Storage {
 					text.append(path_directory_separator);
 				}
 				if (!rectify) {
-					text.append_list(segment);
+					text.append_range(segment);
 				}
 				else {
 					if (style == PathStyle::Constant::posix()) {
-						text.append_list(segment);
+						text.append_range(segment);
 					}
 					if (style == PathStyle::Constant::windows()) {
 						auto segment_size = segment.size();
@@ -336,7 +336,7 @@ export namespace Twinning::Kernel::Storage {
 							}
 							break;
 						}
-						text.append_list(Range::make_range_n(segment.begin(), segment_size));
+						text.append_range(Range::make_range_n(segment.begin(), segment_size));
 					}
 				}
 			}

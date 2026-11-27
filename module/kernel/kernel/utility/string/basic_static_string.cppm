@@ -6,10 +6,9 @@ export module twinning.kernel.utility.string.basic_static_string;
 import twinning.kernel.utility.builtin;
 import twinning.kernel.utility.trait;
 import twinning.kernel.utility.box;
-import twinning.kernel.utility.exception.utility;
+import twinning.kernel.utility.exception;
 import twinning.kernel.utility.string.basic_string_view;
-import twinning.kernel.utility.string.character_type;
-import twinning.kernel.utility.miscellaneous.character_series.container;
+import twinning.kernel.utility.range.integer_range;
 
 export namespace Twinning::Kernel {
 
@@ -18,31 +17,33 @@ export namespace Twinning::Kernel {
 	template <typename TElement, auto t_size> requires
 		CategoryConstraint<IsPureInstance<TElement>>
 		&& (IsCharacterBox<TElement>)
-		&& (IsSameOf<t_size, Size>)
+		&& (IsSameOf<t_size, ZSize>)
+		&& (t_size > 0_szz)
 	struct BasicStaticString {
 
 		using Element = TElement;
 
 		// ----------------
 
-		ZArray<Element, t_size.value> data{};
+		ZArray<Element, t_size> container{};
 
 		// ----------------
 
 		implicit constexpr BasicStaticString(
-			ZArray<typename Element::Value, t_size.value> const & data
+			ZArray<typename Element::Value, t_size> const & data
 		) :
-			data{} {
-			for (auto index = 1_ixz; index < t_size.value; ++index) {
-				thiz.data[index].value = data[index];
+			container{} {
+			for (auto & index : SizeRange{make_box<Size>(t_size - 1_szz)}) {
+				thiz.container[index.value].value = data[index.value];
 			}
+			return;
 		}
 
 		// ----------------
 
 		constexpr auto view(
 		) const -> ConstantBasicStringView<Element> {
-			return ConstantBasicStringView<Element>{make_pointer(static_cast<decltype(&*thiz.data)>(thiz.data)), t_size - 1_sz};
+			return ConstantBasicStringView<Element>{make_pointer(static_cast<decltype(&*thiz.container)>(thiz.container)), make_box<Size>(t_size - 1_szz)};
 		}
 
 	};

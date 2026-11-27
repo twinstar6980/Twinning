@@ -22,7 +22,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Transpile {
 		resource_name: string,
 		conversion_setting_map: ConversionSetting,
 		option: Option,
-		buffer: Kernel.ByteArray,
+		buffer: Kernel.Binary,
 	): void {
 		let resource_directory = make_scope_root_path(project_directory, part_name, group_name, resource_name);
 		let resource_setting = JsonHelper.decode_file(make_scope_setting_path(resource_directory)) as ResourceSetting;
@@ -94,7 +94,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Transpile {
 					let new_source_data_directory = make_scope_child_path(resource_directory, 'source.sprite');
 					let new_sprite_property_list: Array<SpecialPtxResourcePropertySpriteProperty> = [];
 					let data = StorageHelper.read_file_data(source_file);
-					let data_stream = Kernel.ByteStreamView.watch(data.view());
+					let data_stream = Kernel.BinaryStreamView.watch(data.view());
 					let image = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(resource_property.size));
 					let image_view = image.view();
 					Support.Popcap.Texture.Encoding.decode(data_stream, image_view, conversion_setting.format, true);
@@ -189,9 +189,9 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Transpile {
 					if (buffer.size().value < resource_data_size) {
 						buffer.allocate(Kernel.Size.value(resource_data_size));
 					}
-					let resource_data = Kernel.ByteStreamView.watch(buffer.view());
+					let resource_data = Kernel.BinaryStreamView.watch(buffer.view());
 					Support.Popcap.Texture.Encoding.encode(resource_data, atlas_view, conversion_setting.format, texture_encode_option);
-					StorageHelper.write_file_data(new_source_file, resource_data.stream_view());
+					StorageHelper.write_file_data(new_source_file, resource_data.split_stream().view());
 					resource_setting.type = 'texture';
 					resource_setting.property = {
 						path: resource_property.path + '',
@@ -205,7 +205,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Transpile {
 				break;
 			}
 			case 'special_pam': {
-				let resource_property = resource_setting.property as SpecialWemResourceProperty;
+				let resource_property = resource_setting.property as SpecialPamResourceProperty;
 				let source_file = make_scope_child_path(resource_directory, 'source.json');
 				if (option.generalize_pam) {
 					Console.warning(`transpiling by generalize_pam ...`, [`/${part_name}/${group_name}/${resource_name}`]);
@@ -255,7 +255,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Transpile {
 		resource_scope: Scope0 | Scope1,
 		conversion_setting_map: ConversionSetting,
 		option: Option,
-		buffer: Kernel.ByteArray,
+		buffer: Kernel.Binary,
 	): void {
 		let group_directory = make_scope_root_path(project_directory, part_name, group_name);
 		for (let resource_name of list_scope_child_name(group_directory, resource_scope)) {
@@ -270,7 +270,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Transpile {
 		group_scope: Scope0 | Scope1 | Scope2,
 		conversion_setting_map: ConversionSetting,
 		option: Option,
-		buffer: Kernel.ByteArray,
+		buffer: Kernel.Binary,
 	): void {
 		let part_directory = make_scope_root_path(project_directory, part_name);
 		for (let group_name of list_scope_child_name(part_directory, group_scope)) {
@@ -284,7 +284,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Transpile {
 		part_scope: Scope0 | Scope1 | Scope2 | Scope3,
 		conversion_setting_map: ConversionSetting,
 		option: Option,
-		buffer: Kernel.ByteArray,
+		buffer: Kernel.Binary,
 	): void {
 		for (let part_name of list_scope_child_name(project_directory, part_scope)) {
 			transpile_part(project_directory, part_name, part_scope.slice(1) as any, conversion_setting_map, option, buffer);
@@ -302,7 +302,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Transpile {
 		buffer_size: bigint,
 	): void {
 		check_version_file(project_directory);
-		let buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
+		let buffer = Kernel.Binary.allocate(Kernel.Size.value(buffer_size));
 		let project_setting = JsonHelper.decode_file(make_scope_setting_path(project_directory)) as ProjectSetting;
 		if (target_scope === null) {
 			target_scope = [[]];

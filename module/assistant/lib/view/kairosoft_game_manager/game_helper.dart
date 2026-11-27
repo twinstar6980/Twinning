@@ -400,7 +400,7 @@ class GameRepositoryHelper {
   static lib.Uint8List makeKeyFromWindowsSteamUser(
     String user,
   ) {
-    var keyValue = Integer.parse(user);
+    var keyValue = ConvertHelper.parseIntegerFromString(user);
     var key = lib.Uint64List.fromList([keyValue]).buffer.asUint8List();
     return key;
   }

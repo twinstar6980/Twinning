@@ -6,10 +6,16 @@ export module twinning.kernel.utility.string.string;
 import twinning.kernel.utility.builtin;
 import twinning.kernel.utility.trait;
 import twinning.kernel.utility.box;
-import twinning.kernel.utility.exception.utility;
+import twinning.kernel.utility.exception;
+import twinning.kernel.utility.container.stream.stream_mode;
 import twinning.kernel.utility.string.basic_string_view;
 import twinning.kernel.utility.string.basic_string;
+import twinning.kernel.utility.string.basic_string_stream_flag;
+import twinning.kernel.utility.string.basic_string_stream_view;
+import twinning.kernel.utility.string.basic_string_stream_adapter;
+import twinning.kernel.utility.string.basic_string_formatter;
 import twinning.kernel.utility.string.basic_static_string;
+import twinning.kernel.utility.range.algorithm;
 
 export namespace Twinning::Kernel {
 
@@ -25,80 +31,23 @@ export namespace Twinning::Kernel {
 
 	using String = BasicString<Character>;
 
-	// ----------------
+	using StringStreamFlag = BasicStringStreamFlag;
+
+	template <auto t_mode> requires
+		AutomaticConstraint
+	using StringStreamView = BasicStringStreamView<Character, t_mode>;
+
+	using AccessStringStreamView = AccessBasicStringStreamView<Character>;
+
+	using InputStringStreamView = InputBasicStringStreamView<Character>;
+
+	using OutputStringStreamView = OutputBasicStringStreamView<Character>;
+
+	using StringFormatter = BasicStringFormatter<Character>;
 
 	template <auto t_size> requires
-		CategoryConstraint<>
-		&& (IsSameOf<t_size, ZSize>)
-	struct StaticString :
-		BasicStaticString<Character, make_box<Size>(t_size)> {
-		implicit constexpr StaticString(
-			ZArray<Character::Value, t_size> const & data
-		) :
-			BasicStaticString<Character, make_box<Size>(t_size)>{data} {
-		}
-	};
-
-	#pragma endregion
-
-	#pragma region utility
-
-	inline auto make_string_view(
-		ZConstantString const & string,
-		ZSize const &           length
-	) -> ConstantStringView {
-		return ConstantStringView{make_pointer_unsafe<Character>(string), make_box<Size>(length)};
-	}
-
-	inline auto make_string(
-		ZConstantString const & string,
-		ZSize const &           length
-	) -> String {
-		return String{make_pointer_unsafe<Character>(string), make_box<Size>(length)};
-	}
-
-	// ----------------
-
-	inline auto make_string_view(
-		std::string_view const & string
-	) -> ConstantStringView {
-		return make_string_view(string.data(), string.length());
-	}
-
-	inline auto make_string(
-		std::string_view const & string
-	) -> String {
-		return make_string(string.data(), string.length());
-	}
-
-	// ----------------
-
-	inline auto make_std_string_view(
-		ConstantStringView const & string
-	) -> std::string_view {
-		return std::string_view{unmake_pointer_unsafe<char>(string.begin()), unmake_box<std::size_t>(string.size())};
-	}
-
-	inline auto make_std_string(
-		ConstantStringView const & string
-	) -> std::string {
-		return std::string{unmake_pointer_unsafe<char>(string.begin()), unmake_box<std::size_t>(string.size())};
-	}
-
-	// ----------------
-
-	inline constexpr auto hash_std_string_view(
-		std::string_view const & string
-	) -> ZIntegerU64 {
-		auto offset = ZIntegerU64{14695981039346656037ull};
-		auto prime = ZIntegerU64{1099511628211ull};
-		auto result = offset;
-		for (auto index = 1_ixz; index < string.size(); ++index) {
-			result ^= static_cast<ZIntegerU8>(string[index]);
-			result *= prime;
-		}
-		return result;
-	}
+		AutomaticConstraint
+	using StaticString = BasicStaticString<Character, t_size>;
 
 	#pragma endregion
 
@@ -132,6 +81,13 @@ export namespace Twinning::Kernel {
 		return String{t_string.view()};
 	}
 
+	template <StaticString t_string> requires
+		NoneConstraint
+	inline constexpr auto operator ""_sf(
+	) -> StringFormatter {
+		return StringFormatter{t_string.view()};
+	}
+
 	// ----------------
 
 	template <StaticString t_string> requires
@@ -139,6 +95,149 @@ export namespace Twinning::Kernel {
 	inline constexpr auto operator ""_shz(
 	) -> ZIntegerU64 {
 		return operator ""_sh<t_string>().value;
+	}
+
+	#pragma endregion
+
+	#pragma region utility
+
+	template <typename TElement> requires
+		CategoryConstraint<IsInstance<TElement>>
+		&& (IsCharacterBox<AsPure<TElement>>)
+	inline constexpr auto compute_null_terminated_string_length(
+		Pointer<TElement> const & string,
+		Size const &              limit
+	) -> Size {
+		auto null_character = make_box<AsPure<TElement>>('\0');
+		auto length = 0_sz;
+		for (length = 0_sz; length < limit; ++length) {
+			if (string[length] == null_character) {
+				break;
+			}
+		}
+		return length;
+	}
+
+	template <typename TElement, auto t_constant> requires
+		CategoryConstraint<IsPureInstance<TElement>>
+	inline constexpr auto is_safe_null_terminated_string(
+		BasicStringView<TElement, t_constant> const & string
+	) -> Boolean {
+		return compute_null_terminated_string_length(string.data(), string.size()) == string.size();
+	}
+
+	// ----------------
+
+	template <typename TElement> requires
+		CategoryConstraint<IsInstance<TElement>>
+		&& (IsCharacterBox<AsPure<TElement>>)
+	inline constexpr auto make_string_view(
+		Pointer<TElement> const & string,
+		Size const &              length
+	) -> BasicStringView<AsPure<TElement>, make_box<Boolean>(IsConstant<TElement>)> {
+		return BasicStringView<AsPure<TElement>, make_box<Boolean>(IsConstant<TElement>)>{string, length};
+	}
+
+	template <typename TElement> requires
+		CategoryConstraint<IsInstance<TElement>>
+		&& (IsCharacterBox<AsPure<TElement>>)
+	inline constexpr auto make_string_view_from_indeterminate(
+		Pointer<TElement> const & string,
+		Size const &              limit
+	) -> BasicStringView<AsPure<TElement>, make_box<Boolean>(IsConstant<TElement>)> {
+		return make_string_view(string, compute_null_terminated_string_length(string, limit));
+	}
+
+	template <auto t_size> requires
+		CategoryConstraint<>
+		&& IsSameOf<t_size, ZSize>
+	inline auto make_string_view_from_reflection(
+		Reflection::String<t_size> const & string
+	) -> ConstantStringView {
+		return make_string_view(make_pointer_unsafe<Character>(string.data()), make_box<Size>(string.length()));
+	}
+
+	// ----------------
+
+	inline auto from_std_string_view(
+		std::string_view const & string
+	) -> ConstantStringView {
+		return make_string_view(make_pointer_unsafe<Character>(string.data()), make_box<Size>(string.length()));
+	}
+
+	inline auto from_std_string(
+		std::string_view const & string
+	) -> String {
+		return String{from_std_string_view(string)};
+	}
+
+	// ----------------
+
+	inline auto to_std_string_view(
+		ConstantStringView const & string
+	) -> std::string_view {
+		return std::string_view{unmake_pointer_unsafe<char>(string.data()), unmake_box<std::size_t>(string.size())};
+	}
+
+	inline auto to_std_string(
+		ConstantStringView const & string
+	) -> std::string {
+		return std::string{to_std_string_view(string)};
+	}
+
+	#pragma endregion
+
+	#pragma region convert
+
+	template <typename TValue, typename ... TOption> requires
+		CategoryConstraint<IsValid<TValue> && IsValid<TOption ...>>
+		&& (IsHasBasicStringStreamAdapter<Character, AsPure<TValue>>)
+	inline auto string_from(
+		String &       string,
+		TValue &&      value,
+		TOption && ... option
+	) -> String & {
+		string.allocate_full(BasicStringStreamAdapter<Character, AsPure<TValue>>::capacity(as_forward<TValue>(value), as_forward<TOption>(option) ...));
+		auto stream = OutputStringStreamView{string};
+		stream.write(as_forward<TValue>(value), as_forward<TOption>(option) ...);
+		string.resize(stream.position());
+		return string;
+	}
+
+	template <typename TValue, typename ... TOption> requires
+		CategoryConstraint<IsValid<TValue> && IsValid<TOption ...>>
+		&& (IsHasBasicStringStreamAdapter<Character, AsPure<TValue>>)
+	inline auto string_to(
+		String const & string,
+		TValue &&      value,
+		TOption && ... option
+	) -> TValue && {
+		auto stream = InputStringStreamView{string};
+		stream.read(as_forward<TValue>(value), as_forward<TOption>(option) ...);
+		assert_test(stream.full());
+		return as_forward<TValue>(value);
+	}
+
+	// ----------------
+
+	template <typename TValue, typename ... TOption> requires
+		CategoryConstraint<IsValid<TValue> && IsValid<TOption ...>>
+		&& (IsHasBasicStringStreamAdapter<Character, AsPure<TValue>>)
+	inline auto string_from_of(
+		TValue &&      value,
+		TOption && ... option
+	) -> String {
+		return string_from(as_left(String{}), as_forward<TValue>(value), as_forward<TOption>(option) ...);
+	}
+
+	template <typename TValue, typename ... TOption> requires
+		CategoryConstraint<IsPureInstance<TValue> && IsValid<TOption ...>>
+		&& (IsHasBasicStringStreamAdapter<Character, AsPure<TValue>>)
+	inline auto string_to_of(
+		String const & string,
+		TOption && ... option
+	) -> TValue {
+		return string_to(string, as_left(TValue{}), as_forward<TOption>(option) ...);
 	}
 
 	#pragma endregion

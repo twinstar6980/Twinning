@@ -56,9 +56,9 @@ namespace Twinning.Script.Executor.Implementation.Popcap.ResourceStreamGroup {
 						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /(\.rsg\.bundle)?$/i, '.rsg'),
 					}),
 				],
-				worker: ({bundle_directory, data_file, version_number, buffer_size}, store: {buffer: Kernel.ByteArray}) => {
+				worker: ({bundle_directory, data_file, version_number, buffer_size}, store: {buffer: Kernel.Binary}) => {
 					if (store.buffer === undefined) {
-						store.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size.value()));
+						store.buffer = Kernel.Binary.allocate(Kernel.Size.value(buffer_size.value()));
 					}
 					let definition_file = bundle_directory.join('definition.json');
 					let resource_directory = bundle_directory.join('resource');

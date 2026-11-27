@@ -10,14 +10,14 @@ import twinning.kernel.interface.proxy;
 
 export namespace Twinning::Kernel::Executor {
 
-	#pragma region function
+	#pragma region utility
 
 	inline auto execute(
 		Interface::ExecutorProxy const & callback,
 		String const &                   script,
 		List<String> const &             argument
 	) -> List<String> {
-		auto locker = Thread::Locker{Script::JavaScript::g_mutex};
+		auto _ = Thread::Locker{Script::JavaScript::g_mutex};
 		auto context = Context{callback};
 		Environment::inject(context);
 		auto data = context.context().new_value();

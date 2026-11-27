@@ -6,10 +6,10 @@ export module twinning.kernel.utility.notation.json.value;
 import twinning.kernel.utility.builtin;
 import twinning.kernel.utility.trait;
 import twinning.kernel.utility.box;
-import twinning.kernel.utility.exception.utility;
-import twinning.kernel.utility.container.variant.enumerable_variant;
-import twinning.kernel.utility.container.list.list;
-import twinning.kernel.utility.container.map.map;
+import twinning.kernel.utility.exception;
+import twinning.kernel.utility.container.enumerable_variant;
+import twinning.kernel.utility.container.list;
+import twinning.kernel.utility.container.map;
 import twinning.kernel.utility.string.string;
 import twinning.kernel.utility.math.number_variant;
 import twinning.kernel.utility.notation.json.value_adapter;
@@ -22,7 +22,21 @@ export namespace Twinning::Kernel::Notation::Json {
 
 	#pragma endregion
 
-	#pragma region sub type
+	#pragma region type
+
+	M_enumeration(
+		M_wrap(ValueType),
+		M_wrap(
+			null,
+			boolean,
+			number,
+			string,
+			array,
+			object,
+		),
+	);
+
+	// ----------------
 
 	using Null = Null;
 
@@ -38,22 +52,6 @@ export namespace Twinning::Kernel::Notation::Json {
 
 	// ----------------
 
-	M_enumeration(
-		M_wrap(ValueType),
-		M_wrap(
-			null,
-			boolean,
-			number,
-			string,
-			array,
-			object,
-		),
-	);
-
-	#pragma endregion
-
-	#pragma region type
-
 	class Value :
 		public EnumerableVariant<ValueType, Null, Boolean, Number, String, Array, Object> {
 
@@ -67,7 +65,10 @@ export namespace Twinning::Kernel::Notation::Json {
 		// ----------------
 
 		Value(
-		) = default;
+		) :
+			EnumerableVariant{} {
+			return;
+		}
 
 		Value(
 			Value const & that
@@ -134,7 +135,6 @@ export namespace Twinning::Kernel::Notation::Json {
 		}
 
 		// ----------------
-		// TODO: remove
 
 		auto operator [](
 			ConstantStringView const & key
@@ -304,38 +304,41 @@ export namespace Twinning::Kernel::Notation::Json {
 
 		#pragma endregion
 
-		#pragma region from & to by adapter
+		#pragma region convert
 
-		template <typename TThat, typename ... TOption> requires
-			CategoryConstraint<IsValid<TThat> && IsValid<TOption ...>>
+		template <typename TValue, typename ... TOption> requires
+			CategoryConstraint<IsValid<TValue> && IsValid<TOption ...>>
+			&& (IsHasValueAdapter<AsPure<TValue>>)
 		auto from(
-			TThat &&       that,
+			TValue &&      value,
 			TOption && ... option
 		) -> Void {
-			ValueAdapter<AsPure<TThat>>::from(thiz, as_forward<TThat>(that), as_forward<TOption>(option) ...);
+			ValueAdapter<AsPure<TValue>>::from(thiz, as_forward<TValue>(value), as_forward<TOption>(option) ...);
 			return;
 		}
 
-		template <typename TThat, typename ... TOption> requires
-			CategoryConstraint<IsValid<TThat> && IsValid<TOption ...>>
+		template <typename TValue, typename ... TOption> requires
+			CategoryConstraint<IsValid<TValue> && IsValid<TOption ...>>
+			&& (IsHasValueAdapter<AsPure<TValue>>)
 		auto to(
-			TThat &&       that,
+			TValue &&      value,
 			TOption && ... option
 		) const -> Void {
-			ValueAdapter<AsPure<TThat>>::to(thiz, as_forward<TThat>(that), as_forward<TOption>(option) ...);
+			ValueAdapter<AsPure<TValue>>::to(thiz, as_forward<TValue>(value), as_forward<TOption>(option) ...);
 			return;
 		}
 
 		// ----------------
 
-		template <typename TThat, typename ... TOption> requires
-			CategoryConstraint<IsPureInstance<TThat> && IsValid<TOption ...>>
+		template <typename TValue, typename ... TOption> requires
+			CategoryConstraint<IsPureInstance<TValue> && IsValid<TOption ...>>
+			&& (IsHasValueAdapter<AsPure<TValue>>)
 		auto to_of(
 			TOption && ... option
-		) const -> TThat {
-			auto that = TThat{};
-			thiz.to(that, as_forward<TOption>(option) ...);
-			return that;
+		) const -> TValue {
+			auto value = TValue{};
+			thiz.to(value, as_forward<TOption>(option) ...);
+			return value;
 		}
 
 		#pragma endregion

@@ -10,7 +10,7 @@ export namespace Twinning::Kernel::Tool::Marmalade::Dzip::Structure {
 
 	#pragma region magic marker
 
-	using MagicMarker = StaticByteArray<4_sz>;
+	using MagicMarker = StaticArray<Byte, 4_sz>;
 
 	inline constexpr auto k_magic_marker = MagicMarker{{'D'_b, 'T'_b, 'R'_b, 'Z'_b}};
 
@@ -176,11 +176,11 @@ export namespace Twinning::Kernel {
 
 	template <auto t_version> requires
 		AutomaticConstraint
-	struct ByteStreamAdapter<Tool::Marmalade::Dzip::Structure::ResourceInformation<t_version>> {
+	struct BasicBinaryStreamAdapter<Byte, Tool::Marmalade::Dzip::Structure::ResourceInformation<t_version>> {
 
-		using ThisInput = InputByteStreamView;
+		using ThisInput = InputBinaryStreamView;
 
-		using ThisOutput = OutputByteStreamView;
+		using ThisOutput = OutputBinaryStreamView;
 
 		using That = Tool::Marmalade::Dzip::Structure::ResourceInformation<t_version>;
 
@@ -191,9 +191,9 @@ export namespace Twinning::Kernel {
 		) -> Size {
 			using namespace Tool::Marmalade::Dzip::Structure;
 			auto size = 0_sz;
-			size += bs_size(that.directory_index);
-			size += bs_size(that.chunk_index);
-			size += bs_static_size<IntegerU16>();
+			size += binary_size_of(that.directory_index);
+			size += binary_size_of(that.chunk_index);
+			size += binary_static_size_of<IntegerU16>();
 			return size;
 		}
 

@@ -185,6 +185,12 @@
 
 #pragma region advanced
 
+#define M_avoid_self_assignment()\
+	if (&thiz == &that) {\
+		return thiz;\
+	}\
+	static_assert(true)
+
 #define M_simple_derived_class(_derived, _base, _simplify_base)\
 	class _derived : public _base {\
 	public:\
@@ -335,13 +341,13 @@
 
 #pragma region stream
 
-#define M_use_zps(_name, _source)\
-	auto _name = AsUnmakeReference<decltype(_source)>{_source.reserve_view()};\
+#define M_use_split_stream(_name, _source)\
+	auto _name = _source.split_reserve();\
 	auto finalize_forward_##_name = make_finalizer([&] { _source.forward(_name.position()); });\
 	static_assert(true)
 
-#define M_use_zps_of(_name)\
-	M_use_zps(_name, _name##_)
+#define M_use_split_stream_of(_name)\
+	M_use_split_stream(_name, _name##_)
 
 #pragma endregion
 

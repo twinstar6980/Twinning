@@ -5,7 +5,7 @@ module;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Weverything"
 
-#include "dependency/zlib/zlib.h"
+#include "dependency/zlib/origin/zlib.h"
 
 #pragma clang diagnostic pop
 
@@ -16,8 +16,6 @@ export namespace Twinning::Kernel::Dependency::zlib {
 	using $Bytef = Bytef;
 
 	using $z_stream = z_stream;
-
-	inline constexpr auto $deflateBound = deflateBound;
 
 	inline constexpr auto $deflateInit2_ = deflateInit2_;
 

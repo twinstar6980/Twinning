@@ -45,7 +45,7 @@ namespace Twinning.Script.Support.Atlas.Pack {
 		sprite_directory: StoragePath,
 		expand_value: number | 'power_of_two',
 	): [AtlasDefinition, Kernel.Image.Image] {
-		let sprite_file_list = StorageHelper.list_directory(sprite_directory, null, true, false, true, false).filter((value) => /.+(\.png)/i.test(value.name()!)).map((value) => value.parent()!.join(value.stem()!));
+		let sprite_file_list = StorageHelper.list_directory(sprite_directory, null, true, false, true, false).filter((value) => /.+(\.png)$/i.test(value.name()!)).map((value) => value.parent()!.join(value.stem()!));
 		let sprite_box = ConvertHelper.record_from_array(sprite_file_list, (index, value) => {
 			let size = KernelX.Tool.Texture.Conversion.Png.size_fs(sprite_directory.push(value.parent()!).join(`${value.stem()}.png`));
 			return [value.emit(), {width: Number(size[0]), height: Number(size[1])}];

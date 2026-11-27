@@ -62,9 +62,9 @@ namespace Twinning.Script.Executor.Implementation.Popcap.ReflectionObjectNotatio
 						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /(\.json)?$/i, '.rton'),
 					}),
 				],
-				worker: ({definition_file, data_file, version_number, version_native_string_encoding_use_utf8, buffer_size}, store: {buffer: Kernel.ByteArray}) => {
+				worker: ({definition_file, data_file, version_number, version_native_string_encoding_use_utf8, buffer_size}, store: {buffer: Kernel.Binary}) => {
 					if (store.buffer === undefined) {
-						store.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size.value()));
+						store.buffer = Kernel.Binary.allocate(Kernel.Size.value(buffer_size.value()));
 					}
 					KernelX.Tool.Popcap.ReflectionObjectNotation.encode_fs(data_file, definition_file, true, true, {number: version_number as any, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8}, store.buffer.view());
 					return;
@@ -287,9 +287,9 @@ namespace Twinning.Script.Executor.Implementation.Popcap.ReflectionObjectNotatio
 						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /(\.json)?$/i, '.rton'),
 					}),
 				],
-				worker: ({definition_file, data_file, version_number, version_native_string_encoding_use_utf8, key, buffer_size}, store: {buffer: Kernel.ByteArray}) => {
+				worker: ({definition_file, data_file, version_number, version_native_string_encoding_use_utf8, key, buffer_size}, store: {buffer: Kernel.Binary}) => {
 					if (store.buffer === undefined) {
-						store.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size.value()));
+						store.buffer = Kernel.Binary.allocate(Kernel.Size.value(buffer_size.value()));
 					}
 					KernelX.Tool.Popcap.ReflectionObjectNotation.encode_cipher_fs(data_file, definition_file, true, true, {number: version_number as any, native_string_encoding_use_utf8: version_native_string_encoding_use_utf8}, key, store.buffer.view());
 					return;

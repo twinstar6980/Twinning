@@ -7,14 +7,14 @@ import twinning.kernel.utility;
 import twinning.kernel.tool.popcap.particle.version;
 import twinning.kernel.tool.popcap.particle.definition;
 import twinning.kernel.tool.popcap.particle.common;
-import twinning.kernel.tool.common.byte_stream;
+import twinning.kernel.tool.common.binary_stream;
 
 export namespace Twinning::Kernel::Tool::Popcap::Particle {
 
 	template <auto t_version> requires (check_version(t_version, {}, {}))
 	struct Encode :
 		Common<t_version>,
-		CommonByteStreamExchangeForOutput {
+		CommonBinaryStreamExchangeForOutput {
 
 		using Common = Common<t_version>;
 
@@ -33,7 +33,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Particle {
 		// ----------------
 
 		inline static auto exchange_track_node_list(
-			OutputByteStreamView &                       data,
+			OutputBinaryStreamView &                     data,
 			List<typename Definition::TrackNode> const & value_list
 		) -> Void {
 			auto ignored = Integer{0_i};
@@ -49,7 +49,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Particle {
 		}
 
 		inline static auto exchange_field_list(
-			OutputByteStreamView &                   data,
+			OutputBinaryStreamView &                 data,
 			List<typename Definition::Field> const & value_list
 		) -> Void {
 			auto ignored = Integer{0_i};
@@ -69,7 +69,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Particle {
 		}
 
 		inline static auto exchange_emitter_list(
-			OutputByteStreamView &                     data,
+			OutputBinaryStreamView &                   data,
 			List<typename Definition::Emitter> const & value_list
 		) -> Void {
 			auto ignored = Integer{0_i};
@@ -158,7 +158,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Particle {
 		}
 
 		inline static auto exchange_particle(
-			OutputByteStreamView &       data,
+			OutputBinaryStreamView &     data,
 			Definition::Particle const & value
 		) -> Void {
 			auto ignored = Integer{0_i};
@@ -170,7 +170,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Particle {
 		// ----------------
 
 		inline static auto process_whole(
-			OutputByteStreamView &       data,
+			OutputBinaryStreamView &     data,
 			Definition::Particle const & definition
 		) -> Void {
 			data.write_constant(k_magic_marker);
@@ -181,10 +181,10 @@ export namespace Twinning::Kernel::Tool::Popcap::Particle {
 		// ----------------
 
 		inline static auto process(
-			OutputByteStreamView &       data_,
+			OutputBinaryStreamView &     data_,
 			Definition::Particle const & definition
 		) -> Void {
-			M_use_zps_of(data);
+			M_use_split_stream_of(data);
 			return process_whole(data, definition);
 		}
 

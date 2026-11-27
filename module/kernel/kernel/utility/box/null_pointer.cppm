@@ -12,9 +12,43 @@ export namespace Twinning::Kernel {
 
 	#pragma region type
 
-	class NullPointerBox final {
+	class NullPointerBox {
 
 	public:
+
+		#pragma region constructor
+
+		constexpr ~NullPointerBox(
+		) = default;
+
+		// ----------------
+
+		constexpr NullPointerBox(
+		) {
+			return;
+		}
+
+		constexpr NullPointerBox(
+			NullPointerBox const & that
+		) = default;
+
+		constexpr NullPointerBox(
+			NullPointerBox && that
+		) = default;
+
+		#pragma endregion
+
+		#pragma region operator
+
+		constexpr auto operator =(
+			NullPointerBox const & that
+		) -> NullPointerBox & = default;
+
+		constexpr auto operator =(
+			NullPointerBox && that
+		) -> NullPointerBox & = default;
+
+		#pragma endregion
 
 		#pragma region operator
 

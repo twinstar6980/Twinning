@@ -50,7 +50,7 @@ namespace Twinning.Script {
 		// #region query
 
 		public count(
-		): StoragePathType {
+		): number {
 			return this.m_count;
 		}
 
@@ -79,7 +79,8 @@ namespace Twinning.Script {
 		): void {
 			this.m_count = 0;
 			this.m_exponent = StorageSizeExponent.b;
-			let count = Number.parseFloat(text.slice(0, -1));
+			let count = ConvertHelper.parse_floater_from_string(text.slice(0, -1));
+			assert_test(Number.isFinite(count));
 			let exponent = ['b', 'k', 'm', 'g'].indexOf(text.slice(-1));
 			assert_test(exponent !== -1);
 			this.m_count = count;
@@ -89,7 +90,7 @@ namespace Twinning.Script {
 
 		public emit(
 		): string {
-			return `${this.m_count.toFixed(1)}${['b', 'k', 'm', 'g'][this.m_exponent]}`;
+			return `${ConvertHelper.make_floater_to_string(this.m_count)}${['b', 'k', 'm', 'g'][this.m_exponent]}`;
 		}
 
 		// #endregion

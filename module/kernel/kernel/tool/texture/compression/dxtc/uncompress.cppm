@@ -19,7 +19,7 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Dxtc {
 		// ----------------
 
 		inline static auto process_image(
-			InputByteStreamView &            data,
+			InputBinaryStreamView &          data,
 			Image::VariableImageView const & image,
 			Generation const &               generation,
 			Image::ImageSize const &         block_size,
@@ -38,46 +38,46 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Dxtc {
 				),
 			};
 			if (generation == Generation::Constant::v1()) {
-				auto ripe_data_size = block_count * k_block_bit_count_1 / k_type_bit_count<Byte>;
+				auto ripe_data_size = block_count * k_block_bit_count_1 / type_bit_size_of<Byte>();
 				assert_test(ripe_data_size <= data.reserve());
-				auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
+				auto raw_data = Binary{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
 				Dependency::libsquish::DecompressImage(
-					unmake_pointer_unsafe<Dependency::libsquish::u8>(raw_data.begin()),
+					unmake_pointer_unsafe<Dependency::libsquish::u8>(raw_data.data()),
 					unmake_box<int>(image.size().width),
 					unmake_box<int>(image.size().height),
-					unmake_pointer_unsafe<void>(data.current_pointer()),
+					unmake_pointer_unsafe<void>(data.current()),
 					Dependency::libsquish::kDxt1
 				);
 				data.forward(ripe_data_size);
-				Encoding::Decode::process(as_left(InputByteStreamView{raw_data.view()}), image, raw_format);
+				Encoding::Decode::process(as_left(InputBinaryStreamView{raw_data.as_view()}), image, raw_format);
 			}
 			if (generation == Generation::Constant::v3()) {
-				auto ripe_data_size = block_count * k_block_bit_count_3_5 / k_type_bit_count<Byte>;
+				auto ripe_data_size = block_count * k_block_bit_count_3_5 / type_bit_size_of<Byte>();
 				assert_test(ripe_data_size <= data.reserve());
-				auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
+				auto raw_data = Binary{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
 				Dependency::libsquish::DecompressImage(
-					unmake_pointer_unsafe<Dependency::libsquish::u8>(raw_data.begin()),
+					unmake_pointer_unsafe<Dependency::libsquish::u8>(raw_data.data()),
 					unmake_box<int>(image.size().width),
 					unmake_box<int>(image.size().height),
-					unmake_pointer_unsafe<void>(data.current_pointer()),
+					unmake_pointer_unsafe<void>(data.current()),
 					Dependency::libsquish::kDxt3
 				);
 				data.forward(ripe_data_size);
-				Encoding::Decode::process(as_left(InputByteStreamView{raw_data.view()}), image, raw_format);
+				Encoding::Decode::process(as_left(InputBinaryStreamView{raw_data.as_view()}), image, raw_format);
 			}
 			if (generation == Generation::Constant::v5()) {
-				auto ripe_data_size = block_count * k_block_bit_count_3_5 / k_type_bit_count<Byte>;
+				auto ripe_data_size = block_count * k_block_bit_count_3_5 / type_bit_size_of<Byte>();
 				assert_test(ripe_data_size <= data.reserve());
-				auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
+				auto raw_data = Binary{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
 				Dependency::libsquish::DecompressImage(
-					unmake_pointer_unsafe<Dependency::libsquish::u8>(raw_data.begin()),
+					unmake_pointer_unsafe<Dependency::libsquish::u8>(raw_data.data()),
 					unmake_box<int>(image.size().width),
 					unmake_box<int>(image.size().height),
-					unmake_pointer_unsafe<void>(data.current_pointer()),
+					unmake_pointer_unsafe<void>(data.current()),
 					Dependency::libsquish::kDxt5
 				);
 				data.forward(ripe_data_size);
-				Encoding::Decode::process(as_left(InputByteStreamView{raw_data.view()}), image, raw_format);
+				Encoding::Decode::process(as_left(InputBinaryStreamView{raw_data.as_view()}), image, raw_format);
 			}
 			return;
 		}
@@ -85,13 +85,13 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Dxtc {
 		// ----------------
 
 		inline static auto process(
-			InputByteStreamView &            data_,
+			InputBinaryStreamView &          data_,
 			Image::VariableImageView const & image,
 			Generation const &               generation,
 			Image::ImageSize const &         block_size,
 			Boolean const &                  with_alpha
 		) -> Void {
-			M_use_zps_of(data);
+			M_use_split_stream_of(data);
 			return process_image(data, image, generation, block_size, with_alpha);
 		}
 

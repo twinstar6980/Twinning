@@ -6,245 +6,79 @@ export module twinning.kernel.utility.image.image;
 import twinning.kernel.utility.builtin;
 import twinning.kernel.utility.trait;
 import twinning.kernel.utility.box;
-import twinning.kernel.utility.exception.utility;
+import twinning.kernel.utility.exception;
 import twinning.kernel.utility.image.size;
-import twinning.kernel.utility.image.color;
-import twinning.kernel.utility.image.pixel;
-import twinning.kernel.utility.image.image_view;
-import twinning.kernel.utility.container.list.list_view;
-import twinning.kernel.utility.container.array.array;
+import twinning.kernel.utility.image.basic_color;
+import twinning.kernel.utility.image.basic_pixel;
+import twinning.kernel.utility.image.basic_image_view;
+import twinning.kernel.utility.image.basic_image;
+import twinning.kernel.utility.math.utility;
+import twinning.kernel.utility.memory.bitwise;
 
 export namespace Twinning::Kernel::Image {
 
-	#pragma region type
+	#pragma region alias
 
-	template <typename TPixel> requires
-		CategoryConstraint<IsPureInstance<TPixel>>
-	class BasicImage {
+	using Color = BasicColor<ZIntegerU8>;
 
-	public:
+	// ----------------
 
-		using Pixel = TPixel;
+	using Pixel = BasicPixelRgba<Color>;
 
-		using VariablePixel = Pixel;
+	// ----------------
 
-		using VariablePixelRow = ListView<Pixel, k_false>;
+	using VariableImageView = VariableBasicImageView<Pixel>;
 
-		using VariableView = BasicImageView<Pixel, k_false>;
+	using ConstantImageView = ConstantBasicImageView<Pixel>;
 
-		using ConstantPixel = Pixel const;
+	using Image = BasicImage<Pixel>;
 
-		using ConstantPixelRow = ListView<Pixel, k_true>;
+	#pragma endregion
 
-		using ConstantView = BasicImageView<Pixel, k_true>;
+	#pragma region constant
 
-	protected:
+	inline constexpr auto k_color_minimum = Color{0x00};
 
-		Array<Array<Pixel>> m_data;
+	inline constexpr auto k_color_maximum = Color{0xFF};
 
-	public:
+	#pragma endregion
 
-		#pragma region constructor
+	#pragma region utility
 
-		~BasicImage(
-		) {
-			thiz.reset();
-			return;
-		}
+	template <typename TValue> requires
+		CategoryConstraint<>
+		&& (IsBaseBoxValue<TValue>)
+	inline constexpr auto compress_color(
+		BasicColor<TValue> const & value,
+		Size const &               bit_count
+	) -> BasicColor<TValue> {
+		assert_test(0_sz < bit_count && bit_count <= type_bit_size_of<BasicColor<TValue>>());
+		return Bitwise::extract(value, type_bit_size_of<BasicColor<TValue>>() - bit_count, bit_count);
+	}
 
-		// ----------------
+	template <typename TValue> requires
+		CategoryConstraint<>
+		&& (IsBaseBoxValue<TValue>)
+	inline constexpr auto uncompress_color(
+		BasicColor<TValue> const & value,
+		Size const &               bit_count
+	) -> BasicColor<TValue> {
+		assert_test(0_sz < bit_count && bit_count <= type_bit_size_of<BasicColor<TValue>>());
+		return cast_box<BasicColor<TValue>>(Math::round(cast_box<Floater>(value) * cast_box<Floater>(~BasicColor<TValue>{0}) / cast_box<Floater>(~BasicColor<TValue>{0} >> (type_bit_size_of<BasicColor<TValue>>() - bit_count))));
+	}
 
-		BasicImage(
-		) :
-			m_data{} {
-			return;
-		}
+	// ----------------
 
-		BasicImage(
-			BasicImage const & that
-		) = default;
-
-		BasicImage(
-			BasicImage && that
-		) = default;
-
-		// ----------------
-
-		explicit BasicImage(
-			ImageSize const & size
-		) :
-			BasicImage{} {
-			thiz.allocate(size);
-			return;
-		}
-
-		explicit BasicImage(
-			ConstantView const & view
-		) :
-			BasicImage{} {
-			thiz = view;
-			return;
-		}
-
-		#pragma endregion
-
-		#pragma region operator
-
-		auto operator =(
-			BasicImage const & that
-		) -> BasicImage & = default;
-
-		auto operator =(
-			BasicImage && that
-		) -> BasicImage & = default;
-
-		// ----------------
-
-		auto operator =(
-			ConstantView const & that
-		) -> BasicImage & {
-			thiz.draw(that);
-			return thiz;
-		}
-
-		// ----------------
-
-		auto operator [](
-			Size const & y
-		) -> VariablePixelRow const & {
-			return thiz.as_view()[y];
-		}
-
-		auto operator [](
-			Size const & y
-		) const -> ConstantPixelRow const & {
-			return thiz.as_view()[y];
-		}
-
-		auto operator [](
-			ImagePosition const & position
-		) -> Pixel & {
-			return thiz.as_view()[position];
-		}
-
-		auto operator [](
-			ImagePosition const & position
-		) const -> Pixel const & {
-			return thiz.as_view()[position];
-		}
-
-		// ----------------
-
-		implicit operator VariableView const &() {
-			return thiz.as_view();
-		}
-
-		implicit operator ConstantView const &() const {
-			return thiz.as_view();
-		}
-
-		#pragma endregion
-
-		#pragma region view
-
-		auto as_view(
-		) -> VariableView const & {
-			return unsafe_cast<VariableView>(thiz);
-		}
-
-		auto as_view(
-		) const -> ConstantView const & {
-			return unsafe_cast<ConstantView>(thiz);
-		}
-
-		// ----------------
-
-		auto view(
-		) -> VariableView {
-			return thiz.as_view();
-		}
-
-		auto view(
-		) const -> ConstantView {
-			return thiz.as_view();
-		}
-
-		#pragma endregion
-
-		#pragma region data & size
-
-		auto data(
-		) -> ConstantListView<VariablePixelRow> const & {
-			return thiz.as_view().data();
-		}
-
-		auto data(
-		) const -> ConstantListView<ConstantPixelRow> const & {
-			return thiz.as_view().data();
-		}
-
-		auto size(
-		) const -> ImageSize {
-			return thiz.as_view().size();
-		}
-
-		#pragma endregion
-
-		#pragma region draw
-
-		auto fill(
-			Pixel const & pixel
-		) -> Void {
-			return thiz.as_view().fill(pixel);
-		}
-
-		auto draw(
-			ConstantView const & image
-		) -> Void {
-			return thiz.as_view().draw(image);
-		}
-
-		#pragma endregion
-
-		#pragma region sub
-
-		auto sub(
-			ImagePosition const & position,
-			ImageSize const &     size
-		) -> VariableView {
-			return thiz.as_view().sub(position, size);
-		}
-
-		auto sub(
-			ImagePosition const & position,
-			ImageSize const &     size
-		) const -> ConstantView {
-			return thiz.as_view().sub(position, size);
-		}
-
-		#pragma endregion
-
-		#pragma region allocate
-
-		auto reset(
-		) -> Void {
-			thiz.m_data.reset();
-			return;
-		}
-
-		auto allocate(
-			ImageSize const & size
-		) -> Void {
-			thiz.m_data.allocate(size.height);
-			for (auto & row : thiz.m_data) {
-				row.allocate(size.width);
-			}
-			return;
-		}
-
-		#pragma endregion
-
-	};
+	template <typename TValue> requires
+		CategoryConstraint<>
+		&& (IsBaseBoxValue<TValue>)
+	inline constexpr auto convert_luminance_from_rgb(
+		BasicColor<TValue> const & red,
+		BasicColor<TValue> const & green,
+		BasicColor<TValue> const & blue
+	) -> BasicColor<TValue> {
+		return cast_box<BasicColor<TValue>>(Math::round(cast_box<Floater>(red) * 0.299_f + cast_box<Floater>(green) * 0.587_f + cast_box<Floater>(blue) * 0.114_f));
+	}
 
 	#pragma endregion
 

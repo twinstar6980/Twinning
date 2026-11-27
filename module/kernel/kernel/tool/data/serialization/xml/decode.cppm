@@ -25,7 +25,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Xml {
 			if (auto raw_element = raw_node->ToElement()) {
 				node.set_element();
 				auto & node_value = node.get_element();
-				node_value.name = make_string_view(raw_element->Name());
+				node_value.name = from_std_string_view(raw_element->Name());
 				{
 					auto attribute_count = 0_sz;
 					for (auto raw_attribute = raw_element->FirstAttribute(); raw_attribute; raw_attribute = raw_attribute->Next()) {
@@ -33,7 +33,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Xml {
 					}
 					node_value.attribute.allocate(attribute_count);
 					for (auto raw_attribute = raw_element->FirstAttribute(); raw_attribute; raw_attribute = raw_attribute->Next()) {
-						node_value.attribute.append(make_string(raw_attribute->Name()), make_string(raw_attribute->Value()));
+						node_value.attribute.append(from_std_string(raw_attribute->Name()), from_std_string(raw_attribute->Value()));
 					}
 				}
 				{
@@ -51,13 +51,13 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Xml {
 			else if (auto raw_text = raw_node->ToText()) {
 				node.set_text();
 				auto & node_value = node.get_text();
-				node_value.value = make_string_view(raw_text->Value());
+				node_value.value = from_std_string_view(raw_text->Value());
 				node_value.cdata = make_box<Boolean>(raw_text->CData());
 			}
 			else if (auto raw_comment = raw_node->ToComment()) {
 				node.set_comment();
 				auto & node_value = node.get_comment();
-				node_value.value = make_string_view(raw_comment->Value());
+				node_value.value = from_std_string_view(raw_comment->Value());
 			}
 			else {
 				assert_fail(R"(/* node is valid */)");
@@ -72,7 +72,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Xml {
 			Notation::Xml::Node & value
 		) -> Void {
 			auto raw_document = Dependency::tinyxml2::XMLDocument{};
-			raw_document.Parse(unmake_pointer_unsafe<ZCharacter>(data.begin()), unmake_box<std::size_t>(data.size()));
+			raw_document.Parse(unmake_pointer_unsafe<ZCharacter>(data.data()), unmake_box<std::size_t>(data.size()));
 			auto current_child = raw_document.FirstChild();
 			assert_test(current_child != nullptr);
 			auto declaration = current_child->ToDeclaration();

@@ -6,7 +6,7 @@ namespace Twinning.Script.Executor.Implementation.Data.Encoding {
 	): void {
 		push_typical_method('data.encoding', [
 			typical_method({
-				identifier: 'base64.encode',
+				identifier: 'base.encode',
 				filter: ['file', /()$/i],
 				argument: [
 					typical_argument_path({
@@ -21,6 +21,13 @@ namespace Twinning.Script.Executor.Implementation.Data.Encoding {
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: {raw_file: StoragePath}) => ConvertHelper.replace_path_name(argument.raw_file, /()?$/i, '.bin'),
+						condition: null,
+					}),
+					typical_argument_string({
+						identifier: 'mode',
+						option: KernelX.Tool.Data.Encoding.Base.ModeE,
+						checker: null,
+						automatic: null,
 						condition: null,
 					}),
 				],
@@ -42,13 +49,13 @@ namespace Twinning.Script.Executor.Implementation.Data.Encoding {
 						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /()?$/i, ''),
 					}),
 				],
-				worker: ({raw_file, ripe_file}, store: {}) => {
-					KernelX.Tool.Data.Encoding.Base64.encode_fs(raw_file, ripe_file);
+				worker: ({raw_file, ripe_file, mode}, store: {}) => {
+					KernelX.Tool.Data.Encoding.Base.encode_fs(raw_file, ripe_file, mode as any);
 					return;
 				},
 			}),
 			typical_method({
-				identifier: 'base64.decode',
+				identifier: 'base.decode',
 				filter: ['file', /()$/i],
 				argument: [
 					typical_argument_path({
@@ -63,6 +70,13 @@ namespace Twinning.Script.Executor.Implementation.Data.Encoding {
 						rule: ['file', 'output'],
 						checker: null,
 						automatic: (argument: {ripe_file: StoragePath}) => ConvertHelper.replace_path_name(argument.ripe_file, /()?$/i, '.bin'),
+						condition: null,
+					}),
+					typical_argument_string({
+						identifier: 'mode',
+						option: KernelX.Tool.Data.Encoding.Base.ModeE,
+						checker: null,
+						automatic: null,
 						condition: null,
 					}),
 				],
@@ -84,8 +98,8 @@ namespace Twinning.Script.Executor.Implementation.Data.Encoding {
 						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /()?$/i, ''),
 					}),
 				],
-				worker: ({ripe_file, raw_file}, store: {}) => {
-					KernelX.Tool.Data.Encoding.Base64.decode_fs(raw_file, ripe_file);
+				worker: ({ripe_file, raw_file, mode}, store: {}) => {
+					KernelX.Tool.Data.Encoding.Base.decode_fs(raw_file, ripe_file, mode as any);
 					return;
 				},
 			}),

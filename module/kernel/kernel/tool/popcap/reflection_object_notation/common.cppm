@@ -11,13 +11,13 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 	template <auto t_version> requires (check_version(t_version, {}, {}))
 	struct Common {
 
-		using MagicMarker = StaticByteArray<4_sz>;
+		using MagicMarker = StaticArray<Byte, 4_sz>;
 
 		inline static constexpr auto k_magic_marker = MagicMarker{{'R'_b, 'T'_b, 'O'_b, 'N'_b}};
 
 		// ----------------
 
-		using DoneMarker = StaticByteArray<4_sz>;
+		using DoneMarker = StaticArray<Byte, 4_sz>;
 
 		inline static constexpr auto k_done_marker = DoneMarker{{'D'_b, 'O'_b, 'N'_b, 'E'_b}};
 
@@ -191,38 +191,42 @@ export namespace Twinning::Kernel::Tool::Popcap::ReflectionObjectNotation {
 
 		inline static constexpr auto k_reference_expression_format_of_null = StringFormatter{"RTID(0)"_sf};
 
-		inline static constexpr auto k_reference_expression_format_of_identifier = StringFormatter{"RTID({:d}.{:d}.{:08x}@{:s})"_sf};
+		inline static constexpr auto k_reference_expression_format_of_identifier = StringFormatter{"RTID({}.{}.{}@{})"_sf};
 
-		inline static constexpr auto k_reference_expression_format_of_alias = StringFormatter{"RTID({:s}@{:s})"_sf};
+		inline static constexpr auto k_reference_expression_format_of_alias = StringFormatter{"RTID({}@{})"_sf};
 
 		inline static auto analysis_reference(
 			ConstantStringView const & string
 		) -> Optional<ReferenceTypeIdentifier> {
-			if (!(string.size() > "RTID()"_sl && string.head("RTID("_sl) == "RTID("_sv && string.tail(")"_sl) == ")"_sv)) {
-				return k_null_optional;
-			}
-			auto content = string.sub("RTID("_sl, string.size() - "RTID()"_sl);
-			if (content == "0"_sv) {
-				return make_optional_of(ReferenceTypeIdentifier::Constant::null());
-			}
-			auto at_position = Range::find_index(content, '@'_c);
-			if (!at_position.has()) {
-				return k_null_optional;
-			}
-			if (Range::count(content.head(at_position.get()), '.'_c) == 2_sz) {
-				auto identifier_part = split_string<String>(content.head(at_position.get()), StaticArray<Character, 1_sz>{{'.'_c}});
-				if (Range::all_of(identifier_part[1_ix], &CharacterType::is_number_decimal) &&
-					Range::all_of(identifier_part[2_ix], &CharacterType::is_number_decimal) &&
-					Range::all_of(identifier_part[3_ix], &CharacterType::is_number_hexadecimal)) {
-					return make_optional_of(ReferenceTypeIdentifier::Constant::identifier());
+			auto type = Optional<ReferenceTypeIdentifier>{};
+			if (string.size() > "RTID()"_sl && string.head("RTID("_sl) == "RTID("_sv && string.tail(")"_sl) == ")"_sv) {
+				auto content = string.sub("RTID("_sl, string.size() - "RTID()"_sl);
+				if (content == "0"_sv) {
+					type.set(ReferenceTypeIdentifier::Constant::null());
+				}
+				else {
+					auto at_position = Range::find_index(content, '@'_c);
+					if (at_position.has()) {
+						if (Range::count(content.head(at_position.get()), '.'_c) == 2_sz) {
+							auto identifier_part = StringUtility::split<String>(content.head(at_position.get()), make_static_array<Character>('.'_c));
+							if (Range::all_of(identifier_part[1_ix], &StringUtility::is_number_radix_character<10_sz>) &&
+								Range::all_of(identifier_part[2_ix], &StringUtility::is_number_radix_character<10_sz>) &&
+								Range::all_of(identifier_part[3_ix], &StringUtility::is_number_radix_character<16_sz>)) {
+								type.set(ReferenceTypeIdentifier::Constant::identifier());
+							}
+						}
+						if (!type.has()) {
+							type.set(ReferenceTypeIdentifier::Constant::alias());
+						}
+					}
 				}
 			}
-			return make_optional_of(ReferenceTypeIdentifier::Constant::alias());
+			return type;
 		}
 
 		// ----------------
 
-		inline static constexpr auto k_binary_blob_expression_format = StringFormatter{R"($BINARY("{:s}", {:d}))"_sf};
+		inline static constexpr auto k_binary_blob_expression_format = StringFormatter{R"($BINARY("{}", {}))"_sf};
 
 	};
 

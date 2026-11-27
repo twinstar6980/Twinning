@@ -373,7 +373,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ParticleEffect {
 				(Integer) frame_rate,
 				(Tuple<Integer, Integer>) frame_range,
 				(Color) background_color,
-				(ByteList) startup_state,
+				(Binary) startup_state,
 				(List<Texture>) texture,
 				(List<Emitter>) emitter,
 				(List<Layer>) layer,

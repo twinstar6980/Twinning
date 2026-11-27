@@ -426,7 +426,7 @@ namespace Twinning.Script.ExternalHelper {
 		if (KernelX.is_macintosh) {
 			// locate at wine drive Z
 			assert_test(raw.type() === StoragePathType.absolute);
-			assert_test(raw.root() === null);
+			assert_test(raw.root() === '');
 			return `Z:${raw.emit_native()}`;
 		}
 		return raw.emit_native();
@@ -821,7 +821,7 @@ namespace Twinning.Script.ExternalHelper {
 					continue;
 				}
 				result.push({
-					address: Number.parseInt(field_match[5], 16),
+					address: Number(ConvertHelper.parse_integer_from_string_radix(field_match[5], 16)),
 					modifier: field_match[1],
 					statically: field_match[2] !== undefined,
 					type: field_match[3],
@@ -864,7 +864,7 @@ namespace Twinning.Script.ExternalHelper {
 				let comment_match = comment_rule.exec(source[index - 1]);
 				assert_test(comment_match !== null);
 				result.push({
-					address: Number.parseInt(comment_match[2], 16),
+					address: Number(ConvertHelper.parse_integer_from_string_radix(comment_match[2], 16)),
 					modifier: method_match[1],
 					statically: method_match[2] !== undefined,
 					result: method_match[3],

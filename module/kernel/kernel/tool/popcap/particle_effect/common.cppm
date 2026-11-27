@@ -16,7 +16,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ParticleEffect {
 
 		// ----------------
 
-		using MagicMarker = StaticByteArray<5_sz>;
+		using MagicMarker = StaticArray<Byte, 5_sz>;
 
 		inline static constexpr auto k_magic_marker = MagicMarker{{0x04_b, 'P'_b, 'P'_b, 'F'_b, '1'_b}};
 

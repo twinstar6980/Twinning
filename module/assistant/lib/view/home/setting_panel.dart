@@ -112,9 +112,9 @@ class _SettingPanelState extends State<SettingPanel> {
                   color: setting.data.themeColorLight,
                 ),
               ],
-              value: setting.data.themeColorLight.withValues(alpha: 0.0).toARGB32().toRadixString(16).padLeft(6, '0'),
+              value: ConvertHelper.makeColorToString(setting.data.themeColorLight, false),
               onChanged: (context, value) async {
-                setting.data.themeColorLight = .new(Integer.tryParse(value, radix: 16) ?? 0x000000).withValues(alpha: 1.0);
+                setting.data.themeColorLight = ConvertHelper.parseColorFromString(value, false);
                 await refreshState(setStateForPanel);
                 await refreshState(this.setState);
                 await setting.save();
@@ -134,9 +134,9 @@ class _SettingPanelState extends State<SettingPanel> {
                   color: setting.data.themeColorDark,
                 ),
               ],
-              value: setting.data.themeColorDark.withValues(alpha: 0.0).toARGB32().toRadixString(16).padLeft(6, '0'),
+              value: ConvertHelper.makeColorToString(setting.data.themeColorDark, false),
               onChanged: (context, value) async {
-                setting.data.themeColorDark = .new(Integer.tryParse(value, radix: 16) ?? 0x000000).withValues(alpha: 1.0);
+                setting.data.themeColorDark = ConvertHelper.parseColorFromString(value, false);
                 await refreshState(setStateForPanel);
                 await refreshState(this.setState);
                 await setting.save();

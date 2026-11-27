@@ -9,7 +9,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Link {
 		buffer_size: bigint,
 	): void {
 		check_version_file(project_directory);
-		let buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
+		let buffer = Kernel.Binary.allocate(Kernel.Size.value(buffer_size));
 		let project_setting = JsonHelper.decode_file(make_scope_setting_path(project_directory)) as ProjectSetting;
 		for (let package_setting of project_setting.package) {
 			if (target_package !== null && !target_package.includes(package_setting.name)) {
@@ -114,22 +114,22 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Link {
 				}
 				if (package_setting.manifest.type === 'external_rton_with_array_path' || package_setting.manifest.type === 'external_rton_with_string_path' || package_setting.manifest.type === 'external_newton') {
 					JsonHelper.encode_file(package_bundle_directory.join('manifest.json'), null);
-					let manifest_group_name = `__ManifestGroup__${package_setting.manifest.suffix}`;
+					let manifest_group_name = `__MANIFESTGROUP__${package_setting.manifest.suffix}`;
 					let manifest_resource_path = `properties/resources${package_setting.manifest.suffix}`;
 					if (package_setting.manifest.type === 'external_rton_with_array_path' || package_setting.manifest.type === 'external_rton_with_string_path') {
 						manifest_resource_path += '.rton';
 						let manifest = RegularResourceManifest.Convert.to_official(package_manifest, package_setting.manifest.type === 'external_rton_with_array_path');
 						let version_c = Kernel.Tool.Popcap.ReflectionObjectNotation.Version.value({number: 1n, native_string_encoding_use_utf8: true});
-						let stream = Kernel.ByteStreamView.watch(buffer.view());
+						let stream = Kernel.BinaryStreamView.watch(buffer.view());
 						Kernel.Tool.Popcap.ReflectionObjectNotation.Encode.process(stream, Kernel.Notation.Json.Value.value(manifest as any), Kernel.Boolean.value(true), Kernel.Boolean.value(true), version_c);
-						StorageHelper.write_file_data(package_bundle_directory.join('resource').push(new StoragePath(manifest_resource_path)), stream.stream_view());
+						StorageHelper.write_file_data(package_bundle_directory.join('resource').push(new StoragePath(manifest_resource_path)), stream.split_stream().view());
 					}
 					if (package_setting.manifest.type === 'external_newton') {
 						manifest_resource_path += '.newton';
 						let manifest = RegularResourceManifest.Convert.to_official(package_manifest, false);
-						let stream = new ByteStreamView(buffer.view().value);
+						let stream = new BinaryStreamView(new DataView(buffer.view().value));
 						ResourceManifest.NewTypeObjectNotation.Encode.process(stream, manifest);
-						StorageHelper.write_file_data(package_bundle_directory.join('resource').push(new StoragePath(manifest_resource_path)), Kernel.ByteListView.value(stream.sub(0, stream.p())));
+						StorageHelper.write_file_data(package_bundle_directory.join('resource').push(new StoragePath(manifest_resource_path)), Kernel.BinaryView.value(stream.sub_buffer(0, stream.p())));
 					}
 					StorageHelper.remove_if(package_bundle_directory.join('packet').join(`${manifest_group_name}.rsg`));
 					package_definition.group.push({

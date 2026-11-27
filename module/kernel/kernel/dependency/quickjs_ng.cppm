@@ -5,7 +5,7 @@ module;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Weverything"
 
-#include "dependency/quickjs_ng/quickjs.h"
+#include "dependency/quickjs_ng/origin/quickjs.h"
 
 #pragma clang diagnostic pop
 

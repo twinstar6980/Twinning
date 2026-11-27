@@ -19,6 +19,9 @@ auto main(
 )
 #endif
 	-> int {
+	#if defined M_kernel_test_statement
+	M_kernel_test_statement
+	#endif
 	return Twinning::Shell::MainConsole::instance().run(
 		argc,
 		reinterpret_cast<void * *>(argv),

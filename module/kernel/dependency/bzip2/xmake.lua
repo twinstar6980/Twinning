@@ -1,25 +1,19 @@
--- bzip2
--- 1.0.8 6a8690fc8d26c815e798c588f796eabe9d684cf0
--- https://sourceware.org/bzip2/
-
 target('dependency.bzip2', function()
 	set_group('source/dependency')
 	set_kind('static')
 	add_headerfiles(
-		'bzlib.h',
-		'bzlib_private.h',
+		'origin/bzlib.h',
+		'origin/bzlib_private.h',
 		{ install = false }
 	)
 	add_files(
-		'blocksort.c',
-		'bzip2.c',
-		'bzip2recover.c',
-		'bzlib.c',
-		'compress.c',
-		'crctable.c',
-		'decompress.c',
-		'huffman.c',
-		'randtable.c',
+		'origin/blocksort.c',
+		'origin/huffman.c',
+		'origin/crctable.c',
+		'origin/randtable.c',
+		'origin/compress.c',
+		'origin/decompress.c',
+		'origin/bzlib.c',
 		{}
 	)
 	add_includedirs(

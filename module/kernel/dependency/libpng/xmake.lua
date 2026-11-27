@@ -1,42 +1,36 @@
--- libpng
--- 1.6.58 3061454d980de7d53608f594194cfac722721d2a
--- https://github.com/pnggroup/libpng
-
--- TODO : apply special processor setting, see https://github.com/xmake-io/xmake-repo/blob/master/packages/l/libpng/xmake.lua
-
 target('dependency.libpng', function()
 	set_group('source/dependency')
 	set_kind('static')
 	add_headerfiles(
-		'png.h',
-		'pngconf.h',
-		'pngdebug.h',
-		'pnginfo.h',
-		'pnglibconf.h',
-		'pngpriv.h',
-		'pngstruct.h',
+		'origin/png.h',
+		'origin/pngconf.h',
+		'origin/pngdebug.h',
+		'origin/pnginfo.h',
+		'origin/pnglibconf.h',
+		'origin/pngpriv.h',
+		'origin/pngstruct.h',
 		{ install = false }
 	)
 	add_files(
-		'png.c',
-		'pngerror.c',
-		'pngget.c',
-		'pngmem.c',
-		'pngpread.c',
-		'pngread.c',
-		'pngrio.c',
-		'pngrtran.c',
-		'pngrutil.c',
-		'pngset.c',
-		'pngtrans.c',
-		'pngwio.c',
-		'pngwrite.c',
-		'pngwtran.c',
-		'pngwutil.c',
+		'origin/png.c',
+		'origin/pngerror.c',
+		'origin/pngget.c',
+		'origin/pngmem.c',
+		'origin/pngpread.c',
+		'origin/pngread.c',
+		'origin/pngrio.c',
+		'origin/pngrtran.c',
+		'origin/pngrutil.c',
+		'origin/pngset.c',
+		'origin/pngtrans.c',
+		'origin/pngwio.c',
+		'origin/pngwrite.c',
+		'origin/pngwtran.c',
+		'origin/pngwutil.c',
 		{}
 	)
 	add_includedirs(
-		'../zlib',
+		'../zlib/origin',
 		{ public = true }
 	)
 	add_defines(

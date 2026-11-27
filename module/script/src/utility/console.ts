@@ -91,7 +91,7 @@ namespace Twinning.Script.Console {
 					break;
 				}
 			}
-			if (result != null) {
+			if (result !== null) {
 				break;
 			}
 			let part = Shell.basic_input_text().text;
@@ -803,13 +803,16 @@ namespace Twinning.Script.Console {
 			if (value.type() === StoragePathType.detached) {
 				value = HomePath.workspace().push(value);
 			}
-			else if (value.type() === StoragePathType.relative && value.root() === null) {
+			else if (value.type() === StoragePathType.relative && value.root() === '') {
 				value = HomePath.workspace().push(new StoragePath(value.emit().substring(2)));
 			}
 			return [value];
 		};
 		let checker_proxy = (value: StoragePath): null | string => {
 			state_data.last_value = value;
+			using state_finalizer = new Finalizer(() => {
+				state_data.allow_overwrite = false;
+			});
 			if (value.type() !== StoragePathType.absolute) {
 				return los('console:path_not_absolute');
 			}
@@ -829,7 +832,6 @@ namespace Twinning.Script.Console {
 					return los('console:path_is_exist');
 				}
 			}
-			state_data.allow_overwrite = false;
 			return checker === null ? null : checker(value);
 		};
 		if (Shell.is_basic) {

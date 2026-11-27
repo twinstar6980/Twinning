@@ -15,74 +15,88 @@ export namespace Twinning::Kernel::Tool::Data::Hashing::Fnv {
 
 		// ----------------
 
-		template <auto t_mode, auto t_bit_count> requires
+		template <auto t_mode, auto t_length> requires
 			CategoryConstraint<>
 			&& (IsSameOf<t_mode, Mode>)
-			&& (IsSameOf<t_bit_count, BitCount>)
+			&& (IsSameOf<t_length, Size>)
 		inline static auto process_whole_integer(
-			ConstantByteListView const &    data,
-			Parameter<t_bit_count>::Value & value
+			ConstantBinaryView const &      data,
+			Parameter<t_length>::Value & value
 		) -> Void {
-			using Parameter = Parameter<t_bit_count>;
-			if constexpr (t_mode == Mode::Constant::m_0()) {
+			using Parameter = Parameter<t_length>;
+			if constexpr (t_mode == Mode::Constant::v0()) {
 				value = make_box<typename Parameter::Value>(0);
 			}
-			if constexpr (t_mode == Mode::Constant::m_1() || t_mode == Mode::Constant::m_1a()) {
+			if constexpr (t_mode == Mode::Constant::v1() || t_mode == Mode::Constant::v1a()) {
 				value = Parameter::offset;
 			}
 			for (auto & element : data) {
-				if constexpr (t_mode == Mode::Constant::m_0() || t_mode == Mode::Constant::m_1()) {
-					value *= Parameter::prime;
+				if constexpr (t_mode == Mode::Constant::v0() || t_mode == Mode::Constant::v1()) {
+					value = unchecked_number_multiply(value, Parameter::prime);
 					value ^= cast_box_unsafe<typename Parameter::Value>(element);
 				}
-				if constexpr (t_mode == Mode::Constant::m_1a()) {
+				if constexpr (t_mode == Mode::Constant::v1a()) {
 					value ^= cast_box_unsafe<typename Parameter::Value>(element);
-					value *= Parameter::prime;
+					value = unchecked_number_multiply(value, Parameter::prime);
 				}
 			}
 			return;
 		}
 
 		inline static auto process_whole(
-			ConstantByteListView const & data,
-			ByteArray &                  value,
-			Mode const &                 mode,
-			BitCount const &             bit_count
+			ConstantBinaryView const & data,
+			Binary &                   value,
+			Mode const &               mode,
+			Size const &           length
 		) -> Void {
-			Generalization::match<ValuePackage<
-				Mode::Constant::m_0(),
-				Mode::Constant::m_1(),
-				Mode::Constant::m_1a()
-			>>(
-				mode,
-				[&]<auto t_mode_index, auto t_mode>(ValuePackage<t_mode_index>, ValuePackage<t_mode>) {
-					Generalization::match<ValuePackage<
-						BitCount::Constant::b_32(),
-						BitCount::Constant::b_64()
-					>>(
-						bit_count,
-						[&]<auto t_bit_count_index, auto t_bit_count>(ValuePackage<t_bit_count_index>, ValuePackage<t_bit_count>) {
-							auto value_integer = typename Parameter<t_bit_count>::Value{};
-							process_whole_integer<t_mode, t_bit_count>(data, value_integer);
-							value.allocate(k_type_size<typename Parameter<t_bit_count>::Value>);
-							OutputByteStreamView{value}.write(value_integer);
-						}
-					);
+			auto value_data = Binary{};
+			do {
+				if (mode == Mode::Constant::v0() && length == 32_sz) {
+					value_data.allocate_full(Math::compute_padded_unit_count(length, type_bit_size_of<Byte>()));
+					process_whole_integer<Mode::Constant::v0(), 32_sz>(data, *cast_pointer<Parameter<32_sz>::Value>(value_data.data()));
+					break;
 				}
-			);
+				if (mode == Mode::Constant::v0() && length == 64_sz) {
+					value_data.allocate_full(Math::compute_padded_unit_count(length, type_bit_size_of<Byte>()));
+					process_whole_integer<Mode::Constant::v0(), 64_sz>(data, *cast_pointer<Parameter<64_sz>::Value>(value_data.data()));
+					break;
+				}
+				if (mode == Mode::Constant::v1() && length == 32_sz) {
+					value_data.allocate_full(Math::compute_padded_unit_count(length, type_bit_size_of<Byte>()));
+					process_whole_integer<Mode::Constant::v1(), 32_sz>(data, *cast_pointer<Parameter<32_sz>::Value>(value_data.data()));
+					break;
+				}
+				if (mode == Mode::Constant::v1() && length == 64_sz) {
+					value_data.allocate_full(Math::compute_padded_unit_count(length, type_bit_size_of<Byte>()));
+					process_whole_integer<Mode::Constant::v1(), 64_sz>(data, *cast_pointer<Parameter<64_sz>::Value>(value_data.data()));
+					break;
+				}
+				if (mode == Mode::Constant::v1a() && length == 32_sz) {
+					value_data.allocate_full(Math::compute_padded_unit_count(length, type_bit_size_of<Byte>()));
+					process_whole_integer<Mode::Constant::v1a(), 32_sz>(data, *cast_pointer<Parameter<32_sz>::Value>(value_data.data()));
+					break;
+				}
+				if (mode == Mode::Constant::v1a() && length == 64_sz) {
+					value_data.allocate_full(Math::compute_padded_unit_count(length, type_bit_size_of<Byte>()));
+					process_whole_integer<Mode::Constant::v1a(), 64_sz>(data, *cast_pointer<Parameter<64_sz>::Value>(value_data.data()));
+					break;
+				}
+				throw UnsupportedException{};
+			} while (false);
+			value = as_moveable(value_data);
 			return;
 		}
 
 		// ----------------
 
 		inline static auto process(
-			ConstantByteListView const & data,
-			ByteArray &                  value,
-			Mode const &                 mode,
-			BitCount const &             bit_count
+			ConstantBinaryView const & data,
+			Binary &                   value,
+			Mode const &               mode,
+			Size const &           length
 		) -> Void {
 			restruct(value);
-			return process_whole(data, value, mode, bit_count);
+			return process_whole(data, value, mode, length);
 		}
 
 	};

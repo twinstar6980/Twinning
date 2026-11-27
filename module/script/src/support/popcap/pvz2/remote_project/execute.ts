@@ -75,8 +75,8 @@ namespace Twinning.Script.Support.Popcap.Pvz2.RemoteProject {
 		};
 		let local_temporary = {
 			content_delivery: temporary_directory.join('content_delivery'),
-			local_profile: temporary_directory.join('local_temporary_directory}/local.rton'),
-			player_profile: temporary_directory.join('local_temporary_directory}/player.rton'),
+			local_profile: temporary_directory.join('local.rton'),
+			player_profile: temporary_directory.join('player.rton'),
 		};
 		let remote_external_directory = new StoragePath(`/storage/emulated/0`);
 		let remote_application_data_directory = remote_external_directory.join('Android').join('data').join(application.identifier);
@@ -142,8 +142,9 @@ namespace Twinning.Script.Support.Popcap.Pvz2.RemoteProject {
 						AndroidHelper.pull(local_temporary.content_delivery, remote.content_delivery);
 						Console.information(los('support.popcap.pvz2.remote_project.execute:decode'), []);
 						for (let sub_file of StorageHelper.list_directory(local_temporary.content_delivery, null, true, false, true, false)) {
-							if (sub_file.extension()?.toLowerCase() === 'rton' || sub_file.extension()?.toLowerCase() === 'json') {
-								KernelX.Tool.Popcap.ReflectionObjectNotation.decode_fs(local_temporary.content_delivery.push(sub_file), local.content_delivery.push(sub_file.parent()!).join(`${sub_file.stem()}.json`), rton_version);
+							if (ConvertHelper.check_path_extension(sub_file, ['json', 'rton'], true)) {
+								let real_name = `${sub_file.stem()}.json`;
+								KernelX.Tool.Popcap.ReflectionObjectNotation.decode_fs(local_temporary.content_delivery.push(sub_file), local.content_delivery.push(sub_file.parent()!).join(real_name), rton_version);
 							}
 						}
 						break;
@@ -175,9 +176,15 @@ namespace Twinning.Script.Support.Popcap.Pvz2.RemoteProject {
 					}
 					case 'content_delivery': {
 						Console.information(los('support.popcap.pvz2.remote_project.execute:encode'), []);
-						let rton_encode_buffer = Kernel.ByteArray.allocate(Kernel.Size.value(rton_encode_buffer_size));
+						let rton_encode_buffer = Kernel.Binary.allocate(Kernel.Size.value(rton_encode_buffer_size));
 						for (let sub_file of StorageHelper.list_directory(local.content_delivery, null, true, false, true, false)) {
-							KernelX.Tool.Popcap.ReflectionObjectNotation.encode_fs(local_temporary.content_delivery.push(sub_file.parent()!).join(sub_file.name()!.replace(/(?<!(cdn_config|forceupdateconfig))\.json$/i, '.rton')), local.content_delivery.push(sub_file), true, true, rton_version, rton_encode_buffer.view());
+							if (ConvertHelper.check_path_extension(sub_file, ['json'], true)) {
+								let real_name = sub_file.name()!;
+								if (['cdn_config.json', 'forceupdateconfig.json'].includes(real_name.toLowerCase())) {
+									real_name = `${sub_file.stem()}.rton`;
+								}
+								KernelX.Tool.Popcap.ReflectionObjectNotation.encode_fs(local_temporary.content_delivery.push(sub_file.parent()!).join(real_name), local.content_delivery.push(sub_file), true, true, rton_version, rton_encode_buffer.view());
+							}
 						}
 						Console.information(los('support.popcap.pvz2.remote_project.execute:push'), []);
 						AndroidHelper.push(local_temporary.content_delivery, remote.content_delivery, application.user);
@@ -185,7 +192,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.RemoteProject {
 					}
 					case 'local_profile': {
 						Console.information(los('support.popcap.pvz2.remote_project.execute:encode'), []);
-						let rton_encode_buffer = Kernel.ByteArray.allocate(Kernel.Size.value(rton_encode_buffer_size));
+						let rton_encode_buffer = Kernel.Binary.allocate(Kernel.Size.value(rton_encode_buffer_size));
 						KernelX.Tool.Popcap.ReflectionObjectNotation.encode_fs(local_temporary.local_profile, local.local_profile, true, true, rton_version, rton_encode_buffer.view());
 						Console.information(los('support.popcap.pvz2.remote_project.execute:push'), []);
 						AndroidHelper.push(local_temporary.local_profile, remote.local_profile, application.user);
@@ -193,7 +200,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.RemoteProject {
 					}
 					case 'player_profile': {
 						Console.information(los('support.popcap.pvz2.remote_project.execute:encode'), []);
-						let rton_encode_buffer = Kernel.ByteArray.allocate(Kernel.Size.value(rton_encode_buffer_size));
+						let rton_encode_buffer = Kernel.Binary.allocate(Kernel.Size.value(rton_encode_buffer_size));
 						KernelX.Tool.Popcap.ReflectionObjectNotation.encode_fs(local_temporary.player_profile, local.player_profile, true, true, rton_version, rton_encode_buffer.view());
 						Console.information(los('support.popcap.pvz2.remote_project.execute:push'), []);
 						AndroidHelper.push(local_temporary.player_profile, remote.player_profile, application.user);

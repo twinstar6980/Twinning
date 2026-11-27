@@ -1,40 +1,36 @@
--- zlib
--- 1.3.2 da607da739fa6047df13e66a2af6b8bec7c2a498
--- https://github.com/madler/zlib
-
 target('dependency.zlib', function()
 	set_group('source/dependency')
 	set_kind('static')
 	add_headerfiles(
-		'crc32.h',
-		'deflate.h',
-		'gzguts.h',
-		'inffast.h',
-		'inffixed.h',
-		'inflate.h',
-		'inftrees.h',
-		'trees.h',
-		'zconf.h',
-		'zlib.h',
-		'zutil.h',
+		'origin/zlib.h',
+		'origin/crc32.h',
+		'origin/deflate.h',
+		'origin/gzguts.h',
+		'origin/inffast.h',
+		'origin/inffixed.h',
+		'origin/inflate.h',
+		'origin/inftrees.h',
+		'origin/trees.h',
+		'origin/zutil.h',
+		'origin/zconf.h',
 		{ install = false }
 	)
 	add_files(
-		'adler32.c',
-		'compress.c',
-		'crc32.c',
-		'deflate.c',
-		'gzclose.c',
-		'gzlib.c',
-		'gzread.c',
-		'gzwrite.c',
-		'infback.c',
-		'inffast.c',
-		'inflate.c',
-		'inftrees.c',
-		'trees.c',
-		'uncompr.c',
-		'zutil.c',
+		'origin/adler32.c',
+		'origin/compress.c',
+		'origin/crc32.c',
+		'origin/deflate.c',
+		'origin/gzclose.c',
+		'origin/gzlib.c',
+		'origin/gzread.c',
+		'origin/gzwrite.c',
+		'origin/inflate.c',
+		'origin/infback.c',
+		'origin/inftrees.c',
+		'origin/inffast.c',
+		'origin/trees.c',
+		'origin/uncompr.c',
+		'origin/zutil.c',
 		{}
 	)
 	add_includedirs(

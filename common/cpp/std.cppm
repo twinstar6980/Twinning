@@ -60,7 +60,6 @@ export {
 	// traits
 	namespace std {
 		using ::std::type_info;
-		using ::std::is_constant_evaluated;
 		using ::std::is_same_v;
 		using ::std::conditional_t;
 		using ::std::tuple_element_t;
@@ -131,11 +130,15 @@ export {
 	// math
 	namespace std {
 		using ::std::isfinite;
+		using ::std::isinf;
+		using ::std::isnan;
+		using ::std::frexp;
 		using ::std::round;
+		using ::std::ceil;
+		using ::std::floor;
 	}
 	// string
 	namespace std {
-		using ::std::char_traits;
 		using ::std::strlen;
 		using ::std::string;
 		using ::std::string_view;
@@ -170,16 +173,20 @@ export {
 		using ::std::unordered_map;
 		using ::std::bitset;
 	}
+	namespace std::ranges {
+		using ::std::ranges::replace;
+	}
 	namespace std::ranges::views {
 		using std::ranges::views::reverse;
 	}
 	// memory
 	namespace std {
 		using ::std::free;
-		using ::std::memcpy;
+		using ::std::memmove;
 		using ::std::unique_ptr;
 		using ::std::make_unique;
 		using ::std::shared_ptr;
+		using ::std::bit_cast;
 	}
 	// filesystem
 	namespace std::filesystem {
@@ -206,9 +213,12 @@ export {
 	// thread
 	namespace std {
 		using ::std::mutex;
+		using ::std::lock_guard;
 		using ::std::thread;
+		using ::std::jthread;
 	}
 	namespace std::this_thread {
+		using ::std::this_thread::get_id;
 		using ::std::this_thread::yield;
 		using ::std::this_thread::sleep_for;
 	}
@@ -219,8 +229,6 @@ export {
 	// format
 	namespace std {
 		using ::std::format;
-		using ::std::formatter;
-		using ::std::runtime_format;
 	}
 	// io
 	namespace std {
@@ -247,7 +255,6 @@ export {
 		using ::std::max;
 		using ::std::move;
 		using ::std::forward;
-		using ::std::replace;
 		using ::std::get;
 	}
 	// literal

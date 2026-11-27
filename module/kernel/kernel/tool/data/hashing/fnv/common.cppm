@@ -10,17 +10,9 @@ export namespace Twinning::Kernel::Tool::Data::Hashing::Fnv {
 	M_enumeration(
 		M_wrap(Mode),
 		M_wrap(
-			m_0,
-			m_1,
-			m_1a,
-		),
-	);
-
-	M_enumeration(
-		M_wrap(BitCount),
-		M_wrap(
-			b_32,
-			b_64,
+			v0,
+			v1,
+			v1a,
 		),
 	);
 
@@ -28,11 +20,11 @@ export namespace Twinning::Kernel::Tool::Data::Hashing::Fnv {
 
 	struct Common {
 
-		template <auto t_bit_count>
+		template <auto t_length>
 		struct Parameter;
 
 		template <>
-		struct Parameter<BitCount::Constant::b_32()> {
+		struct Parameter<32_sz> {
 
 			using Value = IntegerU32;
 
@@ -45,7 +37,7 @@ export namespace Twinning::Kernel::Tool::Data::Hashing::Fnv {
 		};
 
 		template <>
-		struct Parameter<BitCount::Constant::b_64()> {
+		struct Parameter<64_sz> {
 
 			using Value = IntegerU64;
 

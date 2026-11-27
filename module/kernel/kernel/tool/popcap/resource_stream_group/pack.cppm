@@ -25,16 +25,16 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 		// ----------------
 
 		inline static auto process_package(
-			OutputByteStreamView &      data,
+			OutputBinaryStreamView &    data,
 			Definition::Package const & definition,
 			Path const &                resource_directory
 		) -> Void {
 			data.write_constant(Structure::k_magic_marker);
 			data.write_constant(cast_box<Structure::VersionNumber>(t_version.number));
 			struct {
-				OutputByteStreamView header{};
-				OutputByteStreamView resource_information{};
-				Size                 resource_information_offset{};
+				OutputBinaryStreamView header{};
+				OutputBinaryStreamView resource_information{};
+				Size                   resource_information_offset{};
 			} information_data = {};
 			{
 				auto information_structure = Structure::Information<t_version>{};
@@ -59,14 +59,10 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 					}
 				}
 				CompiledMapData::adjust_sequence(information_structure.resource_information);
-				information_data.header = OutputByteStreamView{
-					data.forward_view(bs_size(information_structure.header))
-				};
+				information_data.header = data.split_forward(binary_size_of(information_structure.header));
 				information_data.resource_information_offset = data.position();
-				information_data.resource_information = OutputByteStreamView{
-					data.forward_view(CompiledMapData::compute_ripe_size(information_structure.resource_information))
-				};
-				data.write_space(k_null_byte, Math::compute_padding_size(data.position(), k_padding_unit_size));
+				information_data.resource_information = data.split_forward(CompiledMapData::compute_ripe_size(information_structure.resource_information));
+				data.write_space(Math::compute_padding_size(data.position(), k_padding_unit_size), k_null_byte);
 			}
 			auto information_structure = Structure::Information<t_version>{};
 			if constexpr (check_version(t_version, {1, 3})) {
@@ -78,9 +74,9 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 			information_structure.header.information_section_size = cast_box<IntegerU32>(data.position());
 			information_structure.header.resource_data_section_compression = packet_compression_to_data(definition.compression);
 			information_structure.resource_information.allocate_full(definition.resource.size());
-			auto resource_data_section_container = ByteArray{};
+			auto resource_data_section_container = Binary{};
 			for (auto & current_resource_type : make_static_array<ResourceType>(ResourceType::Constant::general(), ResourceType::Constant::texture())) {
-				auto resource_data_section_view = VariableByteListView{};
+				auto resource_data_section_stream = OutputBinaryStreamView{};
 				auto resource_data_section_offset = data.position();
 				auto resource_data_section_size_original = 0_sz;
 				for (auto & resource_index : SizeRange{definition.resource.size()}) {
@@ -105,15 +101,11 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 					default: throw UnreachableException{};
 				}
 				if (!compress_resource_data_section) {
-					resource_data_section_view = data.next_view(resource_data_section_size_original);
+					resource_data_section_stream = data.split_next(resource_data_section_size_original);
 				}
 				else {
-					if (resource_data_section_container.size() < resource_data_section_size_original) {
-						resource_data_section_container.allocate(resource_data_section_size_original);
-					}
-					resource_data_section_view = resource_data_section_container.head(resource_data_section_size_original);
+					resource_data_section_stream = like_binary_stream<StreamMode::Constant::output()>(data, use_binary_buffer(resource_data_section_container, resource_data_section_size_original));
 				}
-				auto resource_data_section_stream = OutputByteStreamView{resource_data_section_view};
 				for (auto & resource_index : SizeRange{definition.resource.size()}) {
 					auto & resource_definition = definition.resource[resource_index];
 					if (resource_definition.additional.type() != current_resource_type) {
@@ -125,7 +117,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 					resource_information_structure.key = resource_definition.path.emit_windows();
 					resource_information_structure.value.offset = cast_box<IntegerU32>(resource_data_section_stream.position());
 					resource_information_structure.value.size = cast_box<IntegerU32>(resource_size);
-					Storage::read_file(resource_path, 0_sz, resource_data_section_stream.forward_view(resource_size));
+					Storage::read_file(resource_path, 0_sz, resource_data_section_stream.split_forward(resource_size).view());
 					switch (resource_definition.additional.type().value) {
 						case ResourceType::Constant::general().value: {
 							auto & resource_additional_definition = resource_definition.additional.template get_of_type<ResourceType::Constant::general()>();
@@ -144,14 +136,15 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 						}
 						default: throw UnreachableException{};
 					}
-					resource_data_section_stream.write_space(k_null_byte, Math::compute_padding_size(resource_data_section_stream.position(), k_padding_unit_size));
+					resource_data_section_stream.write_space(Math::compute_padding_size(resource_data_section_stream.position(), k_padding_unit_size), k_null_byte);
 				}
+				assert_test(resource_data_section_stream.full());
 				if (!compress_resource_data_section || (current_resource_type == ResourceType::Constant::texture() && resource_data_section_size_original == 0_sz)) {
-					data.forward(resource_data_section_view.size());
+					data.forward(resource_data_section_stream.position());
 				}
 				else {
-					Data::Compression::Deflate::Compress::process(as_left(InputByteStreamView{resource_data_section_view}), data, 9_i, 15_i, 9_i, Data::Compression::Deflate::StrategyMode::Constant::default_mode(), Data::Compression::Deflate::WrapperType::Constant::zlib());
-					data.write_space(k_null_byte, Math::compute_padding_size(data.position(), k_padding_unit_size));
+					Data::Compression::Deflate::Compress::process(as_left(unsafe_cast<InputBinaryStreamView>(resource_data_section_stream.split_all())), data, Data::Compression::Deflate::Container::Constant::zlib(), 9_i, 15_i, 9_i, Data::Compression::Deflate::StrategyMode::Constant::default_mode());
+					data.write_space(Math::compute_padding_size(data.position(), k_padding_unit_size), k_null_byte);
 				}
 				auto resource_data_section_size = data.position() - resource_data_section_offset;
 				switch (current_resource_type.value) {
@@ -184,11 +177,11 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 		// ----------------
 
 		inline static auto process(
-			OutputByteStreamView &      data_,
+			OutputBinaryStreamView &    data_,
 			Definition::Package const & definition,
 			Path const &                resource_directory
 		) -> Void {
-			M_use_zps_of(data);
+			M_use_split_stream_of(data);
 			return process_package(data, definition, resource_directory);
 		}
 

@@ -58,10 +58,10 @@ namespace Twinning.Script.Executor.Implementation.Kairosoft.Game {
 				worker: ({target_directory, key}, store: {}) => {
 					let key_value = [] as Array<bigint>;
 					if (key.startsWith('d32:')) {
-						key_value = ConvertHelper.make_integer_to_byte_array(BigInt(key.substring('d32:'.length)), 4);
+						key_value = ConvertHelper.make_integer_to_byte_array(BigInt(key.substring('d32:'.length)), 4, query_endian());
 					}
 					else if (key.startsWith('d64:')) {
-						key_value = ConvertHelper.make_integer_to_byte_array(BigInt(key.substring('d64:'.length)), 8);
+						key_value = ConvertHelper.make_integer_to_byte_array(BigInt(key.substring('d64:'.length)), 8, query_endian());
 					}
 					else {
 						key_value = ConvertHelper.make_string_to_byte_array(key);

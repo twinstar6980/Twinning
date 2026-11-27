@@ -47,7 +47,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.TextTable.Convert {
 				if (ConvertHelper.check_string_data_maybe_utf16(source_data)) {
 					throw new Error(`unsupported charset UTF-16`);
 				}
-				let source_text = Kernel.Miscellaneous.cast_CharacterListView_to_JS_String(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(Kernel.ByteListView.value(source_data)));
+				let source_text = Kernel.Miscellaneous.cast_StringView_to_RawString(Kernel.Miscellaneous.cast_BinaryView_to_StringView(Kernel.BinaryView.value(source_data)));
 				let key_rule = /^\[.+\]$/gm;
 				let value_rule = /(.|[\n\r])*?(?=[\n\r]*?(\[|$))/gy;
 				let key_match: null | RegExpExecArray;
@@ -106,7 +106,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.TextTable.Convert {
 				for (let key in string_map) {
 					destination_text.push(`[${key}]\n${string_map[key]}\n`);
 				}
-				destination_data = Kernel.Miscellaneous.cast_moveable_String_to_ByteArray(Kernel.String.value(destination_text.join('\n'))).release();
+				destination_data = Kernel.Miscellaneous.cast_moveable_String_to_Binary(Kernel.String.value(destination_text.join('\n'))).release();
 				break;
 			}
 			case 'json_map': {
@@ -124,7 +124,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.TextTable.Convert {
 						},
 					],
 				};
-				destination_data = Kernel.ByteArray.value(JsonHelper.encode_data(destination)).release();
+				destination_data = Kernel.Binary.value(JsonHelper.encode_data(destination)).release();
 				break;
 			}
 			case 'json_list': {
@@ -149,7 +149,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.TextTable.Convert {
 						},
 					],
 				};
-				destination_data = Kernel.ByteArray.value(JsonHelper.encode_data(destination)).release();
+				destination_data = Kernel.Binary.value(JsonHelper.encode_data(destination)).release();
 				break;
 			}
 		}
@@ -166,7 +166,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.TextTable.Convert {
 	): void {
 		let source_data = StorageHelper.read_file_data(source_file);
 		let destination_data = convert(source_data.value, source_version, destination_version);
-		StorageHelper.write_file_data(destination_file, Kernel.ByteListView.value(destination_data));
+		StorageHelper.write_file_data(destination_file, Kernel.BinaryView.value(destination_data));
 		return;
 	}
 

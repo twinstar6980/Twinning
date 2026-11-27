@@ -69,23 +69,23 @@ export namespace Twinning::Kernel::Interface {
 		inline static auto parse(
 			Message const & instance
 		) -> MessageProxy {
-			assert_test(instance.data != nullptr && instance.size != 0);
+			assert_test(instance.data != nullptr && instance.size != 0_szz);
 			auto proxy = MessageProxy{};
 			auto data_position = 0_sz;
 			auto next_integer = [&]() -> Size {
-				auto data_size = k_type_size<ZSize>;
+				auto data_size = type_byte_size_of<ZSize>();
 				assert_test(data_position <= data_position + data_size && data_position + data_size <= make_box<Size>(instance.size));
 				auto value = Size{};
-				std::memcpy(&value, instance.data + data_position.value, data_size.value);
+				Memory::copy(make_pointer(&value), make_pointer(instance.data) + data_position, data_size);
 				data_position += data_size;
 				return value;
 			};
 			auto next_string = [&](Size const & size) -> String {
-				auto data_size = k_type_size<ZCharacter8> * size;
+				auto data_size = type_byte_size_of<ZCharacter8>() * size;
 				assert_test(data_position <= data_position + data_size && data_position + data_size <= make_box<Size>(instance.size));
 				auto value = String{};
 				value.allocate_full(size);
-				std::memcpy(value.begin().value, instance.data + data_position.value, data_size.value);
+				Memory::copy(value.data(), make_pointer(instance.data) + data_position, data_size);
 				data_position += data_size;
 				return value;
 			};
@@ -105,28 +105,28 @@ export namespace Twinning::Kernel::Interface {
 			Message &            instance,
 			MessageProxy const & proxy
 		) -> Void {
-			assert_test(instance.data == nullptr && instance.size == 0);
+			assert_test(instance.data == nullptr && instance.size == 0_szz);
 			auto data_position = 0_sz;
 			auto next_integer = [&](Size const & value) -> Void {
-				auto data_size = k_type_size<ZSize>;
+				auto data_size = type_byte_size_of<ZSize>();
 				assert_test(data_position <= data_position + data_size && data_position + data_size <= make_box<Size>(instance.size));
-				std::memcpy(instance.data + data_position.value, &value, data_size.value);
+				Memory::copy(make_pointer(instance.data) + data_position, make_pointer(&value), data_size);
 				data_position += data_size;
 				return;
 			};
 			auto next_string = [&](String const & value) -> Void {
-				auto data_size = k_type_size<ZCharacter8> * value.size();
+				auto data_size = type_byte_size_of<ZCharacter8>() * value.size();
 				assert_test(data_position <= data_position + data_size && data_position + data_size <= make_box<Size>(instance.size));
-				std::memcpy(instance.data + data_position.value, value.begin().value, data_size.value);
+				Memory::copy(make_pointer(instance.data) + data_position, value.data(), data_size);
 				data_position += data_size;
 				return;
 			};
 			auto & value = proxy.value;
 			auto   data_size = 0_sz;
-			data_size += k_type_size<ZSize>;
+			data_size += type_byte_size_of<ZSize>();
 			for (auto & value_item : value) {
-				data_size += k_type_size<ZSize>;
-				data_size += k_type_size<ZCharacter8> * value_item.size();
+				data_size += type_byte_size_of<ZSize>();
+				data_size += type_byte_size_of<ZCharacter8>() * value_item.size();
 			}
 			instance.data = new ZByte[data_size.value]{};
 			instance.size = data_size.value;
@@ -145,10 +145,10 @@ export namespace Twinning::Kernel::Interface {
 		inline static auto destruct(
 			Message & instance
 		) -> Void {
-			assert_test(instance.data != nullptr && instance.size != 0);
+			assert_test(instance.data != nullptr && instance.size != 0_szz);
 			delete[] instance.data;
 			instance.data = nullptr;
-			instance.size = 0;
+			instance.size = 0_szz;
 			return;
 		}
 
@@ -214,6 +214,8 @@ export namespace Twinning::Kernel::Interface {
 
 		#pragma region convert
 
+		inline static auto g_mutex = std::mutex{};
+
 		inline static auto g_guard = std::unordered_map<ZPointer<Executor>, ExecutorProxy>{};
 
 		// ----------------
@@ -233,49 +235,38 @@ export namespace Twinning::Kernel::Interface {
 					auto argument = ZPointer<Message>{nullptr};
 					auto result = ZPointer<Message>{nullptr};
 					auto exception = ZPointer<Message>{nullptr};
-					auto finalizer_action = List<std::function<Void()>>{};
-					finalizer_action.allocate(4_sz);
-					auto finalizer = make_finalizer(
+					callback = new Executor{};
+					argument = new Message{};
+					result = new Message{};
+					exception = new Message{};
+					auto _ = make_finalizer(
 						[&] {
-							for (auto & action : Range::make_reverse_range_of(finalizer_action)) {
-								action();
-							}
+							delete callback;
+							delete argument;
+							delete result;
+							delete exception;
 						}
 					);
-					{
-						callback = new Executor{};
-						argument = new Message{};
-						result = new Message{};
-						exception = new Message{};
-						finalizer_action.append(
-							[&] {
-								delete callback;
-								delete argument;
-								delete result;
-								delete exception;
-							}
-						);
-						ExecutorProxy::construct(*callback, callback_proxy);
-						finalizer_action.append(
-							[&] {
-								ExecutorProxy::destruct(*callback);
-							}
-						);
-						MessageProxy::construct(*argument, argument_proxy);
-						finalizer_action.append(
-							[&] {
-								MessageProxy::destruct(*argument);
-							}
-						);
-						(*self).invoke(self, callback, argument, result, exception);
-						finalizer_action.append(
-							[&] {
-								(*self).clear(self, callback, argument, result, exception);
-							}
-						);
-						result_proxy = MessageProxy::parse(*result);
-						exception_proxy = MessageProxy::parse(*exception);
-					}
+					ExecutorProxy::construct(*callback, callback_proxy);
+					auto _ = make_finalizer(
+						[&] {
+							ExecutorProxy::destruct(*callback);
+						}
+					);
+					MessageProxy::construct(*argument, argument_proxy);
+					auto _ = make_finalizer(
+						[&] {
+							MessageProxy::destruct(*argument);
+						}
+					);
+					(*self).invoke(self, callback, argument, result, exception);
+					auto _ = make_finalizer(
+						[&] {
+							(*self).clear(self, callback, argument, result, exception);
+						}
+					);
+					result_proxy = MessageProxy::parse(*result);
+					exception_proxy = MessageProxy::parse(*exception);
 					if (!exception_proxy.value.empty()) {
 						throw exception_proxy.value.first();
 					}
@@ -289,7 +280,8 @@ export namespace Twinning::Kernel::Interface {
 			ExecutorProxy const & proxy
 		) -> Void {
 			assert_test(instance.invoke == nullptr && instance.clear == nullptr);
-			assert_test(g_guard.emplace(&instance, proxy).second);
+			auto _ = std::lock_guard{g_mutex};
+			assert_test(g_guard.try_emplace(&instance, proxy).second);
 			instance.invoke = [](
 				ZPointer<Executor> self,
 				ZPointer<Executor> callback,
@@ -297,7 +289,10 @@ export namespace Twinning::Kernel::Interface {
 				ZPointer<Message>  result,
 				ZPointer<Message>  exception
 			) -> Void {
-					auto & guard = g_guard.at(self);
+					auto & guard = [&]() -> auto & {
+						auto _ = std::lock_guard{g_mutex};
+						return g_guard.at(self);
+					}();
 					#if defined M_build_release
 					try
 					#endif
@@ -311,7 +306,7 @@ export namespace Twinning::Kernel::Interface {
 					}
 					#if defined M_build_release
 					catch (...) {
-						MessageProxy::construct(*exception, MessageProxy{make_list<String>(make_string(parse_current_exception().what()))});
+						MessageProxy::construct(*exception, MessageProxy{make_list<String>(from_std_string(parse_current_exception().what()))});
 						MessageProxy::construct(*result, MessageProxy{});
 					}
 					#endif
@@ -324,7 +319,10 @@ export namespace Twinning::Kernel::Interface {
 				ZPointer<Message>  result,
 				ZPointer<Message>  exception
 			) -> Void {
-					auto & guard = g_guard.at(self);
+					auto & guard = [&]() -> auto & {
+						auto _ = std::lock_guard{g_mutex};
+						return g_guard.at(self);
+					}();
 					if (result != nullptr) {
 						MessageProxy::destruct(*result);
 					}
@@ -340,7 +338,8 @@ export namespace Twinning::Kernel::Interface {
 			Executor & instance
 		) -> Void {
 			assert_test(instance.invoke != nullptr && instance.clear != nullptr);
-			assert_test(g_guard.erase(&instance) == 1);
+			auto _ = std::lock_guard{g_mutex};
+			assert_test(g_guard.erase(&instance) == 1_szz);
 			instance.invoke = nullptr;
 			instance.clear = nullptr;
 			return;

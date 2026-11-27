@@ -1,6 +1,6 @@
 /**
  * JavaScript interface of Kernel
- * @version 147
+ * @version 154
  */
 declare namespace Twinning.Kernel {
 
@@ -339,26 +339,26 @@ declare namespace Twinning.Kernel {
 
 	// ----------------
 
-	/** 字节序列容器 */
-	class ByteArray {
+	/** 二进制容器 */
+	class Binary {
 
-		private _ByteArray;
+		private _Binary;
 
 		// ----------------
 
-		static default(): ByteArray;
+		static default(): Binary;
 
-		static copy(it: ByteArray): ByteArray;
+		static copy(it: Binary): Binary;
 
 		// ----------------
 
 		static Value: ArrayBuffer;
 
-		static value(it: typeof ByteArray.Value): ByteArray;
+		static value(it: typeof Binary.Value): Binary;
 
-		get value(): typeof ByteArray.Value;
+		get value(): typeof Binary.Value;
 
-		set value(it: typeof ByteArray.Value);
+		set value(it: typeof Binary.Value);
 
 		// ----------------
 
@@ -369,7 +369,7 @@ declare namespace Twinning.Kernel {
 		 */
 		static allocate(
 			size: Size,
-		): ByteArray;
+		): Binary;
 
 		// ----------------
 
@@ -405,7 +405,7 @@ declare namespace Twinning.Kernel {
 		 * @returns 观测本序列的视图
 		 */
 		view(
-		): ByteListView;
+		): BinaryView;
 
 		// ----------------
 
@@ -414,32 +414,32 @@ declare namespace Twinning.Kernel {
 		 * @returns 持有所有权的ArrayBuffer
 		 */
 		release(
-		): typeof ByteArray.Value;
+		): typeof Binary.Value;
 
 	}
 
 	// ----------------
 
-	/** 字节序列视图 */
-	class ByteListView {
+	/** 二进制视图 */
+	class BinaryView {
 
-		private _ByteListView;
+		private _BinaryView;
 
 		// ----------------
 
-		static default(): ByteListView;
+		static default(): BinaryView;
 
-		static copy(it: ByteListView): ByteListView;
+		static copy(it: BinaryView): BinaryView;
 
 		// ----------------
 
 		static Value: ArrayBuffer;
 
-		static value(it: typeof ByteListView.Value): ByteListView;
+		static value(it: typeof BinaryView.Value): BinaryView;
 
-		get value(): typeof ByteListView.Value;
+		get value(): typeof BinaryView.Value;
 
-		set value(it: typeof ByteListView.Value);
+		set value(it: typeof BinaryView.Value);
 
 		// ----------------
 
@@ -455,45 +455,45 @@ declare namespace Twinning.Kernel {
 		/**
 		 * 获取子视图
 		 * @param begin 起始位置
-		 * @param size 尺寸
+		 * @param count 元素数目
 		 * @returns 子视图
 		 */
 		sub(
 			begin: Size,
-			size: Size,
-		): ByteListView;
+			count: Size,
+		): BinaryView;
 
 	}
 
-	/** 变量字节序列视图 */
-	type VariableByteListView = ByteListView;
+	/** 变量二进制视图 */
+	type VariableBinaryView = BinaryView;
 
-	/** 常量字节序列视图 */
-	type ConstantByteListView = ByteListView;
+	/** 常量二进制视图 */
+	type ConstantBinaryView = BinaryView;
 
 	// ----------------
 
-	/** 字节流视图 */
-	class ByteStreamView {
+	/** 二进制流视图 */
+	class BinaryStreamView {
 
-		private _ByteStreamView;
+		private _BinaryStreamView;
 
 		// ----------------
 
-		static default(): ByteStreamView;
+		static default(): BinaryStreamView;
 
-		static copy(it: ByteStreamView): ByteStreamView;
+		static copy(it: BinaryStreamView): BinaryStreamView;
 
 		// ----------------
 
 		/**
-		 * 使用字节序列视图作为观测对象，初始流位置为0
+		 * 使用视图作为观测对象，初始流位置为0
 		 * @param list 观测对象
 		 * @returns 对象
 		 */
 		static watch(
-			list: ByteListView,
-		): ByteStreamView;
+			list: BinaryView,
+		): BinaryStreamView;
 
 		// ----------------
 
@@ -529,35 +529,35 @@ declare namespace Twinning.Kernel {
 		 * @returns 观测完整序列的视图
 		 */
 		view(
-		): ByteListView;
+		): BinaryView;
 
 		/**
-		 * 获取观测已流经序列的视图，即 [ 0, position() )
-		 * @returns 观测已流经序列的视图
+		 * 获取包含已流经序列的流，即 [ 0, position() )
+		 * @returns 观测包含已流经序列的流
 		 */
-		stream_view(
-		): ByteListView;
+		split_stream(
+		): BinaryStreamView;
 
 	}
 
-	/** 字节输入流视图 */
-	type InputByteStreamView = ByteStreamView;
+	/** 输入二进制流视图 */
+	type InputBinaryStreamView = BinaryStreamView;
 
-	/** 字节输出流视图 */
-	type OutputByteStreamView = ByteStreamView;
+	/** 输出二进制流视图 */
+	type OutputBinaryStreamView = BinaryStreamView;
 
 	// ----------------
 
-	/** 字符序列视图 */
-	class CharacterListView {
+	/** 字符串视图 */
+	class StringView {
 
-		private _CharacterListView;
+		private _StringView;
 
 		// ----------------
 
-		static default(): CharacterListView;
+		static default(): StringView;
 
-		static copy(it: CharacterListView): CharacterListView;
+		static copy(it: StringView): StringView;
 
 		// ----------------
 
@@ -573,45 +573,45 @@ declare namespace Twinning.Kernel {
 		/**
 		 * 获取子视图
 		 * @param begin 起始位置
-		 * @param size 尺寸
+		 * @param count 元素数目
 		 * @returns 子视图
 		 */
 		sub(
 			begin: Size,
-			size: Size,
-		): CharacterListView;
+			count: Size,
+		): StringView;
 
 	}
 
-	/** 变量字符序列视图 */
-	type VariableCharacterListView = CharacterListView;
+	/** 变量字符串视图 */
+	type VariableStringView = StringView;
 
-	/** 常量字符序列视图 */
-	type ConstantCharacterListView = CharacterListView;
+	/** 常量字符串视图 */
+	type ConstantStringView = StringView;
 
 	// ----------------
 
-	/** 字符流视图 */
-	class CharacterStreamView {
+	/** 字符串流视图 */
+	class StringStreamView {
 
-		private _CharacterStreamView;
+		private _StringStreamView;
 
 		// ----------------
 
-		static default(): CharacterStreamView;
+		static default(): StringStreamView;
 
-		static copy(it: CharacterStreamView): CharacterStreamView;
+		static copy(it: StringStreamView): StringStreamView;
 
 		// ----------------
 
 		/**
-		 * 使用字符序列视图作为观测对象，初始流位置为0
+		 * 使用视图作为观测对象，初始流位置为0
 		 * @param list 观测对象
 		 * @returns 对象
 		 */
 		static watch(
-			list: CharacterListView,
-		): CharacterStreamView;
+			list: StringView,
+		): StringStreamView;
 
 		// ----------------
 
@@ -647,22 +647,22 @@ declare namespace Twinning.Kernel {
 		 * @returns 观测完整序列的视图
 		 */
 		view(
-		): CharacterListView;
+		): StringView;
 
 		/**
-		 * 获取观测已流经序列的视图，即 [ 0, position() )
-		 * @returns 观测已流经序列的视图
+		 * 获取包含已流经序列的流，即 [ 0, position() )
+		 * @returns 观测包含已流经序列的流
 		 */
-		stream_view(
-		): CharacterListView;
+		split_stream(
+		): StringStreamView;
 
 	}
 
-	/** 字符输入流视图 */
-	type InputCharacterStreamView = CharacterStreamView;
+	/** 输入字符串流视图 */
+	type InputStringStreamView = StringStreamView;
 
-	/** 字符输出流视图 */
-	type OutputCharacterStreamView = CharacterStreamView;
+	/** 输出字符串流视图 */
+	type OutputStringStreamView = StringStreamView;
 
 	// ----------------
 
@@ -734,7 +734,7 @@ declare namespace Twinning.Kernel {
 				value: JS_Element,
 			};
 
-			/** 注释结点 */
+			/** 文本结点 */
 			type JS_TextNode = {
 				type: 'text',
 				value: JS_Text,
@@ -1176,7 +1176,7 @@ declare namespace Twinning.Kernel {
 		function read_file(
 			target: Path,
 			offset: Size,
-			data: VariableByteListView,
+			data: VariableBinaryView,
 		): Void;
 
 		/**
@@ -1189,7 +1189,7 @@ declare namespace Twinning.Kernel {
 		function write_file(
 			target: Path,
 			offset: Size,
-			data: ConstantByteListView,
+			data: ConstantBinaryView,
 		): Void;
 
 		// ----------------
@@ -1294,7 +1294,7 @@ declare namespace Twinning.Kernel {
 					/** 模式 */
 					class Mode {
 
-						private _Tool_Data_Hash_Fnv_Mode;
+						private _Tool_Data_Hashing_Fnv_Mode;
 
 						// ----------------
 
@@ -1304,36 +1304,13 @@ declare namespace Twinning.Kernel {
 
 						// ----------------
 
-						static Value: 'm_0' | 'm_1' | 'm_1a';
+						static Value: 'v0' | 'v1' | 'v1a';
 
 						static value(it: typeof Mode.Value): Mode;
 
 						get value(): typeof Mode.Value;
 
 						set value(it: typeof Mode.Value);
-
-					}
-
-					/** 位数 */
-					class BitCount {
-
-						private _Tool_Data_Hash_Fnv_BitCount;
-
-						// ----------------
-
-						static default(): BitCount;
-
-						static copy(it: BitCount): BitCount;
-
-						// ----------------
-
-						static Value: 'b_32' | 'b_64';
-
-						static value(it: typeof BitCount.Value): BitCount;
-
-						get value(): typeof BitCount.Value;
-
-						set value(it: typeof BitCount.Value);
 
 					}
 
@@ -1345,21 +1322,44 @@ declare namespace Twinning.Kernel {
 						 * @param data 数据
 						 * @param value 散列值
 						 * @param mode 模式
-						 * @param bit_count 位数
+						 * @param length 长度
 						 */
 						function process(
-							data: ConstantByteListView,
-							value: ByteArray,
+							data: ConstantBinaryView,
+							value: Binary,
 							mode: Mode,
-							bit_count: BitCount,
+							length: Size,
 						): Void;
 
 					}
 
 				}
 
-				/** Md5 */
-				namespace Md5 {
+				/** Crc */
+				namespace Crc {
+
+					/** 模式 */
+					class Mode {
+
+						private _Tool_Data_Hashing_Crc_Mode;
+
+						// ----------------
+
+						static default(): Mode;
+
+						static copy(it: Mode): Mode;
+
+						// ----------------
+
+						static Value: 'standard' | 'castagnoli';
+
+						static value(it: typeof Mode.Value): Mode;
+
+						get value(): typeof Mode.Value;
+
+						set value(it: typeof Mode.Value);
+
+					}
 
 					/** 散列 */
 					namespace Hash {
@@ -1368,10 +1368,155 @@ declare namespace Twinning.Kernel {
 						 * 散列
 						 * @param data 数据
 						 * @param value 散列值
+						 * @param mode 模式
+						 * @param length 长度
 						 */
 						function process(
-							data: ConstantByteListView,
-							value: ByteArray,
+							data: ConstantBinaryView,
+							value: Binary,
+							mode: Mode,
+							length: Size,
+						): Void;
+
+					}
+
+				}
+
+				/** Adler */
+				namespace Adler {
+
+					/** 模式 */
+					class Mode {
+
+						private _Tool_Data_Hashing_Adler_Mode;
+
+						// ----------------
+
+						static default(): Mode;
+
+						static copy(it: Mode): Mode;
+
+						// ----------------
+
+						static Value: 'standard';
+
+						static value(it: typeof Mode.Value): Mode;
+
+						get value(): typeof Mode.Value;
+
+						set value(it: typeof Mode.Value);
+
+					}
+
+					/** 散列 */
+					namespace Hash {
+
+						/**
+						 * 散列
+						 * @param data 数据
+						 * @param value 散列值
+						 * @param mode 模式
+						 * @param length 长度
+						 */
+						function process(
+							data: ConstantBinaryView,
+							value: Binary,
+							mode: Mode,
+							length: Size,
+						): Void;
+
+					}
+
+				}
+
+				/** Md */
+				namespace Md {
+
+					/** 模式 */
+					class Mode {
+
+						private _Tool_Data_Hashing_Md_Mode;
+
+						// ----------------
+
+						static default(): Mode;
+
+						static copy(it: Mode): Mode;
+
+						// ----------------
+
+						static Value: 'v2' | 'v4' | 'v5';
+
+						static value(it: typeof Mode.Value): Mode;
+
+						get value(): typeof Mode.Value;
+
+						set value(it: typeof Mode.Value);
+
+					}
+
+					/** 散列 */
+					namespace Hash {
+
+						/**
+						 * 散列
+						 * @param data 数据
+						 * @param value 散列值
+						 * @param mode 模式
+						 * @param length 长度
+						 */
+						function process(
+							data: ConstantBinaryView,
+							value: Binary,
+							mode: Mode,
+							length: Size,
+						): Void;
+
+					}
+
+				}
+
+				/** Sha */
+				namespace Sha {
+
+					/** 模式 */
+					class Mode {
+
+						private _Tool_Data_Hashing_Sha_Mode;
+
+						// ----------------
+
+						static default(): Mode;
+
+						static copy(it: Mode): Mode;
+
+						// ----------------
+
+						static Value: 'v1' | 'v2' | 'v3';
+
+						static value(it: typeof Mode.Value): Mode;
+
+						get value(): typeof Mode.Value;
+
+						set value(it: typeof Mode.Value);
+
+					}
+
+					/** 散列 */
+					namespace Hash {
+
+						/**
+						 * 散列
+						 * @param data 数据
+						 * @param value 散列值
+						 * @param mode 模式
+						 * @param length 长度
+						 */
+						function process(
+							data: ConstantBinaryView,
+							value: Binary,
+							mode: Mode,
+							length: Size,
 						): Void;
 
 					}
@@ -1383,8 +1528,31 @@ declare namespace Twinning.Kernel {
 			/** 编码 */
 			namespace Encoding {
 
-				/** Base64 */
-				namespace Base64 {
+				/** Base */
+				namespace Base {
+
+					/** 模式 */
+					class Mode {
+
+						private _Tool_Data_Encoding_Base_Mode;
+
+						// ----------------
+
+						static default(): Mode;
+
+						static copy(it: Mode): Mode;
+
+						// ----------------
+
+						static Value: 'v16_std' | 'v32_std' | 'v32_hex' | 'v64_std' | 'v64_url';
+
+						static value(it: typeof Mode.Value): Mode;
+
+						get value(): typeof Mode.Value;
+
+						set value(it: typeof Mode.Value);
+
+					}
 
 					/** 编码 */
 					namespace Encode {
@@ -1393,20 +1561,24 @@ declare namespace Twinning.Kernel {
 						 * 编码
 						 * @param raw 原始数据
 						 * @param ripe 成品数据
+						 * @param mode 模式
 						 */
 						function process(
-							raw: InputByteStreamView,
-							ripe: OutputByteStreamView,
+							raw: InputBinaryStreamView,
+							ripe: OutputBinaryStreamView,
+							mode: Mode,
 						): Void;
 
 						/**
 						 * 计算成品数据尺寸
 						 * @param raw_size 原始数据尺寸
 						 * @param ripe_size 成品数据尺寸
+						 * @param mode 模式
 						 */
 						function estimate(
 							raw_size: Size,
 							ripe_size: Size,
+							mode: Mode,
 						): Void;
 
 					}
@@ -1418,20 +1590,24 @@ declare namespace Twinning.Kernel {
 						 * 解码
 						 * @param raw 原始数据
 						 * @param ripe 成品数据
+						 * @param mode 模式
 						 */
 						function process(
-							raw: OutputByteStreamView,
-							ripe: InputByteStreamView,
+							raw: OutputBinaryStreamView,
+							ripe: InputBinaryStreamView,
+							mode: Mode,
 						): Void;
 
 						/**
 						 * 计算原始数据尺寸
 						 * @param raw_size 原始数据尺寸
-						 * @param ripe 成品数据
+						 * @param ripe_size 成品数据尺寸
+						 * @param mode 模式
 						 */
 						function estimate(
 							raw_size: Size,
-							ripe: ConstantByteListView,
+							ripe_size: Size,
+							mode: Mode,
 						): Void;
 
 					}
@@ -1456,9 +1632,9 @@ declare namespace Twinning.Kernel {
 						 * @param key 密钥
 						 */
 						function process(
-							raw: InputByteStreamView,
-							ripe: OutputByteStreamView,
-							key: ConstantByteListView,
+							raw: InputBinaryStreamView,
+							ripe: OutputBinaryStreamView,
+							key: ConstantBinaryView,
 						): Void;
 
 					}
@@ -1471,7 +1647,7 @@ declare namespace Twinning.Kernel {
 					/** 模式 */
 					class Mode {
 
-						private _Tool_Data_Encrypt_Rijndeal_Mode;
+						private _Tool_Data_Encrypt_Rijndael_Mode;
 
 						// ----------------
 
@@ -1504,12 +1680,12 @@ declare namespace Twinning.Kernel {
 						 * @param initialization_vector 初始向量，当模式为cbc或cfb时有效，此时尺寸必须与block_size一致
 						 */
 						function process(
-							raw: InputByteStreamView,
-							ripe: OutputByteStreamView,
+							raw: InputBinaryStreamView,
+							ripe: OutputBinaryStreamView,
 							mode: Mode,
 							block_size: Integer,
-							key: ConstantByteListView,
-							initialization_vector: ConstantByteListView,
+							key: ConstantBinaryView,
+							initialization_vector: ConstantBinaryView,
 						): Void;
 
 					}
@@ -1527,12 +1703,12 @@ declare namespace Twinning.Kernel {
 						 * @param initialization_vector 初始向量，当模式为cbc或cfb时有效，此时尺寸必须与block_size一致
 						 */
 						function process(
-							raw: OutputByteStreamView,
-							ripe: InputByteStreamView,
+							raw: OutputBinaryStreamView,
+							ripe: InputBinaryStreamView,
 							mode: Mode,
 							block_size: Integer,
-							key: ConstantByteListView,
-							initialization_vector: ConstantByteListView,
+							key: ConstantBinaryView,
+							initialization_vector: ConstantBinaryView,
 						): Void;
 
 					}
@@ -1546,6 +1722,29 @@ declare namespace Twinning.Kernel {
 
 				/** Deflate */
 				namespace Deflate {
+
+					/** 容器 */
+					class Container {
+
+						private _Tool_Data_Compress_Deflate_Container;
+
+						// ----------------
+
+						static default(): Container;
+
+						static copy(it: Container): Container;
+
+						// ----------------
+
+						static Value: 'none' | 'zlib' | 'gzip';
+
+						static value(it: typeof Container.Value): Container;
+
+						get value(): typeof Container.Value;
+
+						set value(it: typeof Container.Value);
+
+					}
 
 					/** 策略模式 */
 					class StrategyMode {
@@ -1570,29 +1769,6 @@ declare namespace Twinning.Kernel {
 
 					}
 
-					/** 封装类型 */
-					class WrapperType {
-
-						private _Tool_Data_Compress_Deflate_WrapperType;
-
-						// ----------------
-
-						static default(): WrapperType;
-
-						static copy(it: WrapperType): WrapperType;
-
-						// ----------------
-
-						static Value: 'none' | 'zlib' | 'gzip';
-
-						static value(it: typeof WrapperType.Value): WrapperType;
-
-						get value(): typeof WrapperType.Value;
-
-						set value(it: typeof WrapperType.Value);
-
-					}
-
 					/** 压缩 */
 					namespace Compress {
 
@@ -1600,36 +1776,36 @@ declare namespace Twinning.Kernel {
 						 * 压缩
 						 * @param raw 原始数据
 						 * @param ripe 成品数据
+						 * @param container 容器
 						 * @param level 压缩级别(0~9)
 						 * @param window_exponent 窗口尺寸幂次(8~15)
 						 * @param memory_level 内存级别(1~9)
 						 * @param strategy_mode 策略模式
-						 * @param wrapper_type 封装类型
 						 */
 						function process(
-							raw: InputByteStreamView,
-							ripe: OutputByteStreamView,
+							raw: InputBinaryStreamView,
+							ripe: OutputBinaryStreamView,
+							container: Container,
 							level: Integer,
 							window_exponent: Integer,
 							memory_level: Integer,
 							strategy_mode: StrategyMode,
-							wrapper_type: WrapperType,
 						): Void;
 
 						/**
 						 * 计算成品数据尺寸上限
 						 * @param raw_size 原始数据尺寸
 						 * @param ripe_size_bound 成品数据尺寸上限
+						 * @param container 容器
 						 * @param window_exponent 窗口尺寸幂次(8~15)
 						 * @param memory_level 内存级别(1~9)
-						 * @param wrapper_type 封装类型
 						 */
 						function estimate(
 							raw_size: Size,
 							ripe_size_bound: Size,
+							container: Container,
 							window_exponent: Integer,
 							memory_level: Integer,
-							wrapper_type: WrapperType,
 						): Void;
 
 					}
@@ -1641,14 +1817,14 @@ declare namespace Twinning.Kernel {
 						 * 解压
 						 * @param raw 原始数据
 						 * @param ripe 成品数据
+						 * @param container 容器
 						 * @param window_exponent 窗口尺寸幂次(8~15)
-						 * @param wrapper_type 封装类型
 						 */
 						function process(
-							raw: OutputByteStreamView,
-							ripe: InputByteStreamView,
+							raw: OutputBinaryStreamView,
+							ripe: InputBinaryStreamView,
+							container: Container,
 							window_exponent: Integer,
-							wrapper_type: WrapperType,
 						): Void;
 
 					}
@@ -1658,6 +1834,29 @@ declare namespace Twinning.Kernel {
 				/** Bzip2 */
 				namespace Bzip2 {
 
+					/** 容器 */
+					class Container {
+
+						private _Tool_Data_Compress_Bzip2_Container;
+
+						// ----------------
+
+						static default(): Container;
+
+						static copy(it: Container): Container;
+
+						// ----------------
+
+						static Value: 'none';
+
+						static value(it: typeof Container.Value): Container;
+
+						get value(): typeof Container.Value;
+
+						set value(it: typeof Container.Value);
+
+					}
+
 					/** 压缩 */
 					namespace Compress {
 
@@ -1665,14 +1864,28 @@ declare namespace Twinning.Kernel {
 						 * 压缩
 						 * @param raw 原始数据
 						 * @param ripe 成品数据
+						 * @param container 容器
 						 * @param block_size 块尺寸(1~9)
 						 * @param work_factor 工作因子(0~250，0==30)
 						 */
 						function process(
-							raw: InputByteStreamView,
-							ripe: OutputByteStreamView,
+							raw: InputBinaryStreamView,
+							ripe: OutputBinaryStreamView,
+							container: Container,
 							block_size: Integer,
 							work_factor: Integer,
+						): Void;
+
+						/**
+						 * 计算成品数据尺寸上限
+						 * @param raw_size 原始数据尺寸
+						 * @param ripe_size_bound 成品数据尺寸上限
+						 * @param container 容器
+						 */
+						function estimate(
+							raw_size: Size,
+							ripe_size_bound: Size,
+							container: Container,
 						): Void;
 
 					}
@@ -1684,11 +1897,13 @@ declare namespace Twinning.Kernel {
 						 * 解压
 						 * @param raw 原始数据
 						 * @param ripe 成品数据
+						 * @param container 容器
 						 * @param small 是否使用少量内存
 						 */
 						function process(
-							raw: OutputByteStreamView,
-							ripe: InputByteStreamView,
+							raw: OutputBinaryStreamView,
+							ripe: InputBinaryStreamView,
+							container: Container,
 							small: Boolean,
 						): Void;
 
@@ -1696,8 +1911,31 @@ declare namespace Twinning.Kernel {
 
 				}
 
-				/** Lzma */
-				namespace Lzma {
+				/** Lzma1 */
+				namespace Lzma1 {
+
+					/** 容器 */
+					class Container {
+
+						private _Tool_Data_Compress_Lzma1_Container;
+
+						// ----------------
+
+						static default(): Container;
+
+						static copy(it: Container): Container;
+
+						// ----------------
+
+						static Value: 'alone';
+
+						static value(it: typeof Container.Value): Container;
+
+						get value(): typeof Container.Value;
+
+						set value(it: typeof Container.Value);
+
+					}
 
 					/** 压缩 */
 					namespace Compress {
@@ -1706,12 +1944,26 @@ declare namespace Twinning.Kernel {
 						 * 压缩
 						 * @param raw 原始数据
 						 * @param ripe 成品数据
+						 * @param container 容器
 						 * @param level 压缩级别(0~9)
 						 */
 						function process(
-							raw: InputByteStreamView,
-							ripe: OutputByteStreamView,
+							raw: InputBinaryStreamView,
+							ripe: OutputBinaryStreamView,
+							container: Container,
 							level: Integer,
+						): Void;
+
+						/**
+						 * 计算成品数据尺寸上限
+						 * @param raw_size 原始数据尺寸
+						 * @param ripe_size_bound 成品数据尺寸上限
+						 * @param container 容器
+						 */
+						function estimate(
+							raw_size: Size,
+							ripe_size_bound: Size,
+							container: Container,
 						): Void;
 
 					}
@@ -1723,10 +1975,458 @@ declare namespace Twinning.Kernel {
 						 * 解压
 						 * @param raw 原始数据
 						 * @param ripe 成品数据
+						 * @param container 容器
 						 */
 						function process(
-							raw: OutputByteStreamView,
-							ripe: InputByteStreamView,
+							raw: OutputBinaryStreamView,
+							ripe: InputBinaryStreamView,
+							container: Container,
+						): Void;
+
+					}
+
+				}
+
+				/** Lzma1 */
+				namespace Lzma2 {
+
+					/** 容器 */
+					class Container {
+
+						private _Tool_Data_Compress_Lzma2_Container;
+
+						// ----------------
+
+						static default(): Container;
+
+						static copy(it: Container): Container;
+
+						// ----------------
+
+						static Value: 'xz';
+
+						static value(it: typeof Container.Value): Container;
+
+						get value(): typeof Container.Value;
+
+						set value(it: typeof Container.Value);
+
+					}
+
+					/** 压缩 */
+					namespace Compress {
+
+						/**
+						 * 压缩
+						 * @param raw 原始数据
+						 * @param ripe 成品数据
+						 * @param container 容器
+						 * @param level 压缩级别(0~9)
+						 */
+						function process(
+							raw: InputBinaryStreamView,
+							ripe: OutputBinaryStreamView,
+							container: Container,
+							level: Integer,
+						): Void;
+
+						/**
+						 * 计算成品数据尺寸上限
+						 * @param raw_size 原始数据尺寸
+						 * @param ripe_size_bound 成品数据尺寸上限
+						 * @param container 容器
+						 */
+						function estimate(
+							raw_size: Size,
+							ripe_size_bound: Size,
+							container: Container,
+						): Void;
+
+					}
+
+					/** 解压 */
+					namespace Uncompress {
+
+						/**
+						 * 解压
+						 * @param raw 原始数据
+						 * @param ripe 成品数据
+						 * @param container 容器
+						 */
+						function process(
+							raw: OutputBinaryStreamView,
+							ripe: InputBinaryStreamView,
+							container: Container,
+						): Void;
+
+					}
+
+				}
+
+				/** Lz4 */
+				namespace Lz4 {
+
+					/** 容器 */
+					class Container {
+
+						private _Tool_Data_Compress_Lz4_Container;
+
+						// ----------------
+
+						static default(): Container;
+
+						static copy(it: Container): Container;
+
+						// ----------------
+
+						static Value: 'none';
+
+						static value(it: typeof Container.Value): Container;
+
+						get value(): typeof Container.Value;
+
+						set value(it: typeof Container.Value);
+
+					}
+
+					/** 压缩 */
+					namespace Compress {
+
+						/**
+						 * 压缩
+						 * @param raw 原始数据
+						 * @param ripe 成品数据
+						 * @param container 容器
+						 */
+						function process(
+							raw: InputBinaryStreamView,
+							ripe: OutputBinaryStreamView,
+							container: Container,
+						): Void;
+
+						/**
+						 * 计算成品数据尺寸上限
+						 * @param raw_size 原始数据尺寸
+						 * @param ripe_size_bound 成品数据尺寸上限
+						 * @param container 容器
+						 */
+						function estimate(
+							raw_size: Size,
+							ripe_size_bound: Size,
+							container: Container,
+						): Void;
+
+					}
+
+					/** 解压 */
+					namespace Uncompress {
+
+						/**
+						 * 解压
+						 * @param raw 原始数据
+						 * @param ripe 成品数据
+						 * @param container 容器
+						 */
+						function process(
+							raw: OutputBinaryStreamView,
+							ripe: InputBinaryStreamView,
+							container: Container,
+						): Void;
+
+					}
+
+				}
+
+				/** Lzo */
+				namespace Lzo {
+
+					/** 容器 */
+					class Container {
+
+						private _Tool_Data_Compress_Lzo_Container;
+
+						// ----------------
+
+						static default(): Container;
+
+						static copy(it: Container): Container;
+
+						// ----------------
+
+						static Value: 'none';
+
+						static value(it: typeof Container.Value): Container;
+
+						get value(): typeof Container.Value;
+
+						set value(it: typeof Container.Value);
+
+					}
+
+					/** 压缩 */
+					namespace Compress {
+
+						/**
+						 * 压缩
+						 * @param raw 原始数据
+						 * @param ripe 成品数据
+						 * @param container 容器
+						 */
+						function process(
+							raw: InputBinaryStreamView,
+							ripe: OutputBinaryStreamView,
+							container: Container,
+						): Void;
+
+						/**
+						 * 计算成品数据尺寸上限
+						 * @param raw_size 原始数据尺寸
+						 * @param ripe_size_bound 成品数据尺寸上限
+						 * @param container 容器
+						 */
+						function estimate(
+							raw_size: Size,
+							ripe_size_bound: Size,
+							container: Container,
+						): Void;
+
+					}
+
+					/** 解压 */
+					namespace Uncompress {
+
+						/**
+						 * 解压
+						 * @param raw 原始数据
+						 * @param ripe 成品数据
+						 * @param container 容器
+						 */
+						function process(
+							raw: OutputBinaryStreamView,
+							ripe: InputBinaryStreamView,
+							container: Container,
+						): Void;
+
+					}
+
+				}
+
+				/** Brotli */
+				namespace Brotli {
+
+					/** 容器 */
+					class Container {
+
+						private _Tool_Data_Compress_Brotli_Container;
+
+						// ----------------
+
+						static default(): Container;
+
+						static copy(it: Container): Container;
+
+						// ----------------
+
+						static Value: 'none';
+
+						static value(it: typeof Container.Value): Container;
+
+						get value(): typeof Container.Value;
+
+						set value(it: typeof Container.Value);
+
+					}
+
+					/** 压缩 */
+					namespace Compress {
+
+						/**
+						 * 压缩
+						 * @param raw 原始数据
+						 * @param ripe 成品数据
+						 * @param container 容器
+						 */
+						function process(
+							raw: InputBinaryStreamView,
+							ripe: OutputBinaryStreamView,
+							container: Container,
+						): Void;
+
+						/**
+						 * 计算成品数据尺寸上限
+						 * @param raw_size 原始数据尺寸
+						 * @param ripe_size_bound 成品数据尺寸上限
+						 * @param container 容器
+						 */
+						function estimate(
+							raw_size: Size,
+							ripe_size_bound: Size,
+							container: Container,
+						): Void;
+
+					}
+
+					/** 解压 */
+					namespace Uncompress {
+
+						/**
+						 * 解压
+						 * @param raw 原始数据
+						 * @param ripe 成品数据
+						 * @param container 容器
+						 */
+						function process(
+							raw: OutputBinaryStreamView,
+							ripe: InputBinaryStreamView,
+							container: Container,
+						): Void;
+
+					}
+
+				}
+
+				/** Snappy */
+				namespace Snappy {
+
+					/** 容器 */
+					class Container {
+
+						private _Tool_Data_Compress_Snappy_Container;
+
+						// ----------------
+
+						static default(): Container;
+
+						static copy(it: Container): Container;
+
+						// ----------------
+
+						static Value: 'none';
+
+						static value(it: typeof Container.Value): Container;
+
+						get value(): typeof Container.Value;
+
+						set value(it: typeof Container.Value);
+
+					}
+
+					/** 压缩 */
+					namespace Compress {
+
+						/**
+						 * 压缩
+						 * @param raw 原始数据
+						 * @param ripe 成品数据
+						 * @param container 容器
+						 */
+						function process(
+							raw: InputBinaryStreamView,
+							ripe: OutputBinaryStreamView,
+							container: Container,
+						): Void;
+
+						/**
+						 * 计算成品数据尺寸上限
+						 * @param raw_size 原始数据尺寸
+						 * @param ripe_size_bound 成品数据尺寸上限
+						 * @param container 容器
+						 */
+						function estimate(
+							raw_size: Size,
+							ripe_size_bound: Size,
+							container: Container,
+						): Void;
+
+					}
+
+					/** 解压 */
+					namespace Uncompress {
+
+						/**
+						 * 解压
+						 * @param raw 原始数据
+						 * @param ripe 成品数据
+						 * @param container 容器
+						 */
+						function process(
+							raw: OutputBinaryStreamView,
+							ripe: InputBinaryStreamView,
+							container: Container,
+						): Void;
+
+					}
+
+				}
+
+				/** Zstd */
+				namespace Zstd {
+
+					/** 容器 */
+					class Container {
+
+						private _Tool_Data_Compress_Zstd_Container;
+
+						// ----------------
+
+						static default(): Container;
+
+						static copy(it: Container): Container;
+
+						// ----------------
+
+						static Value: 'none';
+
+						static value(it: typeof Container.Value): Container;
+
+						get value(): typeof Container.Value;
+
+						set value(it: typeof Container.Value);
+
+					}
+
+					/** 压缩 */
+					namespace Compress {
+
+						/**
+						 * 压缩
+						 * @param raw 原始数据
+						 * @param ripe 成品数据
+						 * @param container 容器
+						 */
+						function process(
+							raw: InputBinaryStreamView,
+							ripe: OutputBinaryStreamView,
+							container: Container,
+						): Void;
+
+						/**
+						 * 计算成品数据尺寸上限
+						 * @param raw_size 原始数据尺寸
+						 * @param ripe_size_bound 成品数据尺寸上限
+						 * @param container 容器
+						 */
+						function estimate(
+							raw_size: Size,
+							ripe_size_bound: Size,
+							container: Container,
+						): Void;
+
+					}
+
+					/** 解压 */
+					namespace Uncompress {
+
+						/**
+						 * 解压
+						 * @param raw 原始数据
+						 * @param ripe 成品数据
+						 * @param container 容器
+						 */
+						function process(
+							raw: OutputBinaryStreamView,
+							ripe: InputBinaryStreamView,
+							container: Container,
 						): Void;
 
 					}
@@ -1752,9 +2452,9 @@ declare namespace Twinning.Kernel {
 						 * @param interleaved 使用交叉模式生成差异数据
 						 */
 						function process(
-							before: InputByteStreamView,
-							after: InputByteStreamView,
-							patch: OutputByteStreamView,
+							before: InputBinaryStreamView,
+							after: InputBinaryStreamView,
+							patch: OutputBinaryStreamView,
 							interleaved: Boolean,
 						): Void;
 
@@ -1771,9 +2471,9 @@ declare namespace Twinning.Kernel {
 						 * @param maximum_window_size 最大窗口尺寸，最大为 2^31 - 1
 						 */
 						function process(
-							before: InputByteStreamView,
-							after: OutputByteStreamView,
-							patch: InputByteStreamView,
+							before: InputBinaryStreamView,
+							after: OutputBinaryStreamView,
+							patch: InputBinaryStreamView,
 							maximum_window_size: Integer,
 						): Void;
 
@@ -1802,7 +2502,7 @@ declare namespace Twinning.Kernel {
 						 * @param disable_object_line_breaking 禁用对象换行
 						 */
 						function process(
-							data: OutputCharacterStreamView,
+							data: OutputStringStreamView,
 							value: Notation.Json.Value,
 							disable_array_trailing_comma: Boolean,
 							disable_array_line_breaking: Boolean,
@@ -1822,9 +2522,9 @@ declare namespace Twinning.Kernel {
 						 * @param buffer 缓冲区
 						 */
 						function process(
-							data: InputCharacterStreamView,
+							data: InputStringStreamView,
 							value: Notation.Json.Value,
-							buffer: OutputCharacterStreamView,
+							buffer: OutputStringStreamView,
 						): Void;
 
 					}
@@ -1876,7 +2576,7 @@ declare namespace Twinning.Kernel {
 			/** 变换 */
 			namespace Transformation {
 
-				/** 翻转 */
+				/** 填充 */
 				namespace Filling {
 
 					/** 编码 */
@@ -2145,7 +2845,7 @@ declare namespace Twinning.Kernel {
 					 * @param format 格式
 					 */
 					function process(
-						data: OutputByteStreamView,
+						data: OutputBinaryStreamView,
 						image: Image.ConstantImageView,
 						format: Format,
 					): Void;
@@ -2162,7 +2862,7 @@ declare namespace Twinning.Kernel {
 					 * @param format 格式
 					 */
 					function process(
-						data: InputByteStreamView,
+						data: InputBinaryStreamView,
 						image: Image.VariableImageView,
 						format: Format,
 					): Void;
@@ -2212,7 +2912,7 @@ declare namespace Twinning.Kernel {
 						 * @param with_alpha 是否包含A
 						 */
 						function process(
-							data: OutputByteStreamView,
+							data: OutputBinaryStreamView,
 							image: Image.ConstantImageView,
 							generation: Generation,
 							block_size: Image.ImageSize,
@@ -2233,7 +2933,7 @@ declare namespace Twinning.Kernel {
 						 * @param with_alpha 是否包含A
 						 */
 						function process(
-							data: InputByteStreamView,
+							data: InputBinaryStreamView,
 							image: Image.VariableImageView,
 							generation: Generation,
 							block_size: Image.ImageSize,
@@ -2283,7 +2983,7 @@ declare namespace Twinning.Kernel {
 						 * @param with_alpha 是否包含A
 						 */
 						function process(
-							data: OutputByteStreamView,
+							data: OutputBinaryStreamView,
 							image: Image.ConstantImageView,
 							generation: Generation,
 							block_size: Image.ImageSize,
@@ -2306,7 +3006,7 @@ declare namespace Twinning.Kernel {
 						 * @param with_alpha 是否包含A
 						 */
 						function process(
-							data: InputByteStreamView,
+							data: InputBinaryStreamView,
 							image: Image.VariableImageView,
 							generation: Generation,
 							block_size: Image.ImageSize,
@@ -2357,7 +3057,7 @@ declare namespace Twinning.Kernel {
 						 * @param with_green_eac Eac模式下，是否包含G
 						 */
 						function process(
-							data: OutputByteStreamView,
+							data: OutputBinaryStreamView,
 							image: Image.ConstantImageView,
 							generation: Generation,
 							block_size: Image.ImageSize,
@@ -2380,7 +3080,7 @@ declare namespace Twinning.Kernel {
 						 * @param with_green_eac Eac模式下，是否包含G
 						 */
 						function process(
-							data: InputByteStreamView,
+							data: InputBinaryStreamView,
 							image: Image.VariableImageView,
 							generation: Generation,
 							block_size: Image.ImageSize,
@@ -2430,7 +3130,7 @@ declare namespace Twinning.Kernel {
 						 * @param quality 压缩质量
 						 */
 						function process(
-							data: OutputByteStreamView,
+							data: OutputBinaryStreamView,
 							image: Image.ConstantImageView,
 							generation: Generation,
 							block_size: Image.ImageSize,
@@ -2450,7 +3150,7 @@ declare namespace Twinning.Kernel {
 						 * @param block_size 区块大小
 						 */
 						function process(
-							data: InputByteStreamView,
+							data: InputBinaryStreamView,
 							image: Image.VariableImageView,
 							generation: Generation,
 							block_size: Image.ImageSize,
@@ -2477,7 +3177,7 @@ declare namespace Twinning.Kernel {
 						 * @param image 图像
 						 */
 						function process(
-							data: OutputByteStreamView,
+							data: OutputBinaryStreamView,
 							image: Image.ConstantImageView,
 						): Void;
 
@@ -2492,7 +3192,7 @@ declare namespace Twinning.Kernel {
 						 * @param image 图像
 						 */
 						function process(
-							data: InputByteStreamView,
+							data: InputBinaryStreamView,
 							image: Image.VariableImageView,
 						): Void;
 
@@ -2502,7 +3202,7 @@ declare namespace Twinning.Kernel {
 						 * @param image_size 图像尺寸
 						 */
 						function estimate(
-							data: ConstantByteListView,
+							data: InputBinaryStreamView,
 							image_size: Image.ImageSize,
 						): Void;
 
@@ -2594,7 +3294,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: OutputByteStreamView,
+						data: OutputBinaryStreamView,
 						definition: Definition.SoundBank,
 						embedded_media_directory: Path,
 						version: Version,
@@ -2613,7 +3313,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: InputByteStreamView,
+						data: InputBinaryStreamView,
 						definition: Definition.SoundBank,
 						embedded_media_directory: PathOptional,
 						version: Version,
@@ -2717,7 +3417,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: OutputByteStreamView,
+						data: OutputBinaryStreamView,
 						definition: Definition.Package,
 						resource_directory: Path,
 						version: Version,
@@ -2736,7 +3436,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: InputByteStreamView,
+						data: InputBinaryStreamView,
 						definition: Definition.Package,
 						resource_directory: PathOptional,
 						version: Version,
@@ -2793,8 +3493,8 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						raw: InputByteStreamView,
-						ripe: OutputByteStreamView,
+						raw: InputBinaryStreamView,
+						ripe: OutputBinaryStreamView,
 						level: Integer,
 						window_exponent: Integer,
 						memory_level: Integer,
@@ -2831,8 +3531,8 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						raw: OutputByteStreamView,
-						ripe: InputByteStreamView,
+						raw: OutputBinaryStreamView,
+						ripe: InputBinaryStreamView,
 						window_exponent: Integer,
 						version: Version,
 					): Void;
@@ -2845,7 +3545,7 @@ declare namespace Twinning.Kernel {
 					 */
 					function estimate(
 						raw_size: Size,
-						ripe: ConstantByteListView,
+						ripe: InputBinaryStreamView,
 						version: Version,
 					): Void;
 
@@ -2892,8 +3592,8 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						raw: InputByteStreamView,
-						ripe: OutputByteStreamView,
+						raw: InputBinaryStreamView,
+						ripe: OutputBinaryStreamView,
 						limit: Size,
 						key: String,
 						version: Version,
@@ -2927,8 +3627,8 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						raw: OutputByteStreamView,
-						ripe: InputByteStreamView,
+						raw: OutputBinaryStreamView,
+						ripe: InputBinaryStreamView,
 						limit: Size,
 						key: String,
 						version: Version,
@@ -2943,7 +3643,7 @@ declare namespace Twinning.Kernel {
 					 */
 					function estimate(
 						raw_size: Size,
-						ripe: ConstantByteListView,
+						ripe: InputBinaryStreamView,
 						limit: Size,
 						version: Version,
 					): Void;
@@ -2996,7 +3696,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: OutputByteStreamView,
+						data: OutputBinaryStreamView,
 						definition: Notation.Json.Value<JS_ValidValue>,
 						enable_string_index: Boolean,
 						enable_reference: Boolean,
@@ -3015,7 +3715,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: InputByteStreamView,
+						data: InputBinaryStreamView,
 						definition: Notation.Json.Value<JS_ValidValue>,
 						version: Version,
 					): Void;
@@ -3063,7 +3763,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: OutputByteStreamView,
+						data: OutputBinaryStreamView,
 						image: Image.ConstantImageView,
 						format: String,
 						version: Version,
@@ -3095,7 +3795,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: InputByteStreamView,
+						data: InputBinaryStreamView,
 						image: Image.VariableImageView,
 						version: Version,
 					): Void;
@@ -3107,7 +3807,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function estimate(
-						data: ConstantByteListView,
+						data: InputBinaryStreamView,
 						image_size: Image.ImageSize,
 						version: Version,
 					): Void;
@@ -3156,7 +3856,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: OutputByteStreamView,
+						data: OutputBinaryStreamView,
 						image: Image.ConstantImageView,
 						format: String,
 						compress_texture_data: Boolean,
@@ -3191,7 +3891,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: InputByteStreamView,
+						data: InputBinaryStreamView,
 						image: Image.VariableImageView,
 						version: Version,
 					): Void;
@@ -3203,7 +3903,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function estimate(
-						data: ConstantByteListView,
+						data: InputBinaryStreamView,
 						image_size: Image.ImageSize,
 						version: Version,
 					): Void;
@@ -3443,7 +4143,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: OutputByteStreamView,
+						data: OutputBinaryStreamView,
 						definition: Definition.Animation,
 						version: Version,
 					): Void;
@@ -3460,7 +4160,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: InputByteStreamView,
+						data: InputBinaryStreamView,
 						definition: Definition.Animation,
 						version: Version,
 					): Void;
@@ -3503,23 +4203,23 @@ declare namespace Twinning.Kernel {
 
 					namespace JS_N {
 
-						/** 精灵 */
+						/** 变换 */
 						type Transform = {
 						};
 
-						/** 图像 */
+						/** 轨迹 */
 						type Track = {
 							/** 名称 */
 							name: string;
-							/** 尺寸。版本4开始存在 */
-							t: Array<Transform>;
+							/** 变换。版本4开始存在 */
+							transform: Array<Transform>;
 						};
 
 						/** 动画 */
 						type Animation = {
 							/** 帧率 */
-							fps: number;
-							/** 位置 */
+							frame_rate: number;
+							/** 轨迹 */
 							track: Array<Track>;
 						};
 
@@ -3538,11 +4238,11 @@ declare namespace Twinning.Kernel {
 
 						// ----------------
 
-						static json(it: Notation.Json.Value<undefined>, version: Version): Animation;
+						static json(it: Notation.Json.Value<JS_N.Animation>, version: Version): Animation;
 
-						get_json(version: Version): Notation.Json.Value<undefined>;
+						get_json(version: Version): Notation.Json.Value<JS_N.Animation>;
 
-						set_json(it: Notation.Json.Value<undefined>, version: Version): Void;
+						set_json(it: Notation.Json.Value<JS_N.Animation>, version: Version): Void;
 
 					}
 
@@ -3558,7 +4258,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: OutputByteStreamView,
+						data: OutputBinaryStreamView,
 						definition: Definition.Animation,
 						version: Version,
 					): Void;
@@ -3575,7 +4275,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: InputByteStreamView,
+						data: InputBinaryStreamView,
 						definition: Definition.Animation,
 						version: Version,
 					): Void;
@@ -3653,7 +4353,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: OutputByteStreamView,
+						data: OutputBinaryStreamView,
 						definition: Definition.Particle,
 						version: Version,
 					): Void;
@@ -3670,7 +4370,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: InputByteStreamView,
+						data: InputBinaryStreamView,
 						definition: Definition.Particle,
 						version: Version,
 					): Void;
@@ -3748,7 +4448,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: OutputByteStreamView,
+						data: OutputBinaryStreamView,
 						definition: Definition.Trail,
 						version: Version,
 					): Void;
@@ -3765,7 +4465,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: InputByteStreamView,
+						data: InputBinaryStreamView,
 						definition: Definition.Trail,
 						version: Version,
 					): Void;
@@ -3843,7 +4543,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: OutputByteStreamView,
+						data: OutputBinaryStreamView,
 						definition: Definition.Effect,
 						version: Version,
 					): Void;
@@ -3860,7 +4560,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: InputByteStreamView,
+						data: InputBinaryStreamView,
 						definition: Definition.Effect,
 						version: Version,
 					): Void;
@@ -3937,7 +4637,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: OutputByteStreamView,
+						data: OutputBinaryStreamView,
 						definition: Definition.Effect,
 						version: Version,
 					): Void;
@@ -3954,7 +4654,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: InputByteStreamView,
+						data: InputBinaryStreamView,
 						definition: Definition.Effect,
 						version: Version,
 					): Void;
@@ -4030,7 +4730,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: OutputByteStreamView,
+						data: OutputBinaryStreamView,
 						definition: Definition.FontWidget,
 						version: Version,
 					): Void;
@@ -4047,7 +4747,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: InputByteStreamView,
+						data: InputBinaryStreamView,
 						definition: Definition.FontWidget,
 						version: Version,
 					): Void;
@@ -4109,7 +4809,7 @@ declare namespace Twinning.Kernel {
 					/** 包 */
 					class Package {
 
-						private _Tool_Popcap_Definition_Package;
+						private _Tool_Popcap_Package_Definition_Package;
 
 						// ----------------
 
@@ -4140,7 +4840,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: OutputByteStreamView,
+						data: OutputBinaryStreamView,
 						definition: Definition.Package,
 						resource_directory: Path,
 						version: Version,
@@ -4159,7 +4859,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: InputByteStreamView,
+						data: InputBinaryStreamView,
 						definition: Definition.Package,
 						resource_directory: PathOptional,
 						version: Version,
@@ -4290,7 +4990,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: OutputByteStreamView,
+						data: OutputBinaryStreamView,
 						definition: Definition.Package,
 						resource_directory: Path,
 						version: Version,
@@ -4309,7 +5009,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: InputByteStreamView,
+						data: InputBinaryStreamView,
 						definition: Definition.Package,
 						resource_directory: PathOptional,
 						version: Version,
@@ -4507,7 +5207,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: OutputByteStreamView,
+						data: OutputBinaryStreamView,
 						definition: Definition.Package,
 						manifest: Manifest.PackageOptional,
 						resource_directory: Path,
@@ -4531,7 +5231,7 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						data: InputByteStreamView,
+						data: InputBinaryStreamView,
 						definition: Definition.Package,
 						manifest: Manifest.PackageOptional,
 						resource_directory: PathOptional,
@@ -4583,9 +5283,9 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						before: InputByteStreamView,
-						after: InputByteStreamView,
-						patch: OutputByteStreamView,
+						before: InputBinaryStreamView,
+						after: InputBinaryStreamView,
+						patch: OutputBinaryStreamView,
 						use_raw_packet: Boolean,
 						version: Version,
 					): Void;
@@ -4604,9 +5304,9 @@ declare namespace Twinning.Kernel {
 					 * @param version 版本
 					 */
 					function process(
-						before: InputByteStreamView,
-						after: OutputByteStreamView,
-						patch: InputByteStreamView,
+						before: InputBinaryStreamView,
+						after: OutputBinaryStreamView,
+						patch: InputBinaryStreamView,
 						use_raw_packet: Boolean,
 						version: Version,
 					): Void;
@@ -4633,8 +5333,8 @@ declare namespace Twinning.Kernel {
 					 * @param key 密钥
 					 */
 					function process(
-						raw: InputByteStreamView,
-						ripe: OutputByteStreamView,
+						raw: InputBinaryStreamView,
+						ripe: OutputBinaryStreamView,
 						key: String,
 					): Void;
 
@@ -4660,8 +5360,8 @@ declare namespace Twinning.Kernel {
 					 * @param key 密钥
 					 */
 					function process(
-						raw: OutputByteStreamView,
-						ripe: InputByteStreamView,
+						raw: OutputBinaryStreamView,
+						ripe: InputBinaryStreamView,
 						key: String,
 					): Void;
 
@@ -4692,7 +5392,7 @@ declare namespace Twinning.Kernel {
 					 * @param palette 调色板
 					 */
 					function process(
-						data: OutputByteStreamView,
+						data: OutputBinaryStreamView,
 						image: Image.ConstantImageView,
 						palette: Image.ColorList,
 					): Void;
@@ -4709,7 +5409,7 @@ declare namespace Twinning.Kernel {
 					 * @param palette 调色板
 					 */
 					function process(
-						data: InputByteStreamView,
+						data: InputBinaryStreamView,
 						image: Image.VariableImageView,
 						palette: Image.ColorList,
 					): Void;
@@ -4796,7 +5496,7 @@ declare namespace Twinning.Kernel {
 			 * @returns 计算值
 			 */
 			evaluate(
-				script: ConstantCharacterListView,
+				script: ConstantStringView,
 				name: String,
 				is_module: Boolean,
 			): any;
@@ -4848,34 +5548,27 @@ declare namespace Twinning.Kernel {
 			query_module_home(
 			): PathOptional;
 
-			/**
-			 * 字节流读写数据时是否使用大端序，默认为false，线程作用域
-			 * @returns 引用变量
-			 */
-			query_byte_stream_use_big_endian(
-			): Boolean;
-
 		}
 
 		// ----------------
 
 		/**
-		 * 将 ByteListView 解释为 CharacterListView
+		 * 将 BinaryView 解释为 StringView
 		 * @param target 目标
 		 * @returns 结果
 		 */
-		function cast_ByteListView_to_CharacterListView(
-			target: ByteListView,
-		): CharacterListView;
+		function cast_BinaryView_to_StringView(
+			target: BinaryView,
+		): StringView;
 
 		/**
-		 * 将 CharacterListView 解释为 ByteListView
+		 * 将 StringView 解释为 BinaryView
 		 * @param target 目标
 		 * @returns 结果
 		 */
-		function cast_CharacterListView_to_ByteListView(
-			target: CharacterListView,
-		): ByteListView;
+		function cast_StringView_to_BinaryView(
+			target: StringView,
+		): BinaryView;
 
 		// ----------------
 
@@ -4884,8 +5577,8 @@ declare namespace Twinning.Kernel {
 		 * @param target 目标
 		 * @returns 结果
 		 */
-		function cast_moveable_ByteArray_to_String(
-			target: ByteArray,
+		function cast_moveable_Binary_to_String(
+			target: Binary,
 		): String;
 
 		/**
@@ -4893,30 +5586,30 @@ declare namespace Twinning.Kernel {
 		 * @param target 目标
 		 * @returns 结果
 		 */
-		function cast_moveable_String_to_ByteArray(
+		function cast_moveable_String_to_Binary(
 			target: String,
-		): ByteArray;
+		): Binary;
 
 		// ----------------
 
 		/**
-		 * 获取 String 的内存视图为 CharacterListView
+		 * 获取 String 的内存视图为 StringView
 		 * @param target 目标
 		 * @returns 结果
 		 */
-		function cast_String_to_CharacterListView(
+		function cast_String_to_StringView(
 			target: String,
-		): CharacterListView;
+		): StringView;
 
 		// ----------------
 
 		/**
-		 * 通过 CharacterListView 指向的内存构造新的字符串
+		 * 通过 StringView 指向的内存构造新的字符串
 		 * @param target 目标
 		 * @returns 结果
 		 */
-		function cast_CharacterListView_to_JS_String(
-			target: CharacterListView,
+		function cast_StringView_to_RawString(
+			target: StringView,
 		): string;
 
 		// ----------------

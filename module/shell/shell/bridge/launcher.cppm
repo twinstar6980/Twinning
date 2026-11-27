@@ -6,6 +6,7 @@ export module twinning.shell.bridge.launcher;
 import twinning.shell.bridge.proxy;
 import twinning.shell.bridge.library;
 import twinning.shell.bridge.client;
+import twinning.shell.utility.finalizer;
 
 export namespace Twinning::Shell::Bridge {
 
@@ -13,7 +14,7 @@ export namespace Twinning::Shell::Bridge {
 
 	struct Launcher {
 
-		#pragma region function
+		#pragma region utility
 
 		inline static auto launch(
 			Client &                         client,
@@ -24,6 +25,11 @@ export namespace Twinning::Shell::Bridge {
 			auto result = std::vector<std::string>{};
 			auto exception = std::exception_ptr{};
 			client.start();
+			auto _ = make_finalizer(
+				[&] {
+					client.finish();
+				}
+			);
 			#if defined M_build_release
 			try
 			#endif
@@ -34,7 +40,7 @@ export namespace Twinning::Shell::Bridge {
 					return;
 				};
 				auto executor_argument = MessageProxy{};
-				executor_argument.value.emplace_back("execute");
+				executor_argument.value.emplace_back("execute"sv);
 				executor_argument.value.emplace_back(script);
 				executor_argument.value.append_range(argument);
 				auto executor_result = MessageProxy{};
@@ -46,7 +52,6 @@ export namespace Twinning::Shell::Bridge {
 				exception = std::current_exception();
 			}
 			#endif
-			client.finish();
 			if (exception != nullptr) {
 				std::rethrow_exception(exception);
 			}

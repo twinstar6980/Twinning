@@ -101,13 +101,25 @@
 	"executor.implementation:common.utility.run_custom_script:target_file": "目标文件",
 	"executor.implementation:common.utility.run_custom_script:is_module": "作为模块运行",
 	// executor/implementation/data.hashing
-	"executor.implementation:data.hashing.md5.hash": "MD5 散列",
-	"executor.implementation:data.hashing.md5.hash:target_file": "目标文件",
+	"executor.implementation:data.hashing.fnv.hash": "FNV Hash",
+	"executor.implementation:data.hashing.fnv.hash:target_file": "Target File",
+	"executor.implementation:data.hashing.fnv.hash:mode": "Mode",
+	"executor.implementation:data.hashing.fnv.hash:length": "Length",
 	// 
-	"executor.implementation:data.hashing.fnv.hash": "FNV 散列",
-	"executor.implementation:data.hashing.fnv.hash:target_file": "目标文件",
-	"executor.implementation:data.hashing.fnv.hash:mode": "算法模式",
-	"executor.implementation:data.hashing.fnv.hash:bit_count": "位数",
+	"executor.implementation:data.hashing.crc.hash": "CRC Hash",
+	"executor.implementation:data.hashing.crc.hash:target_file": "Target File",
+	"executor.implementation:data.hashing.crc.hash:mode": "Mode",
+	"executor.implementation:data.hashing.crc.hash:length": "Length",
+	// 
+	"executor.implementation:data.hashing.md.hash": "MD Hash",
+	"executor.implementation:data.hashing.md.hash:target_file": "Target File",
+	"executor.implementation:data.hashing.md.hash:mode": "Mode",
+	"executor.implementation:data.hashing.md.hash:length": "Length",
+	// 
+	"executor.implementation:data.hashing.sha.hash": "SHA Hash",
+	"executor.implementation:data.hashing.sha.hash:target_file": "Target File",
+	"executor.implementation:data.hashing.sha.hash:mode": "Mode",
+	"executor.implementation:data.hashing.sha.hash:length": "Length",
 	// executor/implementation/data.encoding
 	"executor.implementation:data.encoding.base64.encode": "Base64 编码",
 	"executor.implementation:data.encoding.base64.encode:raw_file": "原始文件",

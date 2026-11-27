@@ -38,16 +38,16 @@ export namespace Twinning::Kernel::Tool::Texture::Encoding {
 			auto result = k_true;
 			auto bit_count = 0_sz;
 			for (auto & channel : format.channel) {
-				if (!Math::between(channel.get<2_ix>(), 1_sz, k_type_bit_count<Byte>)) {
+				if (!Math::between(channel.get<2_ix>(), 1_sz, type_bit_size_of<Byte>())) {
 					result = k_false;
 					break;
 				}
 				bit_count += channel.get<2_ix>();
 			}
-			if (!Math::is_padded_size(bit_count, k_type_bit_count<Byte>)) {
+			if (!Math::is_padded_size(bit_count, type_bit_size_of<Byte>())) {
 				result = k_false;
 			}
-			if (!Math::between(bit_count, 1_sz * k_type_bit_count<Byte>, 4_sz * k_type_bit_count<Byte>)) {
+			if (!Math::between(bit_count, 1_sz * type_bit_size_of<Byte>(), 4_sz * type_bit_size_of<Byte>())) {
 				result = k_false;
 			}
 			return result;
@@ -60,8 +60,8 @@ export namespace Twinning::Kernel::Tool::Texture::Encoding {
 			for (auto & channel : format.channel) {
 				bit_count += channel.get<2_ix>();
 			}
-			assert_test(Math::is_padded_size(bit_count, k_type_bit_count<Byte>));
-			auto byte_count = bit_count / k_type_bit_count<Byte>;
+			assert_test(Math::is_padded_size(bit_count, type_bit_size_of<Byte>()));
+			auto byte_count = bit_count / type_bit_size_of<Byte>();
 			return byte_count;
 		}
 

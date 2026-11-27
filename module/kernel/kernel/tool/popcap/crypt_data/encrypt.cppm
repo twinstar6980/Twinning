@@ -26,19 +26,19 @@ export namespace Twinning::Kernel::Tool::Popcap::CryptData {
 		// ----------------
 
 		inline static auto process_whole(
-			InputByteStreamView &  raw,
-			OutputByteStreamView & ripe,
-			Size const &           limit,
-			String const &         key
+			InputBinaryStreamView &  raw,
+			OutputBinaryStreamView & ripe,
+			Size const &             limit,
+			String const &           key
 		) -> Void {
 			if (raw.reserve() >= limit) {
 				ripe.write_constant(k_magic_marker);
 				auto header = Header{};
 				header.raw_size = cast_box<IntegerU64>(raw.reserve());
 				ripe.write(header);
-				Data::Encryption::Exor::Encrypt::process(as_left(InputByteStreamView{raw.forward_view(limit)}), ripe, to_byte_view(key.as_view()));
+				Data::Encryption::Exor::Encrypt::process(as_left(raw.split_forward(limit)), ripe, to_binary_view(key.as_view()));
 			}
-			ripe.write(raw.forward_view(raw.reserve()));
+			ripe.write(raw.split_forward(raw.reserve()).view());
 			return;
 		}
 
@@ -51,8 +51,8 @@ export namespace Twinning::Kernel::Tool::Popcap::CryptData {
 		) -> Void {
 			ripe_size = 0_sz;
 			if (raw_size >= limit) {
-				ripe_size += bs_static_size<MagicMarker>();
-				ripe_size += bs_static_size<Header>();
+				ripe_size += binary_static_size_of<MagicMarker>();
+				ripe_size += binary_static_size_of<Header>();
 			}
 			ripe_size += raw_size;
 			return;
@@ -61,13 +61,13 @@ export namespace Twinning::Kernel::Tool::Popcap::CryptData {
 		// ----------------
 
 		inline static auto process(
-			InputByteStreamView &  raw_,
-			OutputByteStreamView & ripe_,
-			Size const &           limit,
-			String const &         key
+			InputBinaryStreamView &  raw_,
+			OutputBinaryStreamView & ripe_,
+			Size const &             limit,
+			String const &           key
 		) -> Void {
-			M_use_zps_of(raw);
-			M_use_zps_of(ripe);
+			M_use_split_stream_of(raw);
+			M_use_split_stream_of(ripe);
 			return process_whole(raw, ripe, limit, key);
 		}
 

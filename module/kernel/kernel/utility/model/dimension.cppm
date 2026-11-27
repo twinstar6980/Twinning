@@ -6,7 +6,7 @@ export module twinning.kernel.utility.model.dimension;
 import twinning.kernel.utility.builtin;
 import twinning.kernel.utility.trait;
 import twinning.kernel.utility.box;
-import twinning.kernel.utility.exception.utility;
+import twinning.kernel.utility.exception;
 
 export namespace Twinning::Kernel {
 
@@ -97,7 +97,6 @@ export namespace Twinning::Kernel {
 
 		constexpr auto area(
 		) const -> XValue requires
-			(IsSame<XValue, XValue>) &&
 			(IsNumberBox<XValue>) {
 			return thiz.width;
 		}
@@ -129,9 +128,8 @@ export namespace Twinning::Kernel {
 
 		constexpr auto area(
 		) const -> XValue requires
-			(IsSame<XValue, XValue>) &&
-			(IsSame<XValue, YValue>) &&
-			(IsNumberBox<XValue>) {
+			(IsNumberBox<XValue>) &&
+			(IsSame<XValue, YValue>) {
 			return thiz.width * thiz.height;
 		}
 
@@ -166,10 +164,9 @@ export namespace Twinning::Kernel {
 
 		constexpr auto area(
 		) const -> XValue requires
-			(IsSame<XValue, XValue>) &&
+			(IsNumberBox<XValue>) &&
 			(IsSame<XValue, YValue>) &&
-			(IsSame<XValue, ZValue>) &&
-			(IsNumberBox<XValue>) {
+			(IsSame<XValue, ZValue>) {
 			return thiz.width * thiz.height * thiz.depth;
 		}
 

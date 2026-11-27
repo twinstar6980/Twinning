@@ -83,7 +83,7 @@ class _GameCardState extends State<GameCard> {
               ).withFlexExpanded(),
             ]),
             Gap.vertical(8),
-            StyledDivider.minimal(),
+            StyledDivider.minimal(direction: .horizontal),
             Gap.vertical(8),
             FlexContainer.horizontal([
               Gap.expanded(),

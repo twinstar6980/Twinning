@@ -19,7 +19,7 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Etc {
 		// ----------------
 
 		inline static auto process_image(
-			InputByteStreamView &            data,
+			InputBinaryStreamView &          data,
 			Image::VariableImageView const & image,
 			Generation const &               generation,
 			Image::ImageSize const &         block_size,
@@ -39,72 +39,72 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Etc {
 				),
 			};
 			if (generation == Generation::Constant::v1()) {
-				auto ripe_data_size = block_count * k_block_bit_count / k_type_bit_count<Byte>;
+				auto ripe_data_size = block_count * k_block_bit_count / type_bit_size_of<Byte>();
 				assert_test(ripe_data_size <= data.reserve());
-				auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
+				auto raw_data = Binary{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
 				Dependency::etcpak::DecodeRGB(
-					unmake_pointer_unsafe<std::uint64_t>(data.current_pointer()),
-					unmake_pointer_unsafe<std::uint32_t>(raw_data.begin()),
+					unmake_pointer_unsafe<std::uint64_t>(data.current()),
+					unmake_pointer_unsafe<std::uint32_t>(raw_data.data()),
 					unmake_box<std::int32_t>(image.size().width),
 					unmake_box<std::int32_t>(image.size().height)
 				);
 				data.forward(ripe_data_size);
-				Encoding::Decode::process(as_left(InputByteStreamView{raw_data.view()}), image, raw_format);
+				Encoding::Decode::process(as_left(InputBinaryStreamView{raw_data.as_view()}), image, raw_format);
 			}
 			if (generation == Generation::Constant::v2()) {
 				if (!with_alpha_eac) {
-					auto ripe_data_size = block_count * k_block_bit_count / k_type_bit_count<Byte>;
+					auto ripe_data_size = block_count * k_block_bit_count / type_bit_size_of<Byte>();
 					assert_test(ripe_data_size <= data.reserve());
-					auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
+					auto raw_data = Binary{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
 					Dependency::etcpak::DecodeRGB(
-						unmake_pointer_unsafe<std::uint64_t>(data.current_pointer()),
-						unmake_pointer_unsafe<std::uint32_t>(raw_data.begin()),
+						unmake_pointer_unsafe<std::uint64_t>(data.current()),
+						unmake_pointer_unsafe<std::uint32_t>(raw_data.data()),
 						unmake_box<std::int32_t>(image.size().width),
 						unmake_box<std::int32_t>(image.size().height)
 					);
 					data.forward(ripe_data_size);
-					Encoding::Decode::process(as_left(InputByteStreamView{raw_data.view()}), image, raw_format);
+					Encoding::Decode::process(as_left(InputBinaryStreamView{raw_data.as_view()}), image, raw_format);
 				}
 				else {
-					auto ripe_data_size = block_count * k_block_bit_count * 2_sz / k_type_bit_count<Byte>;
+					auto ripe_data_size = block_count * k_block_bit_count * 2_sz / type_bit_size_of<Byte>();
 					assert_test(ripe_data_size <= data.reserve());
-					auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
+					auto raw_data = Binary{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
 					Dependency::etcpak::DecodeRGBA(
-						unmake_pointer_unsafe<std::uint64_t>(data.current_pointer()),
-						unmake_pointer_unsafe<std::uint32_t>(raw_data.begin()),
+						unmake_pointer_unsafe<std::uint64_t>(data.current()),
+						unmake_pointer_unsafe<std::uint32_t>(raw_data.data()),
 						unmake_box<std::int32_t>(image.size().width),
 						unmake_box<std::int32_t>(image.size().height)
 					);
 					data.forward(ripe_data_size);
-					Encoding::Decode::process(as_left(InputByteStreamView{raw_data.view()}), image, raw_format);
+					Encoding::Decode::process(as_left(InputBinaryStreamView{raw_data.as_view()}), image, raw_format);
 				}
 			}
 			if (generation == Generation::Constant::eac()) {
 				if (!with_green_eac) {
-					auto ripe_data_size = block_count * k_block_bit_count / k_type_bit_count<Byte>;
+					auto ripe_data_size = block_count * k_block_bit_count / type_bit_size_of<Byte>();
 					assert_test(ripe_data_size <= data.reserve());
-					auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
+					auto raw_data = Binary{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
 					Dependency::etcpak::DecodeR(
-						unmake_pointer_unsafe<std::uint64_t>(data.current_pointer()),
-						unmake_pointer_unsafe<std::uint32_t>(raw_data.begin()),
+						unmake_pointer_unsafe<std::uint64_t>(data.current()),
+						unmake_pointer_unsafe<std::uint32_t>(raw_data.data()),
 						unmake_box<std::int32_t>(image.size().width),
 						unmake_box<std::int32_t>(image.size().height)
 					);
 					data.forward(ripe_data_size);
-					Encoding::Decode::process(as_left(InputByteStreamView{raw_data.view()}), image, raw_format);
+					Encoding::Decode::process(as_left(InputBinaryStreamView{raw_data.as_view()}), image, raw_format);
 				}
 				else {
-					auto ripe_data_size = block_count * k_block_bit_count * 2_sz / k_type_bit_count<Byte>;
+					auto ripe_data_size = block_count * k_block_bit_count * 2_sz / type_bit_size_of<Byte>();
 					assert_test(ripe_data_size <= data.reserve());
-					auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
+					auto raw_data = Binary{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
 					Dependency::etcpak::DecodeRG(
-						unmake_pointer_unsafe<std::uint64_t>(data.current_pointer()),
-						unmake_pointer_unsafe<std::uint32_t>(raw_data.begin()),
+						unmake_pointer_unsafe<std::uint64_t>(data.current()),
+						unmake_pointer_unsafe<std::uint32_t>(raw_data.data()),
 						unmake_box<std::int32_t>(image.size().width),
 						unmake_box<std::int32_t>(image.size().height)
 					);
 					data.forward(ripe_data_size);
-					Encoding::Decode::process(as_left(InputByteStreamView{raw_data.view()}), image, raw_format);
+					Encoding::Decode::process(as_left(InputBinaryStreamView{raw_data.as_view()}), image, raw_format);
 				}
 			}
 			return;
@@ -113,14 +113,14 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Etc {
 		// ----------------
 
 		inline static auto process(
-			InputByteStreamView &            data_,
+			InputBinaryStreamView &          data_,
 			Image::VariableImageView const & image,
 			Generation const &               generation,
 			Image::ImageSize const &         block_size,
 			Boolean const &                  with_alpha_eac,
 			Boolean const &                  with_green_eac
 		) -> Void {
-			M_use_zps_of(data);
+			M_use_split_stream_of(data);
 			return process_image(data, image, generation, block_size, with_alpha_eac, with_green_eac);
 		}
 

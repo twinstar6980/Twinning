@@ -55,7 +55,7 @@ class GameRecordPanel extends StatelessWidget {
           Gap.horizontal(16),
         ]),
         Gap.vertical(12),
-        StyledDivider.minimal(indent: 16),
+        StyledDivider.minimal(direction: .horizontal, indent: 16),
         Gap.vertical(8),
         ...this.information.recordBackup.reversed.map((it) => StyledListTile.standardCustom(
           key: ObjectKey(it),

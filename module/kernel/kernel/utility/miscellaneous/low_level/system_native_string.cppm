@@ -43,6 +43,7 @@ export namespace Twinning::Kernel::LowLevel::SystemNativeString {
 		auto wide = std::wstring{};
 		if (!generic.empty()) {
 			auto size = std::size_t{};
+			assert_test(generic.size() <= static_cast<std::size_t>(std::numeric_limits<int>::max()));
 			size = static_cast<std::size_t>(
 				Dependency::system::win32::$MultiByteToWideChar(
 					Dependency::system::win32::$CP_UTF8,
@@ -53,8 +54,8 @@ export namespace Twinning::Kernel::LowLevel::SystemNativeString {
 					0
 				)
 			);
-			assert_test(size != 0);
-			wide.reserve(size + 1);
+			assert_test(size != 0zu);
+			wide.reserve(size + 1zu);
 			wide.resize(size);
 			size = static_cast<std::size_t>(
 				Dependency::system::win32::$MultiByteToWideChar(
@@ -77,6 +78,7 @@ export namespace Twinning::Kernel::LowLevel::SystemNativeString {
 		auto generic = std::string{};
 		if (!wide.empty()) {
 			auto size = std::size_t{};
+			assert_test(wide.size() <= static_cast<std::size_t>(std::numeric_limits<int>::max()));
 			size = static_cast<std::size_t>(
 				Dependency::system::win32::$WideCharToMultiByte(
 					Dependency::system::win32::$CP_UTF8,
@@ -89,8 +91,8 @@ export namespace Twinning::Kernel::LowLevel::SystemNativeString {
 					nullptr
 				)
 			);
-			assert_test(size != 0);
-			generic.reserve(size + 1);
+			assert_test(size != 0zu);
+			generic.reserve(size + 1zu);
 			generic.resize(size);
 			size = static_cast<std::size_t>(
 				Dependency::system::win32::$WideCharToMultiByte(
@@ -122,6 +124,7 @@ export namespace Twinning::Kernel::LowLevel::SystemNativeString {
 		auto narrow = std::string{};
 		if (!wide.empty()) {
 			auto size = std::size_t{};
+			assert_test(wide.size() <= static_cast<std::size_t>(std::numeric_limits<int>::max()));
 			size = static_cast<std::size_t>(
 				Dependency::system::win32::$WideCharToMultiByte(
 					Dependency::system::win32::$CP_ACP,
@@ -134,8 +137,8 @@ export namespace Twinning::Kernel::LowLevel::SystemNativeString {
 					nullptr
 				)
 			);
-			assert_test(size != 0);
-			narrow.reserve(size + 1);
+			assert_test(size != 0zu);
+			narrow.reserve(size + 1zu);
 			narrow.resize(size);
 			size = static_cast<std::size_t>(
 				Dependency::system::win32::$WideCharToMultiByte(
@@ -160,6 +163,7 @@ export namespace Twinning::Kernel::LowLevel::SystemNativeString {
 		auto wide = std::wstring{};
 		if (!narrow.empty()) {
 			auto size = std::size_t{};
+			assert_test(narrow.size() <= static_cast<std::size_t>(std::numeric_limits<int>::max()));
 			size = static_cast<std::size_t>(
 				Dependency::system::win32::$MultiByteToWideChar(
 					Dependency::system::win32::$CP_ACP,
@@ -170,8 +174,8 @@ export namespace Twinning::Kernel::LowLevel::SystemNativeString {
 					0
 				)
 			);
-			assert_test(size != 0);
-			wide.reserve(size + 1);
+			assert_test(size != 0zu);
+			wide.reserve(size + 1zu);
 			wide.resize(size);
 			size = static_cast<std::size_t>(
 				Dependency::system::win32::$MultiByteToWideChar(

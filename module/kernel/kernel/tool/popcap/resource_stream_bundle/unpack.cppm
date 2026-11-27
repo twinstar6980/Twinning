@@ -70,24 +70,24 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 		// ----------------
 
 		inline static auto process_package_manifest(
-			InputByteStreamView &                data,
+			InputBinaryStreamView &              data,
 			Structure::Header<t_version> const & header_structure,
 			Manifest::Package &                  manifest
 		) -> Void {
-			auto group_manifest_information_data = InputByteStreamView{data.sub_view(cast_box<Size>(header_structure.group_manifest_information_section_offset), cast_box<Size>(header_structure.resource_manifest_information_section_offset - header_structure.group_manifest_information_section_offset))};
-			auto resource_manifest_information_data = InputByteStreamView{data.sub_view(cast_box<Size>(header_structure.resource_manifest_information_section_offset), cast_box<Size>(header_structure.string_manifest_information_section_offset - header_structure.resource_manifest_information_section_offset))};
-			auto string_manifest_information_data = InputCharacterStreamView{from_byte_view<Character, BasicCharacterListView>(data.sub_view(cast_box<Size>(header_structure.string_manifest_information_section_offset), cast_box<Size>(header_structure.information_section_size - header_structure.string_manifest_information_section_offset)))};
+			auto group_manifest_information_data = data.split_sub(cast_box<Size>(header_structure.group_manifest_information_section_offset), cast_box<Size>(header_structure.resource_manifest_information_section_offset - header_structure.group_manifest_information_section_offset));
+			auto resource_manifest_information_data = data.split_sub(cast_box<Size>(header_structure.resource_manifest_information_section_offset), cast_box<Size>(header_structure.string_manifest_information_section_offset - header_structure.resource_manifest_information_section_offset));
+			auto string_manifest_information_data = data.split_sub(cast_box<Size>(header_structure.string_manifest_information_section_offset), cast_box<Size>(header_structure.information_section_size - header_structure.string_manifest_information_section_offset));
 			auto get_string = [&](
 				IntegerU32 const & offset
 			) -> ConstantStringView {
 				auto result = ConstantStringView{};
 				string_manifest_information_data.set_position(cast_box<Size>(offset));
-				StringParser::read_string_until(string_manifest_information_data, result, CharacterType::k_null);
+				StringUtility::read_string_until(unsafe_cast<InputStringStreamView>(string_manifest_information_data), result, StringUtility::k_null_character);
 				return result;
 			};
 			manifest.group.allocate_full(0_sz);
 			while (!group_manifest_information_data.full()) {
-				auto   group_manifest_information_structure = group_manifest_information_data.read_of<Structure::GroupManifestInformation<t_version>>();
+				auto   group_manifest_information_structure = group_manifest_information_data.template read_of<Structure::GroupManifestInformation<t_version>>();
 				auto & group_manifest = manifest.group.append();
 				make_original_group_identifier(get_string(group_manifest_information_structure.identifier_offset), group_manifest.composite, group_manifest.identifier);
 				group_manifest.subgroup.allocate_full(group_manifest_information_structure.subgroup_information.size());
@@ -108,7 +108,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 							subgroup_manifest.category.locale.reset();
 						}
 						else {
-							subgroup_manifest.category.locale.set().from(four_character_code_from_integer(subgroup_manifest_information_structure.locale));
+							subgroup_manifest.category.locale.set(string_from_of(four_character_code_from_integer(subgroup_manifest_information_structure.locale)));
 						}
 					}
 					subgroup_manifest.resource.allocate_full(subgroup_manifest_information_structure.resource_information.size());
@@ -116,7 +116,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 						auto & resource_manifest_information_structure = subgroup_manifest_information_structure.resource_information[resource_index];
 						auto & resource_manifest = subgroup_manifest.resource[resource_index];
 						resource_manifest_information_data.set_position(cast_box<Size>(resource_manifest_information_structure.detail_offset));
-						auto resource_detail_manifest_information_structure = resource_manifest_information_data.read_of<Structure::ResourceDetailManifestInformation<t_version>>();
+						auto resource_detail_manifest_information_structure = resource_manifest_information_data.template read_of<Structure::ResourceDetailManifestInformation<t_version>>();
 						resource_manifest.identifier = get_string(resource_detail_manifest_information_structure.identifier_offset);
 						resource_manifest.path = Path{String{get_string(resource_detail_manifest_information_structure.path_offset)}};
 						assert_test(resource_manifest.path.type() == Storage::PathType::Constant::detached());
@@ -124,16 +124,16 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 						resource_manifest.property.allocate(resource_detail_manifest_information_structure.property_information.size() + (!resource_detail_manifest_information_structure.image_property_information.has() ? (0_sz) : (11_sz)));
 						if (resource_detail_manifest_information_structure.image_property_information.has()) {
 							auto & resource_image_property_detail_manifest_information_structure = resource_detail_manifest_information_structure.image_property_information.get();
-							resource_manifest.property("type"_sv).from(cast_box<Integer>(resource_image_property_detail_manifest_information_structure.type), k_true);
-							resource_manifest.property("flag"_sv).from(cast_box<Integer>(resource_image_property_detail_manifest_information_structure.flag), k_true);
-							resource_manifest.property("x"_sv).from(cast_box<Integer>(resource_image_property_detail_manifest_information_structure.x), k_true);
-							resource_manifest.property("y"_sv).from(cast_box<Integer>(resource_image_property_detail_manifest_information_structure.y), k_true);
-							resource_manifest.property("ax"_sv).from(cast_box<Integer>(resource_image_property_detail_manifest_information_structure.ax), k_true);
-							resource_manifest.property("ay"_sv).from(cast_box<Integer>(resource_image_property_detail_manifest_information_structure.ay), k_true);
-							resource_manifest.property("aw"_sv).from(cast_box<Integer>(resource_image_property_detail_manifest_information_structure.aw), k_true);
-							resource_manifest.property("ah"_sv).from(cast_box<Integer>(resource_image_property_detail_manifest_information_structure.ah), k_true);
-							resource_manifest.property("rows"_sv).from(cast_box<Integer>(resource_image_property_detail_manifest_information_structure.rows), k_true);
-							resource_manifest.property("cols"_sv).from(cast_box<Integer>(resource_image_property_detail_manifest_information_structure.cols), k_true);
+							resource_manifest.property("type"_sv) = string_from_of(cast_box<Integer>(resource_image_property_detail_manifest_information_structure.type), k_true);
+							resource_manifest.property("flag"_sv) = string_from_of(cast_box<Integer>(resource_image_property_detail_manifest_information_structure.flag), k_true);
+							resource_manifest.property("x"_sv) = string_from_of(cast_box<Integer>(resource_image_property_detail_manifest_information_structure.x), k_true);
+							resource_manifest.property("y"_sv) = string_from_of(cast_box<Integer>(resource_image_property_detail_manifest_information_structure.y), k_true);
+							resource_manifest.property("ax"_sv) = string_from_of(cast_box<Integer>(resource_image_property_detail_manifest_information_structure.ax), k_true);
+							resource_manifest.property("ay"_sv) = string_from_of(cast_box<Integer>(resource_image_property_detail_manifest_information_structure.ay), k_true);
+							resource_manifest.property("aw"_sv) = string_from_of(cast_box<Integer>(resource_image_property_detail_manifest_information_structure.aw), k_true);
+							resource_manifest.property("ah"_sv) = string_from_of(cast_box<Integer>(resource_image_property_detail_manifest_information_structure.ah), k_true);
+							resource_manifest.property("rows"_sv) = string_from_of(cast_box<Integer>(resource_image_property_detail_manifest_information_structure.rows), k_true);
+							resource_manifest.property("cols"_sv) = string_from_of(cast_box<Integer>(resource_image_property_detail_manifest_information_structure.cols), k_true);
 							resource_manifest.property("parent"_sv) = get_string(resource_image_property_detail_manifest_information_structure.parent_offset);
 						}
 						for (auto & resource_property_index : SizeRange{resource_detail_manifest_information_structure.property_information.size()}) {
@@ -149,7 +149,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 		}
 
 		inline static auto process_package(
-			InputByteStreamView &                  data,
+			InputBinaryStreamView &                data,
 			Definition::Package &                  definition,
 			Optional<typename Manifest::Package> & manifest,
 			Optional<Path> const &                 resource_directory,
@@ -167,13 +167,13 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 				if constexpr (check_version(t_version, {3}, {})) {
 					assert_test(information_structure.header.unknown_1 == 0_iu32);
 				}
-				assert_test(cast_box<Size>(information_structure.header.group_information_section_block_size) == bs_static_size<Structure::GroupInformation<t_version>>());
-				assert_test(cast_box<Size>(information_structure.header.subgroup_information_section_block_size) == bs_static_size<Structure::SubgroupInformation<t_version>>());
-				assert_test(cast_box<Size>(information_structure.header.pool_information_section_block_size) == bs_static_size<Structure::PoolInformation<t_version>>());
-				assert_test(cast_box<Size>(information_structure.header.texture_resource_information_section_block_size) == bs_static_size<Structure::TextureResourceInformation<t_version>>());
-				CompiledMapData::decode(information_structure.group_identifier, as_left(InputByteStreamView{data.sub_view(cast_box<Size>(information_structure.header.group_identifier_section_offset), cast_box<Size>(information_structure.header.group_identifier_section_size))}));
-				CompiledMapData::decode(information_structure.subgroup_identifier, as_left(InputByteStreamView{data.sub_view(cast_box<Size>(information_structure.header.subgroup_identifier_section_offset), cast_box<Size>(information_structure.header.subgroup_identifier_section_size))}));
-				CompiledMapData::decode(information_structure.resource_path, as_left(InputByteStreamView{data.sub_view(cast_box<Size>(information_structure.header.resource_path_section_offset), cast_box<Size>(information_structure.header.resource_path_section_size))}));
+				assert_test(cast_box<Size>(information_structure.header.group_information_section_block_size) == binary_static_size_of<Structure::GroupInformation<t_version>>());
+				assert_test(cast_box<Size>(information_structure.header.subgroup_information_section_block_size) == binary_static_size_of<Structure::SubgroupInformation<t_version>>());
+				assert_test(cast_box<Size>(information_structure.header.pool_information_section_block_size) == binary_static_size_of<Structure::PoolInformation<t_version>>());
+				assert_test(cast_box<Size>(information_structure.header.texture_resource_information_section_block_size) == binary_static_size_of<Structure::TextureResourceInformation<t_version>>());
+				CompiledMapData::decode(information_structure.group_identifier, as_left(data.split_sub(cast_box<Size>(information_structure.header.group_identifier_section_offset), cast_box<Size>(information_structure.header.group_identifier_section_size))));
+				CompiledMapData::decode(information_structure.subgroup_identifier, as_left(data.split_sub(cast_box<Size>(information_structure.header.subgroup_identifier_section_offset), cast_box<Size>(information_structure.header.subgroup_identifier_section_size))));
+				CompiledMapData::decode(information_structure.resource_path, as_left(data.split_sub(cast_box<Size>(information_structure.header.resource_path_section_offset), cast_box<Size>(information_structure.header.resource_path_section_size))));
 				data.set_position(cast_box<Size>(information_structure.header.group_information_section_offset));
 				data.read(information_structure.group_information, cast_box<Size>(information_structure.header.group_information_section_block_count));
 				data.set_position(cast_box<Size>(information_structure.header.subgroup_information_section_offset));
@@ -236,26 +236,25 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 							subgroup_definition.category.locale.reset();
 						}
 						else {
-							subgroup_definition.category.locale.set().from(four_character_code_from_integer(simple_subgroup_information_structure.locale));
+							subgroup_definition.category.locale.set(string_from_of(four_character_code_from_integer(simple_subgroup_information_structure.locale)));
 						}
 					}
 					auto make_formatted_path = [&](
 						Path const & path_format
 					) -> Path {
-						return Path{format_string(path_format.emit(), group_definition.identifier, subgroup_definition.identifier)};
+						return Path{StringFormatter{path_format.emit()}(group_definition.identifier, subgroup_definition.identifier)};
 					};
-					auto packet_data = data.sub_view(cast_box<Size>(subgroup_information_structure.offset), cast_box<Size>(subgroup_information_structure.size));
-					auto packet_stream = InputByteStreamView{packet_data};
+					auto packet_stream = data.split_sub(cast_box<Size>(subgroup_information_structure.offset), cast_box<Size>(subgroup_information_structure.size));
 					auto packet_package_definition = typename ResourceStreamGroup::Definition<packet_version>::Package{};
-					ResourceStreamGroup::Unpack<packet_version>::process(packet_stream, packet_package_definition, !resource_directory.has() ? (k_null_optional) : (make_optional_of(make_formatted_path(resource_directory.get()))));
+					ResourceStreamGroup::Unpack<packet_version>::process(packet_stream, packet_package_definition, !resource_directory.has() ? make_optional_null<Path>() : make_optional_of(make_formatted_path(resource_directory.get())));
 					assert_test(packet_stream.full());
 					if (packet_file.has()) {
 						auto packet_path = make_formatted_path(packet_file.get());
 						if (!Storage::exist_file(packet_path)) {
 							Storage::create_file(packet_path);
 						}
-						Storage::resize_file(packet_path, packet_data.size());
-						Storage::write_file(packet_path, 0_sz, packet_data);
+						Storage::resize_file(packet_path, packet_stream.view().size());
+						Storage::write_file(packet_path, 0_sz, packet_stream.view());
 					}
 					subgroup_definition.compression = packet_package_definition.compression;
 					subgroup_definition.resource.allocate_full(packet_package_definition.resource.size());
@@ -311,13 +310,13 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle {
 		// ----------------
 
 		inline static auto process(
-			InputByteStreamView &                  data_,
+			InputBinaryStreamView &                data_,
 			Definition::Package &                  definition,
 			Optional<typename Manifest::Package> & manifest,
 			Optional<Path> const &                 resource_directory,
 			Optional<Path> const &                 packet_file
 		) -> Void {
-			M_use_zps_of(data);
+			M_use_split_stream_of(data);
 			restruct(definition);
 			restruct(manifest);
 			return process_package(data, definition, manifest, resource_directory, packet_file);

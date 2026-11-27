@@ -1,4 +1,5 @@
 import '/common.dart';
+import '/utility/finalizer.dart';
 import '/utility/convert_helper.dart';
 import '/bridge/data.dart';
 import 'dart:convert' as lib;
@@ -151,49 +152,41 @@ class ExecutorProxy {
   ) {
     assertTest(instance.ref.invoke != lib.nullptr && instance.ref.clear != lib.nullptr);
     var proxy = ExecutorProxy();
-    proxy.value = (callbackProxy, argumentProxy, resultProxy) {
+    proxy.value = (callbackProxy, argumentProxy, resultProxy) => withFinalizerScopeSync((finalizer) {
       var exceptionProxy = MessageProxy();
       var callback = lib.Pointer<Executor>.fromAddress(0);
       var argument = lib.Pointer<Message>.fromAddress(0);
       var result = lib.Pointer<Message>.fromAddress(0);
       var exception = lib.Pointer<Message>.fromAddress(0);
-      var finalizer = <Void Function()>[];
-      try {
-        callback = lib.calloc.call<Executor>();
-        argument = lib.calloc.call<Message>();
-        result = lib.calloc.call<Message>();
-        exception = lib.calloc.call<Message>();
-        finalizer.add(() {
-          lib.calloc.free(callback);
-          lib.calloc.free(argument);
-          lib.calloc.free(result);
-          lib.calloc.free(exception);
-        });
-        ExecutorProxy.construct(callback, callbackProxy);
-        finalizer.add(() {
-          ExecutorProxy.destruct(callback);
-        });
-        MessageProxy.construct(argument, argumentProxy);
-        finalizer.add(() {
-          MessageProxy.destruct(argument);
-        });
-        instance.ref.invoke.asFunction<Void Function(lib.Pointer<Executor> self, lib.Pointer<Executor> callback, lib.Pointer<Message> argument, lib.Pointer<Message> result, lib.Pointer<Message> exception)>()(instance, callback, argument, result, exception);
-        finalizer.add(() {
-          instance.ref.clear.asFunction<Void Function(lib.Pointer<Executor> self, lib.Pointer<Executor> callback, lib.Pointer<Message> argument, lib.Pointer<Message> result, lib.Pointer<Message> exception)>()(instance, callback, argument, result, exception);
-        });
-        resultProxy.value = MessageProxy.parse(result).value;
-        exceptionProxy.value = MessageProxy.parse(exception).value;
-      }
-      finally {
-        for (var finalizerItem in finalizer.reversed) {
-          finalizerItem();
-        }
-      }
+      callback = lib.calloc.call<Executor>();
+      argument = lib.calloc.call<Message>();
+      result = lib.calloc.call<Message>();
+      exception = lib.calloc.call<Message>();
+      finalizer.add(() {
+        lib.calloc.free(callback);
+        lib.calloc.free(argument);
+        lib.calloc.free(result);
+        lib.calloc.free(exception);
+      });
+      ExecutorProxy.construct(callback, callbackProxy);
+      finalizer.add(() {
+        ExecutorProxy.destruct(callback);
+      });
+      MessageProxy.construct(argument, argumentProxy);
+      finalizer.add(() {
+        MessageProxy.destruct(argument);
+      });
+      instance.ref.invoke.asFunction<Void Function(lib.Pointer<Executor> self, lib.Pointer<Executor> callback, lib.Pointer<Message> argument, lib.Pointer<Message> result, lib.Pointer<Message> exception)>()(instance, callback, argument, result, exception);
+      finalizer.add(() {
+        instance.ref.clear.asFunction<Void Function(lib.Pointer<Executor> self, lib.Pointer<Executor> callback, lib.Pointer<Message> argument, lib.Pointer<Message> result, lib.Pointer<Message> exception)>()(instance, callback, argument, result, exception);
+      });
+      resultProxy.value = MessageProxy.parse(result).value;
+      exceptionProxy.value = MessageProxy.parse(exception).value;
       if (!exceptionProxy.value.isEmpty) {
         throw exceptionProxy.value.first;
       }
       return;
-    };
+    });
     return proxy;
   }
 

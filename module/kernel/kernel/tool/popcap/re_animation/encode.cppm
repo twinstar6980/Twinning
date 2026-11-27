@@ -7,14 +7,14 @@ import twinning.kernel.utility;
 import twinning.kernel.tool.popcap.re_animation.version;
 import twinning.kernel.tool.popcap.re_animation.definition;
 import twinning.kernel.tool.popcap.re_animation.common;
-import twinning.kernel.tool.common.byte_stream;
+import twinning.kernel.tool.common.binary_stream;
 
 export namespace Twinning::Kernel::Tool::Popcap::ReAnimation {
 
 	template <auto t_version> requires (check_version(t_version, {}, {}))
 	struct Encode :
 		Common<t_version>,
-		CommonByteStreamExchangeForOutput {
+		CommonBinaryStreamExchangeForOutput {
 
 		using Common = Common<t_version>;
 
@@ -33,7 +33,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ReAnimation {
 		// ----------------
 
 		inline static auto exchange_transform_list(
-			OutputByteStreamView &                       data,
+			OutputBinaryStreamView &                     data,
 			List<typename Definition::Transform> const & value_list
 		) -> Void {
 			auto ignored = Integer{0_i};
@@ -73,7 +73,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ReAnimation {
 		}
 
 		inline static auto exchange_track_list(
-			OutputByteStreamView &                   data,
+			OutputBinaryStreamView &                 data,
 			List<typename Definition::Track> const & value_list
 		) -> Void {
 			auto ignored = Integer{0_i};
@@ -97,7 +97,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ReAnimation {
 		}
 
 		inline static auto exchange_animation(
-			OutputByteStreamView &        data,
+			OutputBinaryStreamView &      data,
 			Definition::Animation const & value
 		) -> Void {
 			auto ignored = Integer{0_i};
@@ -112,7 +112,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ReAnimation {
 		// ----------------
 
 		inline static auto process_whole(
-			OutputByteStreamView &        data,
+			OutputBinaryStreamView &      data,
 			Definition::Animation const & definition
 		) -> Void {
 			data.write_constant(k_magic_marker);
@@ -123,10 +123,10 @@ export namespace Twinning::Kernel::Tool::Popcap::ReAnimation {
 		// ----------------
 
 		inline static auto process(
-			OutputByteStreamView &        data_,
+			OutputBinaryStreamView &      data_,
 			Definition::Animation const & definition
 		) -> Void {
-			M_use_zps_of(data);
+			M_use_split_stream_of(data);
 			return process_whole(data, definition);
 		}
 

@@ -3,7 +3,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.ResourceManifest.NewTypeObjectNota
 	// #region utility
 
 	function write_enumeration(
-		data: ByteStreamView,
+		data: BinaryStreamView,
 		value: bigint,
 	): void {
 		data.u8(value);
@@ -11,7 +11,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.ResourceManifest.NewTypeObjectNota
 	}
 
 	function write_boolean(
-		data: ByteStreamView,
+		data: BinaryStreamView,
 		value: boolean,
 	): void {
 		data.u8(!value ? 0x00n : 0x01n);
@@ -19,7 +19,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.ResourceManifest.NewTypeObjectNota
 	}
 
 	function write_integer(
-		data: ByteStreamView,
+		data: BinaryStreamView,
 		value: bigint,
 	): void {
 		data.i32(value);
@@ -27,7 +27,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.ResourceManifest.NewTypeObjectNota
 	}
 
 	function write_string(
-		data: ByteStreamView,
+		data: BinaryStreamView,
 		value: string,
 	): void {
 		let size = ConvertHelper.compute_utf8_string_size(value);
@@ -39,7 +39,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.ResourceManifest.NewTypeObjectNota
 	// ----------------
 
 	export function process(
-		data: ByteStreamView,
+		data: BinaryStreamView,
 		definition: ResourceManifest.Package,
 	): void {
 		write_integer(data, definition.slot_count);
@@ -48,8 +48,8 @@ namespace Twinning.Script.Support.Popcap.Pvz2.ResourceManifest.NewTypeObjectNota
 			let group: ResourceManifest.GroupBase & (ResourceManifest.CompositeGroupAdditional & ResourceManifest.SimpleGroupAdditional) = {...definition.groups[groups_index]} as any;
 			group.subgroups = CheckHelper.not_undefined_or(group.subgroups, []);
 			group.resources = CheckHelper.not_undefined_or(group.resources, []);
-			let group_type_index = GroupTypeEnumeration.find((item) => (item.value === group.type))?.index!;
-			if (group.type === undefined) {
+			let group_type_index = GroupTypeEnumeration.find((item) => (item.value === group.type))?.index;
+			if (group_type_index === undefined) {
 				throw new Error(`unknown group type value ${group.type}`);
 			}
 			write_enumeration(data, group_type_index);
@@ -72,9 +72,9 @@ namespace Twinning.Script.Support.Popcap.Pvz2.ResourceManifest.NewTypeObjectNota
 				if (resource.type !== 'Image' || resource.parent === undefined) {
 					resource.y = 0x7FFFFFFFn;
 				}
-				let resource_type_index = ResourceTypeEnumeration.find((item) => (item.value === resource.type))?.index!;
-				if (resource.type === undefined) {
-					throw new Error(`unknown resource type value ${resource_type_index}`);
+				let resource_type_index = ResourceTypeEnumeration.find((item) => (item.value === resource.type))?.index;
+				if (resource_type_index === undefined) {
+					throw new Error(`unknown resource type value ${resource.type}`);
 				}
 				write_enumeration(data, resource_type_index);
 				write_integer(data, resource.slot);
@@ -107,10 +107,10 @@ namespace Twinning.Script.Support.Popcap.Pvz2.ResourceManifest.NewTypeObjectNota
 	export function process_fs(
 		data_file: StoragePath,
 		definition_file: StoragePath,
-		data_buffer: Kernel.ByteListView,
+		data_buffer: Kernel.BinaryView,
 	): void {
 		let definition = JsonHelper.decode_file(definition_file) as ResourceManifest.Package;
-		let data_stream = new ByteStreamView(data_buffer.value);
+		let data_stream = new BinaryStreamView(new DataView(data_buffer.value));
 		process(data_stream, definition);
 		StorageHelper.write_file_data(data_file, data_buffer.sub(Kernel.Size.value(0n), Kernel.Size.value(BigInt(data_stream.p()))));
 		return;

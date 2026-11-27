@@ -12,7 +12,7 @@ export namespace Twinning::Kernel::Tool::Popcap::SexyTexture {
 	template <auto t_version> requires (check_version(t_version, {}))
 	struct Common {
 
-		using MagicMarker = StaticByteArray<8_sz>;
+		using MagicMarker = StaticArray<Byte, 8_sz>;
 
 		inline static constexpr auto k_magic_marker = MagicMarker{{0x53_b, 0x45_b, 0x58_b, 0x59_b, 0x54_b, 0x45_b, 0x58_b, 0x00_b}};
 

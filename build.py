@@ -22,6 +22,7 @@ def build(
 	if not utility.project_check_platform(platform, ['windows.amd64', 'linux.amd64', 'macintosh.arm64', 'android.arm64', 'iphone.arm64']):
 		return destination
 	# build
+	utility.project_setup_library(platform)
 	utility.project_build_module(build_kernel.__file__, build_kernel.build, platform)
 	utility.project_build_module(build_script.__file__, build_script.build, platform)
 	utility.project_build_module(build_shell.__file__, build_shell.build, platform)

@@ -16,9 +16,9 @@ export namespace Twinning::Kernel::Tool::Data::Encryption::Exor {
 		// ----------------
 
 		inline static auto process_whole(
-			InputByteStreamView &        raw,
-			OutputByteStreamView &       ripe,
-			ConstantByteListView const & key
+			InputBinaryStreamView &    raw,
+			OutputBinaryStreamView &   ripe,
+			ConstantBinaryView const & key
 		) -> Void {
 			if (key.size() == 0_sz) {
 				while (!raw.full()) {
@@ -46,12 +46,12 @@ export namespace Twinning::Kernel::Tool::Data::Encryption::Exor {
 		// ----------------
 
 		inline static auto process(
-			InputByteStreamView &        raw_,
-			OutputByteStreamView &       ripe_,
-			ConstantByteListView const & key
+			InputBinaryStreamView &    raw_,
+			OutputBinaryStreamView &   ripe_,
+			ConstantBinaryView const & key
 		) -> Void {
-			M_use_zps_of(raw);
-			M_use_zps_of(ripe);
+			M_use_split_stream_of(raw);
+			M_use_split_stream_of(ripe);
 			return process_whole(raw, ripe, key);
 		}
 

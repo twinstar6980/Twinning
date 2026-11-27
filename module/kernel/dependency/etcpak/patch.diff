@@ -1,0 +1,38 @@
+diff --git a/Application.cpp b/Application.cpp
+index 86a94f1..5076941 100644
+--- a/Application.cpp
++++ b/Application.cpp
+@@ -2,7 +2,6 @@
+ #include <math.h>
+ #include <memory>
+ #include <string.h>
+-#include <tracy/Tracy.hpp>
+ 
+ #ifdef _MSC_VER
+ #  include "getopt/getopt.h"
+@@ -51,7 +50,6 @@ void Usage()
+ 
+ int main( int argc, char** argv )
+ {
+-    TracyNoop;
+ 
+     DebugLog::AddCallback( &DebugCallback );
+ 
+diff --git a/System.cpp b/System.cpp
+index 1383d0e..e7a7220 100644
+--- a/System.cpp
++++ b/System.cpp
+@@ -35,6 +35,7 @@ unsigned int System::CPUCores()
+ 
+ void System::SetThreadName( std::thread& thread, const char* name )
+ {
++#ifdef false
+ #ifdef _WIN32
+     const DWORD MS_VC_EXCEPTION=0x406D1388;
+ 
+@@ -65,4 +66,5 @@ void System::SetThreadName( std::thread& thread, const char* name )
+ #elif !defined(__APPLE__)
+     pthread_setname_np( thread.native_handle(), name );
+ #endif
++#endif
+ }

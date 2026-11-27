@@ -7,14 +7,14 @@ import twinning.kernel.utility;
 import twinning.kernel.tool.popcap.particle_effect.version;
 import twinning.kernel.tool.popcap.particle_effect.definition;
 import twinning.kernel.tool.popcap.particle_effect.common;
-import twinning.kernel.tool.common.byte_stream;
+import twinning.kernel.tool.common.binary_stream;
 
 export namespace Twinning::Kernel::Tool::Popcap::ParticleEffect {
 
 	template <auto t_version> requires (check_version(t_version, {}))
 	struct Decode :
 		Common<t_version>,
-		CommonByteStreamExchangeForInput {
+		CommonBinaryStreamExchangeForInput {
 
 		using Common = Common<t_version>;
 
@@ -29,8 +29,8 @@ export namespace Twinning::Kernel::Tool::Popcap::ParticleEffect {
 		// ----------------
 
 		inline static auto exchange_string(
-			InputByteStreamView & data,
-			String &              value
+			InputBinaryStreamView & data,
+			String &                value
 		) -> Void {
 			exchange_string_block<IntegerU8>(data, value);
 			return;
@@ -40,14 +40,14 @@ export namespace Twinning::Kernel::Tool::Popcap::ParticleEffect {
 			CategoryConstraint<IsPureInstance<TElement> && IsPureInstance<TElementParser>>
 			&& (IsGenericCallable<TElementParser>)
 		inline static auto exchange_list(
-			InputByteStreamView &  data,
-			List<TElement> &       value,
-			TElementParser const & element_parser,
-			Size const &           size,
-			Size const &           actual_size
+			InputBinaryStreamView & data,
+			List<TElement> &        value,
+			TElementParser const &  element_parser,
+			Size const &            size,
+			Size const &            actual_size
 		) -> Void {
 			value.allocate_full(actual_size);
-			for (auto & element : value.head(size)) {
+			for (auto & element : Range::slice_head(value, size)) {
 				element_parser(data, element);
 			}
 			return;
@@ -57,10 +57,10 @@ export namespace Twinning::Kernel::Tool::Popcap::ParticleEffect {
 			CategoryConstraint<IsPureInstance<TElement> && IsPureInstance<TElementParser>>
 			&& (IsGenericCallable<TElementParser>)
 		inline static auto exchange_list(
-			InputByteStreamView &  data,
-			List<TElement> &       value,
-			TElementParser const & element_parser,
-			Size const &           size
+			InputBinaryStreamView & data,
+			List<TElement> &        value,
+			TElementParser const &  element_parser,
+			Size const &            size
 		) -> Void {
 			exchange_list(data, value, element_parser, size, size);
 			return;
@@ -70,9 +70,9 @@ export namespace Twinning::Kernel::Tool::Popcap::ParticleEffect {
 			CategoryConstraint<IsPureInstance<TElement> && IsPureInstance<TElementParser>>
 			&& (IsGenericCallable<TElementParser>)
 		inline static auto exchange_list(
-			InputByteStreamView &  data,
-			List<TElement> &       value,
-			TElementParser const & element_parser
+			InputBinaryStreamView & data,
+			List<TElement> &        value,
+			TElementParser const &  element_parser
 		) -> Void {
 			auto size = Size{};
 			exchange_size_fixed<IntegerU16>(data, size);
@@ -83,8 +83,8 @@ export namespace Twinning::Kernel::Tool::Popcap::ParticleEffect {
 		// ----------------
 
 		inline static auto process_value_1(
-			InputByteStreamView & data,
-			Definition::Value1 &  value
+			InputBinaryStreamView & data,
+			Definition::Value1 &    value
 		) -> Void {
 			auto count = Size{};
 			auto flag = BitSet<5_sz>{};
@@ -148,8 +148,8 @@ export namespace Twinning::Kernel::Tool::Popcap::ParticleEffect {
 		}
 
 		inline static auto process_value_2(
-			InputByteStreamView & data,
-			Definition::Value2 &  value
+			InputBinaryStreamView & data,
+			Definition::Value2 &    value
 		) -> Void {
 			auto count = Size{};
 			exchange_size_fixed<IntegerU16>(data, count);
@@ -179,8 +179,8 @@ export namespace Twinning::Kernel::Tool::Popcap::ParticleEffect {
 		}
 
 		inline static auto process_value_2_simple(
-			InputByteStreamView & data,
-			Definition::Value2 &  value
+			InputBinaryStreamView & data,
+			Definition::Value2 &    value
 		) -> Void {
 			exchange_floater_fixed<FloaterS32>(data, value.unknown_1);
 			exchange_floater_fixed<FloaterS32>(data, value.unknown_2);
@@ -199,8 +199,8 @@ export namespace Twinning::Kernel::Tool::Popcap::ParticleEffect {
 		// ----------------
 
 		inline static auto process_texture(
-			InputByteStreamView & data,
-			Definition::Texture & value
+			InputBinaryStreamView & data,
+			Definition::Texture &   value
 		) -> Void {
 			exchange_string(data, value.name);
 			exchange_integer_fixed<IntegerS16>(data, value.cell);
@@ -211,8 +211,8 @@ export namespace Twinning::Kernel::Tool::Popcap::ParticleEffect {
 		}
 
 		inline static auto process_emitter(
-			InputByteStreamView & data,
-			Definition::Emitter & value
+			InputBinaryStreamView & data,
+			Definition::Emitter &   value
 		) -> Void {
 			exchange_integer_fixed<IntegerS32>(data, value.unknown_1);
 			exchange_string(data, value.name);
@@ -311,8 +311,8 @@ export namespace Twinning::Kernel::Tool::Popcap::ParticleEffect {
 		}
 
 		inline static auto process_layer(
-			InputByteStreamView & data,
-			Definition::Layer &   value
+			InputBinaryStreamView & data,
+			Definition::Layer &     value
 		) -> Void {
 			exchange_string(data, value.name);
 			exchange_list(
@@ -429,8 +429,8 @@ export namespace Twinning::Kernel::Tool::Popcap::ParticleEffect {
 		}
 
 		inline static auto process_effect(
-			InputByteStreamView & data,
-			Definition::Effect &  value
+			InputBinaryStreamView & data,
+			Definition::Effect &    value
 		) -> Void {
 			exchange_string(data, value.note);
 			exchange_list(data, value.texture, &process_texture);
@@ -465,8 +465,8 @@ export namespace Twinning::Kernel::Tool::Popcap::ParticleEffect {
 		// ----------------
 
 		inline static auto process_whole(
-			InputByteStreamView & data,
-			Definition::Effect &  definition
+			InputBinaryStreamView & data,
+			Definition::Effect &    definition
 		) -> Void {
 			data.read_constant(k_magic_marker);
 			data.read_constant(cast_box<VersionNumber>(t_version.number));
@@ -477,10 +477,10 @@ export namespace Twinning::Kernel::Tool::Popcap::ParticleEffect {
 		// ----------------
 
 		inline static auto process(
-			InputByteStreamView & data_,
-			Definition::Effect &  definition
+			InputBinaryStreamView & data_,
+			Definition::Effect &    definition
 		) -> Void {
-			M_use_zps_of(data);
+			M_use_split_stream_of(data);
 			restruct(definition);
 			return process_whole(data, definition);
 		}

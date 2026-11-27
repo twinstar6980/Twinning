@@ -6,29 +6,29 @@ export module twinning.kernel.utility.support.java_script;
 import twinning.kernel.utility.builtin;
 import twinning.kernel.utility.trait;
 import twinning.kernel.utility.box;
-import twinning.kernel.utility.exception.utility;
+import twinning.kernel.utility.exception;
 import twinning.kernel.utility.string.string;
-import twinning.kernel.utility.container.wrapper.wrapper;
-import twinning.kernel.utility.container.optional.optional;
-import twinning.kernel.utility.container.variant.variant;
-import twinning.kernel.utility.container.variant.enumerable_variant;
-import twinning.kernel.utility.container.tuple.tuple;
-import twinning.kernel.utility.container.list.list;
-import twinning.kernel.utility.container.map.map;
-import twinning.kernel.utility.range.number_range;
+import twinning.kernel.utility.container.wrapper;
+import twinning.kernel.utility.container.optional;
+import twinning.kernel.utility.container.variant;
+import twinning.kernel.utility.container.enumerable_variant;
+import twinning.kernel.utility.container.tuple;
+import twinning.kernel.utility.container.list;
+import twinning.kernel.utility.container.map;
+import twinning.kernel.utility.range.integer_range;
 import twinning.kernel.utility.math.number_variant;
 import twinning.kernel.utility.notation.json.value;
 import twinning.kernel.utility.notation.xml.node;
-import twinning.kernel.utility.image.pixel;
+import twinning.kernel.utility.image.basic_pixel;
 import twinning.kernel.utility.script.java_script.value;
 import twinning.kernel.utility.script.java_script.value_adapter;
 import twinning.kernel.utility.script.java_script.utility;
-import twinning.kernel.utility.memory.allocation;
-import twinning.kernel.utility.miscellaneous.byte_series.container;
+import twinning.kernel.utility.memory.utility;
+import twinning.kernel.utility.binary.binary;
 import twinning.kernel.utility.model.dimension;
 import twinning.kernel.utility.model.record;
 import twinning.kernel.utility.storage.path;
-import twinning.kernel.utility.image.regular;
+import twinning.kernel.utility.image.image;
 import twinning.kernel.dependency.quickjs_ng;
 
 export namespace Twinning::Kernel::Script::JavaScript {
@@ -88,7 +88,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 		) -> Void {
 			assert_test(Detail::g_native_class_identifier<TValue> != Detail::k_invalid_native_class_identifier);
 			auto thix_value = Dependency::quickjs_ng::$JS_NewObjectClass(thix._context(), unmake_box<Dependency::quickjs_ng::$JSClassID>(Detail::g_native_class_identifier<TValue>));
-			auto thix_opaque = allocate_instance<That>(that);
+			auto thix_opaque = Memory::allocate<That>(that);
 			Dependency::quickjs_ng::$JS_SetOpaque(thix_value, thix_opaque.value);
 			thix._rebind_value(thix_value);
 			return;
@@ -100,7 +100,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 		) -> Void {
 			assert_test(Detail::g_native_class_identifier<TValue> != Detail::k_invalid_native_class_identifier);
 			auto thix_value = Dependency::quickjs_ng::$JS_NewObjectClass(thix._context(), unmake_box<Dependency::quickjs_ng::$JSClassID>(Detail::g_native_class_identifier<TValue>));
-			auto thix_opaque = allocate_instance<That>(as_moveable(that));
+			auto thix_opaque = Memory::allocate<That>(as_moveable(that));
 			Dependency::quickjs_ng::$JS_SetOpaque(thix_value, thix_opaque.value);
 			thix._rebind_value(thix_value);
 			return;
@@ -408,7 +408,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 			That const & that
 		) -> Void {
 			auto string = String{};
-			string.from(that);
+			string_from(string, that);
 			thix.set_string(string);
 			return;
 		}
@@ -419,7 +419,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 		) -> Void {
 			assert_test(thix.is_string());
 			auto string = thix.get_string();
-			string.to(that);
+			string_to(string, that);
 			return;
 		}
 
@@ -731,9 +731,9 @@ export namespace Twinning::Kernel::Script::JavaScript {
 		) -> Void {
 			thix.set_object_of_object();
 			for (auto & index : SizeRange{that.size()}) {
-				auto thix_property_key = String{};
-				thix_property_key.from(that.at(index).key);
-				thix.set_object_property(thix_property_key, thix.new_value(that.at(index).value));
+				auto thix_element_key = String{};
+				string_from(thix_element_key, that.at(index).key);
+				thix.set_object_property(thix_element_key, thix.new_value(that.at(index).value));
 			}
 			return;
 		}
@@ -746,7 +746,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 			that.convert(
 				thix_object,
 				[](auto & that_element, auto & thix_element) -> auto {
-					thix_element.key.to(that_element.key);
+					string_to(thix_element.key, that_element.key);
 					thix_element.value.to(that_element.value);
 					return;
 				}
@@ -822,7 +822,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 			thix.set_object_of_object();
 			Generalization::each<FieldPackage>(
 				[&]<auto t_index, typename TField>(ValuePackage<t_index>, TypePackage<TField>) {
-					thix.set_object_property(make_string_view(TField::name.view()), thix.new_value(TField::value_of(that)));
+					thix.set_object_property(make_string_view_from_reflection(TField::name), thix.new_value(TField::value_of(that)));
 				}
 			);
 			return;
@@ -836,7 +836,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 			assert_test(thix_object.size() == make_box<Size>(FieldPackage::size));
 			Generalization::each<FieldPackage>(
 				[&]<auto t_index, typename TField>(ValuePackage<t_index>, TypePackage<TField>) {
-					assert_test(thix_object.at(make_box<Size>(t_index)).key == make_string_view(TField::name.view()));
+					assert_test(thix_object.at(make_box<Size>(t_index)).key == make_string_view_from_reflection(TField::name));
 					thix_object.at(make_box<Size>(t_index)).value.to(TField::value_of(that));
 				}
 			);
@@ -915,7 +915,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 					auto & that_value = that.template set_of_index<make_box<Size>(t_index)>();
 					Generalization::each<typename TypePackage<TValue ...>::template Element<t_index>::Reflection::MemberVariable>(
 						[&]<auto t_field_index, typename TField>(ValuePackage<t_field_index>, TypePackage<TField>) {
-							assert_test(thix_object.at(make_box<Size>(t_field_index)).key == make_string_view(TField::name.view()));
+							assert_test(thix_object.at(make_box<Size>(t_field_index)).key == make_string_view_from_reflection(TField::name));
 							thix_object.at(make_box<Size>(t_field_index)).value.to(TField::value_of(that_value));
 						}
 					);
@@ -959,11 +959,11 @@ export namespace Twinning::Kernel::Script::JavaScript {
 	};
 
 	template <>
-	struct ValueAdapter<ByteArray> {
+	struct ValueAdapter<Binary> {
 
 		using This = Value;
 
-		using That = ByteArray;
+		using That = Binary;
 
 		// ----------------
 
@@ -971,7 +971,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 			This &       thix,
 			That const & that
 		) -> Void {
-			thix.set_object_of_array_buffer(that.view());
+			thix.set_object_of_array_buffer(that);
 			return;
 		}
 
@@ -979,7 +979,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 			This &  thix,
 			That && that
 		) -> Void {
-			thix.set_object_of_array_buffer(that.view(), k_true);
+			thix.set_object_of_array_buffer(that, k_true);
 			that.unbind();
 			return;
 		}
@@ -995,11 +995,11 @@ export namespace Twinning::Kernel::Script::JavaScript {
 	};
 
 	template <>
-	struct ValueAdapter<VariableByteListView> {
+	struct ValueAdapter<VariableBinaryView> {
 
 		using This = Value;
 
-		using That = VariableByteListView;
+		using That = VariableBinaryView;
 
 		// ----------------
 

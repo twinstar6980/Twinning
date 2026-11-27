@@ -6,7 +6,7 @@ export module twinning.kernel.utility.thread.thread;
 import twinning.kernel.utility.builtin;
 import twinning.kernel.utility.trait;
 import twinning.kernel.utility.box;
-import twinning.kernel.utility.exception.utility;
+import twinning.kernel.utility.exception;
 
 export namespace Twinning::Kernel::Thread {
 
@@ -16,7 +16,7 @@ export namespace Twinning::Kernel::Thread {
 
 	private:
 
-		std::thread m_thread;
+		std::jthread m_thread;
 
 	public:
 
@@ -64,14 +64,14 @@ export namespace Twinning::Kernel::Thread {
 			TExecutor const & executor
 		) -> Void {
 			assert_test(!thiz.joinable());
-			thiz.m_thread = std::thread{executor};
+			thiz.m_thread = std::jthread{executor};
 			return;
 		}
 
 		// ----------------
 
 		auto joinable(
-		) -> Boolean {
+		) const -> Boolean {
 			return thiz.m_thread.joinable();
 		}
 

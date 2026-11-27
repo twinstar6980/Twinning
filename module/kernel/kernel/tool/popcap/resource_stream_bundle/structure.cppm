@@ -505,11 +505,11 @@ export namespace Twinning::Kernel {
 
 	template <auto t_version> requires
 		AutomaticConstraint
-	struct ByteStreamAdapter<Tool::Popcap::ResourceStreamBundle::Structure::ResourceDetailManifestInformation<t_version>> {
+	struct BasicBinaryStreamAdapter<Byte, Tool::Popcap::ResourceStreamBundle::Structure::ResourceDetailManifestInformation<t_version>> {
 
-		using ThisInput = InputByteStreamView;
+		using ThisInput = InputBinaryStreamView;
 
-		using ThisOutput = OutputByteStreamView;
+		using ThisOutput = OutputBinaryStreamView;
 
 		using That = Tool::Popcap::ResourceStreamBundle::Structure::ResourceDetailManifestInformation<t_version>;
 
@@ -520,11 +520,11 @@ export namespace Twinning::Kernel {
 		) -> Size {
 			using namespace Tool::Popcap::ResourceStreamBundle::Structure;
 			auto size = 0_sz;
-			size += bs_size(up_cast<ResourceBasicDetailManifestInformation<t_version>>(that));
+			size += binary_size_of(up_cast<ResourceBasicDetailManifestInformation<t_version>>(that));
 			if (that.image_property_information_offset != 0_iu32) {
-				size += bs_size(that.image_property_information.get());
+				size += binary_size_of(that.image_property_information.get());
 			}
-			size += bs_size(that.property_information);
+			size += binary_size_of(that.property_information);
 			return size;
 		}
 
@@ -565,11 +565,11 @@ export namespace Twinning::Kernel {
 
 	template <auto t_version> requires
 		AutomaticConstraint
-	struct ByteStreamAdapter<Tool::Popcap::ResourceStreamBundle::Structure::ResourceManifestInformation<t_version>> {
+	struct BasicBinaryStreamAdapter<Byte, Tool::Popcap::ResourceStreamBundle::Structure::ResourceManifestInformation<t_version>> {
 
-		using ThisInput = InputByteStreamView;
+		using ThisInput = InputBinaryStreamView;
 
-		using ThisOutput = OutputByteStreamView;
+		using ThisOutput = OutputBinaryStreamView;
 
 		using That = Tool::Popcap::ResourceStreamBundle::Structure::ResourceManifestInformation<t_version>;
 
@@ -580,7 +580,7 @@ export namespace Twinning::Kernel {
 		) -> Size {
 			using namespace Tool::Popcap::ResourceStreamBundle::Structure;
 			auto size = 0_sz;
-			size += bs_size(up_cast<ResourceBasicManifestInformation<t_version>>(that));
+			size += binary_size_of(up_cast<ResourceBasicManifestInformation<t_version>>(that));
 			return size;
 		}
 
@@ -608,11 +608,11 @@ export namespace Twinning::Kernel {
 
 	template <auto t_version> requires
 		AutomaticConstraint
-	struct ByteStreamAdapter<Tool::Popcap::ResourceStreamBundle::Structure::SubgroupManifestInformation<t_version>> {
+	struct BasicBinaryStreamAdapter<Byte, Tool::Popcap::ResourceStreamBundle::Structure::SubgroupManifestInformation<t_version>> {
 
-		using ThisInput = InputByteStreamView;
+		using ThisInput = InputBinaryStreamView;
 
-		using ThisOutput = OutputByteStreamView;
+		using ThisOutput = OutputBinaryStreamView;
 
 		using That = Tool::Popcap::ResourceStreamBundle::Structure::SubgroupManifestInformation<t_version>;
 
@@ -623,8 +623,8 @@ export namespace Twinning::Kernel {
 		) -> Size {
 			using namespace Tool::Popcap::ResourceStreamBundle::Structure;
 			auto size = 0_sz;
-			size += bs_size(up_cast<SubgroupBasicManifestInformation<t_version>>(that));
-			size += bs_size(that.resource_information);
+			size += binary_size_of(up_cast<SubgroupBasicManifestInformation<t_version>>(that));
+			size += binary_size_of(that.resource_information);
 			return size;
 		}
 
@@ -654,11 +654,11 @@ export namespace Twinning::Kernel {
 
 	template <auto t_version> requires
 		AutomaticConstraint
-	struct ByteStreamAdapter<Tool::Popcap::ResourceStreamBundle::Structure::GroupManifestInformation<t_version>> {
+	struct BasicBinaryStreamAdapter<Byte, Tool::Popcap::ResourceStreamBundle::Structure::GroupManifestInformation<t_version>> {
 
-		using ThisInput = InputByteStreamView;
+		using ThisInput = InputBinaryStreamView;
 
-		using ThisOutput = OutputByteStreamView;
+		using ThisOutput = OutputBinaryStreamView;
 
 		using That = Tool::Popcap::ResourceStreamBundle::Structure::GroupManifestInformation<t_version>;
 
@@ -669,8 +669,8 @@ export namespace Twinning::Kernel {
 		) -> Size {
 			using namespace Tool::Popcap::ResourceStreamBundle::Structure;
 			auto size = 0_sz;
-			size += bs_size(up_cast<GroupBasicManifestInformation<t_version>>(that));
-			size += bs_size(that.subgroup_information);
+			size += binary_size_of(up_cast<GroupBasicManifestInformation<t_version>>(that));
+			size += binary_size_of(that.subgroup_information);
 			return size;
 		}
 

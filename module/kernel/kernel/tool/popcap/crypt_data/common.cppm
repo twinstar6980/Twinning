@@ -11,7 +11,7 @@ export namespace Twinning::Kernel::Tool::Popcap::CryptData {
 	template <auto t_version> requires (check_version(t_version))
 	struct Common {
 
-		using MagicMarker = StaticByteArray<11_sz>;
+		using MagicMarker = StaticArray<Byte, 11_sz>;
 
 		inline static constexpr auto k_magic_marker = MagicMarker{{0x43_b, 0x52_b, 0x59_b, 0x50_b, 0x54_b, 0x5F_b, 0x52_b, 0x45_b, 0x53_b, 0x0A_b, 0x00_b}};
 

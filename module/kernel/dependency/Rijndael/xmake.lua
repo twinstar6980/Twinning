@@ -1,16 +1,12 @@
--- Rijndael
--- ? ?
--- ?
-
 target('dependency.Rijndael', function()
 	set_group('source/dependency')
 	set_kind('static')
 	add_headerfiles(
-		'Rijndael.h',
+		'origin/Rijndael.h',
 		{ install = false }
 	)
 	add_files(
-		'Rijndael.cpp',
+		'origin/Rijndael.cpp',
 		{}
 	)
 	add_includedirs(

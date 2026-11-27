@@ -198,7 +198,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.RegularResourceManifest.Convert {
 							id: source_resource.identifier,
 							path: !use_array_style_path ? destination_resource_path.emit_windows() : destination_resource_path.segment(),
 							type: source_resource.additional.value.type,
-						} as ResourceManifest.ResourceBase & ResourceManifest.DummyResourceAdditional);
+						} as ResourceManifest.ResourceBase & ResourceManifest.GeneralResourceAdditional);
 					}
 					if (source_resource.additional.type === 'texture') {
 						let destination_resource_path = new StoragePath(source_resource.additional.value.path);
@@ -211,7 +211,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.RegularResourceManifest.Convert {
 							atlas: true,
 							width: source_resource.additional.value.size[0],
 							height: source_resource.additional.value.size[1],
-						} as ResourceManifest.ResourceBase & ResourceManifest.DummyResourceAdditional);
+						} as ResourceManifest.ResourceBase & ResourceManifest.AtlasImageResourceAdditional);
 						for (let source_sprite_resource of source_resource.additional.value.sprite) {
 							let destination_sprite_resource_path = new StoragePath(source_sprite_resource.path);
 							assert_test(destination_resource_path.type() === StoragePathType.detached);

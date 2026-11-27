@@ -35,8 +35,8 @@ export namespace Twinning::Kernel::Tool::Texture::Transformation::Interleaving {
 			for (auto & y : SizeRange{raw.size().height}) {
 				for (auto & x : SizeRange{raw.size().width}) {
 					auto   raw_position = convert_index(Image::ImagePosition{x, y}, raw.size().width);
-					auto & raw_pixel = raw[raw_position.y][raw_position.x];
-					auto & ripe_pixel = ripe[y][x];
+					auto & raw_pixel = raw[raw_position.x, raw_position.y];
+					auto & ripe_pixel = ripe[x, y];
 					raw_pixel = ripe_pixel;
 				}
 			}

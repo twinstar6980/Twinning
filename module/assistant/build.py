@@ -14,9 +14,6 @@ def build(
 ) -> tuple[str, str] | None:
 	destination = None
 	if utility.project_check_platform(platform, ['windows.amd64']):
-		utility.project_setup_library(
-			platform,
-		)
 		utility.sh_execute_command(source, [
 			'flutter',
 			'build',
@@ -42,9 +39,6 @@ def build(
 		)
 		destination = ('.msix', f'{temporary}/artifact.msix')
 	if utility.project_check_platform(platform, ['linux.amd64']):
-		utility.project_setup_library(
-			platform,
-		)
 		utility.sh_execute_command(source, [
 			'flutter',
 			'build',
@@ -65,9 +59,6 @@ def build(
 		)
 		destination = ('.AppImage', f'{temporary}/artifact.AppImage')
 	if utility.project_check_platform(platform, ['macintosh.arm64']):
-		utility.project_setup_library(
-			platform,
-		)
 		utility.sh_execute_command(source, [
 			'flutter',
 			'build',
@@ -91,9 +82,6 @@ def build(
 		)
 		destination = ('.dmg', f'{temporary}/artifact.dmg')
 	if utility.project_check_platform(platform, ['android.arm64']):
-		utility.project_setup_library(
-			platform,
-		)
 		utility.sh_execute_command(source, [
 			'flutter',
 			'build',
@@ -116,9 +104,6 @@ def build(
 		)
 		destination = ('.apk', f'{temporary}/artifact.apk')
 	if utility.project_check_platform(platform, ['iphone.arm64']):
-		utility.project_setup_library(
-			platform,
-		)
 		utility.sh_execute_command(source, [
 			'flutter',
 			'build',

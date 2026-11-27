@@ -1,36 +1,28 @@
--- quickjs_ng
--- 0.16.1 954dc53628e36891f93c359aa60895c2ae3dac6b
--- https://github.com/quickjs-ng/quickjs
-
 target('dependency.quickjs_ng', function()
 	set_group('source/dependency')
 	set_kind('static')
 	add_headerfiles(
-		'builtin-array-fromasync.h',
-		'builtin-iterator-zip.h',
-		'builtin-iterator-zip-keyed.h',
-		'cutils.h',
-		'dtoa.h',
-		'libregexp-opcode.h',
-		'libregexp.h',
-		'libunicode-table.h',
-		'libunicode.h',
-		'list.h',
-		'quickjs-atom.h',
-		'quickjs-c-atomics.h',
-		'quickjs-libc.h',
-		'quickjs-opcode.h',
-		'quickjs.h',
-		'unicode_gen_def.h',
+		'origin/builtin-array-fromasync.h',
+		'origin/builtin-iterator-zip.h',
+		'origin/builtin-iterator-zip-keyed.h',
+		'origin/cutils.h',
+		'origin/dtoa.h',
+		'origin/libregexp-opcode.h',
+		'origin/libregexp.h',
+		'origin/libunicode-table.h',
+		'origin/libunicode.h',
+		'origin/list.h',
+		'origin/quickjs-atom.h',
+		'origin/quickjs-c-atomics.h',
+		'origin/quickjs-opcode.h',
+		'origin/quickjs.h',
 		{ install = false }
 	)
 	add_files(
-		'dtoa.c',
-		'libregexp.c',
-		'libunicode.c',
-		'quickjs-libc.c',
-		'quickjs.c',
-		'unicode_gen.c',
+		'origin/dtoa.c',
+		'origin/libregexp.c',
+		'origin/libunicode.c',
+		'origin/quickjs.c',
 		{}
 	)
 	add_includedirs(

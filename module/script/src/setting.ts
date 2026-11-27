@@ -3,7 +3,7 @@ namespace Twinning.Script {
 	// #region utility
 
 	export type Setting = {
-		byte_stream_use_big_endian: boolean;
+		binary_stream_endian: null | string;
 		common_buffer_size: string;
 		json_format_disable_array_trailing_comma: boolean;
 		json_format_disable_array_line_breaking: boolean;
@@ -29,8 +29,8 @@ namespace Twinning.Script {
 		store: Setting,
 	): void {
 		let action: {[Key in keyof Setting]: (value: Setting[Key]) => void} = {
-			byte_stream_use_big_endian: (value) => {
-				Kernel.Miscellaneous.g_context.query_byte_stream_use_big_endian().value = value;
+			binary_stream_endian: (value) => {
+				KernelX.g_binary_stream_endian = value === null ? query_endian() : value as Endian;
 			},
 			common_buffer_size: (value) => {
 				KernelX.g_common_buffer.allocate(Kernel.Size.value(new StorageSize(value).value()));

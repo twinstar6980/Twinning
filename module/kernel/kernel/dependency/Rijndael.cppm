@@ -5,7 +5,7 @@ module;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Weverything"
 
-#include "dependency/Rijndael/Rijndael.h"
+#include "dependency/Rijndael/origin/Rijndael.h"
 
 #pragma clang diagnostic pop
 

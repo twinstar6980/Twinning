@@ -11,24 +11,35 @@ export namespace Twinning::Kernel::Trait::Reflection {
 
 	#pragma region type
 
-	using StringView = std::string_view;
-
 	template <auto t_size> requires
 		CategoryConstraint<>
 		&& (IsSameOf<t_size, ZSize>)
 	struct String {
 
-		inline static constexpr auto size = ZSize{t_size};
+		ZArray<ZCharacter, t_size + 1_szz> container{};
 
 		// ----------------
 
-		ZArray<ZCharacter, t_size + 1> data{};
+		implicit constexpr String(
+			ZArray<ZCharacter, t_size + 1_szz> const & data
+		) :
+			container{} {
+			for (auto index = 1_ixz; index < t_size; ++index) {
+				thiz.container[index] = data[index];
+			}
+			return;
+		}
 
 		// ----------------
 
-		constexpr auto view(
-		) const -> StringView {
-			return StringView{thiz.data, thiz.size};
+		constexpr auto data(
+		) const -> ZConstantString {
+			return thiz.container;
+		}
+
+		constexpr auto length(
+		) const -> ZSize {
+			return t_size;
 		}
 
 	};
@@ -43,11 +54,7 @@ export namespace Twinning::Kernel::Trait::Reflection {
 	inline constexpr auto make_string(
 		ZArray<ZCharacter, t_size> const & source
 	) -> String<t_size - 1_szz> {
-		auto result = String<t_size - 1_szz>{};
-		for (auto index = 1_ixz; index < t_size; ++index) {
-			result.data[index] = source[index];
-		}
-		return result;
+		return String<t_size - 1_szz>{source};
 	}
 
 	#pragma endregion

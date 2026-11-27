@@ -17,17 +17,18 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Bzip2 {
 		// ----------------
 
 		inline static auto process_whole(
-			OutputByteStreamView & raw,
-			InputByteStreamView &  ripe,
-			Boolean const &        small
+			OutputBinaryStreamView & raw,
+			InputBinaryStreamView &  ripe,
+			Container const &        container,
+			Boolean const &          small
 		) -> Void {
-			auto bz_state = int{};
-			auto bz_stream = Dependency::bzip2::$bz_stream{
-				.next_in = unmake_pointer_unsafe<char>(as_variable_pointer(ripe.current_pointer())),
+			auto z_state = int{};
+			auto z_stream = Dependency::bzip2::$bz_stream{
+				.next_in = unmake_pointer_unsafe<char>(as_variable_pointer(ripe.current())),
 				.avail_in = unmake_box<unsigned int>(ripe.reserve()),
 				.total_in_lo32 = 0,
 				.total_in_hi32 = 0,
-				.next_out = unmake_pointer_unsafe<char>(raw.current_pointer()),
+				.next_out = unmake_pointer_unsafe<char>(raw.current()),
 				.avail_out = unmake_box<unsigned int>(raw.reserve()),
 				.total_out_lo32 = 0,
 				.total_out_hi32 = 0,
@@ -36,35 +37,36 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Bzip2 {
 				.bzfree = nullptr,
 				.opaque = nullptr,
 			};
-			bz_state = Dependency::bzip2::$BZ2_bzDecompressInit(
-				&bz_stream,
+			z_state = Dependency::bzip2::$BZ2_bzDecompressInit(
+				&z_stream,
 				0,
 				unmake_box<int>(small)
 			);
-			assert_test(bz_state == Dependency::bzip2::$BZ_OK);
-			bz_state = Dependency::bzip2::$BZ2_bzDecompress(
-				&bz_stream
+			assert_test(z_state == Dependency::bzip2::$BZ_OK);
+			z_state = Dependency::bzip2::$BZ2_bzDecompress(
+				&z_stream
 			);
-			assert_test(bz_state == Dependency::bzip2::$BZ_STREAM_END);
-			bz_state = Dependency::bzip2::$BZ2_bzDecompressEnd(
-				&bz_stream
+			assert_test(z_state == Dependency::bzip2::$BZ_STREAM_END);
+			z_state = Dependency::bzip2::$BZ2_bzDecompressEnd(
+				&z_stream
 			);
-			assert_test(bz_state == Dependency::bzip2::$BZ_OK);
-			ripe.forward(cast_box<Size>(Bitwise::infuse(make_box<IntegerU64>(bz_stream.total_in_hi32), 2_ix * 32_sz, 32_sz) | Bitwise::infuse(make_box<IntegerU64>(bz_stream.total_in_lo32), 1_ix * 32_sz, 32_sz)));
-			raw.forward(cast_box<Size>(Bitwise::infuse(make_box<IntegerU64>(bz_stream.total_out_hi32), 2_ix * 32_sz, 32_sz) | Bitwise::infuse(make_box<IntegerU64>(bz_stream.total_out_lo32), 1_ix * 32_sz, 32_sz)));
+			assert_test(z_state == Dependency::bzip2::$BZ_OK);
+			ripe.forward(cast_box<Size>(Bitwise::infuse(make_box<IntegerU64>(z_stream.total_in_hi32), 2_ix * 32_sz, 32_sz) | Bitwise::infuse(make_box<IntegerU64>(z_stream.total_in_lo32), 1_ix * 32_sz, 32_sz)));
+			raw.forward(cast_box<Size>(Bitwise::infuse(make_box<IntegerU64>(z_stream.total_out_hi32), 2_ix * 32_sz, 32_sz) | Bitwise::infuse(make_box<IntegerU64>(z_stream.total_out_lo32), 1_ix * 32_sz, 32_sz)));
 			return;
 		}
 
 		// ----------------
 
 		inline static auto process(
-			OutputByteStreamView & raw_,
-			InputByteStreamView &  ripe_,
-			Boolean const &        small
+			OutputBinaryStreamView & raw_,
+			InputBinaryStreamView &  ripe_,
+			Container const &        container,
+			Boolean const &          small
 		) -> Void {
-			M_use_zps_of(raw);
-			M_use_zps_of(ripe);
-			return process_whole(raw, ripe, small);
+			M_use_split_stream_of(raw);
+			M_use_split_stream_of(ripe);
+			return process_whole(raw, ripe, container, small);
 		}
 
 	};

@@ -20,7 +20,7 @@ export namespace Twinning::Kernel::Tool::Data::Encryption::Rijndael {
 
 	struct Common {
 
-		inline static constexpr auto k_empty_initialization_vector = StaticByteArray<32_sz>{{
+		inline static constexpr auto k_empty_initialization_vector = StaticArray<Byte, 32_sz>{{
 			0x00_b, 0x00_b, 0x00_b, 0x00_b, 0x00_b, 0x00_b, 0x00_b, 0x00_b,
 			0x00_b, 0x00_b, 0x00_b, 0x00_b, 0x00_b, 0x00_b, 0x00_b, 0x00_b,
 			0x00_b, 0x00_b, 0x00_b, 0x00_b, 0x00_b, 0x00_b, 0x00_b, 0x00_b,

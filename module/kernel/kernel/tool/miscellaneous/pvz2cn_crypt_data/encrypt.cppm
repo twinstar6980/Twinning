@@ -18,24 +18,23 @@ export namespace Twinning::Kernel::Tool::Miscellaneous::Pvz2cnCryptData {
 		// ----------------
 
 		inline static auto process_whole(
-			InputByteStreamView &  raw,
-			OutputByteStreamView & ripe,
-			String const &         key
+			InputBinaryStreamView &  raw,
+			OutputBinaryStreamView & ripe,
+			String const &           key
 		) -> Void {
-			auto rijndael_raw_container = ByteArray{};
-			auto rijndael_raw = InputByteStreamView{};
-			auto raw_data = raw.forward_view(raw.reserve());
-			auto rijndael_data_size = Math::compute_padded_size(raw_data.size(), cast_box<Size>(k_rijndael_block_size));
-			if (raw_data.size() == rijndael_data_size) {
-				rijndael_raw.set(raw_data);
+			auto rijndael_raw_container = Binary{};
+			auto rijndael_raw = InputBinaryStreamView{};
+			auto rijndael_data_size = Math::compute_padded_size(raw.reserve(), cast_box<Size>(k_rijndael_block_size));
+			if (raw.reserve() == rijndael_data_size) {
+				rijndael_raw = raw.split_reserve();
 			}
 			else {
-				rijndael_raw_container.allocate(rijndael_data_size);
-				Range::assign_from(rijndael_raw_container.head(raw_data.size()), raw_data);
-				rijndael_raw.set(rijndael_raw_container);
+				rijndael_raw_container.allocate_full(rijndael_data_size);
+				Range::assign_from(rijndael_raw_container.head(raw.reserve()), raw.split_forward(raw.reserve()).view());
+				rijndael_raw = like_binary_stream<StreamMode::Constant::input()>(raw, rijndael_raw_container);
 			}
 			ripe.write_constant(k_magic_marker);
-			auto rijndael_ripe = OutputByteStreamView{ripe.forward_view(rijndael_data_size)};
+			auto rijndael_ripe = ripe.split_forward(rijndael_data_size);
 			auto rijndael_key = compute_rijndael_key(key);
 			auto rijndael_initialization_vector = compute_rijndael_initialization_vector(rijndael_key);
 			Data::Encryption::Rijndael::Encrypt::process(rijndael_raw, rijndael_ripe, Data::Encryption::Rijndael::Mode::Constant::cbc(), k_rijndael_block_size, rijndael_key, rijndael_initialization_vector);
@@ -49,7 +48,7 @@ export namespace Twinning::Kernel::Tool::Miscellaneous::Pvz2cnCryptData {
 			Size &       ripe_size
 		) -> Void {
 			ripe_size = 0_sz;
-			ripe_size += bs_static_size<MagicMarker>();
+			ripe_size += binary_static_size_of<MagicMarker>();
 			ripe_size += Math::compute_padded_size(raw_size, cast_box<Size>(k_rijndael_block_size));
 			return;
 		}
@@ -57,12 +56,12 @@ export namespace Twinning::Kernel::Tool::Miscellaneous::Pvz2cnCryptData {
 		// ----------------
 
 		inline static auto process(
-			InputByteStreamView &  raw_,
-			OutputByteStreamView & ripe_,
-			String const &         key
+			InputBinaryStreamView &  raw_,
+			OutputBinaryStreamView & ripe_,
+			String const &           key
 		) -> Void {
-			M_use_zps_of(raw);
-			M_use_zps_of(ripe);
+			M_use_split_stream_of(raw);
+			M_use_split_stream_of(ripe);
 			return process_whole(raw, ripe, key);
 		}
 

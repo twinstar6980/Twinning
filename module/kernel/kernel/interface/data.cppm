@@ -13,7 +13,7 @@ export namespace Twinning::Kernel::Interface {
 
 		ZPointer<ZByte> data{nullptr};
 
-		ZSize size{0};
+		ZSize size{0_szz};
 
 	};
 

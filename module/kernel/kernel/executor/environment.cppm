@@ -7,11 +7,17 @@ import twinning.kernel.utility;
 import twinning.kernel.executor.context;
 import twinning.kernel.tool.data.hashing.fnv.common;
 import twinning.kernel.tool.data.hashing.fnv.hash;
-import twinning.kernel.tool.data.hashing.md5.common;
-import twinning.kernel.tool.data.hashing.md5.hash;
-import twinning.kernel.tool.data.encoding.base64.common;
-import twinning.kernel.tool.data.encoding.base64.encode;
-import twinning.kernel.tool.data.encoding.base64.decode;
+import twinning.kernel.tool.data.hashing.crc.common;
+import twinning.kernel.tool.data.hashing.crc.hash;
+import twinning.kernel.tool.data.hashing.adler.common;
+import twinning.kernel.tool.data.hashing.adler.hash;
+import twinning.kernel.tool.data.hashing.md.common;
+import twinning.kernel.tool.data.hashing.md.hash;
+import twinning.kernel.tool.data.hashing.sha.common;
+import twinning.kernel.tool.data.hashing.sha.hash;
+import twinning.kernel.tool.data.encoding.base.common;
+import twinning.kernel.tool.data.encoding.base.encode;
+import twinning.kernel.tool.data.encoding.base.decode;
 import twinning.kernel.tool.data.encryption.exor.common;
 import twinning.kernel.tool.data.encryption.exor.encrypt;
 import twinning.kernel.tool.data.encryption.rijndael.common;
@@ -23,9 +29,27 @@ import twinning.kernel.tool.data.compression.deflate.uncompress;
 import twinning.kernel.tool.data.compression.bzip2.common;
 import twinning.kernel.tool.data.compression.bzip2.compress;
 import twinning.kernel.tool.data.compression.bzip2.uncompress;
-import twinning.kernel.tool.data.compression.lzma.common;
-import twinning.kernel.tool.data.compression.lzma.compress;
-import twinning.kernel.tool.data.compression.lzma.uncompress;
+import twinning.kernel.tool.data.compression.lzma1.common;
+import twinning.kernel.tool.data.compression.lzma1.compress;
+import twinning.kernel.tool.data.compression.lzma1.uncompress;
+import twinning.kernel.tool.data.compression.lzma2.common;
+import twinning.kernel.tool.data.compression.lzma2.compress;
+import twinning.kernel.tool.data.compression.lzma2.uncompress;
+import twinning.kernel.tool.data.compression.lz4.common;
+import twinning.kernel.tool.data.compression.lz4.compress;
+import twinning.kernel.tool.data.compression.lz4.uncompress;
+import twinning.kernel.tool.data.compression.lzo.common;
+import twinning.kernel.tool.data.compression.lzo.compress;
+import twinning.kernel.tool.data.compression.lzo.uncompress;
+import twinning.kernel.tool.data.compression.brotli.common;
+import twinning.kernel.tool.data.compression.brotli.compress;
+import twinning.kernel.tool.data.compression.brotli.uncompress;
+import twinning.kernel.tool.data.compression.snappy.common;
+import twinning.kernel.tool.data.compression.snappy.compress;
+import twinning.kernel.tool.data.compression.snappy.uncompress;
+import twinning.kernel.tool.data.compression.zstd.common;
+import twinning.kernel.tool.data.compression.zstd.compress;
+import twinning.kernel.tool.data.compression.zstd.uncompress;
 import twinning.kernel.tool.data.differentiation.vcdiff.common;
 import twinning.kernel.tool.data.differentiation.vcdiff.encode;
 import twinning.kernel.tool.data.differentiation.vcdiff.decode;
@@ -233,7 +257,6 @@ export namespace Twinning::Kernel::Executor::Environment {
 				[](
 				Script::JavaScript::NativeValueHandler<TClass> & thix
 			) -> TClass & {
-					// NOTE: EXPLAIN: return reference is cheap
 					return thix.value();
 				}
 			>;
@@ -247,8 +270,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 					Script::JavaScript::NativeValueHandler<TClass> & thix,
 					TClass &                                         value
 				) -> Void {
-						// NOTE: EXPLAIN: some type has not the copy assignment
-						restruct(thix.value(), value);
+						value = thix.value();
 						return;
 					}
 				>;
@@ -328,34 +350,30 @@ export namespace Twinning::Kernel::Executor::Environment {
 	#pragma region proxy function with promotion
 
 	// NOTE: EXPLAIN: promotion these type to simplify interface
-	// - *StringView          -> String                    -> String
-	// - *ByteListView        -> VariableByteListView      -> ByteListView
-	// - *ByteStreamView      -> AccessByteStreamView      -> ByteStreamView
-	// - *CharacterListView   -> VariableCharacterListView -> CharacterListView
-	// - *CharacterStreamView -> AccessCharacterStreamView -> CharacterStreamView
-	// - Image::*ImageView    -> Image::VariableImageView  -> Image::ImageView
+	// - *BinaryView       -> VariableBinaryView       -> BinaryView
+	// - *BinaryStreamView -> AccessBinaryStreamView   -> BinaryStreamView
+	// - *StringView       -> VariableStringView       -> StringView
+	// - *StringStreamView -> AccessStringStreamView   -> StringStreamView
+	// - Image::*ImageView -> Image::VariableImageView -> Image::ImageView
 
 	namespace Detail {
 
 		template <typename TType> requires
 			NoneConstraint
 		using AsPromotion = decltype([]<typename = None> {
-			if constexpr (IsSame<TType, ConstantStringView, VariableStringView>) {
-				return declare<String>();
+			if constexpr (IsSame<TType, VariableBinaryView, ConstantBinaryView>) {
+				return declare<VariableBinaryView>();
 			}
-			else if constexpr (IsSame<TType, ConstantByteListView>) {
-				return declare<VariableByteListView>();
+			else if constexpr (IsSame<TType, InputBinaryStreamView, OutputBinaryStreamView, AccessBinaryStreamView>) {
+				return declare<AccessBinaryStreamView>();
 			}
-			else if constexpr (IsSame<TType, InputByteStreamView, OutputByteStreamView>) {
-				return declare<AccessByteStreamView>();
+			else if constexpr (IsSame<TType, VariableStringView, ConstantStringView>) {
+				return declare<VariableStringView>();
 			}
-			else if constexpr (IsSame<TType, ConstantCharacterListView>) {
-				return declare<VariableCharacterListView>();
+			else if constexpr (IsSame<TType, InputStringStreamView, OutputStringStreamView, AccessStringStreamView>) {
+				return declare<AccessStringStreamView>();
 			}
-			else if constexpr (IsSame<TType, InputCharacterStreamView, OutputCharacterStreamView>) {
-				return declare<AccessCharacterStreamView>();
-			}
-			else if constexpr (IsSame<TType, Image::ConstantImageView>) {
+			else if constexpr (IsSame<TType, Image::VariableImageView, Image::ConstantImageView>) {
 				return declare<Image::VariableImageView>();
 			}
 			else {
@@ -405,7 +423,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 
 	namespace Detail {
 
-		template <typename TVersion, typename TVersionPackage, template <auto> typename TOperationClass, auto t_operation_type, typename TVersionedArgument, typename ... TArgument> requires
+		template <typename TVersion, typename TVersionPackage, template <auto> typename TMOperationClass, auto t_operation_type, typename TVersionedArgument, typename ... TArgument> requires
 			NoneConstraint
 		inline auto make_proxy_function_by_versioned(
 			TArgument & ...  argument,
@@ -431,10 +449,10 @@ export namespace Twinning::Kernel::Executor::Environment {
 					};
 					[&] <auto ... t_argument_index>(ValuePackage<t_argument_index ...>) -> Void {
 						if constexpr (t_operation_type == VersionedOperation::Constant::process()) {
-							TOperationClass<t_version>::process(extract_argument(ValuePackage<t_argument_index>{}) ...);
+							TMOperationClass<t_version>::process(extract_argument(ValuePackage<t_argument_index>{}) ...);
 						}
 						if constexpr (t_operation_type == VersionedOperation::Constant::estimate()) {
-							TOperationClass<t_version>::estimate(extract_argument(ValuePackage<t_argument_index>{}) ...);
+							TMOperationClass<t_version>::estimate(extract_argument(ValuePackage<t_argument_index>{}) ...);
 						}
 					}(AsValuePackageOfIndex<sizeof...(TArgument)>{});
 				}
@@ -446,12 +464,12 @@ export namespace Twinning::Kernel::Executor::Environment {
 
 	// ----------------
 
-	template <typename TVersion, typename TVersionPackage, template <auto> typename TOperation, auto t_versioned_operation, typename TVersionedArgument, typename ... TArgument> requires
+	template <typename TVersion, typename TVersionPackage, template <auto> typename TMOperationClass, auto t_operation_type, typename TVersionedArgument, typename ... TArgument> requires
 		CategoryConstraint<IsPureInstance<TVersionPackage> && IsInstance<TArgument ...>>
 		&& (IsValuePackage<TVersionPackage>)
-		&& (IsSameOf<t_versioned_operation, VersionedOperation>)
+		&& (IsSameOf<t_operation_type, VersionedOperation>)
 		&& (IsTypePackage<TVersionedArgument>)
-	inline constexpr auto & proxy_function_by_versioned = Detail::make_proxy_function_by_versioned<TVersion, TVersionPackage, TOperation, t_versioned_operation, TVersionedArgument, TArgument ...>;
+	inline constexpr auto & proxy_function_by_versioned = Detail::make_proxy_function_by_versioned<TVersion, TVersionPackage, TMOperationClass, t_operation_type, TVersionedArgument, TArgument ...>;
 
 	#pragma endregion
 
@@ -462,7 +480,7 @@ export namespace Twinning::Kernel::Executor::Environment {
 	) -> Void {
 		// @formatter:off
 		// ReSharper disable CppInconsistentNaming CppTooWideScope
-		auto s_Twinning = Script::JavaScript::NativeSpaceBuilder{k_null_optional, "Twinning"_s, as_left(context.context().global_object())};
+		auto s_Twinning = Script::JavaScript::NativeSpaceBuilder{make_optional_null<String>(), "Twinning"_s, as_left(context.context().global_object())};
 		auto s_Kernel = s_Twinning.add_space("Kernel"_s);
 		// Boolean
 		define_generic_class<Boolean>(s_Kernel, "Boolean"_s);
@@ -482,46 +500,53 @@ export namespace Twinning::Kernel::Executor::Environment {
 		define_generic_class<Path>(s_Kernel, "Path"_s);
 		define_generic_class<Optional<Path>>(s_Kernel, "PathOptional"_s);
 		define_generic_class<List<Path>>(s_Kernel, "PathList"_s);
-		// ByteArray
-		define_generic_class<ByteArray>(s_Kernel, "ByteArray"_s)
+		// Binary
+		define_generic_class<Binary>(s_Kernel, "Binary"_s)
 			.add_constructor_allocate_proxy<Size const &>("allocate"_s)
-			.add_member_function_proxy<&proxy_member_function_with_promotion<ByteArray, &ByteArray::allocate>>("allocate"_s)
-			.add_member_function_proxy<&proxy_member_function_with_promotion<ByteArray, &ByteArray::reset>>("reset"_s)
-			.add_member_function_proxy<&proxy_member_function_with_promotion<ByteArray, &ByteArray::size>>("size"_s)
-			.add_member_function_proxy<&proxy_member_function_with_promotion<ByteArray, AsVariableMemberFunction<ByteArray, ByteArray::View>{&ByteArray::view}>>("view"_s)
+			.add_member_function_proxy<&proxy_member_function_with_promotion<Binary, &Binary::allocate_full>>("allocate"_s)
+			.add_member_function_proxy<&proxy_member_function_with_promotion<Binary, &Binary::reset>>("reset"_s)
+			.add_member_function_proxy<&proxy_member_function_with_promotion<Binary, &Binary::size>>("size"_s).add_member_function_proxy<
+					&normalized_lambda<
+						[](
+						Binary & target
+					) -> VariableBinaryView & {
+							return as_variable(target.as_view());
+						}
+					>
+				>("view"_s)
 			.add_member_function<
 				&normalized_lambda<
 					[](
-					Script::JavaScript::NativeValueHandler<ByteArray> & that
-				) -> ByteArray && {
+					Script::JavaScript::NativeValueHandler<Binary> & that
+				) -> Binary && {
 						return as_moveable(that.value());
 					}
 				>
 			>("release"_s);
-		// ByteListView
-		define_generic_class<VariableByteListView>(s_Kernel, "ByteListView"_s)
-			.add_member_function_proxy<&proxy_member_function_with_promotion<VariableByteListView, &VariableByteListView::size>>("size"_s)
-			.add_member_function_proxy<&proxy_member_function_with_promotion<VariableByteListView, AsConstantMemberFunction<VariableByteListView, VariableByteListView, Size const &, Size const &>{&VariableByteListView::sub}>>("sub"_s);
-		// ByteStreamView
-		define_generic_class<AccessByteStreamView, GenericClassDefinitionFlag::Constant::generic_mask()>(s_Kernel, "ByteStreamView"_s)
-			.add_constructor_allocate_proxy<VariableByteListView const &>("watch"_s)
-			.add_member_function_proxy<&proxy_member_function_with_promotion<AccessByteStreamView, &AccessByteStreamView::size>>("size"_s)
-			.add_member_function_proxy<&proxy_member_function_with_promotion<AccessByteStreamView, &AccessByteStreamView::position>>("position"_s)
-			.add_member_function_proxy<&proxy_member_function_with_promotion<AccessByteStreamView, &AccessByteStreamView::set_position>>("set_position"_s)
-			.add_member_function_proxy<&proxy_member_function_with_promotion<AccessByteStreamView, &AccessByteStreamView::view>>("view"_s)
-			.add_member_function_proxy<&proxy_member_function_with_promotion<AccessByteStreamView, &AccessByteStreamView::stream_view>>("stream_view"_s);
-		// CharacterListView
-		define_generic_class<VariableCharacterListView, GenericClassDefinitionFlag::Constant::generic_mask()>(s_Kernel, "CharacterListView"_s)
-			.add_member_function_proxy<&proxy_member_function_with_promotion<VariableCharacterListView, &VariableCharacterListView::size>>("size"_s)
-			.add_member_function_proxy<&proxy_member_function_with_promotion<VariableCharacterListView, AsConstantMemberFunction<VariableCharacterListView, VariableCharacterListView, Size const &, Size const &>{&VariableCharacterListView::sub}>>("sub"_s);
-		// CharacterStreamView
-		define_generic_class<AccessCharacterStreamView, GenericClassDefinitionFlag::Constant::generic_mask()>(s_Kernel, "CharacterStreamView"_s)
-			.add_constructor_allocate_proxy<VariableCharacterListView const &>("watch"_s)
-			.add_member_function_proxy<&proxy_member_function_with_promotion<AccessCharacterStreamView, &AccessCharacterStreamView::size>>("size"_s)
-			.add_member_function_proxy<&proxy_member_function_with_promotion<AccessCharacterStreamView, &AccessCharacterStreamView::position>>("position"_s)
-			.add_member_function_proxy<&proxy_member_function_with_promotion<AccessCharacterStreamView, &AccessCharacterStreamView::set_position>>("set_position"_s)
-			.add_member_function_proxy<&proxy_member_function_with_promotion<AccessCharacterStreamView, &AccessCharacterStreamView::view>>("view"_s)
-			.add_member_function_proxy<&proxy_member_function_with_promotion<AccessCharacterStreamView, &AccessCharacterStreamView::stream_view>>("stream_view"_s);
+		// BinaryView
+		define_generic_class<VariableBinaryView>(s_Kernel, "BinaryView"_s)
+			.add_member_function_proxy<&proxy_member_function_with_promotion<VariableBinaryView, &VariableBinaryView::size>>("size"_s)
+			.add_member_function_proxy<&proxy_member_function_with_promotion<VariableBinaryView, AsConstantMemberFunction<VariableBinaryView, VariableBinaryView, Size const &, Size const &>{&VariableBinaryView::sub}>>("sub"_s);
+		// BinaryStreamView
+		define_generic_class<AccessBinaryStreamView, GenericClassDefinitionFlag::Constant::generic_mask()>(s_Kernel, "BinaryStreamView"_s)
+			.add_constructor_allocate_proxy<VariableBinaryView const &>("watch"_s)
+			.add_member_function_proxy<&proxy_member_function_with_promotion<AccessBinaryStreamView, &AccessBinaryStreamView::size>>("size"_s)
+			.add_member_function_proxy<&proxy_member_function_with_promotion<AccessBinaryStreamView, &AccessBinaryStreamView::position>>("position"_s)
+			.add_member_function_proxy<&proxy_member_function_with_promotion<AccessBinaryStreamView, &AccessBinaryStreamView::set_position>>("set_position"_s)
+			.add_member_function_proxy<&proxy_member_function_with_promotion<AccessBinaryStreamView, &AccessBinaryStreamView::view>>("view"_s)
+			.add_member_function_proxy<&proxy_member_function_with_promotion<AccessBinaryStreamView, &AccessBinaryStreamView::split_stream>>("split_stream"_s);
+		// StringView
+		define_generic_class<VariableStringView, GenericClassDefinitionFlag::Constant::generic_mask()>(s_Kernel, "StringView"_s)
+			.add_member_function_proxy<&proxy_member_function_with_promotion<VariableStringView, &VariableStringView::size>>("size"_s)
+			.add_member_function_proxy<&proxy_member_function_with_promotion<VariableStringView, AsConstantMemberFunction<VariableStringView, VariableStringView, Size const &, Size const &>{&VariableStringView::sub}>>("sub"_s);
+		// StringStreamView
+		define_generic_class<AccessStringStreamView, GenericClassDefinitionFlag::Constant::generic_mask()>(s_Kernel, "StringStreamView"_s)
+			.add_constructor_allocate_proxy<VariableStringView const &>("watch"_s)
+			.add_member_function_proxy<&proxy_member_function_with_promotion<AccessStringStreamView, &AccessStringStreamView::size>>("size"_s)
+			.add_member_function_proxy<&proxy_member_function_with_promotion<AccessStringStreamView, &AccessStringStreamView::position>>("position"_s)
+			.add_member_function_proxy<&proxy_member_function_with_promotion<AccessStringStreamView, &AccessStringStreamView::set_position>>("set_position"_s)
+			.add_member_function_proxy<&proxy_member_function_with_promotion<AccessStringStreamView, &AccessStringStreamView::view>>("view"_s)
+			.add_member_function_proxy<&proxy_member_function_with_promotion<AccessStringStreamView, &AccessStringStreamView::split_stream>>("split_stream"_s);
 		// Notation
 		{
 			auto s_Notation = s_Kernel.add_space("Notation"_s);
@@ -555,7 +580,15 @@ export namespace Twinning::Kernel::Executor::Environment {
 				.add_member_function_proxy<&proxy_member_function_with_promotion<Image::Image, &Image::Image::allocate>>("allocate"_s)
 				.add_member_function_proxy<&proxy_member_function_with_promotion<Image::Image, &Image::Image::reset>>("reset"_s)
 				.add_member_function_proxy<&proxy_member_function_with_promotion<Image::Image, &Image::Image::size>>("size"_s)
-				.add_member_function_proxy<&proxy_member_function_with_promotion<Image::Image, AsVariableMemberFunction<Image::Image, Image::VariableImageView>{&Image::Image::view}>>("view"_s);
+				.add_member_function_proxy<
+					&normalized_lambda<
+						[](
+						Image::Image & target
+					) -> Image::VariableImageView & {
+							return as_variable(target.as_view());
+						}
+					>
+				>("view"_s);
 		}
 		// Storage
 		{
@@ -603,26 +636,45 @@ export namespace Twinning::Kernel::Executor::Environment {
 					{
 						auto s_Fnv = s_Hashing.add_space("Fnv"_s);
 						define_generic_class<Tool::Data::Hashing::Fnv::Mode>(s_Fnv, "Mode"_s);
-						define_generic_class<Tool::Data::Hashing::Fnv::BitCount>(s_Fnv, "BitCount"_s);
 						s_Fnv.add_space("Hash"_s)
 							.add_function_proxy<&proxy_global_function_with_promotion<Tool::Data::Hashing::Fnv::Hash::process>>("process"_s);
 					}
 					{
-						auto s_Md5 = s_Hashing.add_space("Md5"_s);
-						s_Md5.add_space("Hash"_s)
-							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Hashing::Md5::Hash::process>>("process"_s);
+						auto s_Crc = s_Hashing.add_space("Crc"_s);
+						define_generic_class<Tool::Data::Hashing::Crc::Mode>(s_Crc, "Mode"_s);
+						s_Crc.add_space("Hash"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<Tool::Data::Hashing::Crc::Hash::process>>("process"_s);
+					}
+					{
+						auto s_Adler = s_Hashing.add_space("Adler"_s);
+						define_generic_class<Tool::Data::Hashing::Adler::Mode>(s_Adler, "Mode"_s);
+						s_Adler.add_space("Hash"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<Tool::Data::Hashing::Adler::Hash::process>>("process"_s);
+					}
+					{
+						auto s_Md = s_Hashing.add_space("Md"_s);
+						define_generic_class<Tool::Data::Hashing::Md::Mode>(s_Md, "Mode"_s);
+						s_Md.add_space("Hash"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Hashing::Md::Hash::process>>("process"_s);
+					}
+					{
+						auto s_Sha = s_Hashing.add_space("Sha"_s);
+						define_generic_class<Tool::Data::Hashing::Sha::Mode>(s_Sha, "Mode"_s);
+						s_Sha.add_space("Hash"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Hashing::Sha::Hash::process>>("process"_s);
 					}
 				}
 				{
 					auto s_Encoding = s_Data.add_space("Encoding"_s);
 					{
-						auto s_Base64 = s_Encoding.add_space("Base64"_s);
-						s_Base64.add_space("Encode"_s)
-							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Encoding::Base64::Encode::process>>("process"_s)
-							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Encoding::Base64::Encode::estimate>>("estimate"_s);
-						s_Base64.add_space("Decode"_s)
-							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Encoding::Base64::Decode::process>>("process"_s)
-							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Encoding::Base64::Decode::estimate>>("estimate"_s);
+						auto s_Base = s_Encoding.add_space("Base"_s);
+						define_generic_class<Tool::Data::Encoding::Base::Mode>(s_Base, "Mode"_s);
+						s_Base.add_space("Encode"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Encoding::Base::Encode::process>>("process"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Encoding::Base::Encode::estimate>>("estimate"_s);
+						s_Base.add_space("Decode"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Encoding::Base::Decode::process>>("process"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Encoding::Base::Decode::estimate>>("estimate"_s);
 					}
 				}
 				{
@@ -645,8 +697,8 @@ export namespace Twinning::Kernel::Executor::Environment {
 					auto s_Compression = s_Data.add_space("Compression"_s);
 					{
 						auto s_Deflate = s_Compression.add_space("Deflate"_s);
+						define_generic_class<Tool::Data::Compression::Deflate::Container>(s_Deflate, "Container"_s);
 						define_generic_class<Tool::Data::Compression::Deflate::StrategyMode>(s_Deflate, "StrategyMode"_s);
-						define_generic_class<Tool::Data::Compression::Deflate::WrapperType>(s_Deflate, "WrapperType"_s);
 						s_Deflate.add_space("Compress"_s)
 							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Compression::Deflate::Compress::process>>("process"_s)
 							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Compression::Deflate::Compress::estimate>>("estimate"_s);
@@ -655,17 +707,76 @@ export namespace Twinning::Kernel::Executor::Environment {
 					}
 					{
 						auto s_Bzip2 = s_Compression.add_space("Bzip2"_s);
+						define_generic_class<Tool::Data::Compression::Bzip2::Container>(s_Bzip2, "Container"_s);
 						s_Bzip2.add_space("Compress"_s)
-							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Compression::Bzip2::Compress::process>>("process"_s);
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Compression::Bzip2::Compress::process>>("process"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Compression::Bzip2::Compress::estimate>>("estimate"_s);
 						s_Bzip2.add_space("Uncompress"_s)
 							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Compression::Bzip2::Uncompress::process>>("process"_s);
 					}
 					{
-						auto s_Lzma = s_Compression.add_space("Lzma"_s);
-						s_Lzma.add_space("Compress"_s)
-							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Compression::Lzma::Compress::process>>("process"_s);
-						s_Lzma.add_space("Uncompress"_s)
-							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Compression::Lzma::Uncompress::process>>("process"_s);
+						auto s_Lzma1 = s_Compression.add_space("Lzma1"_s);
+						define_generic_class<Tool::Data::Compression::Lzma1::Container>(s_Lzma1, "Container"_s);
+						s_Lzma1.add_space("Compress"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Compression::Lzma1::Compress::process>>("process"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Compression::Lzma1::Compress::estimate>>("estimate"_s);
+						s_Lzma1.add_space("Uncompress"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Compression::Lzma1::Uncompress::process>>("process"_s);
+					}
+					{
+						auto s_Lzma2 = s_Compression.add_space("Lzma2"_s);
+						define_generic_class<Tool::Data::Compression::Lzma2::Container>(s_Lzma2, "Container"_s);
+						s_Lzma2.add_space("Compress"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Compression::Lzma2::Compress::process>>("process"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Compression::Lzma2::Compress::estimate>>("estimate"_s);
+						s_Lzma2.add_space("Uncompress"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Compression::Lzma2::Uncompress::process>>("process"_s);
+					}
+					{
+						auto s_Lz4 = s_Compression.add_space("Lz4"_s);
+						define_generic_class<Tool::Data::Compression::Lz4::Container>(s_Lz4, "Container"_s);
+						s_Lz4.add_space("Compress"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Compression::Lz4::Compress::process>>("process"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Compression::Lz4::Compress::estimate>>("estimate"_s);
+						s_Lz4.add_space("Uncompress"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Compression::Lz4::Uncompress::process>>("process"_s);
+					}
+					{
+						auto s_Lzo = s_Compression.add_space("Lzo"_s);
+						define_generic_class<Tool::Data::Compression::Lzo::Container>(s_Lzo, "Container"_s);
+						s_Lzo.add_space("Compress"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Compression::Lzo::Compress::process>>("process"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Compression::Lzo::Compress::estimate>>("estimate"_s);
+						s_Lzo.add_space("Uncompress"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Compression::Lzo::Uncompress::process>>("process"_s);
+					}
+					{
+						auto s_Brotli = s_Compression.add_space("Brotli"_s);
+						define_generic_class<Tool::Data::Compression::Brotli::Container>(s_Brotli, "Container"_s);
+						define_generic_class<Tool::Data::Compression::Brotli::Mode>(s_Brotli, "Mode"_s);
+						s_Brotli.add_space("Compress"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Compression::Brotli::Compress::process>>("process"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Compression::Brotli::Compress::estimate>>("estimate"_s);
+						s_Brotli.add_space("Uncompress"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Compression::Brotli::Uncompress::process>>("process"_s);
+					}
+					{
+						auto s_Snappy = s_Compression.add_space("Snappy"_s);
+						define_generic_class<Tool::Data::Compression::Snappy::Container>(s_Snappy, "Container"_s);
+						s_Snappy.add_space("Compress"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Compression::Snappy::Compress::process>>("process"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Compression::Snappy::Compress::estimate>>("estimate"_s);
+						s_Snappy.add_space("Uncompress"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Compression::Snappy::Uncompress::process>>("process"_s);
+					}
+					{
+						auto s_Zstd = s_Compression.add_space("Zstd"_s);
+						define_generic_class<Tool::Data::Compression::Zstd::Container>(s_Zstd, "Container"_s);
+						s_Zstd.add_space("Compress"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Compression::Zstd::Compress::process>>("process"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Compression::Zstd::Compress::estimate>>("estimate"_s);
+						s_Zstd.add_space("Uncompress"_s)
+							.add_function_proxy<&proxy_global_function_with_promotion<&Tool::Data::Compression::Zstd::Uncompress::process>>("process"_s);
 					}
 				}
 				{
@@ -830,9 +941,9 @@ export namespace Twinning::Kernel::Executor::Environment {
 						define_variant_class_version_method<Version, VersionPackage>(c_SoundBank);
 					}
 					s_SoundBank.add_space("Encode"_s)
-						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Wwise::SoundBank::Encode, VersionedOperation::Constant::process(), TypePackage<SoundBankDefinition>, OutputByteStreamView, SoundBankDefinition const, Path const>>>("process"_s);
+						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Wwise::SoundBank::Encode, VersionedOperation::Constant::process(), TypePackage<SoundBankDefinition>, OutputBinaryStreamView, SoundBankDefinition const, Path const>>>("process"_s);
 					s_SoundBank.add_space("Decode"_s)
-						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Wwise::SoundBank::Decode, VersionedOperation::Constant::process(), TypePackage<SoundBankDefinition>, InputByteStreamView, SoundBankDefinition, Optional<Path> const>>>("process"_s);
+						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Wwise::SoundBank::Decode, VersionedOperation::Constant::process(), TypePackage<SoundBankDefinition>, InputBinaryStreamView, SoundBankDefinition, Optional<Path> const>>>("process"_s);
 				}
 			}
 			// Marmalade
@@ -853,9 +964,9 @@ export namespace Twinning::Kernel::Executor::Environment {
 						define_variant_class_version_method<Version, VersionPackage>(c_Package);
 					}
 					s_Dzip.add_space("Pack"_s)
-						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Marmalade::Dzip::Pack, VersionedOperation::Constant::process(), TypePackage<PackageDefinition>, OutputByteStreamView, PackageDefinition const, Path const>>>("process"_s);
+						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Marmalade::Dzip::Pack, VersionedOperation::Constant::process(), TypePackage<PackageDefinition>, OutputBinaryStreamView, PackageDefinition const, Path const>>>("process"_s);
 					s_Dzip.add_space("Unpack"_s)
-						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Marmalade::Dzip::Unpack, VersionedOperation::Constant::process(), TypePackage<PackageDefinition>, InputByteStreamView, PackageDefinition, Optional<Path> const>>>("process"_s);
+						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Marmalade::Dzip::Unpack, VersionedOperation::Constant::process(), TypePackage<PackageDefinition>, InputBinaryStreamView, PackageDefinition, Optional<Path> const>>>("process"_s);
 				}
 			}
 			// Popcap
@@ -867,11 +978,11 @@ export namespace Twinning::Kernel::Executor::Environment {
 					auto s_Zlib = s_Popcap.add_space("Zlib"_s);
 					define_generic_class<Version>(s_Zlib, "Version"_s);
 					s_Zlib.add_space("Compress"_s)
-						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::Zlib::Compress, VersionedOperation::Constant::process(), TypePackage<>, InputByteStreamView, OutputByteStreamView, Integer const, Integer const, Integer const, Tool::Data::Compression::Deflate::StrategyMode const>>>("process"_s)
+						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::Zlib::Compress, VersionedOperation::Constant::process(), TypePackage<>, InputBinaryStreamView, OutputBinaryStreamView, Integer const, Integer const, Integer const, Tool::Data::Compression::Deflate::StrategyMode const>>>("process"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::Zlib::Compress, VersionedOperation::Constant::estimate(), TypePackage<>, Size const, Size, Integer const, Integer const>>>("estimate"_s);
 					s_Zlib.add_space("Uncompress"_s)
-						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::Zlib::Uncompress, VersionedOperation::Constant::process(), TypePackage<>, OutputByteStreamView, InputByteStreamView, Integer const>>>("process"_s)
-						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::Zlib::Uncompress, VersionedOperation::Constant::estimate(), TypePackage<>, Size, ConstantByteListView const>>>("estimate"_s);
+						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::Zlib::Uncompress, VersionedOperation::Constant::process(), TypePackage<>, OutputBinaryStreamView, InputBinaryStreamView, Integer const>>>("process"_s)
+						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::Zlib::Uncompress, VersionedOperation::Constant::estimate(), TypePackage<>, Size, InputBinaryStreamView>>>("estimate"_s);
 				}
 				{
 					using Tool::Popcap::CryptData::Version;
@@ -879,11 +990,11 @@ export namespace Twinning::Kernel::Executor::Environment {
 					auto s_CryptData = s_Popcap.add_space("CryptData"_s);
 					define_generic_class<Version>(s_CryptData, "Version"_s);
 					s_CryptData.add_space("Encrypt"_s)
-						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::CryptData::Encrypt, VersionedOperation::Constant::process(), TypePackage<>, InputByteStreamView, OutputByteStreamView, Size const, String const>>>("process"_s)
+						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::CryptData::Encrypt, VersionedOperation::Constant::process(), TypePackage<>, InputBinaryStreamView, OutputBinaryStreamView, Size const, String const>>>("process"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::CryptData::Encrypt, VersionedOperation::Constant::estimate(), TypePackage<>, Size const, Size, Size const>>>("estimate"_s);
 					s_CryptData.add_space("Decrypt"_s)
-						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::CryptData::Decrypt, VersionedOperation::Constant::process(), TypePackage<>, OutputByteStreamView, InputByteStreamView, Size const, String const>>>("process"_s)
-						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::CryptData::Decrypt, VersionedOperation::Constant::estimate(), TypePackage<>, Size, ConstantByteListView const, Size const>>>("estimate"_s);
+						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::CryptData::Decrypt, VersionedOperation::Constant::process(), TypePackage<>, OutputBinaryStreamView, InputBinaryStreamView, Size const, String const>>>("process"_s)
+						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::CryptData::Decrypt, VersionedOperation::Constant::estimate(), TypePackage<>, Size, InputBinaryStreamView, Size const>>>("estimate"_s);
 				}
 				{
 					using Tool::Popcap::ReflectionObjectNotation::Version;
@@ -891,9 +1002,9 @@ export namespace Twinning::Kernel::Executor::Environment {
 					auto s_ReflectionObjectNotation = s_Popcap.add_space("ReflectionObjectNotation"_s);
 					define_generic_class<Version>(s_ReflectionObjectNotation, "Version"_s);
 					s_ReflectionObjectNotation.add_space("Encode"_s)
-						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::ReflectionObjectNotation::Encode, VersionedOperation::Constant::process(), TypePackage<>, OutputByteStreamView, Notation::Json::Value const, Boolean const, Boolean const>>>("process"_s);
+						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::ReflectionObjectNotation::Encode, VersionedOperation::Constant::process(), TypePackage<>, OutputBinaryStreamView, Notation::Json::Value const, Boolean const, Boolean const>>>("process"_s);
 					s_ReflectionObjectNotation.add_space("Decode"_s)
-						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::ReflectionObjectNotation::Decode, VersionedOperation::Constant::process(), TypePackage<>, InputByteStreamView, Notation::Json::Value>>>("process"_s);
+						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::ReflectionObjectNotation::Decode, VersionedOperation::Constant::process(), TypePackage<>, InputBinaryStreamView, Notation::Json::Value>>>("process"_s);
 				}
 				{
 					using Tool::Popcap::UTexture::Version;
@@ -901,11 +1012,11 @@ export namespace Twinning::Kernel::Executor::Environment {
 					auto s_UTexture = s_Popcap.add_space("UTexture"_s);
 					define_generic_class<Version>(s_UTexture, "Version"_s);
 					s_UTexture.add_space("Encode"_s)
-						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::UTexture::Encode, VersionedOperation::Constant::process(), TypePackage<>, OutputByteStreamView, Image::ConstantImageView const, String const>>>("process"_s)
+						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::UTexture::Encode, VersionedOperation::Constant::process(), TypePackage<>, OutputBinaryStreamView, Image::ConstantImageView const, String const>>>("process"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::UTexture::Encode, VersionedOperation::Constant::estimate(), TypePackage<>, Size, Image::ImageSize const, String const>>>("estimate"_s);
 					s_UTexture.add_space("Decode"_s)
-						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::UTexture::Decode, VersionedOperation::Constant::process(), TypePackage<>, InputByteStreamView, Image::VariableImageView const>>>("process"_s)
-						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::UTexture::Decode, VersionedOperation::Constant::estimate(), TypePackage<>, ConstantByteListView, Image::ImageSize>>>("estimate"_s);
+						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::UTexture::Decode, VersionedOperation::Constant::process(), TypePackage<>, InputBinaryStreamView, Image::VariableImageView const>>>("process"_s)
+						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::UTexture::Decode, VersionedOperation::Constant::estimate(), TypePackage<>, InputBinaryStreamView, Image::ImageSize>>>("estimate"_s);
 				}
 				{
 					using Tool::Popcap::SexyTexture::Version;
@@ -913,11 +1024,11 @@ export namespace Twinning::Kernel::Executor::Environment {
 					auto s_SexyTexture = s_Popcap.add_space("SexyTexture"_s);
 					define_generic_class<Version>(s_SexyTexture, "Version"_s);
 					s_SexyTexture.add_space("Encode"_s)
-						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::SexyTexture::Encode, VersionedOperation::Constant::process(), TypePackage<>, OutputByteStreamView, Image::ConstantImageView const, String const, Boolean const>>>("process"_s)
+						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::SexyTexture::Encode, VersionedOperation::Constant::process(), TypePackage<>, OutputBinaryStreamView, Image::ConstantImageView const, String const, Boolean const>>>("process"_s)
 						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::SexyTexture::Encode, VersionedOperation::Constant::estimate(), TypePackage<>, Size, Image::ImageSize const, String const, Boolean const>>>("estimate"_s);
 					s_SexyTexture.add_space("Decode"_s)
-						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::SexyTexture::Decode, VersionedOperation::Constant::process(), TypePackage<>, InputByteStreamView, Image::VariableImageView const>>>("process"_s)
-						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::SexyTexture::Decode, VersionedOperation::Constant::estimate(), TypePackage<>, ConstantByteListView, Image::ImageSize>>>("estimate"_s);
+						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::SexyTexture::Decode, VersionedOperation::Constant::process(), TypePackage<>, InputBinaryStreamView, Image::VariableImageView const>>>("process"_s)
+						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::SexyTexture::Decode, VersionedOperation::Constant::estimate(), TypePackage<>, InputBinaryStreamView, Image::ImageSize>>>("estimate"_s);
 				}
 				{
 					using Tool::Popcap::Animation::Version;
@@ -939,9 +1050,9 @@ export namespace Twinning::Kernel::Executor::Environment {
 						define_variant_class_version_method<Version, VersionPackage>(c_Animation);
 					}
 					s_Animation.add_space("Encode"_s)
-						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::Animation::Encode, VersionedOperation::Constant::process(), TypePackage<AnimationDefinition>, OutputByteStreamView, AnimationDefinition const>>>("process"_s);
+						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::Animation::Encode, VersionedOperation::Constant::process(), TypePackage<AnimationDefinition>, OutputBinaryStreamView, AnimationDefinition const>>>("process"_s);
 					s_Animation.add_space("Decode"_s)
-						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::Animation::Decode, VersionedOperation::Constant::process(), TypePackage<AnimationDefinition>, InputByteStreamView, AnimationDefinition>>>("process"_s);
+						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::Animation::Decode, VersionedOperation::Constant::process(), TypePackage<AnimationDefinition>, InputBinaryStreamView, AnimationDefinition>>>("process"_s);
 				}
 				{
 					using Tool::Popcap::ReAnimation::Version;
@@ -961,9 +1072,9 @@ export namespace Twinning::Kernel::Executor::Environment {
 						define_variant_class_version_method<Version, VersionPackage>(c_Animation);
 					}
 					s_ReAnimation.add_space("Encode"_s)
-						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::ReAnimation::Encode, VersionedOperation::Constant::process(), TypePackage<AnimationDefinition>, OutputByteStreamView, AnimationDefinition const>>>("process"_s);
+						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::ReAnimation::Encode, VersionedOperation::Constant::process(), TypePackage<AnimationDefinition>, OutputBinaryStreamView, AnimationDefinition const>>>("process"_s);
 					s_ReAnimation.add_space("Decode"_s)
-						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::ReAnimation::Decode, VersionedOperation::Constant::process(), TypePackage<AnimationDefinition>, InputByteStreamView, AnimationDefinition>>>("process"_s);
+						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::ReAnimation::Decode, VersionedOperation::Constant::process(), TypePackage<AnimationDefinition>, InputBinaryStreamView, AnimationDefinition>>>("process"_s);
 				}
 				{
 					using Tool::Popcap::Particle::Version;
@@ -983,9 +1094,9 @@ export namespace Twinning::Kernel::Executor::Environment {
 						define_variant_class_version_method<Version, VersionPackage>(c_Particle);
 					}
 					s_Particle.add_space("Encode"_s)
-						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::Particle::Encode, VersionedOperation::Constant::process(), TypePackage<ParticleDefinition>, OutputByteStreamView, ParticleDefinition const>>>("process"_s);
+						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::Particle::Encode, VersionedOperation::Constant::process(), TypePackage<ParticleDefinition>, OutputBinaryStreamView, ParticleDefinition const>>>("process"_s);
 					s_Particle.add_space("Decode"_s)
-						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::Particle::Decode, VersionedOperation::Constant::process(), TypePackage<ParticleDefinition>, InputByteStreamView, ParticleDefinition>>>("process"_s);
+						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::Particle::Decode, VersionedOperation::Constant::process(), TypePackage<ParticleDefinition>, InputBinaryStreamView, ParticleDefinition>>>("process"_s);
 				}
 				{
 					using Tool::Popcap::Trail::Version;
@@ -1005,9 +1116,9 @@ export namespace Twinning::Kernel::Executor::Environment {
 						define_variant_class_version_method<Version, VersionPackage>(c_Trail);
 					}
 					s_Trail.add_space("Encode"_s)
-						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::Trail::Encode, VersionedOperation::Constant::process(), TypePackage<TrailDefinition>, OutputByteStreamView, TrailDefinition const>>>("process"_s);
+						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::Trail::Encode, VersionedOperation::Constant::process(), TypePackage<TrailDefinition>, OutputBinaryStreamView, TrailDefinition const>>>("process"_s);
 					s_Trail.add_space("Decode"_s)
-						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::Trail::Decode, VersionedOperation::Constant::process(), TypePackage<TrailDefinition>, InputByteStreamView, TrailDefinition>>>("process"_s);
+						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::Trail::Decode, VersionedOperation::Constant::process(), TypePackage<TrailDefinition>, InputBinaryStreamView, TrailDefinition>>>("process"_s);
 				}
 				{
 					using Tool::Popcap::RenderEffect::Version;
@@ -1026,9 +1137,9 @@ export namespace Twinning::Kernel::Executor::Environment {
 						define_variant_class_version_method<Version, VersionPackage>(c_Effect);
 					}
 					s_RenderEffect.add_space("Encode"_s)
-						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::RenderEffect::Encode, VersionedOperation::Constant::process(), TypePackage<EffectDefinition>, OutputByteStreamView, EffectDefinition const>>>("process"_s);
+						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::RenderEffect::Encode, VersionedOperation::Constant::process(), TypePackage<EffectDefinition>, OutputBinaryStreamView, EffectDefinition const>>>("process"_s);
 					s_RenderEffect.add_space("Decode"_s)
-						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::RenderEffect::Decode, VersionedOperation::Constant::process(), TypePackage<EffectDefinition>, InputByteStreamView, EffectDefinition>>>("process"_s);
+						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::RenderEffect::Decode, VersionedOperation::Constant::process(), TypePackage<EffectDefinition>, InputBinaryStreamView, EffectDefinition>>>("process"_s);
 				}
 				{
 					using Tool::Popcap::ParticleEffect::Version;
@@ -1045,9 +1156,9 @@ export namespace Twinning::Kernel::Executor::Environment {
 						define_variant_class_version_method<Version, VersionPackage>(c_Effect);
 					}
 					s_ParticleEffect.add_space("Encode"_s)
-						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::ParticleEffect::Encode, VersionedOperation::Constant::process(), TypePackage<EffectDefinition>, OutputByteStreamView, EffectDefinition const>>>("process"_s);
+						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::ParticleEffect::Encode, VersionedOperation::Constant::process(), TypePackage<EffectDefinition>, OutputBinaryStreamView, EffectDefinition const>>>("process"_s);
 					s_ParticleEffect.add_space("Decode"_s)
-						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::ParticleEffect::Decode, VersionedOperation::Constant::process(), TypePackage<EffectDefinition>, InputByteStreamView, EffectDefinition>>>("process"_s);
+						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::ParticleEffect::Decode, VersionedOperation::Constant::process(), TypePackage<EffectDefinition>, InputBinaryStreamView, EffectDefinition>>>("process"_s);
 				}
 				{
 					using Tool::Popcap::CharacterFontWidget2::Version;
@@ -1064,9 +1175,9 @@ export namespace Twinning::Kernel::Executor::Environment {
 						define_variant_class_version_method<Version, VersionPackage>(c_FontWidget);
 					}
 					s_CharacterFontWidget2.add_space("Encode"_s)
-						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::CharacterFontWidget2::Encode, VersionedOperation::Constant::process(), TypePackage<FontWidgetDefinition>, OutputByteStreamView, FontWidgetDefinition const>>>("process"_s);
+						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::CharacterFontWidget2::Encode, VersionedOperation::Constant::process(), TypePackage<FontWidgetDefinition>, OutputBinaryStreamView, FontWidgetDefinition const>>>("process"_s);
 					s_CharacterFontWidget2.add_space("Decode"_s)
-						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::CharacterFontWidget2::Decode, VersionedOperation::Constant::process(), TypePackage<FontWidgetDefinition>, InputByteStreamView, FontWidgetDefinition>>>("process"_s);
+						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::CharacterFontWidget2::Decode, VersionedOperation::Constant::process(), TypePackage<FontWidgetDefinition>, InputBinaryStreamView, FontWidgetDefinition>>>("process"_s);
 				}
 				{
 					using Tool::Popcap::Package::Version;
@@ -1084,9 +1195,9 @@ export namespace Twinning::Kernel::Executor::Environment {
 						define_variant_class_version_method<Version, VersionPackage>(c_Package);
 					}
 					s_Package.add_space("Pack"_s)
-						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::Package::Pack, VersionedOperation::Constant::process(), TypePackage<PackageDefinition>, OutputByteStreamView, PackageDefinition const, Path const>>>("process"_s);
+						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::Package::Pack, VersionedOperation::Constant::process(), TypePackage<PackageDefinition>, OutputBinaryStreamView, PackageDefinition const, Path const>>>("process"_s);
 					s_Package.add_space("Unpack"_s)
-						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::Package::Unpack, VersionedOperation::Constant::process(), TypePackage<PackageDefinition>, InputByteStreamView, PackageDefinition, Optional<Path> const>>>("process"_s);
+						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::Package::Unpack, VersionedOperation::Constant::process(), TypePackage<PackageDefinition>, InputBinaryStreamView, PackageDefinition, Optional<Path> const>>>("process"_s);
 				}
 				{
 					using Tool::Popcap::ResourceStreamGroup::Version;
@@ -1105,9 +1216,9 @@ export namespace Twinning::Kernel::Executor::Environment {
 						define_variant_class_version_method<Version, VersionPackage>(c_Package);
 					}
 					s_ResourceStreamGroup.add_space("Pack"_s)
-						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::ResourceStreamGroup::Pack, VersionedOperation::Constant::process(), TypePackage<PackageDefinition>, OutputByteStreamView, PackageDefinition const, Path const>>>("process"_s);
+						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::ResourceStreamGroup::Pack, VersionedOperation::Constant::process(), TypePackage<PackageDefinition>, OutputBinaryStreamView, PackageDefinition const, Path const>>>("process"_s);
 					s_ResourceStreamGroup.add_space("Unpack"_s)
-						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::ResourceStreamGroup::Unpack, VersionedOperation::Constant::process(), TypePackage<PackageDefinition>, InputByteStreamView, PackageDefinition, Optional<Path> const>>>("process"_s);
+						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::ResourceStreamGroup::Unpack, VersionedOperation::Constant::process(), TypePackage<PackageDefinition>, InputBinaryStreamView, PackageDefinition, Optional<Path> const>>>("process"_s);
 				}
 				{
 					using Tool::Popcap::ResourceStreamBundle::Version;
@@ -1143,9 +1254,9 @@ export namespace Twinning::Kernel::Executor::Environment {
 						define_variant_class_version_method<Version, VersionPackage>(c_PackageOptional);
 					}
 					s_ResourceStreamBundle.add_space("Pack"_s)
-						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::ResourceStreamBundle::Pack, VersionedOperation::Constant::process(), TypePackage<PackageDefinition, PackageManifestOptional>, OutputByteStreamView, PackageDefinition const, PackageManifestOptional const, Path const, Optional<Path> const, Optional<Path> const>>>("process"_s);
+						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::ResourceStreamBundle::Pack, VersionedOperation::Constant::process(), TypePackage<PackageDefinition, PackageManifestOptional>, OutputBinaryStreamView, PackageDefinition const, PackageManifestOptional const, Path const, Optional<Path> const, Optional<Path> const>>>("process"_s);
 					s_ResourceStreamBundle.add_space("Unpack"_s)
-						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::ResourceStreamBundle::Unpack, VersionedOperation::Constant::process(), TypePackage<PackageDefinition, PackageManifestOptional>, InputByteStreamView, PackageDefinition, PackageManifestOptional, Optional<Path> const, Optional<Path> const>>>("process"_s);
+						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::ResourceStreamBundle::Unpack, VersionedOperation::Constant::process(), TypePackage<PackageDefinition, PackageManifestOptional>, InputBinaryStreamView, PackageDefinition, PackageManifestOptional, Optional<Path> const, Optional<Path> const>>>("process"_s);
 				}
 				{
 					using Tool::Popcap::ResourceStreamBundlePatch::Version;
@@ -1153,9 +1264,9 @@ export namespace Twinning::Kernel::Executor::Environment {
 					auto s_ResourceStreamBundlePatch = s_Popcap.add_space("ResourceStreamBundlePatch"_s);
 					define_generic_class<Version>(s_ResourceStreamBundlePatch, "Version"_s);
 					s_ResourceStreamBundlePatch.add_space("Encode"_s)
-						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::ResourceStreamBundlePatch::Encode, VersionedOperation::Constant::process(), TypePackage<>, InputByteStreamView, InputByteStreamView, OutputByteStreamView, Boolean const>>>("process"_s);
+						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::ResourceStreamBundlePatch::Encode, VersionedOperation::Constant::process(), TypePackage<>, InputBinaryStreamView, InputBinaryStreamView, OutputBinaryStreamView, Boolean const>>>("process"_s);
 					s_ResourceStreamBundlePatch.add_space("Decode"_s)
-						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::ResourceStreamBundlePatch::Decode, VersionedOperation::Constant::process(), TypePackage<>, InputByteStreamView, OutputByteStreamView, InputByteStreamView, Boolean const>>>("process"_s);
+						.add_function_proxy<&proxy_global_function_with_promotion<&proxy_function_by_versioned<Version, VersionPackage, Tool::Popcap::ResourceStreamBundlePatch::Decode, VersionedOperation::Constant::process(), TypePackage<>, InputBinaryStreamView, OutputBinaryStreamView, InputBinaryStreamView, Boolean const>>>("process"_s);
 				}
 			}
 			// Miscellaneous
@@ -1189,100 +1300,78 @@ export namespace Twinning::Kernel::Executor::Environment {
 				.add_static_function_proxy<&proxy_global_function_with_promotion<&Thread::Thread::yield>>("yield"_s)
 				.add_static_function_proxy<&proxy_global_function_with_promotion<&Thread::Thread::sleep>>("sleep"_s);
 			define_generic_class<Context, GenericClassDefinitionFlag::Constant::none_mask()>(s_Miscellaneous, "Context"_s)
-				.add_member_function<
-					&normalized_lambda<
-						[](
-						Script::JavaScript::NativeValueHandler<Context> &                   thix,
-						Script::JavaScript::NativeValueHandler<VariableCharacterListView> & script,
-						Script::JavaScript::NativeValueHandler<String> &                    name,
-						Script::JavaScript::NativeValueHandler<Boolean> &                   is_module
-					) -> Script::JavaScript::Value {
-							return thix.value().evaluate(down_cast<VariableStringView>(script.value()), name.value(), is_module.value());
-						}
-					>
-				>("evaluate"_s)
+				.add_member_function_proxy<&proxy_member_function_with_promotion<Context, &Context::evaluate>>("evaluate"_s)
 				.add_member_function_proxy<&proxy_member_function_with_promotion<Context, &Context::callback>>("callback"_s)
 				.add_member_function_proxy<&proxy_member_function_with_promotion<Context, &Context::spawn>>("spawn"_s)
 				.add_member_function_proxy<&proxy_member_function_with_promotion<Context, &Context::busy>>("busy"_s)
-				.add_member_function<
-					&normalized_lambda<
-						[](
-						Script::JavaScript::NativeValueHandler<Context> &        thix,
-						Script::JavaScript::NativeValueHandler<Thread::Thread> & thread,
-						Script::JavaScript::Value &                              executor
-					) -> Void {
-							return thix.value().execute(thread.value(), executor);
-						}
-					>
-				>("execute"_s)
-				.add_member_function_proxy<&proxy_member_function_with_promotion<Context, &Context::query_module_home>>("query_module_home"_s)
-				.add_member_function_proxy<&proxy_member_function_with_promotion<Context, &Context::query_byte_stream_use_big_endian>>("query_byte_stream_use_big_endian"_s);
+				.add_member_function_proxy<&proxy_member_function_with_promotion<Context, &Context::execute>>("execute"_s)
+				.add_member_function_proxy<&proxy_member_function_with_promotion<Context, &Context::query_module_home>>("query_module_home"_s);
 			s_Miscellaneous
 				.add_function_proxy<
 					&normalized_lambda<
 						[](
-						VariableByteListView & target
-					) -> VariableCharacterListView {
-							return unsafe_cast<VariableCharacterListView>(target);
+						VariableBinaryView & target
+					) -> VariableStringView {
+							return unsafe_cast<VariableStringView>(target);
 						}
 					>
-				>("cast_ByteListView_to_CharacterListView"_s)
+				>("cast_BinaryView_to_StringView"_s)
 				.add_function_proxy<
 					&normalized_lambda<
 						[](
-						VariableCharacterListView & target
-					) -> VariableByteListView {
-							return unsafe_cast<VariableByteListView>(target);
+						VariableStringView & target
+					) -> VariableBinaryView {
+							return unsafe_cast<VariableBinaryView>(target);
 						}
 					>
-				>("cast_CharacterListView_to_ByteListView"_s)
+				>("cast_StringView_to_BinaryView"_s)
 				.add_function_proxy<
 					&normalized_lambda<
 						[](
-						ByteArray & target
+						Binary & target
 					) -> String {
 							auto result = String{};
-							result.bind(from_byte_view<Character>(target.view()));
+							result.bind(cast_pointer<Character>(target.data()), target.size(), target.capacity());
 							target.unbind();
 							return result;
 						}
 					>
-				>("cast_moveable_ByteArray_to_String"_s)
+				>("cast_moveable_Binary_to_String"_s)
 				.add_function_proxy<
 					&normalized_lambda<
 						[](
 						String & target
-					) -> ByteArray {
-							auto result = ByteArray{};
-							result.bind(to_byte_view(target.view()));
+					) -> Binary {
+							auto result = Binary{};
+							result.bind(cast_pointer<Byte>(target.data()), target.size(), target.capacity());
 							target.unbind();
 							return result;
 						}
 					>
-				>("cast_moveable_String_to_ByteArray"_s)
+				>("cast_moveable_String_to_Binary"_s)
 				.add_function_proxy<
 					&normalized_lambda<
 						[](
 						String & target
-					) -> VariableCharacterListView {
-							return up_cast<VariableCharacterListView>(target.view());
+					) -> VariableStringView {
+							return target.as_view();
 						}
 					>
-				>("cast_String_to_CharacterListView"_s)
+				>("cast_String_to_StringView"_s)
 				.add_function<
 					&normalized_lambda<
 						[](
-						Script::JavaScript::NativeValueHandler<VariableCharacterListView> & target
+						Script::JavaScript::NativeValueHandler<VariableStringView> & target
 					) -> VariableStringView & {
 							// NOTE: EXPLAIN: return StringView is cheap
-							return down_cast<VariableStringView>(target.value());
+							return target.value();
 						}
 					>
-				>("cast_CharacterListView_to_JS_String"_s);
+				>("cast_StringView_to_RawString"_s);
 			s_Miscellaneous.add_variable("g_context"_s, context.context().new_value(Script::JavaScript::NativeValueHandler<Context>::new_reference(context)));
-			s_Miscellaneous.add_variable("g_version"_s, context.context().new_value(Script::JavaScript::NativeValueHandler<String>::new_instance_allocate(make_string(M_version))));
-			s_Miscellaneous.add_variable("g_system"_s, context.context().new_value(Script::JavaScript::NativeValueHandler<String>::new_instance_allocate(make_string(M_system))));
-			s_Miscellaneous.add_variable("g_architecture"_s, context.context().new_value(Script::JavaScript::NativeValueHandler<String>::new_instance_allocate(make_string(M_architecture))));
+			s_Miscellaneous.add_variable("g_version"_s, context.context().new_value(Script::JavaScript::NativeValueHandler<String>::new_instance_allocate(from_std_string(M_version))));
+			s_Miscellaneous.add_variable("g_system"_s, context.context().new_value(Script::JavaScript::NativeValueHandler<String>::new_instance_allocate(from_std_string(M_system))));
+			s_Miscellaneous.add_variable("g_architecture"_s, context.context().new_value(Script::JavaScript::NativeValueHandler<String>::new_instance_allocate(from_std_string(M_architecture))));
 		}
 		// ReSharper restore CppInconsistentNaming
 		// @formatter:on

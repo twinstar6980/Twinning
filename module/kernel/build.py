@@ -13,6 +13,7 @@ def build(
 	platform: str,
 ) -> tuple[str, str] | None:
 	destination = None
+	utility.project_fetch_cpp_dependency_directory(f'{source}/dependency')
 	if utility.project_check_platform(platform, ['windows.amd64']):
 		utility.sh_execute_command(source, [
 			'xmake',

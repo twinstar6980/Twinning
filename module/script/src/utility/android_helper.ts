@@ -377,10 +377,10 @@ namespace Twinning.Script.AndroidHelper {
 			[`${application}`],
 		]]);
 		{
-			match = new RegExp(`^package:${application.replaceAll('.', '\.')} uid\:([0-9]+)$`, 'm').exec(shell_result);
+			match = new RegExp(`^package:${application.replaceAll('.', '\\.')} uid\:([0-9]+)$`, 'm').exec(shell_result);
 			assert_test(match !== null);
 			let user_number = BigInt(match[1]);
-			result.user = `u${user_number / 100000n}_a${user_number - 10000n}`;
+			result.user = `u${user_number / 100000n}_a${(user_number % 100000n) - 10000n}`;
 		}
 		shell_result = shell('only_native', [[
 			`pm`,

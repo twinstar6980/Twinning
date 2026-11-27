@@ -53,7 +53,7 @@ export namespace Twinning::Kernel::Executor {
 			m_context{m_runtime.new_context()},
 			m_callback{callback},
 			m_busy{k_false},
-			m_module_home{k_null_optional} {
+			m_module_home{} {
 			thiz.m_runtime.enable_module_loader(thiz.m_module_home);
 			return;
 		}
@@ -66,7 +66,7 @@ export namespace Twinning::Kernel::Executor {
 			m_context{m_runtime.new_context()},
 			m_callback{callback},
 			m_busy{k_false},
-			m_module_home{k_null_optional} {
+			m_module_home{} {
 			return;
 		}
 
@@ -105,7 +105,7 @@ export namespace Twinning::Kernel::Executor {
 			String const &             name,
 			Boolean const &            is_module
 		) -> Script::JavaScript::Value {
-			auto locker = Thread::Locker{Script::JavaScript::g_mutex};
+			auto _ = Thread::Locker{Script::JavaScript::g_mutex};
 			return thiz.m_context.evaluate(script, name, is_module);
 		}
 
@@ -125,7 +125,7 @@ export namespace Twinning::Kernel::Executor {
 			}
 			#if defined M_build_release
 			catch (String & e) {
-				throw InvocationException{make_std_string("<callback>"_sv), make_std_string(e)};
+				throw InvocationException{to_std_string("<callback>"_sv), to_std_string(e)};
 			}
 			#endif
 			return result;
@@ -137,7 +137,7 @@ export namespace Twinning::Kernel::Executor {
 
 		auto spawn(
 		) -> Context {
-			auto locker = Thread::Locker{Script::JavaScript::g_mutex};
+			auto _ = Thread::Locker{Script::JavaScript::g_mutex};
 			return Context{thiz.m_runtime, thiz.m_callback};
 		}
 
@@ -154,11 +154,16 @@ export namespace Twinning::Kernel::Executor {
 		) -> Void {
 			assert_test(!thiz.busy());
 			thiz.m_busy = k_true;
-			auto locker = Thread::Locker{Script::JavaScript::g_mutex};
+			auto _ = Thread::Locker{Script::JavaScript::g_mutex};
 			thread.run(
 				[&, executor] mutable {
-					auto inner_locker = Thread::Locker{Script::JavaScript::g_mutex};
-					Script::JavaScript::Value::new_reference(thiz.m_context._context(), executor._value()).call(make_list<Script::JavaScript::Value>());
+					auto _ = Thread::Locker{Script::JavaScript::g_mutex};
+					try {
+						Script::JavaScript::Value::new_reference(thiz.m_context._context(), executor._value()).call(make_list<Script::JavaScript::Value>());
+					}
+					catch (...) {
+						// ignored
+					}
 					executor.set_undefined();
 					thiz.m_busy = k_false;
 					return;
@@ -174,13 +179,6 @@ export namespace Twinning::Kernel::Executor {
 		auto query_module_home(
 		) -> Optional<Path> & {
 			return thiz.m_module_home;
-		}
-
-		// ----------------
-
-		auto query_byte_stream_use_big_endian(
-		) -> Boolean & {
-			return g_byte_stream_use_big_endian;
 		}
 
 		#pragma endregion

@@ -543,7 +543,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin<MainP
                 ),
               ),
             ).withFlexExpanded(),
-            StyledDivider.minimal(),
+            StyledDivider.minimal(direction: .horizontal),
             Gap.vertical(8),
             FlexContainer.horizontal([
               Gap.horizontal(4),
@@ -788,7 +788,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin<MainP
               Gap.horizontal(16),
             ]),
             Gap.vertical(12),
-            StyledDivider.minimal(),
+            StyledDivider.minimal(direction: .horizontal),
             Gap.vertical(12),
             FlexContainer.horizontal([
               Gap.horizontal(16),

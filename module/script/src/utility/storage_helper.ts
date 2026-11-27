@@ -113,7 +113,7 @@ namespace Twinning.Script.StorageHelper {
 	export function read_file(
 		target: StoragePath,
 		offset: bigint,
-		data: Kernel.ByteListView,
+		data: Kernel.BinaryView,
 	): void {
 		return KernelX.Storage.read_file(target, offset, data);
 	}
@@ -121,7 +121,7 @@ namespace Twinning.Script.StorageHelper {
 	export function write_file(
 		target: StoragePath,
 		offset: bigint,
-		data: Kernel.ByteListView,
+		data: Kernel.BinaryView,
 	): void {
 		return KernelX.Storage.write_file(target, offset, data);
 	}
@@ -130,16 +130,16 @@ namespace Twinning.Script.StorageHelper {
 
 	export function read_file_data(
 		target: StoragePath,
-	): Kernel.ByteArray {
+	): Kernel.Binary {
 		let size = size_file(target);
-		let data = Kernel.ByteArray.allocate(Kernel.Size.value(size));
+		let data = Kernel.Binary.allocate(Kernel.Size.value(size));
 		read_file(target, 0n, data.view());
 		return data;
 	}
 
 	export function write_file_data(
 		target: StoragePath,
-		data: Kernel.ByteListView,
+		data: Kernel.BinaryView,
 	): void {
 		// TODO: dont create
 		if (!exist_file(target)) {
@@ -154,7 +154,7 @@ namespace Twinning.Script.StorageHelper {
 		target: StoragePath,
 	): string {
 		let data = read_file_data(target);
-		let text = Kernel.Miscellaneous.cast_CharacterListView_to_JS_String(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(data.view()));
+		let text = Kernel.Miscellaneous.cast_StringView_to_RawString(Kernel.Miscellaneous.cast_BinaryView_to_StringView(data.view()));
 		return text;
 	}
 
@@ -162,7 +162,7 @@ namespace Twinning.Script.StorageHelper {
 		target: StoragePath,
 		text: string,
 	): void {
-		let data = Kernel.Miscellaneous.cast_moveable_String_to_ByteArray(Kernel.String.value(text));
+		let data = Kernel.Miscellaneous.cast_moveable_String_to_Binary(Kernel.String.value(text));
 		write_file_data(target, data.view());
 		return;
 	}

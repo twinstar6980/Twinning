@@ -1,60 +1,57 @@
--- open_vcdiff
--- 0.8.4 9af10d36e691c15dceff04419b9e3a71ec5d8bec
--- https://github.com/google/open-vcdiff
-
 target('dependency.open_vcdiff', function()
 	set_group('source/dependency')
 	set_kind('static')
 	add_headerfiles(
-		'google/format_extension_flags.h',
-		'google/output_string.h',
-		'google/vcdecoder.h',
-		'google/vcencoder.h',
-		'addrcache.h',
-		'blockhash.h',
-		'checksum.h',
-		'codetable.h',
-		'codetablewriter_interface.h',
-		'compile_assert.h',
-		'config.h',
-		'decodetable.h',
-		'encodetable.h',
-		'headerparser.h',
-		'instruction_map.h',
-		'jsonwriter.h',
-		'logging.h',
-		'rolling_hash.h',
-		'unique_ptr.h',
-		'varint_bigendian.h',
-		'vcdiff_defs.h',
-		'vcdiffengine.h',
+		'origin/src/google/format_extension_flags.h',
+		'origin/src/google/output_string.h',
+		'origin/src/google/vcdecoder.h',
+		'origin/src/google/vcencoder.h',
+		'origin/src/addrcache.h',
+		'origin/src/blockhash.h',
+		'origin/src/checksum.h',
+		'origin/src/codetable.h',
+		'origin/src/codetablewriter_interface.h',
+		'origin/src/compile_assert.h',
+		'origin/src/config.h',
+		'origin/src/decodetable.h',
+		'origin/src/encodetable.h',
+		'origin/src/headerparser.h',
+		'origin/src/instruction_map.h',
+		'origin/src/jsonwriter.h',
+		'origin/src/logging.h',
+		'origin/src/rolling_hash.h',
+		'origin/src/unique_ptr.h',
+		'origin/src/varint_bigendian.h',
+		'origin/src/vcdiff_defs.h',
+		'origin/src/vcdiffengine.h',
 		{ install = false }
 	)
 	add_files(
-		'addrcache.cc',
-		'blockhash.cc',
-		'codetable.cc',
-		'decodetable.cc',
-		'encodetable.cc',
-		'headerparser.cc',
-		'instruction_map.cc',
-		'jsonwriter.cc',
-		'logging.cc',
-		'varint_bigendian.cc',
-		'vcdecoder.cc',
-		'vcdiffengine.cc',
-		'vcencoder.cc',
+		'origin/src/addrcache.cc',
+		'origin/src/blockhash.cc',
+		'origin/src/codetable.cc',
+		'origin/src/decodetable.cc',
+		'origin/src/encodetable.cc',
+		'origin/src/headerparser.cc',
+		'origin/src/instruction_map.cc',
+		'origin/src/jsonwriter.cc',
+		'origin/src/logging.cc',
+		'origin/src/varint_bigendian.cc',
+		'origin/src/vcdecoder.cc',
+		'origin/src/vcdiffengine.cc',
+		'origin/src/vcencoder.cc',
 		{}
 	)
 	add_includedirs(
-		'.',
-		'../zlib',
+		'origin/src',
+		'../zlib/origin',
 		{ public = true }
 	)
 	add_defines(
 		{ public = true }
 	)
 	add_deps(
+		'dependency.zlib',
 		{}
 	)
 	on_load(function(target)

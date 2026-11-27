@@ -41,33 +41,33 @@ export namespace Twinning::Kernel::Tool::Popcap::ReAnimation {
 
 		inline static constexpr auto k_transform_data_size = [] {
 			auto size = 0_sz;
-			size += bs_static_size<FloaterS32>();
-			size += bs_static_size<FloaterS32>();
-			size += bs_static_size<FloaterS32>();
-			size += bs_static_size<FloaterS32>();
-			size += bs_static_size<FloaterS32>();
-			size += bs_static_size<FloaterS32>();
-			size += bs_static_size<FloaterS32>();
-			size += bs_static_size<FloaterS32>();
-			size += bs_static_size<IntegerOfPlatform>();
-			size += bs_static_size<IntegerOfPlatform>();
-			size += bs_static_size<IntegerOfPlatform>();
+			size += binary_static_size_of<FloaterS32>();
+			size += binary_static_size_of<FloaterS32>();
+			size += binary_static_size_of<FloaterS32>();
+			size += binary_static_size_of<FloaterS32>();
+			size += binary_static_size_of<FloaterS32>();
+			size += binary_static_size_of<FloaterS32>();
+			size += binary_static_size_of<FloaterS32>();
+			size += binary_static_size_of<FloaterS32>();
+			size += binary_static_size_of<IntegerOfPlatform>();
+			size += binary_static_size_of<IntegerOfPlatform>();
+			size += binary_static_size_of<IntegerOfPlatform>();
 			if constexpr (check_version(t_version, {VersionPlatform::Constant::television()}, {})) {
-				size += bs_static_size<IntegerOfPlatform>();
+				size += binary_static_size_of<IntegerOfPlatform>();
 			}
 			return size;
 		}();
 
 		inline static constexpr auto k_track_data_size = [] {
 			auto size = 0_sz;
-			size += bs_static_size<IntegerOfPlatform>();
-			size += bs_static_size<IntegerOfPlatform>();
+			size += binary_static_size_of<IntegerOfPlatform>();
+			size += binary_static_size_of<IntegerOfPlatform>();
 			if constexpr (check_version(t_version, {VersionPlatform::Constant::mobile(), VersionPlatform::Constant::television()}, {})) {
-				size += bs_static_size<IntegerOfPlatform>();
+				size += binary_static_size_of<IntegerOfPlatform>();
 			}
-			size += bs_static_size<IntegerOfPlatform>();
+			size += binary_static_size_of<IntegerOfPlatform>();
 			if constexpr (check_version(t_version, {VersionPlatform::Constant::television()}, {})) {
-				size += bs_static_size<IntegerOfPlatform>();
+				size += binary_static_size_of<IntegerOfPlatform>();
 			}
 			return size;
 		}();

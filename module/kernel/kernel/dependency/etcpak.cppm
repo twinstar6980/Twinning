@@ -6,8 +6,8 @@ module;
 #pragma clang diagnostic ignored "-Weverything"
 
 #include <cstddef>
-#include "dependency/etcpak/ProcessRGB.hpp"
-#include "dependency/etcpak/Decode.hpp"
+#include "dependency/etcpak/origin/ProcessRGB.hpp"
+#include "dependency/etcpak/origin/Decode.hpp"
 
 #pragma clang diagnostic pop
 

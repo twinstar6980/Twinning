@@ -1,42 +1,35 @@
--- lzma
--- 26.02 f9d78aff31a5f2521ae7ddbdc97c4a8855808959
--- https://github.com/ip7z/7zip
-
 target('dependency.lzma', function()
 	set_group('source/dependency')
 	set_kind('static')
 	add_headerfiles(
-		'7zTypes.h',
-		'7zWindows.h',
-		'Alloc.h',
-		'Compiler.h',
-		'CpuArch.h',
-		'LzFind.h',
-		'LzFindMt.h',
-		'LzHash.h',
-		'LzmaDec.h',
-		'LzmaEnc.h',
-		'LzmaLib.h',
-		'Precomp.h',
-		'Threads.h',
+		'origin/C/7zTypes.h',
+		'origin/C/7zWindows.h',
+		'origin/C/Alloc.h',
+		'origin/C/Compiler.h',
+		'origin/C/CpuArch.h',
+		'origin/C/LzFind.h',
+		'origin/C/LzHash.h',
+		'origin/C/LzmaDec.h',
+		'origin/C/LzmaEnc.h',
+		'origin/C/LzmaLib.h',
+		'origin/C/Precomp.h',
 		{ install = false }
 	)
 	add_files(
-		'Alloc.c',
-		'CpuArch.c',
-		'LzFind.c',
-		'LzFindMt.c',
-		'LzFindOpt.c',
-		'LzmaDec.c',
-		'LzmaEnc.c',
-		'LzmaLib.c',
-		'Threads.c',
+		'origin/C/Alloc.c',
+		'origin/C/CpuArch.c',
+		'origin/C/LzFind.c',
+		'origin/C/LzFindOpt.c',
+		'origin/C/LzmaDec.c',
+		'origin/C/LzmaEnc.c',
+		'origin/C/LzmaLib.c',
 		{}
 	)
 	add_includedirs(
 		{ public = true }
 	)
 	add_defines(
+		'Z7_ST',
 		{ public = true }
 	)
 	add_deps(

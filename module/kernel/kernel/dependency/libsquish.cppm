@@ -5,7 +5,7 @@ module;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Weverything"
 
-#include "dependency/libsquish/lib/include/squish/squish.h"
+#include "dependency/libsquish/origin/lib/include/squish/squish.h"
 
 #pragma clang diagnostic pop
 

@@ -5,7 +5,7 @@ module;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Weverything"
 
-#include "dependency/lzma/LzmaLib.h"
+#include "dependency/lzma/origin/C/LzmaLib.h"
 
 #pragma clang diagnostic pop
 

@@ -13,7 +13,7 @@ export namespace Twinning::Kernel {
 	#pragma region type
 
 	template <typename TValue> requires
-		CategoryConstraint<>
+		CategoryConstraint<IsPureInstance<TValue>>
 		&& (IsBaseBoxValue<TValue>)
 	M_simple_derived_class(CharacterBox, IntegerBox<TValue>, IntegerBox);
 
@@ -40,7 +40,7 @@ export namespace Twinning::Kernel {
 
 	#pragma endregion
 
-	#pragma region regular type
+	#pragma region regular
 
 	M_simple_derived_class(Character, CharacterN, CharacterN);
 

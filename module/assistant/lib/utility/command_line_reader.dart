@@ -1,4 +1,5 @@
 import '/common.dart';
+import '/utility/convert_helper.dart';
 import 'package:collection/collection.dart' as lib;
 
 // ----------------
@@ -42,17 +43,17 @@ class CommandLineReader {
 
   Boolean nextBoolean(
   ) {
-    return this.nextString().selfLet((it) => Boolean.parse(it));
+    return this.nextString().selfLet((it) => ConvertHelper.parseBooleanFromString(it));
   }
 
   Integer nextInteger(
   ) {
-    return this.nextString().selfLet((it) => Integer.parse(it));
+    return this.nextString().selfLet((it) => ConvertHelper.parseIntegerFromString(it));
   }
 
   Floater nextFloater(
   ) {
-    return this.nextString().selfLet((it) => Floater.parse(it));
+    return this.nextString().selfLet((it) => ConvertHelper.parseFloaterFromString(it));
   }
 
   String nextString(

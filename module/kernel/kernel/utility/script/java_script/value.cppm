@@ -6,24 +6,24 @@ export module twinning.kernel.utility.script.java_script.value;
 import twinning.kernel.utility.builtin;
 import twinning.kernel.utility.trait;
 import twinning.kernel.utility.box;
-import twinning.kernel.utility.exception.exception;
-import twinning.kernel.utility.exception.utility;
-import twinning.kernel.utility.container.list.list;
-import twinning.kernel.utility.container.map.map;
+import twinning.kernel.utility.exception;
 import twinning.kernel.utility.container.array.array;
-import twinning.kernel.utility.container.optional.optional;
-import twinning.kernel.utility.memory.allocation;
-import twinning.kernel.utility.miscellaneous.byte_series.container;
+import twinning.kernel.utility.container.list;
+import twinning.kernel.utility.container.map;
+import twinning.kernel.utility.container.optional;
+import twinning.kernel.utility.memory.utility;
+import twinning.kernel.utility.binary.binary;
 import twinning.kernel.utility.miscellaneous.system_native_string;
 import twinning.kernel.utility.string.string;
 import twinning.kernel.utility.notation.json.value;
 import twinning.kernel.utility.script.java_script.value_adapter;
-import twinning.kernel.utility.range.number_range;
+import twinning.kernel.utility.range.integer_range;
 import twinning.kernel.utility.range.generic_range;
 import twinning.kernel.utility.storage.path;
 import twinning.kernel.utility.storage.utility;
 import twinning.kernel.utility.string.basic_string;
-import twinning.kernel.utility.support.string;
+import twinning.kernel.utility.support.string_stream;
+import twinning.kernel.utility.support.string_stream.extend;
 import twinning.kernel.dependency.quickjs_ng;
 
 export namespace Twinning::Kernel::Script::JavaScript {
@@ -141,6 +141,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 		auto operator =(
 			Runtime && that
 		) -> Runtime & {
+			M_avoid_self_assignment();
 			thiz.m_runtime = that.m_runtime;
 			thiz.m_is_holder = that.m_is_holder;
 			that.m_runtime = k_null_pointer;
@@ -284,6 +285,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 		auto operator =(
 			Context && that
 		) -> Context & {
+			M_avoid_self_assignment();
 			thiz.m_context = that.m_context;
 			thiz.m_is_holder = that.m_is_holder;
 			that.m_context = k_null_pointer;
@@ -432,15 +434,15 @@ export namespace Twinning::Kernel::Script::JavaScript {
 			return result;
 		}
 
-		template <typename TThat, typename ... TOption> requires
-			CategoryConstraint<IsValid<TThat> && IsValid<TOption ...>>
+		template <typename TValue, typename ... TOption> requires
+			CategoryConstraint<IsValid<TValue> && IsValid<TOption ...>>
 		inline static auto new_instance_of(
 			ZPointer<Dependency::quickjs_ng::$JSContext> const & context,
-			TThat &&                                             that,
+			TValue &&                                            value,
 			TOption && ...                                       option
 		) -> Value {
 			auto result = new_instance(context);
-			result.from(as_forward<TThat>(that), as_forward<TOption>(option) ...);
+			result.from(as_forward<TValue>(value), as_forward<TOption>(option) ...);
 			return result;
 		}
 
@@ -489,6 +491,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 		auto operator =(
 			Value const & that
 		) -> Value & {
+			M_avoid_self_assignment();
 			thiz._reset_value();
 			thiz.m_context = that.m_context;
 			thiz.m_value = !that.m_context.has() ? (as_variable(that)._value()) : (Dependency::quickjs_ng::$JS_DupValue(as_variable(that)._context(), as_variable(that)._value()));
@@ -498,6 +501,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 		auto operator =(
 			Value && that
 		) -> Value & {
+			M_avoid_self_assignment();
 			thiz._reset_value();
 			thiz.m_context = that.m_context;
 			thiz.m_value = !that.m_context.has() ? (as_variable(that)._value()) : (that._release_value());
@@ -703,7 +707,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 			assert_test(thiz.is_string());
 			auto raw_length = std::size_t{};
 			auto raw_value = Dependency::quickjs_ng::$JS_ToCStringLen(thiz._context(), &raw_length, thiz._value());
-			auto value = make_string(raw_value, raw_length);
+			auto value = from_std_string(std::string_view{raw_value, raw_length});
 			Dependency::quickjs_ng::$JS_FreeCString(thiz._context(), raw_value);
 			return value;
 		}
@@ -711,11 +715,11 @@ export namespace Twinning::Kernel::Script::JavaScript {
 		// ----------------
 
 		auto get_object_of_array_buffer(
-		) -> VariableByteListView {
+		) -> VariableBinaryView {
 			auto size = std::size_t{};
 			auto data = Dependency::quickjs_ng::$JS_GetArrayBuffer(thiz._context(), &size, thiz._value());
 			assert_test(data != nullptr);
-			return VariableByteListView{make_pointer_unsafe<Byte>(data), make_box<Size>(size)};
+			return VariableBinaryView{make_pointer_unsafe<Byte>(data), make_box<Size>(size)};
 		}
 
 		#pragma endregion
@@ -752,16 +756,9 @@ export namespace Twinning::Kernel::Script::JavaScript {
 		}
 
 		auto set_string(
-			String const & value
-		) -> Void {
-			return thiz._rebind_value(Dependency::quickjs_ng::$JS_NewStringLen(thiz._context(), unmake_pointer_unsafe<char>(value.begin()), unmake_box<std::size_t>(value.size())));
-		}
-
-		// TODO: remove
-		auto set_string(
 			ConstantStringView const & value
 		) -> Void {
-			return thiz._rebind_value(Dependency::quickjs_ng::$JS_NewStringLen(thiz._context(), unmake_pointer_unsafe<char>(value.begin()), unmake_box<std::size_t>(value.size())));
+			return thiz._rebind_value(Dependency::quickjs_ng::$JS_NewStringLen(thiz._context(), unmake_pointer_unsafe<char>(value.data()), unmake_box<std::size_t>(value.size())));
 		}
 
 		// ----------------
@@ -777,33 +774,34 @@ export namespace Twinning::Kernel::Script::JavaScript {
 		}
 
 		auto set_object_of_array_buffer(
-			ConstantByteListView const & data
+			ConstantBinaryView const & data
 		) -> Void {
 			return thiz._rebind_value(
 				Dependency::quickjs_ng::$JS_NewArrayBufferCopy(
 					thiz._context(),
-					unmake_pointer_unsafe<std::uint8_t>(data.begin()),
+					unmake_pointer_unsafe<std::uint8_t>(data.data()),
 					unmake_box<std::size_t>(data.size())
 				)
 			);
 		}
 
 		auto set_object_of_array_buffer(
-			VariableByteListView const & data,
-			Boolean const &              is_holder
+			VariableBinaryView const & data,
+			Boolean const &            is_holder
 		) -> Void {
 			return thiz._rebind_value(
 				Dependency::quickjs_ng::$JS_NewArrayBuffer(
 					thiz._context(),
-					unmake_pointer_unsafe<std::uint8_t>(data.begin()),
+					unmake_pointer_unsafe<std::uint8_t>(data.data()),
 					unmake_box<std::size_t>(data.size()),
 					0_szz,
 					!is_holder
 					? nullptr
 					: [](Dependency::quickjs_ng::$JSRuntime * rt, void * opaque, void * ptr, std::size_t size) -> void * {
-						assert_test(size == 0_szz);
 						auto data = make_pointer_unsafe<std::uint8_t>(ptr);
-						free_instance_array(data);
+						if (size == 0_szz) {
+							Memory::free_array(data);
+						}
 						return nullptr;
 					},
 					nullptr,
@@ -850,15 +848,8 @@ export namespace Twinning::Kernel::Script::JavaScript {
 
 		// ----------------
 
-		// TODO: remove
 		auto is_object_of_class(
 			ConstantStringView const & name
-		) -> Boolean {
-			return thiz.is_object() && thiz.get_object_class_name() == name;
-		}
-
-		auto is_object_of_class(
-			String const & name
 		) -> Boolean {
 			return thiz.is_object() && thiz.get_object_class_name() == name;
 		}
@@ -884,7 +875,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 			Value &&       value
 		) -> Void {
 			assert_test(thiz.is_object());
-			auto atom = Dependency::quickjs_ng::$JS_NewAtomLen(thiz._context(), unmake_pointer_unsafe<char>(name.begin()), unmake_box<std::size_t>(name.size()));
+			auto atom = Dependency::quickjs_ng::$JS_NewAtomLen(thiz._context(), unmake_pointer_unsafe<char>(name.data()), unmake_box<std::size_t>(name.size()));
 			auto result = Dependency::quickjs_ng::$JS_DefinePropertyValue(thiz._context(), thiz._value(), atom, value._release_value(), Dependency::quickjs_ng::$JS_PROP_C_W_E);
 			Dependency::quickjs_ng::$JS_FreeAtom(thiz._context(), atom);
 			assert_test(result != -1);
@@ -913,7 +904,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 			Value &&       setter
 		) -> Void {
 			assert_test(thiz.is_object());
-			auto atom = Dependency::quickjs_ng::$JS_NewAtomLen(thiz._context(), unmake_pointer_unsafe<char>(name.begin()), unmake_box<std::size_t>(name.size()));
+			auto atom = Dependency::quickjs_ng::$JS_NewAtomLen(thiz._context(), unmake_pointer_unsafe<char>(name.data()), unmake_box<std::size_t>(name.size()));
 			auto result = Dependency::quickjs_ng::$JS_DefinePropertyGetSet(thiz._context(), thiz._value(), atom, getter._release_value(), setter._release_value(), Dependency::quickjs_ng::$JS_PROP_C_W_E);
 			Dependency::quickjs_ng::$JS_FreeAtom(thiz._context(), atom);
 			assert_test(result != -1);
@@ -941,7 +932,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 			String const & name
 		) -> Void {
 			assert_test(thiz.is_object());
-			auto atom = Dependency::quickjs_ng::$JS_NewAtomLen(thiz._context(), unmake_pointer_unsafe<char>(name.begin()), unmake_box<std::size_t>(name.size()));
+			auto atom = Dependency::quickjs_ng::$JS_NewAtomLen(thiz._context(), unmake_pointer_unsafe<char>(name.data()), unmake_box<std::size_t>(name.size()));
 			auto result = Dependency::quickjs_ng::$JS_DeleteProperty(thiz._context(), thiz._value(), atom, Dependency::quickjs_ng::$JS_PROP_THROW);
 			Dependency::quickjs_ng::$JS_FreeAtom(thiz._context(), atom);
 			assert_test(result != -1);
@@ -967,7 +958,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 			String const & name
 		) -> Boolean {
 			assert_test(thiz.is_object());
-			auto atom = Dependency::quickjs_ng::$JS_NewAtomLen(thiz._context(), unmake_pointer_unsafe<char>(name.begin()), unmake_box<std::size_t>(name.size()));
+			auto atom = Dependency::quickjs_ng::$JS_NewAtomLen(thiz._context(), unmake_pointer_unsafe<char>(name.data()), unmake_box<std::size_t>(name.size()));
 			auto result = Dependency::quickjs_ng::$JS_HasProperty(thiz._context(), thiz._value(), atom);
 			Dependency::quickjs_ng::$JS_FreeAtom(thiz._context(), atom);
 			assert_test(result != -1);
@@ -987,22 +978,11 @@ export namespace Twinning::Kernel::Script::JavaScript {
 
 		// ----------------
 
-		// TODO: remove
 		auto get_object_property(
 			ConstantStringView const & name
 		) -> Value {
 			assert_test(thiz.is_object());
-			auto atom = Dependency::quickjs_ng::$JS_NewAtomLen(thiz._context(), unmake_pointer_unsafe<char>(name.begin()), unmake_box<std::size_t>(name.size()));
-			auto result = Dependency::quickjs_ng::$JS_GetProperty(thiz._context(), thiz._value(), atom);
-			Dependency::quickjs_ng::$JS_FreeAtom(thiz._context(), atom);
-			return thiz.new_instance(thiz._context(), result);
-		}
-
-		auto get_object_property(
-			String const & name
-		) -> Value {
-			assert_test(thiz.is_object());
-			auto atom = Dependency::quickjs_ng::$JS_NewAtomLen(thiz._context(), unmake_pointer_unsafe<char>(name.begin()), unmake_box<std::size_t>(name.size()));
+			auto atom = Dependency::quickjs_ng::$JS_NewAtomLen(thiz._context(), unmake_pointer_unsafe<char>(name.data()), unmake_box<std::size_t>(name.size()));
 			auto result = Dependency::quickjs_ng::$JS_GetProperty(thiz._context(), thiz._value(), atom);
 			Dependency::quickjs_ng::$JS_FreeAtom(thiz._context(), atom);
 			return thiz.new_instance(thiz._context(), result);
@@ -1020,26 +1000,12 @@ export namespace Twinning::Kernel::Script::JavaScript {
 
 		// ----------------
 
-		// TODO: remove
 		auto set_object_property(
 			ConstantStringView const & name,
 			Value &&                   value
 		) -> Void {
 			assert_test(thiz.is_object());
-			auto atom = Dependency::quickjs_ng::$JS_NewAtomLen(thiz._context(), unmake_pointer_unsafe<char>(name.begin()), unmake_box<std::size_t>(name.size()));
-			auto result = Dependency::quickjs_ng::$JS_SetProperty(thiz._context(), thiz._value(), atom, value._release_value());
-			Dependency::quickjs_ng::$JS_FreeAtom(thiz._context(), atom);
-			assert_test(result != -1);
-			assert_test(result == 1);
-			return;
-		}
-
-		auto set_object_property(
-			String const & name,
-			Value &&       value
-		) -> Void {
-			assert_test(thiz.is_object());
-			auto atom = Dependency::quickjs_ng::$JS_NewAtomLen(thiz._context(), unmake_pointer_unsafe<char>(name.begin()), unmake_box<std::size_t>(name.size()));
+			auto atom = Dependency::quickjs_ng::$JS_NewAtomLen(thiz._context(), unmake_pointer_unsafe<char>(name.data()), unmake_box<std::size_t>(name.size()));
 			auto result = Dependency::quickjs_ng::$JS_SetProperty(thiz._context(), thiz._value(), atom, value._release_value());
 			Dependency::quickjs_ng::$JS_FreeAtom(thiz._context(), atom);
 			assert_test(result != -1);
@@ -1070,10 +1036,11 @@ export namespace Twinning::Kernel::Script::JavaScript {
 			auto property_enum = ZPointer<Dependency::quickjs_ng::$JSPropertyEnum>{};
 			auto property_count = std::uint32_t{};
 			Dependency::quickjs_ng::$JS_GetOwnPropertyNames(thiz._context(), &property_enum, &property_count, thiz._value(), Dependency::quickjs_ng::$JS_GPN_STRING_MASK);
-			auto result = Map<String, Value>{make_box<Size>(property_count)};
+			auto result = Map<String, Value>{};
+			result.allocate(make_box<Size>(property_count));
 			for (auto & element : Range::make_range_n(make_pointer(property_enum), make_box<Size>(property_count))) {
 				auto name = Dependency::quickjs_ng::$JS_AtomToCString(thiz._context(), element.atom);
-				result.append(make_string(name), thiz.new_instance(thiz._context(), Dependency::quickjs_ng::$JS_GetProperty(thiz._context(), thiz._value(), element.atom)));
+				result.append(from_std_string(name), thiz.new_instance(thiz._context(), Dependency::quickjs_ng::$JS_GetProperty(thiz._context(), thiz._value(), element.atom)));
 				Dependency::quickjs_ng::$JS_FreeCString(thiz._context(), name);
 			}
 			Dependency::quickjs_ng::$JS_FreePropertyEnum(thiz._context(), property_enum, property_count);
@@ -1097,7 +1064,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 			auto length = cast_box<Size>(map["length"_sv].get_number());
 			list.allocate_full(length);
 			for (auto & index : SizeRange{length}) {
-				assert_test(cast_box<Size>(map.at(index).key.to_of<Integer>()) == index);
+				assert_test(cast_box<Size>(string_to_of<Integer>(map.at(index).key)) == index);
 				list[index] = as_moveable(map.at(index).value);
 			}
 			return list;
@@ -1118,7 +1085,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 					return as_variable(element)._value();
 				}
 			);
-			auto result = thiz.new_instance(thiz._context(), Dependency::quickjs_ng::$JS_Call(thiz._context(), thiz._value(), Dependency::quickjs_ng::$JS_UNDEFINED, unmake_box<int>(argument.size()), unmake_pointer_unsafe<Dependency::quickjs_ng::$JSValue>(argument_value.begin())));
+			auto result = thiz.new_instance(thiz._context(), Dependency::quickjs_ng::$JS_Call(thiz._context(), thiz._value(), Dependency::quickjs_ng::$JS_UNDEFINED, unmake_box<int>(argument.size()), unmake_pointer_unsafe<Dependency::quickjs_ng::$JSValue>(argument_value.data())));
 			if (result.is_exception()) {
 				throw ExecutionException{as_left(thiz.context().catch_exception())};
 			}
@@ -1138,7 +1105,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 					return as_variable(element)._value();
 				}
 			);
-			auto result = thiz.new_instance(thiz._context(), Dependency::quickjs_ng::$JS_Call(thiz._context(), function._value(), thiz._value(), unmake_box<int>(argument.size()), unmake_pointer_unsafe<Dependency::quickjs_ng::$JSValue>(argument_value.begin())));
+			auto result = thiz.new_instance(thiz._context(), Dependency::quickjs_ng::$JS_Call(thiz._context(), function._value(), thiz._value(), unmake_box<int>(argument.size()), unmake_pointer_unsafe<Dependency::quickjs_ng::$JSValue>(argument_value.data())));
 			if (result.is_exception()) {
 				throw ExecutionException{as_left(thiz.context().catch_exception())};
 			}
@@ -1147,41 +1114,44 @@ export namespace Twinning::Kernel::Script::JavaScript {
 
 		#pragma endregion
 
-		#pragma region from & to by adapter
+		#pragma region convert
 
-		template <typename TThat, typename ... TOption> requires
-			CategoryConstraint<IsValid<TThat> && IsValid<TOption ...>>
+		template <typename TValue, typename ... TOption> requires
+			CategoryConstraint<IsValid<TValue> && IsValid<TOption ...>>
+			&& (IsHasValueAdapter<AsPure<TValue>>)
 		auto from(
-			TThat &&       that,
+			TValue &&      value,
 			TOption && ... option
 		) -> Void {
 			assert_test(thiz.m_context.has());
 			thiz.set_uninitialized();
-			ValueAdapter<AsPure<TThat>>::from(thiz, as_forward<TThat>(that), as_forward<TOption>(option) ...);
+			ValueAdapter<AsPure<TValue>>::from(thiz, as_forward<TValue>(value), as_forward<TOption>(option) ...);
 			return;
 		}
 
-		template <typename TThat, typename ... TOption> requires
-			CategoryConstraint<IsValid<TThat> && IsValid<TOption ...>>
+		template <typename TValue, typename ... TOption> requires
+			CategoryConstraint<IsValid<TValue> && IsValid<TOption ...>>
+			&& (IsHasValueAdapter<AsPure<TValue>>)
 		auto to(
-			TThat &&       that,
+			TValue &&      value,
 			TOption && ... option
-		) -> TThat && {
+		) -> Void {
 			assert_test(thiz.m_context.has());
-			ValueAdapter<AsPure<TThat>>::to(thiz, as_forward<TThat>(that), as_forward<TOption>(option) ...);
-			return as_forward<TThat>(that);
+			ValueAdapter<AsPure<TValue>>::to(thiz, as_forward<TValue>(value), as_forward<TOption>(option) ...);
+			return;
 		}
 
 		// ----------------
 
-		template <typename TThat, typename ... TOption> requires
-			CategoryConstraint<IsPureInstance<TThat> && IsValid<TOption ...>>
+		template <typename TValue, typename ... TOption> requires
+			CategoryConstraint<IsPureInstance<TValue> && IsValid<TOption ...>>
+			&& (IsHasValueAdapter<AsPure<TValue>>)
 		auto to_of(
 			TOption && ... option
-		) -> TThat {
-			auto that = TThat{};
-			thiz.to(that, as_forward<TOption>(option) ...);
-			return that;
+		) -> TValue {
+			auto value = TValue{};
+			thiz.to(value, as_forward<TOption>(option) ...);
+			return value;
 		}
 
 		#pragma endregion
@@ -1201,7 +1171,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 		) -> Dependency::quickjs_ng::$JSModuleDef * {
 			auto path = Path{};
 			if (module_name[0] == '~') {
-				auto & home = *make_pointer_unsafe<Optional<Path>>(opaque);
+				auto & home = make_pointer_unsafe<Optional<Path>>(opaque).dereference();
 				if (!home.has()) {
 					Dependency::quickjs_ng::$JS_ThrowReferenceError(ctx, "could not load module '%s': home path undefined", module_name);
 					return nullptr;
@@ -1210,21 +1180,21 @@ export namespace Twinning::Kernel::Script::JavaScript {
 					Dependency::quickjs_ng::$JS_ThrowReferenceError(ctx, "could not load module '%s': module path invalid", module_name);
 					return nullptr;
 				}
-				path = home.get().push(Path{make_string(module_name + 2)});
+				path = home.get().push(Path{from_std_string(module_name + 2)});
 			}
 			else {
-				path = Path{make_string(module_name)};
+				path = Path{from_std_string(module_name)};
 			}
 			if (!Storage::exist_file(path)) {
 				Dependency::quickjs_ng::$JS_ThrowReferenceError(ctx, "could not load module '%s': file not found", module_name);
 				return nullptr;
 			}
-			auto data = ByteArray{Storage::size_file(path) + 1_sz};
+			auto data = Binary{Storage::size_file(path) + 1_sz};
 			auto data_view = data.head(data.size() - 1_sz);
 			Storage::read_file(path, 0_sz, data_view);
 			auto value = Dependency::quickjs_ng::$JS_Eval(
 				ctx,
-				unmake_pointer_unsafe<char>(data_view.begin()),
+				unmake_pointer_unsafe<char>(data_view.data()),
 				unmake_box<std::size_t>(data_view.size()),
 				module_name,
 				Dependency::quickjs_ng::$JS_EVAL_FLAG_STRICT | Dependency::quickjs_ng::$JS_EVAL_TYPE_MODULE | Dependency::quickjs_ng::$JS_EVAL_FLAG_COMPILE_ONLY
@@ -1291,8 +1261,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 			#if defined M_build_release
 			catch (...) {
 				auto exception = parse_current_exception();
-				auto message_std = exception.what();
-				auto message = make_string_view(message_std);
+				auto message = from_std_string(exception.what());
 				auto context_wrapper = Context::new_reference(ctx);
 				context_wrapper.throw_exception(
 					context_wrapper.evaluate(
@@ -1376,7 +1345,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 				exception
 			)
 		);
-		thiz.m_description.emplace_back(std::format("message: \n{}", make_std_string(message.get_string())));
+		thiz.m_description.emplace_back(std::format("message: \n{}", to_std_string(message.get_string())));
 		return;
 	}
 
@@ -1443,7 +1412,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 	) -> Void {
 		auto name_null_terminated = SystemNativeString::to_generic(name, true);
 		auto definition = Dependency::quickjs_ng::$JSClassDef{
-			.class_name = unmake_pointer_unsafe<char>(name_null_terminated.begin()),
+			.class_name = unmake_pointer_unsafe<char>(name_null_terminated.data()),
 			.finalizer = &Detail::proxy_class_finalizer<t_finalizer>,
 			.gc_mark = nullptr,
 			.call = nullptr,
@@ -1481,9 +1450,9 @@ export namespace Twinning::Kernel::Script::JavaScript {
 	) -> Value {
 		auto result = Dependency::quickjs_ng::$JS_Eval(
 			thiz._context(),
-			unmake_pointer_unsafe<char>(SystemNativeString::to_generic(script, false).begin()),
+			unmake_pointer_unsafe<char>(SystemNativeString::to_generic(script, false).data()),
 			unmake_box<std::size_t>(script.size()),
-			unmake_pointer_unsafe<char>(SystemNativeString::to_generic(name, true).begin()),
+			unmake_pointer_unsafe<char>(SystemNativeString::to_generic(name, true).data()),
 			Dependency::quickjs_ng::$JS_EVAL_FLAG_STRICT | (!is_module ? (Dependency::quickjs_ng::$JS_EVAL_TYPE_GLOBAL) : (Dependency::quickjs_ng::$JS_EVAL_TYPE_MODULE))
 		);
 		if (Dependency::quickjs_ng::$JS_IsException(result)) {
@@ -1542,7 +1511,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 			Dependency::quickjs_ng::$JS_NewCFunction2(
 				thiz._context(),
 				&Detail::proxy_native_function<t_function>,
-				unmake_pointer_unsafe<char>(SystemNativeString::to_generic(name, true).begin()),
+				unmake_pointer_unsafe<char>(SystemNativeString::to_generic(name, true).data()),
 				0,
 				!is_constructor ? (Dependency::quickjs_ng::$JS_CFUNC_generic) : (Dependency::quickjs_ng::$JS_CFUNC_constructor),
 				0

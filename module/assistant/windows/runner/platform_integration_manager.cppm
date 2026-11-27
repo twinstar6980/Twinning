@@ -14,6 +14,7 @@ module;
 #include <winrt/windows.applicationmodel.h>
 #include <flutter/flutter_view_controller.h>
 #include <flutter/method_channel.h>
+#include <flutter/method_result_functions.h>
 #include <flutter/standard_method_codec.h>
 #include "./utils.h"
 #include "./flutter_window.h"
@@ -87,7 +88,7 @@ export {
 
 		#pragma region utility
 
-		static constexpr auto hash_string(
+		inline static constexpr auto hash_string(
 			std::string_view const & string
 		) -> std::uint64_t {
 			auto offset = std::uint64_t{14695981039346656037ull};
@@ -103,12 +104,13 @@ export {
 		// ----------------
 
 		template <typename TFinalizer>
-		static constexpr auto make_finalizer(
+		inline static constexpr auto make_finalizer(
 			TFinalizer const & finalizer
 		) -> std::unique_ptr<TFinalizer, void (*)(std::add_pointer_t<TFinalizer>)> {
 			return std::unique_ptr<TFinalizer, void (*)(std::add_pointer_t<TFinalizer>)>{new TFinalizer{finalizer}, [](std::add_pointer_t<TFinalizer> it) -> void {
 				(*it)();
 				delete it;
+				return;
 			}};
 		}
 
@@ -118,7 +120,7 @@ export {
 
 		#pragma region singleton
 
-		static auto instance(
+		inline static auto instance(
 		) -> PlatformIntegrationManager & {
 			static auto value = PlatformIntegrationManager{nullptr};
 			return value;
@@ -147,11 +149,8 @@ export {
 			int &          with_show_command,
 			bool &         also_exit
 		) -> void {
-			return thiz.execute_platform_task(
-				false,
-				std::function{[] {
-					return;
-				}},
+			return thiz.execute_platform_task<void>(
+				std::nullopt,
 				std::function{[&] {
 					also_exit = false;
 					auto argument = GetCommandLineArguments();
@@ -183,11 +182,8 @@ export {
 			wchar_t * &    with_command_line,
 			int &          with_show_command
 		) -> void {
-			return thiz.execute_platform_task(
-				false,
-				std::function{[] {
-					return;
-				}},
+			return thiz.execute_platform_task<void>(
+				std::nullopt,
 				std::function{[&] {
 					OleUninitialize();
 					return;
@@ -203,8 +199,7 @@ export {
 			WPARAM const &  with_wparam,
 			LPARAM const &  with_lparam
 		) -> void {
-			return thiz.execute_platform_task(
-				true,
+			return thiz.execute_platform_task<void>(
 				std::function{[] {
 					return;
 				}},
@@ -214,7 +209,14 @@ export {
 						if (data.dwData == k_window_data_identifier_for_link) {
 							auto link = std::string{static_cast<std::string::value_type *>(data.lpData), static_cast<std::size_t>(data.cbData)};
 							thiz.bring_window_to_foreground(with_window);
-							thiz.invoke_receive_application_link(link);
+							thiz.execute_platform_task_switch<void>(
+								false,
+								true,
+								[&, link = std::move(link)] {
+									thiz.invoke_receive_application_link(link);
+									return;
+								}
+							);
 						}
 					}
 					if (with_message == k_window_message_identifier_for_foreground) {
@@ -231,11 +233,8 @@ export {
 			FlutterWindow &                                   host,
 			std::unique_ptr<flutter::FlutterViewController> & also_flutter_controller
 		) -> void {
-			return thiz.execute_platform_task(
-				false,
-				std::function{[] {
-					return;
-				}},
+			return thiz.execute_platform_task<void>(
+				std::nullopt,
 				std::function{[&] {
 					thiz.m_window = host.GetHandle();
 					thiz.m_channel = std::make_unique<flutter::MethodChannel<flutter::EncodableValue>>(
@@ -248,29 +247,35 @@ export {
 						flutter::MethodCall<flutter::EncodableValue> const &            call,
 						std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result
 					) -> void {
-							thiz.execute_platform_task_switch(
+							thiz.execute_platform_task_switch<void>(
 								false,
+								true,
 								std::function{[&, call_method_name = call.method_name(), call_arguments = std::move(const_cast<flutter::EncodableValue &>(*call.arguments())), result = std::shared_ptr{std::move(result)}] {
 									try {
 										auto & call_method = call_method_name;
 										auto & call_argument = std::get<flutter::EncodableMap>(call_arguments);
 										auto   call_result = thiz.handle(call_method, call_argument);
-										thiz.execute_platform_task_switch(
+										thiz.execute_platform_task_switch<void>(
 											true,
+											false,
 											std::function{[&, result = std::move(result), call_result = std::move(call_result)] {
 												result->Success(call_result);
+												return;
 											}}
-										);
+										).get();
 									}
 									catch (...) {
 										auto call_exception = thiz.parse_current_exception();
-										thiz.execute_platform_task_switch(
+										thiz.execute_platform_task_switch<void>(
 											true,
+											false,
 											std::function{[&, result = std::move(result), call_exception = std::move(call_exception)] {
 												result->Error("", call_exception);
+												return;
 											}}
-										);
+										).get();
 									}
+									return;
 								}}
 							);
 							return;
@@ -280,7 +285,14 @@ export {
 					thiz.register_drag_drop_support();
 					auto argument = GetCommandLineArguments();
 					if (argument.size() == 1 && std::regex_search(argument.front(), std::regex{R"(^([a-z][a-z0-9\+\-\.]+):)", std::regex_constants::icase})) {
-						thiz.invoke_receive_application_link(argument.front());
+						thiz.execute_platform_task_switch<void>(
+							false,
+							true,
+							[&, argument = std::move(argument)] {
+								thiz.invoke_receive_application_link(argument.front());
+								return;
+							}
+						);
 					}
 					return;
 				}}
@@ -291,17 +303,15 @@ export {
 		auto inject_FlutterWindow_OnDestroy(
 			FlutterWindow & host
 		) -> void {
-			return thiz.execute_platform_task(
-				false,
-				std::function{[] {
-					return;
-				}},
+			return thiz.execute_platform_task<void>(
+				std::nullopt,
 				std::function{[&] {
 					if (thiz.m_window == nullptr) {
 						return;
 					}
 					thiz.unregister_notification_support();
 					thiz.unregister_drag_drop_support();
+					thiz.m_channel = nullptr;
 					thiz.m_window = nullptr;
 					return;
 				}}
@@ -657,8 +667,7 @@ export {
 				winrt::Windows::UI::Notifications::ToastNotification const & sender,
 				winrt::Windows::Foundation::IInspectable const &             args
 			) -> auto {
-					return thiz.execute_platform_task(
-						true,
+					return thiz.execute_platform_task<void>(
 						std::function{[] {
 							return;
 						}},
@@ -754,7 +763,7 @@ export {
 			auto icon_index = WORD{};
 			auto icon = ExtractAssociatedIconW(nullptr, target_h.data(), &icon_index);
 			winrt::check_pointer(icon);
-			auto icon_finalizer = make_finalizer(
+			auto _1 = make_finalizer(
 				[&] {
 					DestroyIcon(icon);
 				}
@@ -762,7 +771,7 @@ export {
 			auto icon_info = ICONINFO{};
 			state_b = GetIconInfo(icon, &icon_info);
 			winrt::check_bool(state_b);
-			auto icon_info_finalizer = make_finalizer(
+			auto _2 = make_finalizer(
 				[&] {
 					DeleteObject(icon_info.hbmColor);
 					DeleteObject(icon_info.hbmMask);
@@ -780,7 +789,7 @@ export {
 			bitmap_info.bmiHeader.biCompression = BI_RGB;
 			auto device_context = GetDC(nullptr);
 			winrt::check_pointer(device_context);
-			auto device_context_finalizer = make_finalizer(
+			auto _3 = make_finalizer(
 				[&] {
 					ReleaseDC(nullptr, device_context);
 				}
@@ -801,88 +810,116 @@ export {
 		auto invoke(
 			std::string const &                               method,
 			std::map<std::string, flutter::EncodableValue> && argument
-		) -> void {
+		) -> flutter::EncodableMap {
 			auto raw_argument = flutter::EncodableMap{};
 			for (auto & argument_item : argument) {
 				thiz.infuse_flutter_value_map(raw_argument, argument_item.first, std::move(argument_item.second));
 			}
-			thiz.execute_platform_task_switch(
+			auto raw_result_guard = std::promise<flutter::EncodableValue>();
+			thiz.execute_platform_task_switch<void>(
 				true,
-				std::function{[&, method, raw_argument = std::move(raw_argument)] {
-					thiz.m_channel->InvokeMethod(method, std::make_unique<flutter::EncodableValue>(std::move(raw_argument)), nullptr);
+				false,
+				std::function{[&] {
+					thiz.m_channel->InvokeMethod(
+						method,
+						std::make_unique<flutter::EncodableValue>(std::move(raw_argument)),
+						std::make_unique<flutter::MethodResultFunctions<flutter::EncodableValue>>(
+							[&](flutter::EncodableValue const * result) {
+								raw_result_guard.set_value(*result);
+								return;
+							},
+							[&](std::string const & error_code, std::string const & error_message, flutter::EncodableValue const * error_details) {
+								raw_result_guard.set_exception(std::make_exception_ptr(std::runtime_error{std::format("{}: {}", error_code, error_message)}));
+								return;
+							},
+							[&]() {
+								raw_result_guard.set_exception(std::make_exception_ptr(std::runtime_error{std::format("unimplemented")}));
+								return;
+							}
+						)
+					);
+					return;
 				}}
-			);
-			return;
+			).get();
+			auto raw_result = raw_result_guard.get_future().get();
+			auto result = std::move(std::get<flutter::EncodableMap>(raw_result));
+			return result;
 		}
 
 		// ----------------
 
 		auto invoke_receive_platform_exception(
 			std::string const & message
-		) -> void {
-			return thiz.invoke(
+		) -> std::tuple<> {
+			auto detail = thiz.invoke(
 				"receive_platform_exception",
 				std::map<std::string, flutter::EncodableValue>{{
 					std::make_pair("message", thiz.encode_flutter_value(auto{message})),
 				}}
 			);
+			return std::make_tuple();
 		}
 
 		// ----------------
 
 		auto invoke_receive_application_link(
 			std::string const & target
-		) -> void {
-			return thiz.invoke(
+		) -> std::tuple<> {
+			auto detail = thiz.invoke(
 				"receive_application_link",
 				std::map<std::string, flutter::EncodableValue>{{
 					std::make_pair("target", thiz.encode_flutter_value(auto{target})),
 				}}
 			);
+			return std::make_tuple();
 		}
 
 		// ----------------
 
 		auto invoke_receive_application_drag_enter(
-		) -> void {
-			return thiz.invoke(
+		) -> std::tuple<> {
+			auto detail = thiz.invoke(
 				"receive_application_drag_enter",
 				std::map<std::string, flutter::EncodableValue>{
 				}
 			);
+			return std::make_tuple();
 		}
 
 		auto invoke_receive_application_drag_over(
 			std::int64_t const & location_x,
 			std::int64_t const & location_y
-		) -> void {
-			return thiz.invoke(
+		) -> std::tuple<> {
+			auto detail = thiz.invoke(
 				"receive_application_drag_over",
 				std::map<std::string, flutter::EncodableValue>{{
 					std::make_pair("location_x", thiz.encode_flutter_value(auto{location_x})),
 					std::make_pair("location_y", thiz.encode_flutter_value(auto{location_y})),
 				}}
 			);
+			return std::make_tuple();
 		}
 
 		auto invoke_receive_application_drag_leave(
-		) -> void {
-			return thiz.invoke(
+		) -> std::tuple<> {
+			auto detail = thiz.invoke(
 				"receive_application_drag_leave",
 				std::map<std::string, flutter::EncodableValue>{
 				}
 			);
+			return std::make_tuple();
 		}
 
 		auto invoke_receive_application_drag_drop(
 			std::vector<std::string> const & target
-		) -> void {
-			return thiz.invoke(
+		) -> std::tuple<> {
+			auto detail = thiz.invoke(
 				"receive_application_drag_drop",
 				std::map<std::string, flutter::EncodableValue>{{
 					std::make_pair("target", thiz.encode_flutter_value(auto{target})),
 				}}
 			);
+			return std::make_tuple();
 		}
 
 		#pragma endregion
@@ -920,11 +957,36 @@ export {
 
 			#pragma region constructor
 
-			explicit NotificationActivationCallback(
+			~NotificationActivationCallback(
+			) = default;
+
+			// ----------------
+
+			NotificationActivationCallback(
 			) :
 				winrt::implements<NotificationActivationCallback, INotificationActivationCallback>{} {
 				return;
 			}
+
+			NotificationActivationCallback(
+				NotificationActivationCallback const & that
+			) = delete;
+
+			NotificationActivationCallback(
+				NotificationActivationCallback && that
+			) = delete;
+
+			#pragma endregion
+
+			#pragma region operator
+
+			auto operator =(
+				NotificationActivationCallback const & that
+			) -> NotificationActivationCallback & = delete;
+
+			auto operator =(
+				NotificationActivationCallback && that
+			) -> NotificationActivationCallback & = delete;
 
 			#pragma endregion
 
@@ -954,11 +1016,36 @@ export {
 
 			#pragma region constructor
 
-			explicit NotificationActivationCallbackFactory(
+			~NotificationActivationCallbackFactory(
+			) = default;
+
+			// ----------------
+
+			NotificationActivationCallbackFactory(
 			) :
 				winrt::implements<NotificationActivationCallbackFactory, IClassFactory>{} {
 				return;
 			}
+
+			NotificationActivationCallbackFactory(
+				NotificationActivationCallbackFactory const & that
+			) = delete;
+
+			NotificationActivationCallbackFactory(
+				NotificationActivationCallbackFactory && that
+			) = delete;
+
+			#pragma endregion
+
+			#pragma region operator
+
+			auto operator =(
+				NotificationActivationCallbackFactory const & that
+			) -> NotificationActivationCallbackFactory & = delete;
+
+			auto operator =(
+				NotificationActivationCallbackFactory && that
+			) -> NotificationActivationCallbackFactory & = delete;
 
 			#pragma endregion
 
@@ -1028,6 +1115,28 @@ export {
 
 			#pragma region constructor
 
+			#pragma endregion
+
+			#pragma region constructor
+
+			~DropTarget(
+			) = default;
+
+			// ----------------
+
+			DropTarget(
+			) = delete;
+
+			DropTarget(
+				DropTarget const & that
+			) = delete;
+
+			DropTarget(
+				DropTarget && that
+			) = delete;
+
+			// ----------------
+
 			explicit DropTarget(
 				PlatformIntegrationManager * const & host
 			) :
@@ -1041,6 +1150,18 @@ export {
 
 			#pragma endregion
 
+			#pragma region operator
+
+			auto operator =(
+				DropTarget const & that
+			) -> DropTarget & = delete;
+
+			auto operator =(
+				DropTarget && that
+			) -> DropTarget & = delete;
+
+			#pragma endregion
+
 			#pragma region implement IDropTarget
 
 			// ReSharper disable CppInconsistentNaming CppEnforceFunctionDeclarationStyle
@@ -1051,8 +1172,7 @@ export {
 				POINTL        pt,
 				DWORD *       pdwEffect
 			) override {
-				return thiz.m_host->execute_platform_task(
-					true,
+				return thiz.m_host->execute_platform_task<HRESULT>(
 					std::function{[] {
 						return S_FALSE;
 					}},
@@ -1075,7 +1195,14 @@ export {
 						state_h = pDataObj->QueryGetData(&drop_format);
 						thiz.m_allow = state_h == S_OK;
 						if (thiz.m_allow) {
-							thiz.m_host->invoke_receive_application_drag_enter();
+							thiz.m_host->execute_platform_task_switch<void>(
+								false,
+								true,
+								[&] {
+									thiz.m_host->invoke_receive_application_drag_enter();
+									return;
+								}
+							);
 						}
 						return S_OK;
 					}}
@@ -1087,8 +1214,7 @@ export {
 				POINTL  pt,
 				DWORD * pdwEffect
 			) override {
-				return thiz.m_host->execute_platform_task(
-					true,
+				return thiz.m_host->execute_platform_task<HRESULT>(
 					std::function{[] {
 						return S_FALSE;
 					}},
@@ -1107,7 +1233,14 @@ export {
 							auto display_density = thiz.m_host->query_display_density();
 							auto location_x = static_cast<std::int64_t>(std::llround(point.x / display_density));
 							auto location_y = static_cast<std::int64_t>(std::llround(point.y / display_density));
-							thiz.m_host->invoke_receive_application_drag_over(location_x, location_y);
+							thiz.m_host->execute_platform_task_switch<void>(
+								false,
+								true,
+								[&, location_x = std::move(location_x), location_y = std::move(location_y)] {
+									thiz.m_host->invoke_receive_application_drag_over(location_x, location_y);
+									return;
+								}
+							);
 						}
 						return S_OK;
 					}}
@@ -1116,8 +1249,7 @@ export {
 
 			virtual IFACEMETHODIMP DragLeave(
 			) override {
-				return thiz.m_host->execute_platform_task(
-					true,
+				return thiz.m_host->execute_platform_task<HRESULT>(
 					std::function{[] {
 						return S_FALSE;
 					}},
@@ -1125,7 +1257,14 @@ export {
 						thiz.m_helper->DragLeave();
 						if (thiz.m_allow) {
 							thiz.m_allow = false;
-							thiz.m_host->invoke_receive_application_drag_leave();
+							thiz.m_host->execute_platform_task_switch<void>(
+								false,
+								true,
+								[&] {
+									thiz.m_host->invoke_receive_application_drag_leave();
+									return;
+								}
+							);
 						}
 						return S_OK;
 					}}
@@ -1138,8 +1277,7 @@ export {
 				POINTL        pt,
 				DWORD *       pdwEffect
 			) override {
-				return thiz.m_host->execute_platform_task(
-					true,
+				return thiz.m_host->execute_platform_task<HRESULT>(
 					std::function{[] {
 						return S_FALSE;
 					}},
@@ -1163,14 +1301,14 @@ export {
 							auto drop_storage = STGMEDIUM{};
 							state_h = pDataObj->GetData(&drop_format, &drop_storage);
 							winrt::check_hresult(state_h);
-							auto drop_storage_finalizer = make_finalizer(
+							auto _1 = make_finalizer(
 								[&] {
 									ReleaseStgMedium(&drop_storage);
 								}
 							);
 							auto drop_handle = static_cast<HDROP>(GlobalLock(drop_storage.hGlobal));
 							winrt::check_pointer(drop_handle);
-							auto drop_handle_finalizer = make_finalizer(
+							auto _2 = make_finalizer(
 								[&] {
 									GlobalUnlock(drop_storage.hGlobal);
 								}
@@ -1187,7 +1325,14 @@ export {
 								auto target_item_path_long = thiz.m_host->query_storage_long_path(target_item_path);
 								target.emplace_back(target_item_path_long);
 							}
-							thiz.m_host->invoke_receive_application_drag_drop(target);
+							thiz.m_host->execute_platform_task_switch<void>(
+								false,
+								true,
+								[&, target = std::move(target)] {
+									thiz.m_host->invoke_receive_application_drag_drop(target);
+									return;
+								}
+							);
 						}
 						return S_OK;
 					}}
@@ -1212,45 +1357,81 @@ export {
 
 		template <typename TResult>
 		auto execute_platform_task(
-			bool const &                 handle_exception,
-			std::function<TResult ()> && fallback_action,
-			std::function<TResult ()> && task_action
+			std::optional<std::function<TResult ()>> && fallback_action,
+			std::function<TResult ()> &&                task_action
 		) -> TResult {
 			auto task = [&] {
 				try {
 					return task_action();
 				}
 				catch (...) {
-					if (!handle_exception) {
+					if (!fallback_action.has_value()) {
 						throw;
 					}
-					thiz.invoke_receive_platform_exception(thiz.parse_current_exception());
-					return fallback_action();
+					auto exception_message = thiz.parse_current_exception();
+					thiz.execute_platform_task_switch<void>(
+						false,
+						false,
+						[&, exception_message = std::move(exception_message)] {
+							thiz.invoke_receive_platform_exception(exception_message);
+							return;
+						}
+					);
+					return fallback_action.value()();
 				}
 			};
 			return task();
 		}
 
+		template <typename TResult>
 		auto execute_platform_task_switch(
-			bool const &              on_main,
-			std::function<void ()> && task_action
-		) -> void {
-			auto task = [&, task_action = std::move(task_action)] {
+			bool const &                 on_main,
+			bool const &                 allow_report,
+			std::function<TResult ()> && task_action
+		) -> std::future<TResult> {
+			auto result = std::make_shared<std::promise<TResult>>();
+			auto task = [&, allow_report, task_action = std::move(task_action), result] {
 				try {
-					task_action();
+					if constexpr (std::is_same_v<TResult, void>) {
+						task_action();
+						result->set_value();
+					}
+					else {
+						result->set_value(task_action());
+					}
+					return;
 				}
 				catch (...) {
-					thiz.invoke_receive_platform_exception(thiz.parse_current_exception());
+					result->set_exception(std::current_exception());
+					if (allow_report) {
+						auto exception_message = thiz.parse_current_exception();
+						thiz.execute_platform_task_switch<void>(
+							false,
+							false,
+							[&, exception_message = std::move(exception_message)] {
+								thiz.invoke_receive_platform_exception(exception_message);
+								return;
+							}
+						);
+					}
+					return;
 				}
-				return;
 			};
-			if (on_main) {
-				PostMessageW(thiz.m_window, k_window_message_identifier_for_foreground, 0, reinterpret_cast<LPARAM>(new std::function<void ()>{std::move(task)}));
+			try {
+				if (on_main) {
+					auto data = std::make_unique<std::function<void ()>>(std::move(task));
+					auto posted = PostMessageW(thiz.m_window, k_window_message_identifier_for_foreground, 0, reinterpret_cast<LPARAM>(data.get()));
+					assert_test(posted != FALSE);
+					data.release();
+				}
+				else {
+					std::thread{std::move(task)}.detach();
+				}
 			}
-			else {
-				std::thread{std::move(task)}.detach();
+			catch (...) {
+				result->set_exception(std::current_exception());
 			}
-			return;
+			return result->get_future();
 		}
 
 		// ----------------

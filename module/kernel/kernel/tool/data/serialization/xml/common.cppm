@@ -65,13 +65,13 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Xml {
 			auto   result = String{};
 			assert_test(buffer_size > 0_sz);
 			if (printer_imitator._buffer._mem == printer_imitator._buffer._pool) {
-				result.assign(ConstantStringView{buffer_data, buffer_size - 1_sz});
+				result.assign(make_string_view(buffer_data, buffer_size - 1_sz));
 			}
 			else {
+				result.bind(buffer_data, buffer_size - 1_sz, buffer_capacity);
 				printer_imitator._buffer._mem = printer_imitator._buffer._pool;
 				printer_imitator._buffer._size = 0;
 				printer_imitator._buffer._allocated = 20;
-				result.bind(buffer_data, buffer_size - 1_sz, buffer_capacity);
 			}
 			return result;
 		}

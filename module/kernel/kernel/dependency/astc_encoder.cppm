@@ -5,7 +5,7 @@ module;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Weverything"
 
-#include "dependency/astc_encoder/Source/astcenc.h"
+#include "dependency/astc_encoder/origin/Source/astcenc.h"
 
 #pragma clang diagnostic pop
 

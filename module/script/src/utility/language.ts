@@ -27,24 +27,13 @@ namespace Twinning.Script.Language {
 		if (format === undefined) {
 			throw new Error(`locale key not found '${key}'`);
 		}
-		let result = '';
-		let argument_index = 0;
-		for (let index = 0; index < format.length; index++) {
-			let character = format[index];
-			if (format[index] === '{' && format[index + 1] === '}') {
-				result += `${argument[argument_index]}`;
-				argument_index++;
-				index++;
-			}
-			else if (format[index] === '{' && format[index + 1] === '{') {
-				result += character;
-				index++;
-			}
-			else {
-				result += character;
-			}
-		}
-		return result;
+		return ConvertHelper.realize_format_string(
+			ConvertHelper.parse_format_string(format, false),
+			(index, name) => {
+				assert_test(index < argument.length);
+				return `${argument[index]}`;
+			},
+		);
 	}
 
 	// #endregion

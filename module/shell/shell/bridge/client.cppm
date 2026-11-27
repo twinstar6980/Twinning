@@ -20,7 +20,9 @@ export namespace Twinning::Shell::Bridge {
 		// ----------------
 
 		Client(
-		) = default;
+		) {
+			return;
+		}
 
 		Client(
 			Client const & that

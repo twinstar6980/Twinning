@@ -20,9 +20,11 @@ namespace Twinning.Script.KernelX {
 
 	// ----------------
 
-	export let g_common_buffer: Kernel.ByteArray = Kernel.ByteArray.default();
+	export let g_binary_stream_endian: Endian = 'little';
 
-	export let g_common_buffer_for_string: Kernel.ByteArray = Kernel.ByteArray.allocate(Kernel.Size.value(0x2000n));
+	export let g_common_buffer: Kernel.Binary = Kernel.Binary.default();
+
+	export let g_common_buffer_for_string: Kernel.Binary = Kernel.Binary.allocate(Kernel.Size.value(0x2000n));
 
 	// #endregion
 
@@ -127,7 +129,7 @@ namespace Twinning.Script.KernelX {
 		export function read_file(
 			target: StoragePath,
 			offset: bigint,
-			data: Kernel.ByteListView,
+			data: Kernel.BinaryView,
 		): void {
 			return Kernel.Storage.read_file(Kernel.Path.value(target.emit()), Kernel.Size.value(offset), data);
 		}
@@ -135,7 +137,7 @@ namespace Twinning.Script.KernelX {
 		export function write_file(
 			target: StoragePath,
 			offset: bigint,
-			data: Kernel.ByteListView,
+			data: Kernel.BinaryView,
 		): void {
 			return Kernel.Storage.write_file(Kernel.Path.value(target.emit()), Kernel.Size.value(offset), data);
 		}
@@ -204,55 +206,180 @@ namespace Twinning.Script.KernelX {
 
 			export namespace Hashing {
 
-				export namespace Md5 {
-
-					export function hash_fs(
-						data_file: StoragePath,
-					): bigint {
-						let data = StorageHelper.read_file_data(data_file);
-						let value = Kernel.ByteArray.default();
-						Kernel.Tool.Data.Hashing.Md5.Hash.process(data.view(), value);
-						return ConvertHelper.parse_integer_from_byte_array([...new Uint8Array(value.value)].map(BigInt), null, 'little');
-					}
-
-				}
-
 				export namespace Fnv {
 
-					const ModeX = ['m_0', 'm_1', 'm_1a'] as const;
+					const ModeX = ['v0', 'v1', 'v1a'] as const;
 
 					export type Mode = typeof ModeX[number];
 
 					export const ModeE = [...ModeX];
 
-					const BitCountX = ['b_32', 'b_64'] as const;
+					const LengthX = [32n, 64n] as const;
 
-					export type BitCount = typeof BitCountX[number];
+					export type Length = typeof LengthX[number];
 
-					export const BitCountE = [...BitCountX];
+					export const LengthE = [...LengthX];
 
 					// ----------------
 
 					export function hash_s(
 						data_string: string,
 						mode: Mode,
-						bit_count: BitCount,
+						length: Length,
 					): bigint {
-						let data = Kernel.Miscellaneous.cast_moveable_String_to_ByteArray(Kernel.String.value(data_string));
-						let value = Kernel.ByteArray.default();
-						Kernel.Tool.Data.Hashing.Fnv.Hash.process(data.view(), value, Kernel.Tool.Data.Hashing.Fnv.Mode.value(mode), Kernel.Tool.Data.Hashing.Fnv.BitCount.value(bit_count));
-						return ConvertHelper.parse_integer_from_byte_array([...new Uint8Array(value.value)].map(BigInt), null, 'current');
+						let data = Kernel.Miscellaneous.cast_moveable_String_to_Binary(Kernel.String.value(data_string));
+						let value = Kernel.Binary.default();
+						Kernel.Tool.Data.Hashing.Fnv.Hash.process(data.view(), value, Kernel.Tool.Data.Hashing.Fnv.Mode.value(mode), Kernel.Size.value(length));
+						return ConvertHelper.parse_integer_from_byte_array([...new Uint8Array(value.value)].map(BigInt), null, query_endian());
 					}
 
 					export function hash_fs(
 						data_file: StoragePath,
 						mode: Mode,
-						bit_count: BitCount,
+						length: Length,
 					): bigint {
 						let data = StorageHelper.read_file_data(data_file);
-						let value = Kernel.ByteArray.default();
-						Kernel.Tool.Data.Hashing.Fnv.Hash.process(data.view(), value, Kernel.Tool.Data.Hashing.Fnv.Mode.value(mode), Kernel.Tool.Data.Hashing.Fnv.BitCount.value(bit_count));
-						return ConvertHelper.parse_integer_from_byte_array([...new Uint8Array(value.value)].map(BigInt), null, 'current');
+						let value = Kernel.Binary.default();
+						Kernel.Tool.Data.Hashing.Fnv.Hash.process(data.view(), value, Kernel.Tool.Data.Hashing.Fnv.Mode.value(mode), Kernel.Size.value(length));
+						return ConvertHelper.parse_integer_from_byte_array([...new Uint8Array(value.value)].map(BigInt), null, query_endian());
+					}
+
+				}
+
+				export namespace Crc {
+
+					const ModeX = ['standard', 'castagnoli'] as const;
+
+					export type Mode = typeof ModeX[number];
+
+					export const ModeE = [...ModeX];
+
+					const LengthX = [32n] as const;
+
+					export type Length = typeof LengthX[number];
+
+					export const LengthE = [...LengthX];
+
+					// ----------------
+
+					export function hash_s(
+						data_string: string,
+						mode: Mode,
+						length: Length,
+					): bigint {
+						let data = Kernel.Miscellaneous.cast_moveable_String_to_Binary(Kernel.String.value(data_string));
+						let value = Kernel.Binary.default();
+						Kernel.Tool.Data.Hashing.Crc.Hash.process(data.view(), value, Kernel.Tool.Data.Hashing.Crc.Mode.value(mode), Kernel.Size.value(length));
+						return ConvertHelper.parse_integer_from_byte_array([...new Uint8Array(value.value)].map(BigInt), null, 'little');
+					}
+
+					export function hash_fs(
+						data_file: StoragePath,
+						mode: Mode,
+						length: Length,
+					): bigint {
+						let data = StorageHelper.read_file_data(data_file);
+						let value = Kernel.Binary.default();
+						Kernel.Tool.Data.Hashing.Crc.Hash.process(data.view(), value, Kernel.Tool.Data.Hashing.Crc.Mode.value(mode), Kernel.Size.value(length));
+						return ConvertHelper.parse_integer_from_byte_array([...new Uint8Array(value.value)].map(BigInt), null, 'little');
+					}
+
+				}
+
+				export namespace Adler {
+
+					const ModeX = ['standard'] as const;
+
+					export type Mode = typeof ModeX[number];
+
+					export const ModeE = [...ModeX];
+
+					const LengthX = [32n] as const;
+
+					export type Length = typeof LengthX[number];
+
+					export const LengthE = [...LengthX];
+
+					// ----------------
+
+					export function hash_s(
+						data_string: string,
+						mode: Mode,
+						length: Length,
+					): bigint {
+						let data = Kernel.Miscellaneous.cast_moveable_String_to_Binary(Kernel.String.value(data_string));
+						let value = Kernel.Binary.default();
+						Kernel.Tool.Data.Hashing.Adler.Hash.process(data.view(), value, Kernel.Tool.Data.Hashing.Adler.Mode.value(mode), Kernel.Size.value(length));
+						return ConvertHelper.parse_integer_from_byte_array([...new Uint8Array(value.value)].map(BigInt), null, 'little');
+					}
+
+					export function hash_fs(
+						data_file: StoragePath,
+						mode: Mode,
+						length: Length,
+					): bigint {
+						let data = StorageHelper.read_file_data(data_file);
+						let value = Kernel.Binary.default();
+						Kernel.Tool.Data.Hashing.Adler.Hash.process(data.view(), value, Kernel.Tool.Data.Hashing.Adler.Mode.value(mode), Kernel.Size.value(length));
+						return ConvertHelper.parse_integer_from_byte_array([...new Uint8Array(value.value)].map(BigInt), null, 'little');
+					}
+
+				}
+
+				export namespace Md {
+
+					const ModeX = ['v2', 'v4', 'v5'] as const;
+
+					export type Mode = typeof ModeX[number];
+
+					export const ModeE = [...ModeX];
+
+					const LengthX = [128n] as const;
+
+					export type Length = typeof LengthX[number];
+
+					export const LengthE = [...LengthX];
+
+					// ----------------
+
+					export function hash_fs(
+						data_file: StoragePath,
+						mode: Mode,
+						length: Length,
+					): bigint {
+						let data = StorageHelper.read_file_data(data_file);
+						let value = Kernel.Binary.default();
+						Kernel.Tool.Data.Hashing.Md.Hash.process(data.view(), value, Kernel.Tool.Data.Hashing.Md.Mode.value(mode), Kernel.Size.value(length));
+						return ConvertHelper.parse_integer_from_byte_array([...new Uint8Array(value.value)].map(BigInt), null, 'little');
+					}
+
+				}
+
+				export namespace Sha {
+
+					const ModeX = ['v1', 'v2', 'v3'] as const;
+
+					export type Mode = typeof ModeX[number];
+
+					export const ModeE = [...ModeX];
+
+					const LengthX = [160n, 224n, 256n, 384n, 512n] as const;
+
+					export type Length = typeof LengthX[number];
+
+					export const LengthE = [...LengthX];
+
+					// ----------------
+
+					export function hash_fs(
+						data_file: StoragePath,
+						mode: Mode,
+						length: Length,
+					): bigint {
+						let data = StorageHelper.read_file_data(data_file);
+						let value = Kernel.Binary.default();
+						Kernel.Tool.Data.Hashing.Sha.Hash.process(data.view(), value, Kernel.Tool.Data.Hashing.Sha.Mode.value(mode), Kernel.Size.value(length));
+						return ConvertHelper.parse_integer_from_byte_array([...new Uint8Array(value.value)].map(BigInt), null, 'little');
 					}
 
 				}
@@ -261,35 +388,45 @@ namespace Twinning.Script.KernelX {
 
 			export namespace Encoding {
 
-				export namespace Base64 {
+				export namespace Base {
+
+					const ModeX = ['v16_std', 'v32_std', 'v32_hex', 'v64_std', 'v64_url'] as const;
+
+					export type Mode = typeof ModeX[number];
+
+					export const ModeE = [...ModeX];
+
+					// ----------------
 
 					export function encode_fs(
 						raw_file: StoragePath,
 						ripe_file: StoragePath,
+						mode: Mode,
 					): void {
 						let raw = StorageHelper.read_file_data(raw_file);
 						let ripe_size = Kernel.Size.default();
-						Kernel.Tool.Data.Encoding.Base64.Encode.estimate(raw.size(), ripe_size);
-						let ripe = Kernel.ByteArray.allocate(ripe_size);
-						let raw_stream = Kernel.ByteStreamView.watch(raw.view());
-						let ripe_stream = Kernel.ByteStreamView.watch(ripe.view());
-						Kernel.Tool.Data.Encoding.Base64.Encode.process(raw_stream, ripe_stream);
-						StorageHelper.write_file_data(ripe_file, ripe_stream.stream_view());
+						Kernel.Tool.Data.Encoding.Base.Encode.estimate(raw.size(), ripe_size, Kernel.Tool.Data.Encoding.Base.Mode.value(mode));
+						let ripe = Kernel.Binary.allocate(ripe_size);
+						let raw_stream = Kernel.BinaryStreamView.watch(raw.view());
+						let ripe_stream = Kernel.BinaryStreamView.watch(ripe.view());
+						Kernel.Tool.Data.Encoding.Base.Encode.process(raw_stream, ripe_stream, Kernel.Tool.Data.Encoding.Base.Mode.value(mode));
+						StorageHelper.write_file_data(ripe_file, ripe_stream.split_stream().view());
 						return;
 					}
 
 					export function decode_fs(
 						raw_file: StoragePath,
 						ripe_file: StoragePath,
+						mode: Mode,
 					): void {
 						let ripe = StorageHelper.read_file_data(ripe_file);
-						let ripe_stream = Kernel.ByteStreamView.watch(ripe.view());
+						let ripe_stream = Kernel.BinaryStreamView.watch(ripe.view());
 						let raw_size = Kernel.Size.default();
-						Kernel.Tool.Data.Encoding.Base64.Decode.estimate(raw_size, ripe_stream.view());
-						let raw = Kernel.ByteArray.allocate(raw_size);
-						let raw_stream = Kernel.ByteStreamView.watch(raw.view());
-						Kernel.Tool.Data.Encoding.Base64.Decode.process(raw_stream, ripe_stream);
-						StorageHelper.write_file_data(raw_file, raw_stream.stream_view());
+						Kernel.Tool.Data.Encoding.Base.Decode.estimate(raw_size, ripe_stream.size(), Kernel.Tool.Data.Encoding.Base.Mode.value(mode));
+						let raw = Kernel.Binary.allocate(raw_size);
+						let raw_stream = Kernel.BinaryStreamView.watch(raw.view());
+						Kernel.Tool.Data.Encoding.Base.Decode.process(raw_stream, ripe_stream, Kernel.Tool.Data.Encoding.Base.Mode.value(mode));
+						StorageHelper.write_file_data(raw_file, raw_stream.split_stream().view());
 						return;
 					}
 
@@ -307,13 +444,13 @@ namespace Twinning.Script.KernelX {
 						key: Array<bigint>,
 					): void {
 						let raw = StorageHelper.read_file_data(raw_file);
-						let raw_stream = Kernel.ByteStreamView.watch(raw.view());
-						let ripe = Kernel.ByteArray.allocate(raw.size());
-						let ripe_stream = Kernel.ByteStreamView.watch(ripe.view());
-						let key_c = Kernel.ByteArray.allocate(Kernel.Size.value(BigInt(key.length)));
+						let raw_stream = Kernel.BinaryStreamView.watch(raw.view());
+						let ripe = Kernel.Binary.allocate(raw.size());
+						let ripe_stream = Kernel.BinaryStreamView.watch(ripe.view());
+						let key_c = Kernel.Binary.allocate(Kernel.Size.value(BigInt(key.length)));
 						new Uint8Array(key_c.view().value).set(key.map(Number));
 						Kernel.Tool.Data.Encryption.Exor.Encrypt.process(raw_stream, ripe_stream, key_c.view());
-						StorageHelper.write_file_data(ripe_file, ripe_stream.stream_view());
+						StorageHelper.write_file_data(ripe_file, ripe_stream.split_stream().view());
 						return;
 					}
 
@@ -340,15 +477,15 @@ namespace Twinning.Script.KernelX {
 						ripe_file: StoragePath,
 						mode: Mode,
 						block_size: BlockSize,
-						key: Kernel.ByteListView,
-						initialization_vector: Kernel.ByteListView,
+						key: Kernel.BinaryView,
+						initialization_vector: Kernel.BinaryView,
 					): void {
 						let raw = StorageHelper.read_file_data(raw_file);
-						let raw_stream = Kernel.ByteStreamView.watch(raw.view());
-						let ripe = Kernel.ByteArray.allocate(raw.size());
-						let ripe_stream = Kernel.ByteStreamView.watch(ripe.view());
+						let raw_stream = Kernel.BinaryStreamView.watch(raw.view());
+						let ripe = Kernel.Binary.allocate(raw.size());
+						let ripe_stream = Kernel.BinaryStreamView.watch(ripe.view());
 						Kernel.Tool.Data.Encryption.Rijndael.Encrypt.process(raw_stream, ripe_stream, Kernel.Tool.Data.Encryption.Rijndael.Mode.value(mode), Kernel.Integer.value(block_size), key, initialization_vector);
-						StorageHelper.write_file_data(ripe_file, ripe_stream.stream_view());
+						StorageHelper.write_file_data(ripe_file, ripe_stream.split_stream().view());
 						return;
 					}
 
@@ -357,15 +494,15 @@ namespace Twinning.Script.KernelX {
 						ripe_file: StoragePath,
 						mode: Mode,
 						block_size: BlockSize,
-						key: Kernel.ByteListView,
-						initialization_vector: Kernel.ByteListView,
+						key: Kernel.BinaryView,
+						initialization_vector: Kernel.BinaryView,
 					): void {
 						let ripe = StorageHelper.read_file_data(ripe_file);
-						let ripe_stream = Kernel.ByteStreamView.watch(ripe.view());
-						let raw = Kernel.ByteArray.allocate(ripe.size());
-						let raw_stream = Kernel.ByteStreamView.watch(raw.view());
+						let ripe_stream = Kernel.BinaryStreamView.watch(ripe.view());
+						let raw = Kernel.Binary.allocate(ripe.size());
+						let raw_stream = Kernel.BinaryStreamView.watch(raw.view());
 						Kernel.Tool.Data.Encryption.Rijndael.Decrypt.process(raw_stream, ripe_stream, Kernel.Tool.Data.Encryption.Rijndael.Mode.value(mode), Kernel.Integer.value(block_size), key, initialization_vector);
-						StorageHelper.write_file_data(raw_file, raw_stream.stream_view());
+						StorageHelper.write_file_data(raw_file, raw_stream.split_stream().view());
 						return;
 					}
 
@@ -376,6 +513,12 @@ namespace Twinning.Script.KernelX {
 			export namespace Compression {
 
 				export namespace Deflate {
+
+					const ContainerX = ['none', 'zlib', 'gzip'] as const;
+
+					export type Container = typeof ContainerX[number];
+
+					export const ContainerE = [...ContainerX];
 
 					const LevelX = [0n, 1n, 2n, 3n, 4n, 5n, 6n, 7n, 8n, 9n] as const;
 
@@ -401,52 +544,52 @@ namespace Twinning.Script.KernelX {
 
 					export const StrategyModeE = [...StrategyModeX];
 
-					const WrapperTypeX = ['none', 'zlib', 'gzip'] as const;
-
-					export type WrapperType = typeof WrapperTypeX[number];
-
-					export const WrapperTypeE = [...WrapperTypeX];
-
 					// ----------------
 
 					export function compress_fs(
 						raw_file: StoragePath,
 						ripe_file: StoragePath,
+						container: Container,
 						level: Level,
 						window_exponent: WindowExponent,
 						memory_level: MemoryLevel,
 						strategy_mode: StrategyMode,
-						wrapper_type: WrapperType,
 					): void {
 						let raw = StorageHelper.read_file_data(raw_file);
-						let raw_stream = Kernel.ByteStreamView.watch(raw.view());
+						let raw_stream = Kernel.BinaryStreamView.watch(raw.view());
 						let ripe_size_bound = Kernel.Size.default();
-						Kernel.Tool.Data.Compression.Deflate.Compress.estimate(raw.size(), ripe_size_bound, Kernel.Integer.value(window_exponent), Kernel.Integer.value(memory_level), Kernel.Tool.Data.Compression.Deflate.WrapperType.value(wrapper_type));
-						let ripe = Kernel.ByteArray.allocate(ripe_size_bound);
-						let ripe_stream = Kernel.ByteStreamView.watch(ripe.view());
-						Kernel.Tool.Data.Compression.Deflate.Compress.process(raw_stream, ripe_stream, Kernel.Integer.value(level), Kernel.Integer.value(window_exponent), Kernel.Integer.value(memory_level), Kernel.Tool.Data.Compression.Deflate.StrategyMode.value(strategy_mode), Kernel.Tool.Data.Compression.Deflate.WrapperType.value(wrapper_type));
-						StorageHelper.write_file_data(ripe_file, ripe_stream.stream_view());
+						Kernel.Tool.Data.Compression.Deflate.Compress.estimate(raw.size(), ripe_size_bound, Kernel.Tool.Data.Compression.Deflate.Container.value(container), Kernel.Integer.value(window_exponent), Kernel.Integer.value(memory_level));
+						let ripe = Kernel.Binary.allocate(ripe_size_bound);
+						let ripe_stream = Kernel.BinaryStreamView.watch(ripe.view());
+						Kernel.Tool.Data.Compression.Deflate.Compress.process(raw_stream, ripe_stream, Kernel.Tool.Data.Compression.Deflate.Container.value(container), Kernel.Integer.value(level), Kernel.Integer.value(window_exponent), Kernel.Integer.value(memory_level), Kernel.Tool.Data.Compression.Deflate.StrategyMode.value(strategy_mode));
+						StorageHelper.write_file_data(ripe_file, ripe_stream.split_stream().view());
 						return;
 					}
 
 					export function uncompress_fs(
 						raw_file: StoragePath,
 						ripe_file: StoragePath,
+						container: Container,
 						window_exponent: WindowExponent,
-						wrapper_type: WrapperType,
-						raw_buffer: Kernel.ByteListView,
+						raw_buffer: Kernel.BinaryView,
 					): void {
 						let ripe = StorageHelper.read_file_data(ripe_file);
-						let ripe_stream = Kernel.ByteStreamView.watch(ripe.view());
-						let raw_stream = Kernel.ByteStreamView.watch(raw_buffer);
-						Kernel.Tool.Data.Compression.Deflate.Uncompress.process(raw_stream, ripe_stream, Kernel.Integer.value(window_exponent), Kernel.Tool.Data.Compression.Deflate.WrapperType.value(wrapper_type));
-						StorageHelper.write_file_data(raw_file, raw_stream.stream_view());
+						let ripe_stream = Kernel.BinaryStreamView.watch(ripe.view());
+						let raw_stream = Kernel.BinaryStreamView.watch(raw_buffer);
+						Kernel.Tool.Data.Compression.Deflate.Uncompress.process(raw_stream, ripe_stream, Kernel.Tool.Data.Compression.Deflate.Container.value(container), Kernel.Integer.value(window_exponent));
+						StorageHelper.write_file_data(raw_file, raw_stream.split_stream().view());
 						return;
 					}
 
 				}
 
 				export namespace Bzip2 {
+
+					const ContainerX = ['none'] as const;
+
+					export type Container = typeof ContainerX[number];
+
+					export const ContainerE = [...ContainerX];
 
 					const BlockSizeX = [1n, 2n, 3n, 4n, 5n, 6n, 7n, 8n, 9n] as const;
 
@@ -459,34 +602,43 @@ namespace Twinning.Script.KernelX {
 					export function compress_fs(
 						raw_file: StoragePath,
 						ripe_file: StoragePath,
+						container: Container,
 						block_size: BlockSize,
 					): void {
 						let raw = StorageHelper.read_file_data(raw_file);
-						let raw_stream = Kernel.ByteStreamView.watch(raw.view());
-						let ripe_size_bound = Kernel.Size.value(raw.size().value + 1024n); // TODO
-						let ripe = Kernel.ByteArray.allocate(ripe_size_bound);
-						let ripe_stream = Kernel.ByteStreamView.watch(ripe.view());
-						Kernel.Tool.Data.Compression.Bzip2.Compress.process(raw_stream, ripe_stream, Kernel.Integer.value(block_size), Kernel.Integer.value(0n));
-						StorageHelper.write_file_data(ripe_file, ripe_stream.stream_view());
+						let raw_stream = Kernel.BinaryStreamView.watch(raw.view());
+						let ripe_size_bound = Kernel.Size.default();
+						Kernel.Tool.Data.Compression.Bzip2.Compress.estimate(raw.size(), ripe_size_bound, Kernel.Tool.Data.Compression.Bzip2.Container.value(container));
+						let ripe = Kernel.Binary.allocate(ripe_size_bound);
+						let ripe_stream = Kernel.BinaryStreamView.watch(ripe.view());
+						Kernel.Tool.Data.Compression.Bzip2.Compress.process(raw_stream, ripe_stream, Kernel.Tool.Data.Compression.Bzip2.Container.value(container), Kernel.Integer.value(block_size), Kernel.Integer.value(0n));
+						StorageHelper.write_file_data(ripe_file, ripe_stream.split_stream().view());
 						return;
 					}
 
 					export function uncompress_fs(
 						raw_file: StoragePath,
 						ripe_file: StoragePath,
-						raw_buffer: Kernel.ByteListView,
+						container: Container,
+						raw_buffer: Kernel.BinaryView,
 					): void {
 						let ripe = StorageHelper.read_file_data(ripe_file);
-						let ripe_stream = Kernel.ByteStreamView.watch(ripe.view());
-						let raw_stream = Kernel.ByteStreamView.watch(raw_buffer);
-						Kernel.Tool.Data.Compression.Bzip2.Uncompress.process(raw_stream, ripe_stream, Kernel.Boolean.value(false));
-						StorageHelper.write_file_data(raw_file, raw_stream.stream_view());
+						let ripe_stream = Kernel.BinaryStreamView.watch(ripe.view());
+						let raw_stream = Kernel.BinaryStreamView.watch(raw_buffer);
+						Kernel.Tool.Data.Compression.Bzip2.Uncompress.process(raw_stream, ripe_stream, Kernel.Tool.Data.Compression.Bzip2.Container.value(container), Kernel.Boolean.value(false));
+						StorageHelper.write_file_data(raw_file, raw_stream.split_stream().view());
 						return;
 					}
 
 				}
 
-				export namespace Lzma {
+				export namespace Lzma1 {
+
+					const ContainerX = ['alone'] as const;
+
+					export type Container = typeof ContainerX[number];
+
+					export const ContainerE = [...ContainerX];
 
 					const LevelX = [0n, 1n, 2n, 3n, 4n, 5n, 6n, 7n, 8n, 9n] as const;
 
@@ -499,28 +651,290 @@ namespace Twinning.Script.KernelX {
 					export function compress_fs(
 						raw_file: StoragePath,
 						ripe_file: StoragePath,
+						container: Container,
 						level: Level,
 					): void {
 						let raw = StorageHelper.read_file_data(raw_file);
-						let ripe_size_bound = Kernel.Size.value(5n + BigInt(Math.ceil(Number(raw.size().value) * 1.1)) + 1024n * 16n);
-						let ripe = Kernel.ByteArray.allocate(ripe_size_bound);
-						let raw_stream = Kernel.ByteStreamView.watch(raw.view());
-						let ripe_stream = Kernel.ByteStreamView.watch(ripe.view());
-						Kernel.Tool.Data.Compression.Lzma.Compress.process(raw_stream, ripe_stream, Kernel.Integer.value(level));
-						StorageHelper.write_file_data(ripe_file, ripe_stream.stream_view());
+						let ripe_size_bound = Kernel.Size.default();
+						Kernel.Tool.Data.Compression.Lzma1.Compress.estimate(raw.size(), ripe_size_bound, Kernel.Tool.Data.Compression.Lzma1.Container.value(container));
+						let ripe = Kernel.Binary.allocate(ripe_size_bound);
+						let raw_stream = Kernel.BinaryStreamView.watch(raw.view());
+						let ripe_stream = Kernel.BinaryStreamView.watch(ripe.view());
+						Kernel.Tool.Data.Compression.Lzma1.Compress.process(raw_stream, ripe_stream, Kernel.Tool.Data.Compression.Lzma1.Container.value(container), Kernel.Integer.value(level));
+						StorageHelper.write_file_data(ripe_file, ripe_stream.split_stream().view());
 						return;
 					}
 
 					export function uncompress_fs(
 						raw_file: StoragePath,
 						ripe_file: StoragePath,
-						raw_buffer: Kernel.ByteListView,
+						container: Container,
+						raw_buffer: Kernel.BinaryView,
 					): void {
 						let ripe = StorageHelper.read_file_data(ripe_file);
-						let ripe_stream = Kernel.ByteStreamView.watch(ripe.view());
-						let raw_stream = Kernel.ByteStreamView.watch(raw_buffer);
-						Kernel.Tool.Data.Compression.Lzma.Uncompress.process(raw_stream, ripe_stream);
-						StorageHelper.write_file_data(raw_file, raw_stream.stream_view());
+						let ripe_stream = Kernel.BinaryStreamView.watch(ripe.view());
+						let raw_stream = Kernel.BinaryStreamView.watch(raw_buffer);
+						Kernel.Tool.Data.Compression.Lzma1.Uncompress.process(raw_stream, ripe_stream, Kernel.Tool.Data.Compression.Lzma1.Container.value(container));
+						StorageHelper.write_file_data(raw_file, raw_stream.split_stream().view());
+						return;
+					}
+
+				}
+
+				export namespace Lzma2 {
+
+					const ContainerX = ['xz'] as const;
+
+					export type Container = typeof ContainerX[number];
+
+					export const ContainerE = [...ContainerX];
+
+					const LevelX = [0n, 1n, 2n, 3n, 4n, 5n, 6n, 7n, 8n, 9n] as const;
+
+					export type Level = typeof LevelX[number];
+
+					export const LevelE = [...LevelX];
+
+					// ----------------
+
+					export function compress_fs(
+						raw_file: StoragePath,
+						ripe_file: StoragePath,
+						container: Container,
+						level: Level,
+					): void {
+						let raw = StorageHelper.read_file_data(raw_file);
+						let ripe_size_bound = Kernel.Size.default();
+						Kernel.Tool.Data.Compression.Lzma2.Compress.estimate(raw.size(), ripe_size_bound, Kernel.Tool.Data.Compression.Lzma2.Container.value(container));
+						let ripe = Kernel.Binary.allocate(ripe_size_bound);
+						let raw_stream = Kernel.BinaryStreamView.watch(raw.view());
+						let ripe_stream = Kernel.BinaryStreamView.watch(ripe.view());
+						Kernel.Tool.Data.Compression.Lzma2.Compress.process(raw_stream, ripe_stream, Kernel.Tool.Data.Compression.Lzma2.Container.value(container), Kernel.Integer.value(level));
+						StorageHelper.write_file_data(ripe_file, ripe_stream.split_stream().view());
+						return;
+					}
+
+					export function uncompress_fs(
+						raw_file: StoragePath,
+						ripe_file: StoragePath,
+						container: Container,
+						raw_buffer: Kernel.BinaryView,
+					): void {
+						let ripe = StorageHelper.read_file_data(ripe_file);
+						let ripe_stream = Kernel.BinaryStreamView.watch(ripe.view());
+						let raw_stream = Kernel.BinaryStreamView.watch(raw_buffer);
+						Kernel.Tool.Data.Compression.Lzma2.Uncompress.process(raw_stream, ripe_stream, Kernel.Tool.Data.Compression.Lzma2.Container.value(container));
+						StorageHelper.write_file_data(raw_file, raw_stream.split_stream().view());
+						return;
+					}
+
+				}
+
+				export namespace Lz4 {
+
+					const ContainerX = ['none'] as const;
+
+					export type Container = typeof ContainerX[number];
+
+					export const ContainerE = [...ContainerX];
+
+					// ----------------
+
+					export function compress_fs(
+						raw_file: StoragePath,
+						ripe_file: StoragePath,
+						container: Container,
+					): void {
+						let raw = StorageHelper.read_file_data(raw_file);
+						let ripe_size_bound = Kernel.Size.default();
+						Kernel.Tool.Data.Compression.Lz4.Compress.estimate(raw.size(), ripe_size_bound, Kernel.Tool.Data.Compression.Lz4.Container.value(container));
+						let ripe = Kernel.Binary.allocate(ripe_size_bound);
+						let raw_stream = Kernel.BinaryStreamView.watch(raw.view());
+						let ripe_stream = Kernel.BinaryStreamView.watch(ripe.view());
+						Kernel.Tool.Data.Compression.Lz4.Compress.process(raw_stream, ripe_stream, Kernel.Tool.Data.Compression.Lz4.Container.value(container));
+						StorageHelper.write_file_data(ripe_file, ripe_stream.split_stream().view());
+						return;
+					}
+
+					export function uncompress_fs(
+						raw_file: StoragePath,
+						ripe_file: StoragePath,
+						container: Container,
+						raw_buffer: Kernel.BinaryView,
+					): void {
+						let ripe = StorageHelper.read_file_data(ripe_file);
+						let ripe_stream = Kernel.BinaryStreamView.watch(ripe.view());
+						let raw_stream = Kernel.BinaryStreamView.watch(raw_buffer);
+						Kernel.Tool.Data.Compression.Lz4.Uncompress.process(raw_stream, ripe_stream, Kernel.Tool.Data.Compression.Lz4.Container.value(container));
+						StorageHelper.write_file_data(raw_file, raw_stream.split_stream().view());
+						return;
+					}
+
+				}
+
+				export namespace Lzo {
+
+					const ContainerX = ['none'] as const;
+
+					export type Container = typeof ContainerX[number];
+
+					export const ContainerE = [...ContainerX];
+
+					// ----------------
+
+					export function compress_fs(
+						raw_file: StoragePath,
+						ripe_file: StoragePath,
+						container: Container,
+					): void {
+						let raw = StorageHelper.read_file_data(raw_file);
+						let ripe_size_bound = Kernel.Size.default();
+						Kernel.Tool.Data.Compression.Lzo.Compress.estimate(raw.size(), ripe_size_bound, Kernel.Tool.Data.Compression.Lzo.Container.value(container));
+						let ripe = Kernel.Binary.allocate(ripe_size_bound);
+						let raw_stream = Kernel.BinaryStreamView.watch(raw.view());
+						let ripe_stream = Kernel.BinaryStreamView.watch(ripe.view());
+						Kernel.Tool.Data.Compression.Lzo.Compress.process(raw_stream, ripe_stream, Kernel.Tool.Data.Compression.Lzo.Container.value(container));
+						StorageHelper.write_file_data(ripe_file, ripe_stream.split_stream().view());
+						return;
+					}
+
+					export function uncompress_fs(
+						raw_file: StoragePath,
+						ripe_file: StoragePath,
+						container: Container,
+						raw_buffer: Kernel.BinaryView,
+					): void {
+						let ripe = StorageHelper.read_file_data(ripe_file);
+						let ripe_stream = Kernel.BinaryStreamView.watch(ripe.view());
+						let raw_stream = Kernel.BinaryStreamView.watch(raw_buffer);
+						Kernel.Tool.Data.Compression.Lzo.Uncompress.process(raw_stream, ripe_stream, Kernel.Tool.Data.Compression.Lzo.Container.value(container));
+						StorageHelper.write_file_data(raw_file, raw_stream.split_stream().view());
+						return;
+					}
+
+				}
+
+				export namespace Brotli {
+
+					const ContainerX = ['none'] as const;
+
+					export type Container = typeof ContainerX[number];
+
+					export const ContainerE = [...ContainerX];
+
+					// ----------------
+
+					export function compress_fs(
+						raw_file: StoragePath,
+						ripe_file: StoragePath,
+						container: Container,
+					): void {
+						let raw = StorageHelper.read_file_data(raw_file);
+						let ripe_size_bound = Kernel.Size.default();
+						Kernel.Tool.Data.Compression.Brotli.Compress.estimate(raw.size(), ripe_size_bound, Kernel.Tool.Data.Compression.Brotli.Container.value(container));
+						let ripe = Kernel.Binary.allocate(ripe_size_bound);
+						let raw_stream = Kernel.BinaryStreamView.watch(raw.view());
+						let ripe_stream = Kernel.BinaryStreamView.watch(ripe.view());
+						Kernel.Tool.Data.Compression.Brotli.Compress.process(raw_stream, ripe_stream, Kernel.Tool.Data.Compression.Brotli.Container.value(container));
+						StorageHelper.write_file_data(ripe_file, ripe_stream.split_stream().view());
+						return;
+					}
+
+					export function uncompress_fs(
+						raw_file: StoragePath,
+						ripe_file: StoragePath,
+						container: Container,
+						raw_buffer: Kernel.BinaryView,
+					): void {
+						let ripe = StorageHelper.read_file_data(ripe_file);
+						let ripe_stream = Kernel.BinaryStreamView.watch(ripe.view());
+						let raw_stream = Kernel.BinaryStreamView.watch(raw_buffer);
+						Kernel.Tool.Data.Compression.Brotli.Uncompress.process(raw_stream, ripe_stream, Kernel.Tool.Data.Compression.Brotli.Container.value(container));
+						StorageHelper.write_file_data(raw_file, raw_stream.split_stream().view());
+						return;
+					}
+
+				}
+
+				export namespace Snappy {
+
+					const ContainerX = ['none'] as const;
+
+					export type Container = typeof ContainerX[number];
+
+					export const ContainerE = [...ContainerX];
+
+					// ----------------
+
+					export function compress_fs(
+						raw_file: StoragePath,
+						ripe_file: StoragePath,
+						container: Container,
+					): void {
+						let raw = StorageHelper.read_file_data(raw_file);
+						let ripe_size_bound = Kernel.Size.default();
+						Kernel.Tool.Data.Compression.Snappy.Compress.estimate(raw.size(), ripe_size_bound, Kernel.Tool.Data.Compression.Snappy.Container.value(container));
+						let ripe = Kernel.Binary.allocate(ripe_size_bound);
+						let raw_stream = Kernel.BinaryStreamView.watch(raw.view());
+						let ripe_stream = Kernel.BinaryStreamView.watch(ripe.view());
+						Kernel.Tool.Data.Compression.Snappy.Compress.process(raw_stream, ripe_stream, Kernel.Tool.Data.Compression.Snappy.Container.value(container));
+						StorageHelper.write_file_data(ripe_file, ripe_stream.split_stream().view());
+						return;
+					}
+
+					export function uncompress_fs(
+						raw_file: StoragePath,
+						ripe_file: StoragePath,
+						container: Container,
+						raw_buffer: Kernel.BinaryView,
+					): void {
+						let ripe = StorageHelper.read_file_data(ripe_file);
+						let ripe_stream = Kernel.BinaryStreamView.watch(ripe.view());
+						let raw_stream = Kernel.BinaryStreamView.watch(raw_buffer);
+						Kernel.Tool.Data.Compression.Snappy.Uncompress.process(raw_stream, ripe_stream, Kernel.Tool.Data.Compression.Snappy.Container.value(container));
+						StorageHelper.write_file_data(raw_file, raw_stream.split_stream().view());
+						return;
+					}
+
+				}
+
+				export namespace Zstd {
+
+					const ContainerX = ['none'] as const;
+
+					export type Container = typeof ContainerX[number];
+
+					export const ContainerE = [...ContainerX];
+
+					// ----------------
+
+					export function compress_fs(
+						raw_file: StoragePath,
+						ripe_file: StoragePath,
+						container: Container,
+					): void {
+						let raw = StorageHelper.read_file_data(raw_file);
+						let ripe_size_bound = Kernel.Size.default();
+						Kernel.Tool.Data.Compression.Zstd.Compress.estimate(raw.size(), ripe_size_bound, Kernel.Tool.Data.Compression.Zstd.Container.value(container));
+						let ripe = Kernel.Binary.allocate(ripe_size_bound);
+						let raw_stream = Kernel.BinaryStreamView.watch(raw.view());
+						let ripe_stream = Kernel.BinaryStreamView.watch(ripe.view());
+						Kernel.Tool.Data.Compression.Zstd.Compress.process(raw_stream, ripe_stream, Kernel.Tool.Data.Compression.Zstd.Container.value(container));
+						StorageHelper.write_file_data(ripe_file, ripe_stream.split_stream().view());
+						return;
+					}
+
+					export function uncompress_fs(
+						raw_file: StoragePath,
+						ripe_file: StoragePath,
+						container: Container,
+						raw_buffer: Kernel.BinaryView,
+					): void {
+						let ripe = StorageHelper.read_file_data(ripe_file);
+						let ripe_stream = Kernel.BinaryStreamView.watch(ripe.view());
+						let raw_stream = Kernel.BinaryStreamView.watch(raw_buffer);
+						Kernel.Tool.Data.Compression.Zstd.Uncompress.process(raw_stream, ripe_stream, Kernel.Tool.Data.Compression.Zstd.Container.value(container));
+						StorageHelper.write_file_data(raw_file, raw_stream.split_stream().view());
 						return;
 					}
 
@@ -540,13 +954,13 @@ namespace Twinning.Script.KernelX {
 						patch_size_bound: bigint,
 					): void {
 						let before = StorageHelper.read_file_data(before_file);
-						let before_stream = Kernel.ByteStreamView.watch(before.view());
+						let before_stream = Kernel.BinaryStreamView.watch(before.view());
 						let after = StorageHelper.read_file_data(after_file);
-						let after_stream = Kernel.ByteStreamView.watch(after.view());
-						let patch = Kernel.ByteArray.allocate(Kernel.Size.value(patch_size_bound));
-						let patch_stream = Kernel.ByteStreamView.watch(patch.view());
+						let after_stream = Kernel.BinaryStreamView.watch(after.view());
+						let patch = Kernel.Binary.allocate(Kernel.Size.value(patch_size_bound));
+						let patch_stream = Kernel.BinaryStreamView.watch(patch.view());
 						Kernel.Tool.Data.Differentiation.Vcdiff.Encode.process(before_stream, after_stream, patch_stream, Kernel.Boolean.value(interleaved));
-						StorageHelper.write_file_data(patch_file, patch_stream.stream_view());
+						StorageHelper.write_file_data(patch_file, patch_stream.split_stream().view());
 						return;
 					}
 
@@ -558,13 +972,13 @@ namespace Twinning.Script.KernelX {
 						after_size_bound: bigint,
 					): void {
 						let before = StorageHelper.read_file_data(before_file);
-						let before_stream = Kernel.ByteStreamView.watch(before.view());
-						let after = Kernel.ByteArray.allocate(Kernel.Size.value(after_size_bound));
-						let after_stream = Kernel.ByteStreamView.watch(after.view());
+						let before_stream = Kernel.BinaryStreamView.watch(before.view());
+						let after = Kernel.Binary.allocate(Kernel.Size.value(after_size_bound));
+						let after_stream = Kernel.BinaryStreamView.watch(after.view());
 						let patch = StorageHelper.read_file_data(patch_file);
-						let patch_stream = Kernel.ByteStreamView.watch(patch.view());
+						let patch_stream = Kernel.BinaryStreamView.watch(patch.view());
 						Kernel.Tool.Data.Differentiation.Vcdiff.Decode.process(before_stream, after_stream, patch_stream, Kernel.Integer.value(maximum_window_size));
-						StorageHelper.write_file_data(after_file, after_stream.stream_view());
+						StorageHelper.write_file_data(after_file, after_stream.split_stream().view());
 						return;
 					}
 
@@ -597,19 +1011,19 @@ namespace Twinning.Script.KernelX {
 						disable_array_line_breaking: boolean = g_format.disable_array_line_breaking,
 						disable_object_trailing_comma: boolean = g_format.disable_object_trailing_comma,
 						disable_object_line_breaking: boolean = g_format.disable_object_line_breaking,
-						data_buffer: Kernel.CharacterListView = Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(g_common_buffer.view()),
+						data_buffer: Kernel.StringView = Kernel.Miscellaneous.cast_BinaryView_to_StringView(g_common_buffer.view()),
 					): ArrayBuffer {
-						let data_stream = Kernel.CharacterStreamView.watch(data_buffer);
+						let data_stream = Kernel.StringStreamView.watch(data_buffer);
 						Kernel.Tool.Data.Serialization.Json.Encode.process(data_stream, value, Kernel.Boolean.value(disable_array_trailing_comma), Kernel.Boolean.value(disable_array_line_breaking), Kernel.Boolean.value(disable_object_trailing_comma), Kernel.Boolean.value(disable_object_line_breaking));
-						return Kernel.Miscellaneous.cast_CharacterListView_to_ByteListView(data_stream.stream_view()).value;
+						return Kernel.Miscellaneous.cast_StringView_to_BinaryView(data_stream.split_stream().view()).value;
 					}
 
 					export function decode<TConstraint extends Kernel.Notation.Json.JS_Value>(
 						data: ArrayBuffer,
 					): Kernel.Notation.Json.Value<TConstraint> {
-						let data_stream = Kernel.CharacterStreamView.watch(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(Kernel.ByteListView.value(data)));
+						let data_stream = Kernel.StringStreamView.watch(Kernel.Miscellaneous.cast_BinaryView_to_StringView(Kernel.BinaryView.value(data)));
 						let value = Kernel.Notation.Json.Value.default<TConstraint>();
-						let buffer_stream = Kernel.CharacterStreamView.watch(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(g_common_buffer_for_string.view()));
+						let buffer_stream = Kernel.StringStreamView.watch(Kernel.Miscellaneous.cast_BinaryView_to_StringView(g_common_buffer_for_string.view()));
 						Kernel.Tool.Data.Serialization.Json.Decode.process(data_stream, value, buffer_stream);
 						return value;
 					}
@@ -622,16 +1036,16 @@ namespace Twinning.Script.KernelX {
 						disable_array_line_breaking: boolean = g_format.disable_array_line_breaking,
 						disable_object_trailing_comma: boolean = g_format.disable_object_trailing_comma,
 						disable_object_line_breaking: boolean = g_format.disable_object_line_breaking,
-						data_buffer: Kernel.CharacterListView = Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(g_common_buffer.view()),
+						data_buffer: Kernel.StringView = Kernel.Miscellaneous.cast_BinaryView_to_StringView(g_common_buffer.view()),
 					): string {
 						let data = encode(value, disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking, data_buffer);
-						return Kernel.Miscellaneous.cast_CharacterListView_to_JS_String(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(Kernel.ByteListView.value(data)));
+						return Kernel.Miscellaneous.cast_StringView_to_RawString(Kernel.Miscellaneous.cast_BinaryView_to_StringView(Kernel.BinaryView.value(data)));
 					}
 
 					export function decode_s<TConstraint extends Kernel.Notation.Json.JS_Value>(
 						data: string,
 					): Kernel.Notation.Json.Value<TConstraint> {
-						let data_byte = Kernel.Miscellaneous.cast_moveable_String_to_ByteArray(Kernel.String.value(data));
+						let data_byte = Kernel.Miscellaneous.cast_moveable_String_to_Binary(Kernel.String.value(data));
 						return decode(data_byte.view().value);
 					}
 
@@ -644,10 +1058,10 @@ namespace Twinning.Script.KernelX {
 						disable_array_line_breaking: boolean = g_format.disable_array_line_breaking,
 						disable_object_trailing_comma: boolean = g_format.disable_object_trailing_comma,
 						disable_object_line_breaking: boolean = g_format.disable_object_line_breaking,
-						data_buffer: Kernel.CharacterListView = Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(g_common_buffer.view()),
+						data_buffer: Kernel.StringView = Kernel.Miscellaneous.cast_BinaryView_to_StringView(g_common_buffer.view()),
 					): void {
 						let data = encode(value, disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking, data_buffer);
-						StorageHelper.write_file_data(data_file, Kernel.ByteListView.value(data));
+						StorageHelper.write_file_data(data_file, Kernel.BinaryView.value(data));
 						return;
 					}
 
@@ -668,7 +1082,7 @@ namespace Twinning.Script.KernelX {
 					): void {
 						let data = Kernel.String.default();
 						Kernel.Tool.Data.Serialization.Xml.Encode.process(data, value);
-						let data_byte = Kernel.Miscellaneous.cast_moveable_String_to_ByteArray(data);
+						let data_byte = Kernel.Miscellaneous.cast_moveable_String_to_Binary(data);
 						StorageHelper.write_file_data(data_file, data_byte.view());
 						return;
 					}
@@ -677,7 +1091,7 @@ namespace Twinning.Script.KernelX {
 						data_file: StoragePath,
 					): Kernel.Notation.Xml.Node {
 						let data_byte = StorageHelper.read_file_data(data_file);
-						let data = Kernel.Miscellaneous.cast_moveable_ByteArray_to_String(data_byte);
+						let data = Kernel.Miscellaneous.cast_moveable_Binary_to_String(data_byte);
 						let value = Kernel.Notation.Xml.Node.default();
 						Kernel.Tool.Data.Serialization.Xml.Decode.process(data, value);
 						return value;
@@ -1044,13 +1458,13 @@ namespace Twinning.Script.KernelX {
 					format: Format,
 				): bigint {
 					let block_bit_count = get_pixel_bit_count(format);
-					return (size[0] * size[1]) * block_bit_count / 8n;
+					return ConvertHelper.compute_padded_size((size[0] * size[1]) * block_bit_count, 8n) / 8n;
 				}
 
 				// ----------------
 
 				export function encode(
-					data: Kernel.OutputByteStreamView,
+					data: Kernel.OutputBinaryStreamView,
 					image: Kernel.Image.ConstantImageView,
 					format: Format,
 				): void {
@@ -1063,10 +1477,10 @@ namespace Twinning.Script.KernelX {
 				}
 
 				export function decode(
-					data: Kernel.InputByteStreamView,
+					data: Kernel.InputBinaryStreamView,
 					image: Kernel.Image.VariableImageView,
 					format: Format,
-					fill_dummy: Boolean,
+					fill_dummy: boolean,
 				): void {
 					Kernel.Tool.Texture.Encoding.Decode.process(
 						data,
@@ -1093,10 +1507,10 @@ namespace Twinning.Script.KernelX {
 					let image_view = image.view();
 					let image_size = image_view.size().value;
 					let data_size = compute_data_size(image_size, format);
-					let data = Kernel.ByteArray.allocate(Kernel.Size.value(data_size));
-					let data_stream = Kernel.ByteStreamView.watch(data.view());
+					let data = Kernel.Binary.allocate(Kernel.Size.value(data_size));
+					let data_stream = Kernel.BinaryStreamView.watch(data.view());
 					encode(data_stream, image_view, format);
-					StorageHelper.write_file_data(data_file, data_stream.stream_view());
+					StorageHelper.write_file_data(data_file, data_stream.split_stream().view());
 					return;
 				}
 
@@ -1107,7 +1521,7 @@ namespace Twinning.Script.KernelX {
 					format: Format,
 				): void {
 					let data = StorageHelper.read_file_data(data_file);
-					let data_stream = Kernel.ByteStreamView.watch(data.view());
+					let data_stream = Kernel.BinaryStreamView.watch(data.view());
 					let image = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(image_size));
 					let image_view = image.view();
 					decode(data_stream, image_view, format, true);
@@ -1345,7 +1759,7 @@ namespace Twinning.Script.KernelX {
 				// ----------------
 
 				export function compress(
-					data: Kernel.OutputByteStreamView,
+					data: Kernel.OutputBinaryStreamView,
 					image: Kernel.Image.ConstantImageView,
 					format: Format,
 				): void {
@@ -1461,10 +1875,10 @@ namespace Twinning.Script.KernelX {
 				}
 
 				export function uncompress(
-					data: Kernel.InputByteStreamView,
+					data: Kernel.InputBinaryStreamView,
 					image: Kernel.Image.VariableImageView,
 					format: Format,
-					fill_dummy: Boolean,
+					fill_dummy: boolean,
 				): void {
 					switch (format) {
 						case 'rgb_dxtc1':
@@ -1593,10 +2007,10 @@ namespace Twinning.Script.KernelX {
 					let image_view = image.view();
 					let image_size = image_view.size().value;
 					let data_size = compute_data_size(image_size, format);
-					let data = Kernel.ByteArray.allocate(Kernel.Size.value(data_size));
-					let data_stream = Kernel.ByteStreamView.watch(data.view());
+					let data = Kernel.Binary.allocate(Kernel.Size.value(data_size));
+					let data_stream = Kernel.BinaryStreamView.watch(data.view());
 					compress(data_stream, image_view, format);
-					StorageHelper.write_file_data(data_file, data_stream.stream_view());
+					StorageHelper.write_file_data(data_file, data_stream.split_stream().view());
 					return;
 				}
 
@@ -1607,7 +2021,7 @@ namespace Twinning.Script.KernelX {
 					format: Format,
 				): void {
 					let data = StorageHelper.read_file_data(data_file);
-					let data_stream = Kernel.ByteStreamView.watch(data.view());
+					let data_stream = Kernel.BinaryStreamView.watch(data.view());
 					let image_size_padded = compute_padded_image_size(image_size, format);
 					let image = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(image_size_padded));
 					let image_view = image.view();
@@ -1623,7 +2037,7 @@ namespace Twinning.Script.KernelX {
 				export namespace Png {
 
 					export function size(
-						data: Kernel.ByteListView,
+						data: Kernel.BinaryStreamView,
 					): Image.ImageSize {
 						let size = Kernel.Image.ImageSize.default();
 						Kernel.Tool.Texture.Conversion.Png.Decode.estimate(data, size);
@@ -1631,14 +2045,14 @@ namespace Twinning.Script.KernelX {
 					}
 
 					export function encode(
-						data: Kernel.ByteStreamView,
+						data: Kernel.BinaryStreamView,
 						image: Kernel.Image.ConstantImageView,
 					): void {
 						return Kernel.Tool.Texture.Conversion.Png.Encode.process(data, image);
 					}
 
 					export function decode(
-						data: Kernel.ByteStreamView,
+						data: Kernel.BinaryStreamView,
 						image: Kernel.Image.VariableImageView,
 					): void {
 						return Kernel.Tool.Texture.Conversion.Png.Decode.process(data, image);
@@ -1650,18 +2064,19 @@ namespace Twinning.Script.KernelX {
 						data_file: StoragePath,
 					): Image.ImageSize {
 						let data = StorageHelper.read_file_data(data_file);
-						let image_size = size(data.view());
+						let data_stream = Kernel.BinaryStreamView.watch(data.view());
+						let image_size = size(data_stream);
 						return image_size;
 					}
 
 					export function encode_fs(
 						data_file: StoragePath,
 						image: Kernel.Image.ConstantImageView,
-						data_buffer: Kernel.ByteListView = g_common_buffer.view(),
+						data_buffer: Kernel.BinaryView = g_common_buffer.view(),
 					): void {
-						let data_stream = Kernel.ByteStreamView.watch(data_buffer);
+						let data_stream = Kernel.BinaryStreamView.watch(data_buffer);
 						encode(data_stream, image);
-						StorageHelper.write_file_data(data_file, data_stream.stream_view());
+						StorageHelper.write_file_data(data_file, data_stream.split_stream().view());
 						return;
 					}
 
@@ -1670,7 +2085,7 @@ namespace Twinning.Script.KernelX {
 						image: Kernel.Image.VariableImageView,
 					): void {
 						let data = StorageHelper.read_file_data(data_file);
-						let data_stream = Kernel.ByteStreamView.watch(data.view());
+						let data_stream = Kernel.BinaryStreamView.watch(data.view());
 						decode(data_stream, image);
 						return;
 					}
@@ -1682,8 +2097,8 @@ namespace Twinning.Script.KernelX {
 						padding_mode: null | [boolean, 'block', Image.ImageSize] | [boolean, 'power_of_two', boolean] | [boolean, 'dynamic', (size: Image.ImageSize) => Image.ImageSize] = null,
 					): Kernel.Image.Image {
 						let data = StorageHelper.read_file_data(data_file);
-						let data_stream = Kernel.ByteStreamView.watch(data.view());
-						let image_size = size(data.view());
+						let data_stream = Kernel.BinaryStreamView.watch(data.view());
+						let image_size = size(Kernel.BinaryStreamView.copy(data_stream));
 						let image_size_padded = image_size;
 						if (padding_mode !== null) {
 							if (padding_mode[1] === 'block') {
@@ -1737,13 +2152,13 @@ namespace Twinning.Script.KernelX {
 					definition_file: StoragePath,
 					embedded_media_directory: StoragePath,
 					version: typeof Kernel.Tool.Wwise.SoundBank.Version.Value,
-					data_buffer: Kernel.ByteListView,
+					data_buffer: Kernel.BinaryView,
 				): void {
 					let version_c = Kernel.Tool.Wwise.SoundBank.Version.value(version);
 					let definition = Kernel.Tool.Wwise.SoundBank.Definition.SoundBank.json(Data.Serialization.Json.decode_fs(definition_file), version_c);
-					let data_stream = Kernel.ByteStreamView.watch(data_buffer);
+					let data_stream = Kernel.BinaryStreamView.watch(data_buffer);
 					Kernel.Tool.Wwise.SoundBank.Encode.process(data_stream, definition, Kernel.Path.value(embedded_media_directory.emit()), version_c);
-					StorageHelper.write_file_data(data_file, data_stream.stream_view());
+					StorageHelper.write_file_data(data_file, data_stream.split_stream().view());
 					return;
 				}
 
@@ -1755,7 +2170,7 @@ namespace Twinning.Script.KernelX {
 				): void {
 					let version_c = Kernel.Tool.Wwise.SoundBank.Version.value(version);
 					let data = StorageHelper.read_file_data(data_file);
-					let data_stream = Kernel.ByteStreamView.watch(data.view());
+					let data_stream = Kernel.BinaryStreamView.watch(data.view());
 					let definition = Kernel.Tool.Wwise.SoundBank.Definition.SoundBank.default();
 					Kernel.Tool.Wwise.SoundBank.Decode.process(data_stream, definition, Kernel.PathOptional.value(embedded_media_directory === null ? null : embedded_media_directory.emit()), version_c);
 					if (definition_file !== null) {
@@ -1783,13 +2198,13 @@ namespace Twinning.Script.KernelX {
 					definition_file: StoragePath,
 					resource_directory: StoragePath,
 					version: typeof Kernel.Tool.Marmalade.Dzip.Version.Value,
-					data_buffer: Kernel.ByteListView,
+					data_buffer: Kernel.BinaryView,
 				): void {
 					let version_c = Kernel.Tool.Marmalade.Dzip.Version.value(version);
 					let definition = Kernel.Tool.Marmalade.Dzip.Definition.Package.json(Data.Serialization.Json.decode_fs(definition_file), version_c);
-					let data_stream = Kernel.ByteStreamView.watch(data_buffer);
+					let data_stream = Kernel.BinaryStreamView.watch(data_buffer);
 					Kernel.Tool.Marmalade.Dzip.Pack.process(data_stream, definition, Kernel.Path.value(resource_directory.emit()), version_c);
-					StorageHelper.write_file_data(data_file, data_stream.stream_view());
+					StorageHelper.write_file_data(data_file, data_stream.split_stream().view());
 					return;
 				}
 
@@ -1801,7 +2216,7 @@ namespace Twinning.Script.KernelX {
 				): void {
 					let version_c = Kernel.Tool.Marmalade.Dzip.Version.value(version);
 					let data = StorageHelper.read_file_data(data_file);
-					let data_stream = Kernel.ByteStreamView.watch(data.view());
+					let data_stream = Kernel.BinaryStreamView.watch(data.view());
 					let definition = Kernel.Tool.Marmalade.Dzip.Definition.Package.default();
 					Kernel.Tool.Marmalade.Dzip.Unpack.process(data_stream, definition, Kernel.PathOptional.value(resource_directory === null ? null : resource_directory.emit()), version_c);
 					if (definition_file !== null) {
@@ -1835,13 +2250,13 @@ namespace Twinning.Script.KernelX {
 				): void {
 					let version_c = Kernel.Tool.Popcap.Zlib.Version.value(version);
 					let raw = StorageHelper.read_file_data(raw_file);
-					let raw_stream = Kernel.ByteStreamView.watch(raw.view());
+					let raw_stream = Kernel.BinaryStreamView.watch(raw.view());
 					let ripe_size_bound = Kernel.Size.default();
 					Kernel.Tool.Popcap.Zlib.Compress.estimate(raw.size(), ripe_size_bound, Kernel.Integer.value(window_exponent), Kernel.Integer.value(memory_level), version_c);
-					let ripe = Kernel.ByteArray.allocate(ripe_size_bound);
-					let ripe_stream = Kernel.ByteStreamView.watch(ripe.view());
+					let ripe = Kernel.Binary.allocate(ripe_size_bound);
+					let ripe_stream = Kernel.BinaryStreamView.watch(ripe.view());
 					Kernel.Tool.Popcap.Zlib.Compress.process(raw_stream, ripe_stream, Kernel.Integer.value(level), Kernel.Integer.value(window_exponent), Kernel.Integer.value(memory_level), Kernel.Tool.Data.Compression.Deflate.StrategyMode.value(strategy_mode), version_c);
-					StorageHelper.write_file_data(ripe_file, ripe_stream.stream_view());
+					StorageHelper.write_file_data(ripe_file, ripe_stream.split_stream().view());
 					return;
 				}
 
@@ -1853,13 +2268,13 @@ namespace Twinning.Script.KernelX {
 				): void {
 					let version_c = Kernel.Tool.Popcap.Zlib.Version.value(version);
 					let ripe = StorageHelper.read_file_data(ripe_file);
-					let ripe_stream = Kernel.ByteStreamView.watch(ripe.view());
+					let ripe_stream = Kernel.BinaryStreamView.watch(ripe.view());
 					let raw_size = Kernel.Size.default();
-					Kernel.Tool.Popcap.Zlib.Uncompress.estimate(raw_size, ripe.view(), version_c);
-					let raw = Kernel.ByteArray.allocate(raw_size);
-					let raw_stream = Kernel.ByteStreamView.watch(raw.view());
+					Kernel.Tool.Popcap.Zlib.Uncompress.estimate(raw_size, Kernel.BinaryStreamView.copy(ripe_stream), version_c);
+					let raw = Kernel.Binary.allocate(raw_size);
+					let raw_stream = Kernel.BinaryStreamView.watch(raw.view());
 					Kernel.Tool.Popcap.Zlib.Uncompress.process(raw_stream, ripe_stream, Kernel.Integer.value(window_exponent), version_c);
-					StorageHelper.write_file_data(raw_file, raw_stream.stream_view());
+					StorageHelper.write_file_data(raw_file, raw_stream.split_stream().view());
 					return;
 				}
 
@@ -1876,13 +2291,13 @@ namespace Twinning.Script.KernelX {
 				): void {
 					let version_c = Kernel.Tool.Popcap.CryptData.Version.value(version);
 					let raw = StorageHelper.read_file_data(raw_file);
-					let raw_stream = Kernel.ByteStreamView.watch(raw.view());
+					let raw_stream = Kernel.BinaryStreamView.watch(raw.view());
 					let ripe_size = Kernel.Size.default();
 					Kernel.Tool.Popcap.CryptData.Encrypt.estimate(raw.size(), ripe_size, Kernel.Size.value(limit), version_c);
-					let ripe = Kernel.ByteArray.allocate(ripe_size);
-					let ripe_stream = Kernel.ByteStreamView.watch(ripe.view());
+					let ripe = Kernel.Binary.allocate(ripe_size);
+					let ripe_stream = Kernel.BinaryStreamView.watch(ripe.view());
 					Kernel.Tool.Popcap.CryptData.Encrypt.process(raw_stream, ripe_stream, Kernel.Size.value(limit), Kernel.String.value(key), version_c);
-					StorageHelper.write_file_data(ripe_file, ripe_stream.stream_view());
+					StorageHelper.write_file_data(ripe_file, ripe_stream.split_stream().view());
 					return;
 				}
 
@@ -1895,13 +2310,13 @@ namespace Twinning.Script.KernelX {
 				): void {
 					let version_c = Kernel.Tool.Popcap.CryptData.Version.value(version);
 					let ripe = StorageHelper.read_file_data(ripe_file);
-					let ripe_stream = Kernel.ByteStreamView.watch(ripe.view());
+					let ripe_stream = Kernel.BinaryStreamView.watch(ripe.view());
 					let raw_size = Kernel.Size.default();
-					Kernel.Tool.Popcap.CryptData.Decrypt.estimate(raw_size, ripe.view(), Kernel.Size.value(limit), version_c);
-					let raw = Kernel.ByteArray.allocate(raw_size);
-					let raw_stream = Kernel.ByteStreamView.watch(raw.view());
+					Kernel.Tool.Popcap.CryptData.Decrypt.estimate(raw_size, Kernel.BinaryStreamView.copy(ripe_stream), Kernel.Size.value(limit), version_c);
+					let raw = Kernel.Binary.allocate(raw_size);
+					let raw_stream = Kernel.BinaryStreamView.watch(raw.view());
 					Kernel.Tool.Popcap.CryptData.Decrypt.process(raw_stream, ripe_stream, Kernel.Size.value(limit), Kernel.String.value(key), version_c);
-					StorageHelper.write_file_data(raw_file, raw_stream.stream_view());
+					StorageHelper.write_file_data(raw_file, raw_stream.split_stream().view());
 					return;
 				}
 
@@ -1925,13 +2340,13 @@ namespace Twinning.Script.KernelX {
 					enable_string_index: boolean,
 					enable_reference: boolean,
 					version: typeof Kernel.Tool.Popcap.ReflectionObjectNotation.Version.Value,
-					data_buffer: Kernel.ByteListView,
+					data_buffer: Kernel.BinaryView,
 				): void {
 					let version_c = Kernel.Tool.Popcap.ReflectionObjectNotation.Version.value(version);
 					let definition = Data.Serialization.Json.decode_fs<Kernel.Tool.Popcap.ReflectionObjectNotation.JS_ValidValue>(definition_file);
-					let data_stream = Kernel.ByteStreamView.watch(data_buffer);
+					let data_stream = Kernel.BinaryStreamView.watch(data_buffer);
 					Kernel.Tool.Popcap.ReflectionObjectNotation.Encode.process(data_stream, definition, Kernel.Boolean.value(enable_string_index), Kernel.Boolean.value(enable_reference), version_c);
-					StorageHelper.write_file_data(data_file, data_stream.stream_view());
+					StorageHelper.write_file_data(data_file, data_stream.split_stream().view());
 					return;
 				}
 
@@ -1942,7 +2357,7 @@ namespace Twinning.Script.KernelX {
 				): void {
 					let version_c = Kernel.Tool.Popcap.ReflectionObjectNotation.Version.value(version);
 					let data = StorageHelper.read_file_data(data_file);
-					let data_stream = Kernel.ByteStreamView.watch(data.view());
+					let data_stream = Kernel.BinaryStreamView.watch(data.view());
 					let definition = Kernel.Notation.Json.Value.default<Kernel.Tool.Popcap.ReflectionObjectNotation.JS_ValidValue>();
 					Kernel.Tool.Popcap.ReflectionObjectNotation.Decode.process(data_stream, definition, version_c);
 					Data.Serialization.Json.encode_fs(definition_file, definition);
@@ -1956,22 +2371,22 @@ namespace Twinning.Script.KernelX {
 					enable_reference: boolean,
 					version: typeof Kernel.Tool.Popcap.ReflectionObjectNotation.Version.Value,
 					key: null | string,
-					data_buffer: Kernel.ByteListView,
+					data_buffer: Kernel.BinaryView,
 				): void {
 					if (key === null) {
 						return encode_fs(data_file, definition_file, enable_string_index, enable_reference, version, data_buffer);
 					}
 					let version_c = Kernel.Tool.Popcap.ReflectionObjectNotation.Version.value(version);
 					let definition = Data.Serialization.Json.decode_fs<Kernel.Tool.Popcap.ReflectionObjectNotation.JS_ValidValue>(definition_file);
-					let data_stream = Kernel.ByteStreamView.watch(data_buffer);
+					let data_stream = Kernel.BinaryStreamView.watch(data_buffer);
 					Kernel.Tool.Popcap.ReflectionObjectNotation.Encode.process(data_stream, definition, Kernel.Boolean.value(enable_string_index), Kernel.Boolean.value(enable_reference), version_c);
-					let raw_stream = Kernel.ByteStreamView.watch(data_stream.stream_view());
+					let raw_stream = Kernel.BinaryStreamView.watch(data_stream.split_stream().view());
 					let ripe_size = Kernel.Size.default();
 					Kernel.Tool.Miscellaneous.Pvz2cnCryptData.Encrypt.estimate(raw_stream.size(), ripe_size);
-					let ripe = Kernel.ByteArray.allocate(ripe_size);
-					let ripe_stream = Kernel.ByteStreamView.watch(ripe.view());
+					let ripe = Kernel.Binary.allocate(ripe_size);
+					let ripe_stream = Kernel.BinaryStreamView.watch(ripe.view());
 					Kernel.Tool.Miscellaneous.Pvz2cnCryptData.Encrypt.process(raw_stream, ripe_stream, Kernel.String.value(key));
-					StorageHelper.write_file_data(data_file, ripe_stream.stream_view());
+					StorageHelper.write_file_data(data_file, ripe_stream.split_stream().view());
 					return;
 				}
 
@@ -1986,13 +2401,13 @@ namespace Twinning.Script.KernelX {
 					}
 					let version_c = Kernel.Tool.Popcap.ReflectionObjectNotation.Version.value(version);
 					let ripe = StorageHelper.read_file_data(data_file);
-					let ripe_stream = Kernel.ByteStreamView.watch(ripe.view());
+					let ripe_stream = Kernel.BinaryStreamView.watch(ripe.view());
 					let raw_size = Kernel.Size.default();
 					Kernel.Tool.Miscellaneous.Pvz2cnCryptData.Decrypt.estimate(raw_size, ripe.size());
-					let raw = Kernel.ByteArray.allocate(raw_size);
-					let raw_stream = Kernel.ByteStreamView.watch(raw.view());
+					let raw = Kernel.Binary.allocate(raw_size);
+					let raw_stream = Kernel.BinaryStreamView.watch(raw.view());
 					Kernel.Tool.Miscellaneous.Pvz2cnCryptData.Decrypt.process(raw_stream, ripe_stream, Kernel.String.value(key));
-					let data_stream = Kernel.ByteStreamView.watch(raw_stream.stream_view());
+					let data_stream = Kernel.BinaryStreamView.watch(raw_stream.split_stream().view());
 					let definition = Kernel.Notation.Json.Value.default<Kernel.Tool.Popcap.ReflectionObjectNotation.JS_ValidValue>();
 					Kernel.Tool.Popcap.ReflectionObjectNotation.Decode.process(data_stream, definition, version_c);
 					Data.Serialization.Json.encode_fs(definition_file, definition);
@@ -2031,10 +2446,10 @@ namespace Twinning.Script.KernelX {
 					let image_view = image.view();
 					let data_size_bound = Kernel.Size.default();
 					Kernel.Tool.Popcap.UTexture.Encode.estimate(data_size_bound, image.size(), Kernel.String.value(format), version_c);
-					let data = Kernel.ByteArray.allocate(data_size_bound);
-					let data_stream = Kernel.ByteStreamView.watch(data.view());
+					let data = Kernel.Binary.allocate(data_size_bound);
+					let data_stream = Kernel.BinaryStreamView.watch(data.view());
 					Kernel.Tool.Popcap.UTexture.Encode.process(data_stream, image_view, Kernel.String.value(format), version_c);
-					StorageHelper.write_file_data(data_file, data_stream.stream_view());
+					StorageHelper.write_file_data(data_file, data_stream.split_stream().view());
 					return;
 				}
 
@@ -2045,9 +2460,9 @@ namespace Twinning.Script.KernelX {
 				): void {
 					let version_c = Kernel.Tool.Popcap.UTexture.Version.value(version);
 					let data = StorageHelper.read_file_data(data_file);
-					let data_stream = Kernel.ByteStreamView.watch(data.view());
+					let data_stream = Kernel.BinaryStreamView.watch(data.view());
 					let image_size = Kernel.Image.ImageSize.default();
-					Kernel.Tool.Popcap.UTexture.Decode.estimate(data.view(), image_size, version_c);
+					Kernel.Tool.Popcap.UTexture.Decode.estimate(Kernel.BinaryStreamView.copy(data_stream), image_size, version_c);
 					let image = Kernel.Image.Image.allocate(image_size);
 					let image_view = image.view();
 					Kernel.Tool.Popcap.UTexture.Decode.process(data_stream, image_view, version_c);
@@ -2094,10 +2509,10 @@ namespace Twinning.Script.KernelX {
 					let image_view = image.view();
 					let data_size_bound = Kernel.Size.default();
 					Kernel.Tool.Popcap.SexyTexture.Encode.estimate(data_size_bound, image.size(), Kernel.String.value(format), Kernel.Boolean.value(compress_texture_data), version_c);
-					let data = Kernel.ByteArray.allocate(data_size_bound);
-					let data_stream = Kernel.ByteStreamView.watch(data.view());
+					let data = Kernel.Binary.allocate(data_size_bound);
+					let data_stream = Kernel.BinaryStreamView.watch(data.view());
 					Kernel.Tool.Popcap.SexyTexture.Encode.process(data_stream, image_view, Kernel.String.value(format), Kernel.Boolean.value(compress_texture_data), version_c);
-					StorageHelper.write_file_data(data_file, data_stream.stream_view());
+					StorageHelper.write_file_data(data_file, data_stream.split_stream().view());
 					return;
 				}
 
@@ -2108,9 +2523,9 @@ namespace Twinning.Script.KernelX {
 				): void {
 					let version_c = Kernel.Tool.Popcap.SexyTexture.Version.value(version);
 					let data = StorageHelper.read_file_data(data_file);
-					let data_stream = Kernel.ByteStreamView.watch(data.view());
+					let data_stream = Kernel.BinaryStreamView.watch(data.view());
 					let image_size = Kernel.Image.ImageSize.default();
-					Kernel.Tool.Popcap.SexyTexture.Decode.estimate(data.view(), image_size, version_c);
+					Kernel.Tool.Popcap.SexyTexture.Decode.estimate(Kernel.BinaryStreamView.copy(data_stream), image_size, version_c);
 					let image = Kernel.Image.Image.allocate(image_size);
 					let image_view = image.view();
 					Kernel.Tool.Popcap.SexyTexture.Decode.process(data_stream, image_view, version_c);
@@ -2132,13 +2547,13 @@ namespace Twinning.Script.KernelX {
 					data_file: StoragePath,
 					definition_file: StoragePath,
 					version: typeof Kernel.Tool.Popcap.Animation.Version.Value,
-					data_buffer: Kernel.ByteListView,
+					data_buffer: Kernel.BinaryView,
 				): void {
 					let version_c = Kernel.Tool.Popcap.Animation.Version.value(version);
 					let definition = Kernel.Tool.Popcap.Animation.Definition.Animation.json(Data.Serialization.Json.decode_fs(definition_file), version_c);
-					let data_stream = Kernel.ByteStreamView.watch(data_buffer);
+					let data_stream = Kernel.BinaryStreamView.watch(data_buffer);
 					Kernel.Tool.Popcap.Animation.Encode.process(data_stream, definition, version_c);
-					StorageHelper.write_file_data(data_file, data_stream.stream_view());
+					StorageHelper.write_file_data(data_file, data_stream.split_stream().view());
 					return;
 				}
 
@@ -2149,7 +2564,7 @@ namespace Twinning.Script.KernelX {
 				): void {
 					let version_c = Kernel.Tool.Popcap.Animation.Version.value(version);
 					let data = StorageHelper.read_file_data(data_file);
-					let data_stream = Kernel.ByteStreamView.watch(data.view());
+					let data_stream = Kernel.BinaryStreamView.watch(data.view());
 					let definition = Kernel.Tool.Popcap.Animation.Definition.Animation.default();
 					Kernel.Tool.Popcap.Animation.Decode.process(data_stream, definition, version_c);
 					Data.Serialization.Json.encode_fs(definition_file, definition.get_json(version_c));
@@ -2174,13 +2589,13 @@ namespace Twinning.Script.KernelX {
 					data_file: StoragePath,
 					definition_file: StoragePath,
 					version: typeof Kernel.Tool.Popcap.ReAnimation.Version.Value,
-					data_buffer: Kernel.ByteListView,
+					data_buffer: Kernel.BinaryView,
 				): void {
 					let version_c = Kernel.Tool.Popcap.ReAnimation.Version.value(version);
 					let definition = Kernel.Tool.Popcap.ReAnimation.Definition.Animation.json(Data.Serialization.Json.decode_fs(definition_file), version_c);
-					let data_stream = Kernel.ByteStreamView.watch(data_buffer);
+					let data_stream = Kernel.BinaryStreamView.watch(data_buffer);
 					Kernel.Tool.Popcap.ReAnimation.Encode.process(data_stream, definition, version_c);
-					StorageHelper.write_file_data(data_file, data_stream.stream_view());
+					StorageHelper.write_file_data(data_file, data_stream.split_stream().view());
 					return;
 				}
 
@@ -2191,7 +2606,7 @@ namespace Twinning.Script.KernelX {
 				): void {
 					let version_c = Kernel.Tool.Popcap.ReAnimation.Version.value(version);
 					let data = StorageHelper.read_file_data(data_file);
-					let data_stream = Kernel.ByteStreamView.watch(data.view());
+					let data_stream = Kernel.BinaryStreamView.watch(data.view());
 					let definition = Kernel.Tool.Popcap.ReAnimation.Definition.Animation.default();
 					Kernel.Tool.Popcap.ReAnimation.Decode.process(data_stream, definition, version_c);
 					Data.Serialization.Json.encode_fs(definition_file, definition.get_json(version_c));
@@ -2216,13 +2631,13 @@ namespace Twinning.Script.KernelX {
 					data_file: StoragePath,
 					definition_file: StoragePath,
 					version: typeof Kernel.Tool.Popcap.Particle.Version.Value,
-					data_buffer: Kernel.ByteListView,
+					data_buffer: Kernel.BinaryView,
 				): void {
 					let version_c = Kernel.Tool.Popcap.Particle.Version.value(version);
 					let definition = Kernel.Tool.Popcap.Particle.Definition.Particle.json(Data.Serialization.Json.decode_fs(definition_file), version_c);
-					let data_stream = Kernel.ByteStreamView.watch(data_buffer);
+					let data_stream = Kernel.BinaryStreamView.watch(data_buffer);
 					Kernel.Tool.Popcap.Particle.Encode.process(data_stream, definition, version_c);
-					StorageHelper.write_file_data(data_file, data_stream.stream_view());
+					StorageHelper.write_file_data(data_file, data_stream.split_stream().view());
 					return;
 				}
 
@@ -2233,7 +2648,7 @@ namespace Twinning.Script.KernelX {
 				): void {
 					let version_c = Kernel.Tool.Popcap.Particle.Version.value(version);
 					let data = StorageHelper.read_file_data(data_file);
-					let data_stream = Kernel.ByteStreamView.watch(data.view());
+					let data_stream = Kernel.BinaryStreamView.watch(data.view());
 					let definition = Kernel.Tool.Popcap.Particle.Definition.Particle.default();
 					Kernel.Tool.Popcap.Particle.Decode.process(data_stream, definition, version_c);
 					Data.Serialization.Json.encode_fs(definition_file, definition.get_json(version_c));
@@ -2258,13 +2673,13 @@ namespace Twinning.Script.KernelX {
 					data_file: StoragePath,
 					definition_file: StoragePath,
 					version: typeof Kernel.Tool.Popcap.Trail.Version.Value,
-					data_buffer: Kernel.ByteListView,
+					data_buffer: Kernel.BinaryView,
 				): void {
 					let version_c = Kernel.Tool.Popcap.Trail.Version.value(version);
 					let definition = Kernel.Tool.Popcap.Trail.Definition.Trail.json(Data.Serialization.Json.decode_fs(definition_file), version_c);
-					let data_stream = Kernel.ByteStreamView.watch(data_buffer);
+					let data_stream = Kernel.BinaryStreamView.watch(data_buffer);
 					Kernel.Tool.Popcap.Trail.Encode.process(data_stream, definition, version_c);
-					StorageHelper.write_file_data(data_file, data_stream.stream_view());
+					StorageHelper.write_file_data(data_file, data_stream.split_stream().view());
 					return;
 				}
 
@@ -2275,7 +2690,7 @@ namespace Twinning.Script.KernelX {
 				): void {
 					let version_c = Kernel.Tool.Popcap.Trail.Version.value(version);
 					let data = StorageHelper.read_file_data(data_file);
-					let data_stream = Kernel.ByteStreamView.watch(data.view());
+					let data_stream = Kernel.BinaryStreamView.watch(data.view());
 					let definition = Kernel.Tool.Popcap.Trail.Definition.Trail.default();
 					Kernel.Tool.Popcap.Trail.Decode.process(data_stream, definition, version_c);
 					Data.Serialization.Json.encode_fs(definition_file, definition.get_json(version_c));
@@ -2300,13 +2715,13 @@ namespace Twinning.Script.KernelX {
 					data_file: StoragePath,
 					definition_file: StoragePath,
 					version: typeof Kernel.Tool.Popcap.RenderEffect.Version.Value,
-					data_buffer: Kernel.ByteListView,
+					data_buffer: Kernel.BinaryView,
 				): void {
 					let version_c = Kernel.Tool.Popcap.RenderEffect.Version.value(version);
 					let definition = Kernel.Tool.Popcap.RenderEffect.Definition.Effect.json(Data.Serialization.Json.decode_fs(definition_file), version_c);
-					let data_stream = Kernel.ByteStreamView.watch(data_buffer);
+					let data_stream = Kernel.BinaryStreamView.watch(data_buffer);
 					Kernel.Tool.Popcap.RenderEffect.Encode.process(data_stream, definition, version_c);
-					StorageHelper.write_file_data(data_file, data_stream.stream_view());
+					StorageHelper.write_file_data(data_file, data_stream.split_stream().view());
 					return;
 				}
 
@@ -2317,7 +2732,7 @@ namespace Twinning.Script.KernelX {
 				): void {
 					let version_c = Kernel.Tool.Popcap.RenderEffect.Version.value(version);
 					let data = StorageHelper.read_file_data(data_file);
-					let data_stream = Kernel.ByteStreamView.watch(data.view());
+					let data_stream = Kernel.BinaryStreamView.watch(data.view());
 					let definition = Kernel.Tool.Popcap.RenderEffect.Definition.Effect.default();
 					Kernel.Tool.Popcap.RenderEffect.Decode.process(data_stream, definition, version_c);
 					Data.Serialization.Json.encode_fs(definition_file, definition.get_json(version_c));
@@ -2338,13 +2753,13 @@ namespace Twinning.Script.KernelX {
 					data_file: StoragePath,
 					definition_file: StoragePath,
 					version: typeof Kernel.Tool.Popcap.ParticleEffect.Version.Value,
-					data_buffer: Kernel.ByteListView,
+					data_buffer: Kernel.BinaryView,
 				): void {
 					let version_c = Kernel.Tool.Popcap.ParticleEffect.Version.value(version);
 					let definition = Kernel.Tool.Popcap.ParticleEffect.Definition.Effect.json(Data.Serialization.Json.decode_fs(definition_file), version_c);
-					let data_stream = Kernel.ByteStreamView.watch(data_buffer);
+					let data_stream = Kernel.BinaryStreamView.watch(data_buffer);
 					Kernel.Tool.Popcap.ParticleEffect.Encode.process(data_stream, definition, version_c);
-					StorageHelper.write_file_data(data_file, data_stream.stream_view());
+					StorageHelper.write_file_data(data_file, data_stream.split_stream().view());
 					return;
 				}
 
@@ -2355,7 +2770,7 @@ namespace Twinning.Script.KernelX {
 				): void {
 					let version_c = Kernel.Tool.Popcap.ParticleEffect.Version.value(version);
 					let data = StorageHelper.read_file_data(data_file);
-					let data_stream = Kernel.ByteStreamView.watch(data.view());
+					let data_stream = Kernel.BinaryStreamView.watch(data.view());
 					let definition = Kernel.Tool.Popcap.ParticleEffect.Definition.Effect.default();
 					Kernel.Tool.Popcap.ParticleEffect.Decode.process(data_stream, definition, version_c);
 					Data.Serialization.Json.encode_fs(definition_file, definition.get_json(version_c));
@@ -2370,14 +2785,14 @@ namespace Twinning.Script.KernelX {
 					data_file: StoragePath,
 					definition_file: StoragePath,
 					version: typeof Kernel.Tool.Popcap.CharacterFontWidget2.Version.Value,
-					data_buffer: Kernel.ByteListView,
+					data_buffer: Kernel.BinaryView,
 				): void {
 					let version_c = Kernel.Tool.Popcap.CharacterFontWidget2.Version.value(version);
 					let definition = Kernel.Tool.Popcap.CharacterFontWidget2.Definition.FontWidget.json(Data.Serialization.Json.decode_fs(definition_file), version_c);
-					let data_stream = Kernel.ByteStreamView.watch(data_buffer);
+					let data_stream = Kernel.BinaryStreamView.watch(data_buffer);
 					data_stream.set_position(Kernel.Size.value(16n));
 					Kernel.Tool.Popcap.CharacterFontWidget2.Encode.process(data_stream, definition, version_c);
-					StorageHelper.write_file_data(data_file, data_stream.stream_view());
+					StorageHelper.write_file_data(data_file, data_stream.split_stream().view());
 					return;
 				}
 
@@ -2388,7 +2803,7 @@ namespace Twinning.Script.KernelX {
 				): void {
 					let version_c = Kernel.Tool.Popcap.CharacterFontWidget2.Version.value(version);
 					let data = StorageHelper.read_file_data(data_file);
-					let data_stream = Kernel.ByteStreamView.watch(data.view());
+					let data_stream = Kernel.BinaryStreamView.watch(data.view());
 					let definition = Kernel.Tool.Popcap.CharacterFontWidget2.Definition.FontWidget.default();
 					data_stream.set_position(Kernel.Size.value(16n));
 					Kernel.Tool.Popcap.CharacterFontWidget2.Decode.process(data_stream, definition, version_c);
@@ -2415,13 +2830,13 @@ namespace Twinning.Script.KernelX {
 					definition_file: StoragePath,
 					resource_directory: StoragePath,
 					version: typeof Kernel.Tool.Popcap.Package.Version.Value,
-					data_buffer: Kernel.ByteListView,
+					data_buffer: Kernel.BinaryView,
 				): void {
 					let version_c = Kernel.Tool.Popcap.Package.Version.value(version);
 					let definition = Kernel.Tool.Popcap.Package.Definition.Package.json(Data.Serialization.Json.decode_fs(definition_file), version_c);
-					let data_stream = Kernel.ByteStreamView.watch(data_buffer);
+					let data_stream = Kernel.BinaryStreamView.watch(data_buffer);
 					Kernel.Tool.Popcap.Package.Pack.process(data_stream, definition, Kernel.Path.value(resource_directory.emit()), version_c);
-					StorageHelper.write_file_data(data_file, data_stream.stream_view());
+					StorageHelper.write_file_data(data_file, data_stream.split_stream().view());
 					return;
 				}
 
@@ -2433,7 +2848,7 @@ namespace Twinning.Script.KernelX {
 				): void {
 					let version_c = Kernel.Tool.Popcap.Package.Version.value(version);
 					let data = StorageHelper.read_file_data(data_file);
-					let data_stream = Kernel.ByteStreamView.watch(data.view());
+					let data_stream = Kernel.BinaryStreamView.watch(data.view());
 					let definition = Kernel.Tool.Popcap.Package.Definition.Package.default();
 					Kernel.Tool.Popcap.Package.Unpack.process(data_stream, definition, Kernel.PathOptional.value(resource_directory === null ? null : resource_directory.emit()), version_c);
 					if (definition_file !== null) {
@@ -2457,13 +2872,13 @@ namespace Twinning.Script.KernelX {
 					definition_file: StoragePath,
 					resource_directory: StoragePath,
 					version: typeof Kernel.Tool.Popcap.ResourceStreamGroup.Version.Value,
-					data_buffer: Kernel.ByteListView,
+					data_buffer: Kernel.BinaryView,
 				): void {
 					let version_c = Kernel.Tool.Popcap.ResourceStreamGroup.Version.value(version);
 					let definition = Kernel.Tool.Popcap.ResourceStreamGroup.Definition.Package.json(Data.Serialization.Json.decode_fs(definition_file), version_c);
-					let data_stream = Kernel.ByteStreamView.watch(data_buffer);
+					let data_stream = Kernel.BinaryStreamView.watch(data_buffer);
 					Kernel.Tool.Popcap.ResourceStreamGroup.Pack.process(data_stream, definition, Kernel.Path.value(resource_directory.emit()), version_c);
-					StorageHelper.write_file_data(data_file, data_stream.stream_view());
+					StorageHelper.write_file_data(data_file, data_stream.split_stream().view());
 					return;
 				}
 
@@ -2475,7 +2890,7 @@ namespace Twinning.Script.KernelX {
 				): void {
 					let version_c = Kernel.Tool.Popcap.ResourceStreamGroup.Version.value(version);
 					let data = StorageHelper.read_file_data(data_file);
-					let data_stream = Kernel.ByteStreamView.watch(data.view());
+					let data_stream = Kernel.BinaryStreamView.watch(data.view());
 					let definition = Kernel.Tool.Popcap.ResourceStreamGroup.Definition.Package.default();
 					Kernel.Tool.Popcap.ResourceStreamGroup.Unpack.process(data_stream, definition, Kernel.PathOptional.value(resource_directory === null ? null : resource_directory.emit()), version_c);
 					if (definition_file !== null) {
@@ -2506,14 +2921,14 @@ namespace Twinning.Script.KernelX {
 					packet_file: null | StoragePath,
 					new_packet_file: null | StoragePath,
 					version: typeof Kernel.Tool.Popcap.ResourceStreamBundle.Version.Value,
-					data_buffer: Kernel.ByteListView,
+					data_buffer: Kernel.BinaryView,
 				): void {
 					let version_c = Kernel.Tool.Popcap.ResourceStreamBundle.Version.value(version);
 					let definition = Kernel.Tool.Popcap.ResourceStreamBundle.Definition.Package.json(Data.Serialization.Json.decode_fs(definition_file), version_c);
 					let manifest = Kernel.Tool.Popcap.ResourceStreamBundle.Manifest.PackageOptional.json(Data.Serialization.Json.decode_fs(manifest_file), version_c);
-					let data_stream = Kernel.ByteStreamView.watch(data_buffer);
+					let data_stream = Kernel.BinaryStreamView.watch(data_buffer);
 					Kernel.Tool.Popcap.ResourceStreamBundle.Pack.process(data_stream, definition, manifest, Kernel.Path.value(resource_directory.emit()), Kernel.PathOptional.value(packet_file === null ? null : packet_file.emit()), Kernel.PathOptional.value(new_packet_file === null ? null : new_packet_file.emit()), version_c);
-					StorageHelper.write_file_data(data_file, data_stream.stream_view());
+					StorageHelper.write_file_data(data_file, data_stream.split_stream().view());
 					return;
 				}
 
@@ -2527,7 +2942,7 @@ namespace Twinning.Script.KernelX {
 				): void {
 					let version_c = Kernel.Tool.Popcap.ResourceStreamBundle.Version.value(version);
 					let data = StorageHelper.read_file_data(data_file);
-					let data_stream = Kernel.ByteStreamView.watch(data.view());
+					let data_stream = Kernel.BinaryStreamView.watch(data.view());
 					let definition = Kernel.Tool.Popcap.ResourceStreamBundle.Definition.Package.default();
 					let manifest = Kernel.Tool.Popcap.ResourceStreamBundle.Manifest.PackageOptional.default();
 					Kernel.Tool.Popcap.ResourceStreamBundle.Unpack.process(data_stream, definition, manifest, Kernel.PathOptional.value(resource_directory === null ? null : resource_directory.emit()), Kernel.PathOptional.value(packet_file === null ? null : packet_file.emit()), version_c);
@@ -2560,13 +2975,13 @@ namespace Twinning.Script.KernelX {
 				): void {
 					let version_c = Kernel.Tool.Popcap.ResourceStreamBundlePatch.Version.value(version);
 					let before = StorageHelper.read_file_data(before_file);
-					let before_stream = Kernel.ByteStreamView.watch(before.view());
+					let before_stream = Kernel.BinaryStreamView.watch(before.view());
 					let after = StorageHelper.read_file_data(after_file);
-					let after_stream = Kernel.ByteStreamView.watch(after.view());
-					let patch = Kernel.ByteArray.allocate(Kernel.Size.value(patch_size_bound));
-					let patch_stream = Kernel.ByteStreamView.watch(patch.view());
+					let after_stream = Kernel.BinaryStreamView.watch(after.view());
+					let patch = Kernel.Binary.allocate(Kernel.Size.value(patch_size_bound));
+					let patch_stream = Kernel.BinaryStreamView.watch(patch.view());
 					Kernel.Tool.Popcap.ResourceStreamBundlePatch.Encode.process(before_stream, after_stream, patch_stream, Kernel.Boolean.value(use_raw_packet), version_c);
-					StorageHelper.write_file_data(patch_file, patch_stream.stream_view());
+					StorageHelper.write_file_data(patch_file, patch_stream.split_stream().view());
 					return;
 				}
 
@@ -2580,13 +2995,13 @@ namespace Twinning.Script.KernelX {
 				): void {
 					let version_c = Kernel.Tool.Popcap.ResourceStreamBundlePatch.Version.value(version);
 					let before = StorageHelper.read_file_data(before_file);
-					let before_stream = Kernel.ByteStreamView.watch(before.view());
-					let after = Kernel.ByteArray.allocate(Kernel.Size.value(after_size_bound));
-					let after_stream = Kernel.ByteStreamView.watch(after.view());
+					let before_stream = Kernel.BinaryStreamView.watch(before.view());
+					let after = Kernel.Binary.allocate(Kernel.Size.value(after_size_bound));
+					let after_stream = Kernel.BinaryStreamView.watch(after.view());
 					let patch = StorageHelper.read_file_data(patch_file);
-					let patch_stream = Kernel.ByteStreamView.watch(patch.view());
+					let patch_stream = Kernel.BinaryStreamView.watch(patch.view());
 					Kernel.Tool.Popcap.ResourceStreamBundlePatch.Decode.process(before_stream, after_stream, patch_stream, Kernel.Boolean.value(use_raw_packet), version_c);
-					StorageHelper.write_file_data(after_file, after_stream.stream_view());
+					StorageHelper.write_file_data(after_file, after_stream.split_stream().view());
 					return;
 				}
 
@@ -2604,13 +3019,13 @@ namespace Twinning.Script.KernelX {
 					key: string,
 				): void {
 					let raw = StorageHelper.read_file_data(raw_file);
-					let raw_stream = Kernel.ByteStreamView.watch(raw.view());
+					let raw_stream = Kernel.BinaryStreamView.watch(raw.view());
 					let ripe_size = Kernel.Size.default();
 					Kernel.Tool.Miscellaneous.Pvz2cnCryptData.Encrypt.estimate(raw.size(), ripe_size);
-					let ripe = Kernel.ByteArray.allocate(ripe_size);
-					let ripe_stream = Kernel.ByteStreamView.watch(ripe.view());
+					let ripe = Kernel.Binary.allocate(ripe_size);
+					let ripe_stream = Kernel.BinaryStreamView.watch(ripe.view());
 					Kernel.Tool.Miscellaneous.Pvz2cnCryptData.Encrypt.process(raw_stream, ripe_stream, Kernel.String.value(key));
-					StorageHelper.write_file_data(ripe_file, ripe_stream.stream_view());
+					StorageHelper.write_file_data(ripe_file, ripe_stream.split_stream().view());
 					return;
 				}
 
@@ -2620,13 +3035,13 @@ namespace Twinning.Script.KernelX {
 					key: string,
 				): void {
 					let ripe = StorageHelper.read_file_data(ripe_file);
-					let ripe_stream = Kernel.ByteStreamView.watch(ripe.view());
+					let ripe_stream = Kernel.BinaryStreamView.watch(ripe.view());
 					let raw_size = Kernel.Size.default();
 					Kernel.Tool.Miscellaneous.Pvz2cnCryptData.Decrypt.estimate(raw_size, ripe.size());
-					let raw = Kernel.ByteArray.allocate(raw_size);
-					let raw_stream = Kernel.ByteStreamView.watch(raw.view());
+					let raw = Kernel.Binary.allocate(raw_size);
+					let raw_stream = Kernel.BinaryStreamView.watch(raw.view());
 					Kernel.Tool.Miscellaneous.Pvz2cnCryptData.Decrypt.process(raw_stream, ripe_stream, Kernel.String.value(key));
-					StorageHelper.write_file_data(raw_file, raw_stream.stream_view());
+					StorageHelper.write_file_data(raw_file, raw_stream.split_stream().view());
 					return;
 				}
 
@@ -2663,18 +3078,18 @@ namespace Twinning.Script.KernelX {
 					index_count: number,
 				): bigint {
 					let bit_count = compute_bit_count(index_count);
-					return 1n + BigInt(index_count === 2 ? 0 : index_count) + size[0] * size[1] * BigInt(bit_count) / 8n;
+					return 1n + BigInt(index_count === 2 ? 0 : index_count) + ConvertHelper.compute_padded_size(size[0] * size[1] * BigInt(bit_count), 8n) / 8n;
 				}
 
 				export function evaluate_palette(
 					image: Kernel.Image.ConstantImageView,
 				): typeof Kernel.Image.ColorList.Value {
 					let image_size = image.size().value;
-					let data = Kernel.ByteArray.allocate(Kernel.Size.value(image_size[0] * image_size[1] * 8n / 8n));
-					let data_stream = Kernel.ByteStreamView.watch(data.view());
+					let data = Kernel.Binary.allocate(Kernel.Size.value(image_size[0] * image_size[1] * 8n / 8n));
+					let data_stream = Kernel.BinaryStreamView.watch(data.view());
 					Texture.Encoding.encode(data_stream, image, {endian: false, channel: [['alpha', 8n]]});
 					let alpha_count: Record<number, number> = {};
-					for (let value of new Uint8Array(data_stream.stream_view().value)) {
+					for (let value of new Uint8Array(data_stream.split_stream().view().value)) {
 						let alpha_4 = (value >> 4) & ~(~0 << 4);
 						alpha_count[alpha_4] = CheckHelper.not_undefined_or(alpha_count[alpha_4], 0) + 1;
 					}
@@ -2696,11 +3111,11 @@ namespace Twinning.Script.KernelX {
 				// ----------------
 
 				export function encode_with_palette(
-					data: Kernel.OutputByteStreamView,
+					data: Kernel.OutputBinaryStreamView,
 					image: Kernel.Image.ConstantImageView,
 					palette: Image.ColorList,
 				): void {
-					let palette_data = new ByteStreamView(data.view().value, Number(data.position().value));
+					let palette_data = new BinaryStreamView(new DataView(data.view().value, Number(data.position().value)));
 					let bit_count = compute_bit_count(palette.length);
 					if (bit_count === 1) {
 						palette_data.u8(0n);
@@ -2717,10 +3132,10 @@ namespace Twinning.Script.KernelX {
 				}
 
 				export function decode_with_palette(
-					data: Kernel.InputByteStreamView,
+					data: Kernel.InputBinaryStreamView,
 					image: Kernel.Image.VariableImageView,
 				): void {
-					let palette_data = new ByteStreamView(data.view().value, Number(data.position().value));
+					let palette_data = new BinaryStreamView(new DataView(data.view().value, Number(data.position().value)));
 					let index_count = palette_data.u8();
 					let palette: Image.ColorList;
 					if (index_count === 0n) {
@@ -2753,15 +3168,15 @@ namespace Twinning.Script.KernelX {
 			is_module: boolean,
 		): any {
 			let script_c = Kernel.String.value(script);
-			return Kernel.Miscellaneous.g_context.evaluate(Kernel.Miscellaneous.cast_String_to_CharacterListView(script_c), Kernel.String.value(name), Kernel.Boolean.value(is_module));
+			return Kernel.Miscellaneous.g_context.evaluate(Kernel.Miscellaneous.cast_String_to_StringView(script_c), Kernel.String.value(name), Kernel.Boolean.value(is_module));
 		}
 
 		export function evaluate_fs(
 			script_file: StoragePath,
 			is_module: boolean,
 		): any {
-			let script = StorageHelper.read_file_data(script_file);
-			return Kernel.Miscellaneous.g_context.evaluate(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(script.view()), Kernel.String.value(script_file.emit()), Kernel.Boolean.value(is_module));
+			let script_data = StorageHelper.read_file_data(script_file);
+			return Kernel.Miscellaneous.g_context.evaluate(Kernel.Miscellaneous.cast_BinaryView_to_StringView(script_data.view()), Kernel.String.value(script_file.emit()), Kernel.Boolean.value(is_module));
 		}
 
 		// ----------------

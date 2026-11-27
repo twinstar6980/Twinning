@@ -1,5 +1,3 @@
--- kernel
-
 target('kernel', function()
 	set_group('source')
 	set_kind('shared')
@@ -23,11 +21,16 @@ target('kernel', function()
 	add_deps(
 		'dependency.mscharconv',
 		'dependency.tinyxml2',
-		'dependency.cpp_md5_lib',
+		'dependency.cryptopp',
 		'dependency.Rijndael',
 		'dependency.zlib',
 		'dependency.bzip2',
 		'dependency.lzma',
+		'dependency.lz4',
+		'dependency.lzo',
+		'dependency.brotli',
+		'dependency.snappy',
+		'dependency.zstd',
 		'dependency.open_vcdiff',
 		'dependency.avir',
 		'dependency.libsquish',

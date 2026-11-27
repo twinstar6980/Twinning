@@ -36,7 +36,7 @@ export namespace Twinning::Kernel::Tool::Popcap::SexyTexture {
 		// ----------------
 
 		inline static auto process_image(
-			InputByteStreamView &            data,
+			InputBinaryStreamView &          data,
 			Image::VariableImageView const & image
 		) -> Void {
 			data.read_constant(k_magic_marker);
@@ -96,33 +96,34 @@ export namespace Twinning::Kernel::Tool::Popcap::SexyTexture {
 			auto compress_texture_data = cast_box<Boolean>(header.compress_data);
 			auto compress_texture_data_size = cast_box<Size>(header.compress_data_size);
 			auto texture_data_size = image.size().area() * Texture::Encoding::Common::get_pixel_byte_count(encoding_format);
-			auto texture_data_view = ConstantByteListView{};
-			auto texture_data_container = ByteArray{};
+			auto texture_data_stream = InputBinaryStreamView{};
+			auto texture_data_container = Binary{};
 			if (!compress_texture_data) {
-				texture_data_view = data.forward_view(texture_data_size);
+				texture_data_stream = data.split_forward(texture_data_size);
 				assert_test(compress_texture_data_size == 0_sz);
 			}
 			else {
-				texture_data_container.allocate(texture_data_size);
-				texture_data_view = texture_data_container.as_view();
+				texture_data_container.allocate_full(texture_data_size);
+				texture_data_stream = like_binary_stream<StreamMode::Constant::input()>(data, texture_data_container);
 			}
 			if (compress_texture_data) {
-				auto texture_data_stream = OutputByteStreamView{texture_data_container};
-				auto ripe_texture_data_stream = InputByteStreamView{data.reserve_view()};
-				Data::Compression::Deflate::Uncompress::process(texture_data_stream, ripe_texture_data_stream, 15_i, Data::Compression::Deflate::WrapperType::Constant::zlib());
+				auto raw_texture_data_stream = unsafe_cast<OutputBinaryStreamView>(texture_data_stream.split_all());
+				auto ripe_texture_data_stream = data.split_reserve();
+				Data::Compression::Deflate::Uncompress::process(raw_texture_data_stream, ripe_texture_data_stream, Data::Compression::Deflate::Container::Constant::zlib(), 15_i);
 				assert_test(ripe_texture_data_stream.position() == compress_texture_data_size);
-				assert_test(texture_data_stream.full());
+				assert_test(raw_texture_data_stream.full());
 				data.forward(ripe_texture_data_stream.position());
 			}
-			Texture::Encoding::Decode::process(as_left(InputByteStreamView{texture_data_view}), image, encoding_format);
+			Texture::Encoding::Decode::process(texture_data_stream, image, encoding_format);
 			if (!Range::has_if(
 				encoding_format.channel,
 				[](auto & it) {
 					return it.template get<1_ix>() == Texture::Encoding::Channel::Constant::alpha();
 				}
 			)) {
-				for (auto & row : image.data()) {
-					for (auto & pixel : row) {
+				for (auto & y : SizeRange{image.size().height}) {
+					for (auto & x : SizeRange{image.size().width}) {
+						auto & pixel = image[x, y];
 						pixel.alpha = Image::k_color_maximum;
 					}
 				}
@@ -133,14 +134,13 @@ export namespace Twinning::Kernel::Tool::Popcap::SexyTexture {
 		// ----------------
 
 		inline static auto estimate_image(
-			ConstantByteListView const & data,
-			Image::ImageSize &           image_size
+			InputBinaryStreamView & data,
+			Image::ImageSize &      image_size
 		) -> Void {
-			auto data_stream = InputByteStreamView{data};
-			data_stream.read_constant(k_magic_marker);
-			data_stream.read_constant(cast_box<VersionNumber>(t_version.number));
+			data.read_constant(k_magic_marker);
+			data.read_constant(cast_box<VersionNumber>(t_version.number));
 			auto header = Header{};
-			data_stream.read(header);
+			data.read(header);
 			image_size = Image::ImageSize{cast_box<Size>(header.size_width), cast_box<Size>(header.size_height)};
 			return;
 		}
@@ -148,17 +148,18 @@ export namespace Twinning::Kernel::Tool::Popcap::SexyTexture {
 		// ----------------
 
 		inline static auto process(
-			InputByteStreamView &            data_,
+			InputBinaryStreamView &          data_,
 			Image::VariableImageView const & image
 		) -> Void {
-			M_use_zps_of(data);
+			M_use_split_stream_of(data);
 			return process_image(data, image);
 		}
 
 		inline static auto estimate(
-			ConstantByteListView const & data,
-			Image::ImageSize &           image_size
+			InputBinaryStreamView & data_,
+			Image::ImageSize &      image_size
 		) -> Void {
+			M_use_split_stream_of(data);
 			restruct(image_size);
 			return estimate_image(data, image_size);
 		}

@@ -27,13 +27,13 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Xml {
 				case Notation::Xml::NodeType::Constant::element().value: {
 					auto & node_value = node.get_element();
 					raw_node = raw_document.NewElement(
-						unmake_pointer_unsafe<char>(SystemNativeString::to_generic(node_value.name, true).begin())
+						unmake_pointer_unsafe<char>(SystemNativeString::to_generic(node_value.name, true).data())
 					);
 					auto raw_element = raw_node->ToElement();
 					for (auto & attribute : node_value.attribute) {
 						raw_element->SetAttribute(
-							unmake_pointer_unsafe<char>(SystemNativeString::to_generic(attribute.key, true).begin()),
-							unmake_pointer_unsafe<char>(SystemNativeString::to_generic(attribute.value, true).begin())
+							unmake_pointer_unsafe<char>(SystemNativeString::to_generic(attribute.key, true).data()),
+							unmake_pointer_unsafe<char>(SystemNativeString::to_generic(attribute.value, true).data())
 						);
 					}
 					for (auto & child : node_value.child) {
@@ -46,7 +46,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Xml {
 				case Notation::Xml::NodeType::Constant::text().value: {
 					auto & node_value = node.get_text();
 					raw_node = raw_document.NewText(
-						unmake_pointer_unsafe<char>(SystemNativeString::to_generic(node_value.value, true).begin())
+						unmake_pointer_unsafe<char>(SystemNativeString::to_generic(node_value.value, true).data())
 					);
 					auto raw_text = raw_node->ToText();
 					raw_text->SetCData(
@@ -57,7 +57,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Xml {
 				case Notation::Xml::NodeType::Constant::comment().value: {
 					auto & node_value = node.get_comment();
 					raw_node = raw_document.NewComment(
-						unmake_pointer_unsafe<char>(SystemNativeString::to_generic(node_value.value, true).begin())
+						unmake_pointer_unsafe<char>(SystemNativeString::to_generic(node_value.value, true).data())
 					);
 					break;
 				}

@@ -181,21 +181,21 @@ if (state_value) {
 
 内核接口提供了对内存的直接操作功能。
 
-* `Kernel.ByteArray` ：字节序列容器，持有一段内存空间，当该对象被析构时，其持有的内存也会被释放。这个类型负责申请并持有内存。
+* `Kernel.Binary` ：二进制容器，持有一段内存空间，当该对象被析构时，其持有的内存也会被释放。这个类型负责申请并持有内存。
 
-* `Kernel.ByteListView` ：字节序列视图，仅保存内存的地址与尺寸信息，不持有所有权。这个类型用于在不进行深复制的情况下访问内存空间。
+* `Kernel.BinaryView` ：二进制视图，仅保存内存的地址与尺寸信息，不持有所有权。这个类型用于在不进行深复制的情况下访问内存空间。
 
-* `Kernel.ByteStreamView` ：字节流视图，相当于字节序列视图附加一个位置信息，位置信息用于表示程序对内存的读取或写入的当前位置，不持有所有权。这个类型被内核函数所广泛使用。
+* `Kernel.BinaryStreamView` ：二进制流视图，相当于二进制视图附加一个位置信息，位置信息用于表示程序对内存的读取或写入的当前位置，不持有所有权。这个类型被内核函数所广泛使用。
 
-* `Kernel.CharacterListView` ：字符序列视图，内存层面与 `Kernel.ByteListView` 等同。
+* `Kernel.StringView` ：字符串视图，内存层面与 `Kernel.BinaryView` 等同。
 
-* `Kernel.CharacterStreamView` ：字符流视图，内存层面与 `Kernel.ByteStreamView` 等同。
+* `Kernel.StringStreamView` ：字符串流视图，内存层面与 `Kernel.BinaryStreamView` 等同。
 
 以下是通过上述接口进行内存读写的例子：
 
 ```ts
 // 申请 16 字节内存空间
-let data = Kernel.ByteArray.allocate(Kernel.Size.value(16n));
+let data = Kernel.Binary.allocate(Kernel.Size.value(16n));
 // 获取 data 对应的内存空间的视图，此时 view 与 data 指向同一块内存
 let view = data.view();
 // 获取 view 对应内存空间的尺寸，此时为 16n 即 16 字节
@@ -215,18 +215,18 @@ stream.position();
 ```
 
 ```ts
-// Kernel.CharacterListView 无法从 Kernel.ByteArray 得到，需要从 Kernel.ByteListView 转换，char_view 将与 view 指向同一内存空间
-let char_view = Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(view);
+// Kernel.StringView 无法从 Kernel.Binary 得到，需要从 Kernel.BinaryView 转换，char_view 将与 view 指向同一内存空间
+let char_view = Kernel.Miscellaneous.cast_BinaryView_to_StringView(view);
 // Kernel.String 对象存储 UTF-8 字符串。
 let string = Kernel.String.value('UTF-8 😄 汉字');
-// 还可以从 Kernel.String 对象获取 Kernel.CharacterListView ，char_view_of_string 将指向 string 字符串数据的内存空间
-let char_view_of_string = Kernel.Miscellaneous.cast_String_to_CharacterListView(string);
+// 还可以从 Kernel.String 对象获取 Kernel.StringView ，char_view_of_string 将指向 string 字符串数据的内存空间
+let char_view_of_string = Kernel.Miscellaneous.cast_String_to_StringView(string);
 // 如果重设 string 的内容，将导致字符串数据内存的重新分配，此时，char_view_of_string 指向的内存空间不应再被访问
 string.value = 'xxx';
-// 可以将 Kernel.String 的内存转交给 Kernel.ByteArray 对象，Kernel.String 的内容将变为空，Kernel.ByteArray 将持有原本归属 Kernel.String 的内存空间。
-let data = Kernel.Miscellaneous.cast_moveable_String_to_ByteArray(string);
-// 同样可以将 Kernel.ByteArray 的内存转交给 Kernel.String ，但应确保 Kernel.ByteArray 所持有的内存存储的是 UTF-8 字符串数据
-let string_in_memory = Kernel.Miscellaneous.cast_moveable_ByteArray_to_String(string);
+// 可以将 Kernel.String 的内存转交给 Kernel.Binary 对象，Kernel.String 的内容将变为空，Kernel.Binary 将持有原本归属 Kernel.String 的内存空间。
+let data = Kernel.Miscellaneous.cast_moveable_String_to_Binary(string);
+// 同样可以将 Kernel.Binary 的内存转交给 Kernel.String ，但应确保 Kernel.Binary 所持有的内存存储的是 UTF-8 字符串数据
+let string_in_memory = Kernel.Miscellaneous.cast_moveable_Binary_to_String(string);
 ```
 
 ### 文件系统
@@ -239,8 +239,8 @@ let string_in_memory = Kernel.Miscellaneous.cast_moveable_ByteArray_to_String(st
 let path = Kernel.Path.value('file.txt');
 // 读取文件数据
 let data = Kernel.Storage.read_file(path);
-// 通过移动内存的方式将 Kernel.ByteArray 转换为 Kernel.String
-let string = Kernel.Miscellaneous.cast_moveable_ByteArray_to_String(data);
+// 通过移动内存的方式将 Kernel.Binary 转换为 Kernel.String
+let string = Kernel.Miscellaneous.cast_moveable_Binary_to_String(data);
 // 得到 Kernel.String 对应的 JS 字符串
 let string_value = string.value;
 ```

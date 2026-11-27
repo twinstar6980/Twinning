@@ -148,7 +148,7 @@ export namespace Twinning::Kernel::Trait {
 		TIt &            it,
 		TArgument && ... argument
 	) -> Void {
-		new(&as_variable(it)) AsUnmakeConstant<TIt>{as_forward<TArgument>(argument) ...};
+		new(&as_variable(it)) TIt{as_forward<TArgument>(argument) ...};
 		return;
 	}
 

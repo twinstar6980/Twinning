@@ -87,7 +87,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle::Shared {
 
 	namespace CompiledMapData {
 
-		inline constexpr auto k_block_size = Size{bs_static_size<IntegerU32>()};
+		inline constexpr auto k_block_size = Size{binary_static_size_of<IntegerU32>()};
 
 		template <typename TValue> requires
 			CategoryConstraint<IsPureInstance<TValue>>
@@ -97,7 +97,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle::Shared {
 			Range::each(
 				map,
 				[](auto & element) -> auto {
-					element.key.as_upper_case();
+					StringUtility::as_upper_case(element.key);
 					return;
 				}
 			);
@@ -120,7 +120,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle::Shared {
 			struct WorkOption {
 				Size inherit_length{};
 			};
-			auto work_option = Array<Optional<WorkOption>>{map.size()};
+			auto work_option = List<Optional<WorkOption>>{map.size()};
 			if (!map.empty()) {
 				work_option[1_ix].set(
 					WorkOption{
@@ -132,7 +132,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle::Shared {
 			for (auto & index : SizeRange{map.size()}) {
 				auto & element = map.at(index);
 				{
-					auto a_string_has_child = Array<Boolean>{element.key.size() + 1_sz};
+					auto a_string_has_child = List<Boolean>{element.key.size() + 1_sz};
 					for (auto & index_1 : SizeRange{index + 2_ix, map.size()}) {
 						if (!work_option[index_1].has()) {
 							auto common_size = Range::common_size(map.at(index).key, map.at(index_1).key);
@@ -153,9 +153,9 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle::Shared {
 					work_option[index].reset();
 				}
 				block_count += element.key.size() - character_index + 1_sz;
-				auto additional_size = bs_size(element.value);
-				assert_test(Math::is_padded_size(additional_size, bs_static_size<IntegerU32>()));
-				block_count += additional_size / bs_static_size<IntegerU32>();
+				auto additional_size = binary_size_of(element.value);
+				assert_test(Math::is_padded_size(additional_size, binary_static_size_of<IntegerU32>()));
+				block_count += additional_size / binary_static_size_of<IntegerU32>();
 			}
 			return block_count * k_block_size;
 		}
@@ -164,14 +164,14 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle::Shared {
 			CategoryConstraint<IsPureInstance<TValue>>
 		inline auto encode(
 			Map<String, TValue> const & map,
-			OutputByteStreamView &      data
+			OutputBinaryStreamView &    data
 		) -> Void {
-			auto stream = AccessByteStreamView{data.reserve_view()};
+			auto stream = unsafe_cast<AccessBinaryStreamView>(data.split_reserve());
 			struct WorkOption {
 				Size inherit_length{};
 				Size parent_offset{};
 			};
-			auto work_option = Array<Optional<WorkOption>>{map.size()};
+			auto work_option = List<Optional<WorkOption>>{map.size()};
 			if (!map.empty()) {
 				work_option.first().set(
 					WorkOption{
@@ -181,7 +181,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle::Shared {
 				);
 				for (auto & index : SizeRange{map.size()}) {
 					auto & element = map.at(index);
-					auto   current_string_has_child = Array<Boolean>{element.key.size() + 1_sz};
+					auto   current_string_has_child = List<Boolean>{element.key.size() + 1_sz};
 					for (auto & index_1 : SizeRange{index + 1_sz, map.size()}) {
 						if (!work_option[index_1].has()) {
 							auto common_size = Range::common_size(element.key, map.at(index_1).key);
@@ -202,8 +202,8 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle::Shared {
 						auto current_position = stream.position();
 						stream.set_position(work_option[index].get().parent_offset * k_block_size);
 						auto composite_value = stream.read_of<IntegerU32>();
-						composite_value |= Bitwise::infuse(cast_box<IntegerU32>(current_position / k_block_size), k_type_bit_count<IntegerU8>, k_type_bit_count<IntegerU32> - k_type_bit_count<IntegerU8>);
-						stream.backward(bs_static_size<IntegerU32>());
+						composite_value |= Bitwise::infuse(cast_box<IntegerU32>(current_position / k_block_size), type_bit_size_of<IntegerU8>(), type_bit_size_of<IntegerU32>() - type_bit_size_of<IntegerU8>());
+						stream.backward(binary_static_size_of<IntegerU32>());
 						stream.write(composite_value);
 						stream.set_position(current_position);
 						work_option[index].reset();
@@ -212,7 +212,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle::Shared {
 						stream.write(cast_box<IntegerU32>(element.key[character_index]));
 						++character_index;
 					}
-					stream.write(cast_box<IntegerU32>(CharacterType::k_null));
+					stream.write(cast_box<IntegerU32>(StringUtility::k_null_character));
 					stream.write(element.value);
 				}
 			}
@@ -223,19 +223,19 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle::Shared {
 		template <typename TValue> requires
 			CategoryConstraint<IsPureInstance<TValue>>
 		inline auto decode(
-			Map<String, TValue> & map,
-			InputByteStreamView & data
+			Map<String, TValue> &   map,
+			InputBinaryStreamView & data
 		) -> Void {
-			auto stream = InputByteStreamView{data.reserve_view()};
+			auto stream = data.split_reserve();
 			map.allocate(stream.reserve() / k_block_size);
-			auto parent_string_list = Array<Optional<ConstantStringView>>{stream.reserve() / k_block_size};
+			auto parent_string_list = List<Optional<ConstantStringView>>{stream.reserve() / k_block_size};
 			while (!stream.full()) {
 				map.append();
 				auto & element = map.last();
 				auto   string_length_in_next_stream = 0_sz;
 				{
 					auto string_begin_position = stream.position();
-					while (cast_box<Character>(Bitwise::extract(stream.read_of<IntegerU32>(), 1_ix * k_type_bit_count<IntegerU8>, 1_sz * k_type_bit_count<IntegerU8>)) != CharacterType::k_null) {
+					while (cast_box<Character>(Bitwise::extract(stream.read_of<IntegerU32>(), 1_ix * type_bit_size_of<IntegerU8>(), 1_sz * type_bit_size_of<IntegerU8>())) != StringUtility::k_null_character) {
 						++string_length_in_next_stream;
 					}
 					stream.set_position(string_begin_position);
@@ -243,7 +243,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle::Shared {
 				auto & parent_string_if = parent_string_list[stream.position() / k_block_size];
 				if (parent_string_if.has()) {
 					element.key.allocate(parent_string_if.get().size() + string_length_in_next_stream);
-					element.key.append_list(parent_string_if.get());
+					element.key.append_range(parent_string_if.get());
 					parent_string_if.reset();
 				}
 				else {
@@ -251,19 +251,19 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamBundle::Shared {
 				}
 				while (k_true) {
 					auto composite_value = stream.read_of<IntegerU32>();
-					auto child_string_offset = Bitwise::extract(composite_value, 2_ix * k_type_bit_count<IntegerU8>, 3_sz * k_type_bit_count<IntegerU8>);
-					auto current_character = cast_box<Character>(Bitwise::extract(composite_value, 1_ix * k_type_bit_count<IntegerU8>, 1_sz * k_type_bit_count<IntegerU8>));
+					auto child_string_offset = Bitwise::extract(composite_value, 2_ix * type_bit_size_of<IntegerU8>(), 3_sz * type_bit_size_of<IntegerU8>());
+					auto current_character = cast_box<Character>(Bitwise::extract(composite_value, 1_ix * type_bit_size_of<IntegerU8>(), 1_sz * type_bit_size_of<IntegerU8>()));
 					if (child_string_offset != 0x000000_iu32) {
 						parent_string_list[cast_box<Size>(child_string_offset)].set(element.key);
 					}
-					if (current_character == CharacterType::k_null) {
+					if (current_character == StringUtility::k_null_character) {
 						break;
 					}
 					element.key.append(current_character);
 				}
 				stream.read(element.value);
 			}
-			map.shrink_to_fit();
+			map.reallocate(map.size());
 			data.forward(stream.position());
 			return;
 		}

@@ -7,14 +7,14 @@ import twinning.kernel.utility;
 import twinning.kernel.tool.popcap.re_animation.version;
 import twinning.kernel.tool.popcap.re_animation.definition;
 import twinning.kernel.tool.popcap.re_animation.common;
-import twinning.kernel.tool.common.byte_stream;
+import twinning.kernel.tool.common.binary_stream;
 
 export namespace Twinning::Kernel::Tool::Popcap::ReAnimation {
 
 	template <auto t_version> requires (check_version(t_version, {}, {}))
 	struct Decode :
 		Common<t_version>,
-		CommonByteStreamExchangeForInput {
+		CommonBinaryStreamExchangeForInput {
 
 		using Common = Common<t_version>;
 
@@ -33,7 +33,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ReAnimation {
 		// ----------------
 
 		inline static auto exchange_transform_list(
-			InputByteStreamView &                  data,
+			InputBinaryStreamView &                data,
 			List<typename Definition::Transform> & value_list
 		) -> Void {
 			auto ignored = Integer{0_i};
@@ -73,7 +73,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ReAnimation {
 		}
 
 		inline static auto exchange_track_list(
-			InputByteStreamView &              data,
+			InputBinaryStreamView &            data,
 			List<typename Definition::Track> & value_list
 		) -> Void {
 			auto ignored = Integer{0_i};
@@ -97,7 +97,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ReAnimation {
 		}
 
 		inline static auto exchange_animation(
-			InputByteStreamView &   data,
+			InputBinaryStreamView & data,
 			Definition::Animation & value
 		) -> Void {
 			auto ignored = Integer{0_i};
@@ -112,7 +112,7 @@ export namespace Twinning::Kernel::Tool::Popcap::ReAnimation {
 		// ----------------
 
 		inline static auto process_whole(
-			InputByteStreamView &   data,
+			InputBinaryStreamView & data,
 			Definition::Animation & definition
 		) -> Void {
 			data.read_constant(k_magic_marker);
@@ -123,10 +123,10 @@ export namespace Twinning::Kernel::Tool::Popcap::ReAnimation {
 		// ----------------
 
 		inline static auto process(
-			InputByteStreamView &   data_,
+			InputBinaryStreamView & data_,
 			Definition::Animation & definition
 		) -> Void {
-			M_use_zps_of(data);
+			M_use_split_stream_of(data);
 			restruct(definition);
 			return process_whole(data, definition);
 		}

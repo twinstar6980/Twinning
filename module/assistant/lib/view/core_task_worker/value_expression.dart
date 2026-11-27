@@ -1,5 +1,6 @@
 import '/common.dart';
 import '/utility/convert_helper.dart';
+import '/utility/storage_size.dart';
 import '/utility/storage_path.dart';
 
 // ----------------
@@ -19,92 +20,46 @@ class ValueExpression {
 
 class PauseExpression extends ValueExpression {
   PauseExpression(
-    super.command,
+    super.macro,
   );
   @override
-  operator ==(other) => other is PauseExpression;
+  operator ==(other) => other is PauseExpression && this.macro == other.macro;
   @override
   get hashCode => Object.hashAll([super.macro]);
 }
 
-class BooleanExpression extends ValueExpression {
-  Boolean value;
-  BooleanExpression(
-    super.command,
+// ----------------
+
+class SingleValueExpression<TValue> extends ValueExpression {
+  TValue value;
+  SingleValueExpression(
+    super.macro,
     this.value,
   );
   @override
-  operator ==(other) => other is BooleanExpression && super.macro == other.macro && this.value == other.value;
+  operator ==(other) => other is SingleValueExpression<TValue> && super.macro == other.macro && this.value == other.value;
   @override
   get hashCode => Object.hashAll([super.macro, this.value]);
 }
 
-class IntegerExpression extends ValueExpression {
-  Integer value;
-  IntegerExpression(
-    super.command,
-    this.value,
-  );
-  @override
-  operator ==(other) => other is IntegerExpression && super.macro == other.macro && this.value == other.value;
-  @override
-  get hashCode => Object.hashAll([super.macro, this.value]);
-}
+typedef BooleanExpression = SingleValueExpression<Boolean>;
 
-class FloaterExpression extends ValueExpression {
-  Floater value;
-  FloaterExpression(
-    super.command,
-    this.value,
-  );
-  @override
-  operator ==(other) => other is FloaterExpression && super.macro == other.macro && this.value == other.value;
-  @override
-  get hashCode => Object.hashAll([super.macro, this.value]);
-}
+typedef IntegerExpression = SingleValueExpression<Integer>;
 
-class StringExpression extends ValueExpression {
-  String value;
-  StringExpression(
-    super.command,
-    this.value,
-  );
-  @override
-  operator ==(other) => other is StringExpression && super.macro == other.macro && this.value == other.value;
-  @override
-  get hashCode => Object.hashAll([super.macro, this.value]);
-}
+typedef FloaterExpression = SingleValueExpression<Floater>;
 
-class SizeExpression extends ValueExpression {
-  Floater count;
-  Integer exponent;
-  SizeExpression(
-    super.command,
-    this.count,
-    this.exponent,
-  );
-  @override
-  operator ==(other) => other is SizeExpression && super.macro == other.macro && this.count == other.count && this.exponent == other.exponent;
-  @override
-  get hashCode => Object.hashAll([super.macro, this.count, this.exponent]);
-}
+typedef StringExpression = SingleValueExpression<String>;
 
-class PathExpression extends ValueExpression {
-  StoragePath content;
-  PathExpression(
-    super.command,
-    this.content,
-  );
-  @override
-  operator ==(other) => other is PathExpression && super.macro == other.macro && this.content == other.content;
-  @override
-  get hashCode => Object.hashAll([super.macro, this.content]);
-}
+typedef SizeExpression = SingleValueExpression<StorageSize>;
+
+typedef PathExpression = SingleValueExpression<StoragePath>;
+
+// ----------------
 
 class EnumerationExpression extends ValueExpression {
   String item;
   EnumerationExpression(
-    super.command,
+    super.macro,
     this.item,
   );
   @override
@@ -128,8 +83,8 @@ class ValueExpressionHelper {
       IntegerExpression     _ => '${ConvertHelper.makeIntegerToString(value.value)}',
       FloaterExpression     _ => '${ConvertHelper.makeFloaterToString(value.value)}',
       StringExpression      _ => '${value.value}',
-      SizeExpression        _ => '${ConvertHelper.makeFloaterToString(value.count)}${['b', 'k', 'm', 'g'][value.exponent]}',
-      PathExpression        _ => '${value.content.emit()}',
+      SizeExpression        _ => '${value.value.emit()}',
+      PathExpression        _ => '${value.value.emit()}',
       EnumerationExpression _ => '${value.item}',
       _                       => throw UnreachableException(),
     };

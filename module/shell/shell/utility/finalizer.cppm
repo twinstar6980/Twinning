@@ -6,7 +6,7 @@ export module twinning.shell.utility.finalizer;
 
 export namespace Twinning::Shell {
 
-	#pragma region function
+	#pragma region utility
 
 	template <typename TFinalizer>
 	inline constexpr auto make_finalizer(

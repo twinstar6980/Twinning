@@ -158,7 +158,7 @@ namespace Twinning.Script.Support.Kairosoft.Game.Program.Modify {
 		}
 		Console.information(`phase: load original program`, []);
 		let program_data = StorageHelper.read_file_data(program_file);
-		let program_stream = new ByteStreamView(program_data.view().value);
+		let program_stream = new BinaryStreamView(new DataView(program_data.view().value));
 		if (disable_record_encryption) {
 			Console.information(`phase: modify method 'RecordStore.ReadRecord'`, []);
 			program_stream.p(symbol_address.RecordStore.ReadRecord[0]);
@@ -288,13 +288,13 @@ namespace Twinning.Script.Support.Kairosoft.Game.Program.Modify {
 			package_type = 'flat';
 		}
 		if (StorageHelper.exist_file(target)) {
-			if (target.extension()?.toLowerCase() === 'zip') {
+			if (ConvertHelper.check_path_extension(target, ['zip'], true)) {
 				package_type = 'zip';
 			}
-			if (target.extension()?.toLowerCase() === 'apk') {
+			if (ConvertHelper.check_path_extension(target, ['apk'], true)) {
 				package_type = 'apk';
 			}
-			if (target.extension()?.toLowerCase() === 'apks') {
+			if (ConvertHelper.check_path_extension(target, ['apks'], true)) {
 				package_type = 'apks';
 			}
 		}
@@ -329,7 +329,7 @@ namespace Twinning.Script.Support.Kairosoft.Game.Program.Modify {
 			if (package_type === 'apks') {
 				package_state.bundle = package_file;
 				let package_content_list: DeveloperHelper.ArchiveContentDescriptor = DeveloperHelper.archive_list(package_file)
-					.filter((it) => it.extension()?.toLowerCase() === 'apk')
+					.filter((it) => ConvertHelper.check_path_extension(it, ['apk'], true))
 					.map((it) => ({
 						location: it,
 						placement: temporary_directory.join('part').join(it.name()!),

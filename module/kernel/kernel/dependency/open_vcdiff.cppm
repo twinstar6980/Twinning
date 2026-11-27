@@ -5,8 +5,8 @@ module;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Weverything"
 
-#include "dependency/open_vcdiff/google/vcencoder.h"
-#include "dependency/open_vcdiff/google/vcdecoder.h"
+#include "dependency/open_vcdiff/origin/src/google/vcencoder.h"
+#include "dependency/open_vcdiff/origin/src/google/vcdecoder.h"
 
 #pragma clang diagnostic pop
 

@@ -1,16 +1,12 @@
--- avir
--- 3.1 1c8433cba92695ed69903175eae0fa527d1e8bc6
--- https://github.com/avaneev/avir
-
 target('dependency.avir', function()
 	set_group('source/dependency')
 	set_kind('headeronly')
 	add_headerfiles(
-		'avir.h',
-		'avir_dil.h',
-		'avir_float4_sse.h',
-		'avir_float8_avx.h',
-		'lancir.h',
+		'origin/avir.h',
+		'origin/avir_dil.h',
+		'origin/avir_float4_sse.h',
+		'origin/avir_float8_avx.h',
+		'origin/lancir.h',
 		{ install = false }
 	)
 	add_files(

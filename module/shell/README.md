@@ -10,19 +10,18 @@
 
 	* [xmake 3.1](https://xmake.io/#/)
 
-	* [LLVM 22.1 (LLVM-MinGW-ucrt 20260616)](https://github.com/mstorsjo/llvm-mingw) for `Windows`
+	* [LLVM 23.1 (LLVM-MinGW-ucrt 20260908)](https://github.com/mstorsjo/llvm-mingw) for `Windows`
 
-	* [LLVM 22.1](https://llvm.org/) for `Linux`
+	* [LLVM 23.1](https://llvm.org/) for `Linux`
 
-	* [LLVM 22.1 (SDK 26.5)](https://llvm.org/) for `Macintosh`
+	* [LLVM 23.1 (SDK 26.5)](https://llvm.org/) for `Macintosh`
 
-	* [LLVM 21.0 (NDK 29.0)](https://developer.android.com/ndk/downloads) for `Android`
+	* [LLVM 21.0 (NDK 30.0)](https://developer.android.com/ndk/downloads) for `Android`
 
-	* [LLVM 22.1 (SDK 26.5)](https://llvm.org/) for `Iphone`
+	* [LLVM 23.1 (SDK 26.5)](https://llvm.org/) for `Iphone`
 
 ## 第三方库使用
 
-| 库 | 用途 |
-|:--:|:----:|
+无
 
 ## 说明

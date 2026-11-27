@@ -36,10 +36,7 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
     _ with_notification: Notification,
   ) -> Void {
     return try! self.executePlatformTask(
-      false,
-      {
-        return
-      },
+      nil,
       {
         NSAppleEventManager.shared().setEventHandler(
           self,
@@ -56,10 +53,7 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
     _ host: MainFlutterWindow,
   ) -> Void {
     return try! self.executePlatformTask(
-      false,
-      {
-        return
-      },
+      nil,
       {
         self.window = host
         self.channel = FlutterMethodChannel(
@@ -67,27 +61,37 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
           binaryMessenger: (host.contentViewController as! FlutterViewController).engine.binaryMessenger,
         )
         self.channel.setMethodCallHandler({ (call, result) in
-          self.executePlatformTaskSwitch(false, {
-            do {
-              let callMethod = call.method
-              let callArgument = call.arguments as? Dictionary<String, Any?>
-              guard callArgument != nil else {
-                throw NSError(domain: "invalid argument.", code: 0)
+          self.executePlatformTaskSwitch(
+            false,
+            true,
+            {
+              do {
+                let callMethod = call.method
+                let callArgument = call.arguments as? Dictionary<String, Any?>
+                guard callArgument != nil else {
+                  throw NSError(domain: "invalid argument.", code: 0)
+                }
+                let callResult = try await self.handle(callMethod, callArgument!)
+                result(callResult)
               }
-              let callResult = try await self.handle(callMethod, callArgument!)
-              result(callResult)
-            }
-            catch {
-              let callException = error.localizedDescription
-              result(FlutterError(code: "", message: callException, details: nil))
-            }
-          })
+              catch {
+                let callException = error.localizedDescription
+                result(FlutterError(code: "", message: callException, details: nil))
+              }
+              return
+            },
+          )
           return
         })
-        self.executePlatformTaskSwitch(false, {
-          try await self.registerNotificationSupport()
-          try await self.registerDragDropSupport()
-        })
+        self.executePlatformTaskSwitch(
+          false,
+          true,
+          {
+            try await self.registerNotificationSupport()
+            try await self.registerDragDropSupport()
+            return
+          },
+        )
         return
       },
     )
@@ -98,14 +102,18 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
     _ with_sender: any NSDraggingInfo,
   ) -> NSDragOperation {
     return try! self.executePlatformTask(
-      true,
       {
         return .init()
       },
       {
-        self.executePlatformTaskSwitch(false, {
-          try await self.invokeReceiveApplicationDragEnter()
-        })
+        self.executePlatformTaskSwitch(
+          false,
+          true,
+          {
+            try await self.invokeReceiveApplicationDragEnter()
+            return
+          },
+        )
         return .init()
       },
     )
@@ -116,7 +124,6 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
     _ with_sender: any NSDraggingInfo,
   ) -> NSDragOperation {
     return try! self.executePlatformTask(
-      true,
       {
         return .init()
       },
@@ -125,9 +132,14 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
         let point = window.contentView!.convert(with_sender.draggingLocation, from: nil)
         let locationX = Int((point.x).rounded())
         let locationY = Int((window.contentView!.bounds.height - point.y).rounded())
-        self.executePlatformTaskSwitch(false, {
-          try await self.invokeReceiveApplicationDragOver(locationX, locationY)
-        })
+        self.executePlatformTaskSwitch(
+          false,
+          true,
+          {
+            try await self.invokeReceiveApplicationDragOver(locationX, locationY)
+            return
+          },
+        )
         return .link
       },
     )
@@ -138,14 +150,18 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
     _ with_sender: (any NSDraggingInfo)?,
   ) -> Void {
     return try! self.executePlatformTask(
-      true,
       {
         return
       },
       {
-        self.executePlatformTaskSwitch(false, {
-          try await self.invokeReceiveApplicationDragLeave()
-        })
+        self.executePlatformTaskSwitch(
+          false,
+          true,
+          {
+            try await self.invokeReceiveApplicationDragLeave()
+            return
+          },
+        )
         return
       },
     )
@@ -156,7 +172,6 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
     _ with_sender: any NSDraggingInfo,
   ) -> Bool {
     return try! self.executePlatformTask(
-      true,
       {
         return true
       },
@@ -166,9 +181,14 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
           throw NSError(domain: "failed to get url.", code: 0)
         }
         let target = try targetUrl!.map({ (item) in try self.resolveFileUrl(item) })
-        self.executePlatformTaskSwitch(false, {
-          try await self.invokeReceiveApplicationDragDrop(target)
-        })
+        self.executePlatformTaskSwitch(
+          false,
+          true,
+          {
+            try await self.invokeReceiveApplicationDragDrop(target)
+            return
+          },
+        )
         return true
       },
     )
@@ -515,11 +535,34 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
   private func invoke(
     _ method: String,
     _ argument: Dictionary<String, Any?>,
-  ) async throws -> Void {
-    self.executePlatformTaskSwitch(true, { @MainActor in
-      self.channel.invokeMethod(method, arguments: argument)
+  ) async throws -> Dictionary<String, Any?> {
+    let rawResult = try await withCheckedThrowingContinuation({ (rawResultGuard : CheckedContinuation<Any?, Error>) in
+      self.executePlatformTaskSwitch(
+        true,
+        false,
+        { @MainActor in
+          self.channel.invokeMethod(method, arguments: argument, result: { (rawResultValue : Any?) in
+            if let rawError = rawResultValue as? FlutterError {
+              rawResultGuard.resume(throwing: NSError(domain: "\(rawError.code): \(rawError.message ?? "")", code: 0))
+            }
+            else if let rawObject = rawResultValue as? NSObject, rawObject === FlutterMethodNotImplemented {
+              rawResultGuard.resume(throwing: NSError(domain: "unimplemented", code: 0))
+            }
+            else {
+              rawResultGuard.resume(returning: rawResultValue)
+            }
+            return
+          })
+          return
+        },
+      )
+      return
     })
-    return
+    let result = rawResult as? Dictionary<String, Any?>
+    guard result != nil else {
+      throw NSError(domain: "invalid result.", code: 0)
+    }
+    return result!
   }
 
   // ----------------
@@ -527,9 +570,10 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
   private func invokeReceivePlatformException(
     _ message: String,
   ) async throws -> Void {
-    return try await self.invoke("receive_platform_exception", [
+    let _ = try await self.invoke("receive_platform_exception", [
       "message": self.encodeFlutterValue(message),
     ])
+    return
   }
 
   // ----------------
@@ -537,39 +581,44 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
   private func invokeReceiveApplicationLink(
     _ target: String,
   ) async throws -> Void {
-    return try await self.invoke("receive_application_link", [
+    let _ = try await self.invoke("receive_application_link", [
       "target": self.encodeFlutterValue(target),
     ])
+    return
   }
 
   // ----------------
 
   private func invokeReceiveApplicationDragEnter(
   ) async throws -> Void {
-    return try await self.invoke("receive_application_drag_enter", [:])
+    let _ = try await self.invoke("receive_application_drag_enter", [:])
+    return
   }
 
   private func invokeReceiveApplicationDragOver(
     _ locationX: Int,
     _ locationY: Int,
   ) async throws -> Void {
-    return try await self.invoke("receive_application_drag_over", [
+    let _ = try await self.invoke("receive_application_drag_over", [
       "location_x": self.encodeFlutterValue(locationX),
       "location_y": self.encodeFlutterValue(locationY),
     ])
+    return
   }
 
   private func invokeReceiveApplicationDragLeave(
   ) async throws -> Void {
-    return try await self.invoke("receive_application_drag_leave", [:])
+    let _ = try await self.invoke("receive_application_drag_leave", [:])
+    return
   }
 
   private func invokeReceiveApplicationDragDrop(
     _ target: Array<String>,
   ) async throws -> Void {
-    return try await self.invoke("receive_application_drag_drop", [
+    let _ = try await self.invoke("receive_application_drag_drop", [
       "target": self.encodeFlutterValue(target),
     ])
+    return
   }
 
   // MARK: - support
@@ -595,8 +644,7 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
   // MARK: - utility
 
   private func executePlatformTask<TResult>(
-    _ handleException: Bool,
-    _ fallbackAction: @escaping () -> TResult,
+    _ fallbackAction: (@escaping () -> TResult)?,
     _ taskAction: @escaping () throws -> TResult,
   ) throws -> TResult {
     let task: () throws -> TResult = {
@@ -604,42 +652,58 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
         return try taskAction()
       }
       catch {
-        if !handleException {
+        if fallbackAction == nil {
           throw error
         }
-        Task { @MainActor in
-          try await self.invokeReceivePlatformException("\(error.localizedDescription)")
-        }
-        return fallbackAction()
+        self.executePlatformTaskSwitch(
+          false,
+          false,
+          {
+            try await self.invokeReceivePlatformException("\(error.localizedDescription)")
+            return
+          },
+        )
+        return fallbackAction!()
       }
     }
     return try task()
   }
 
-  private func executePlatformTaskSwitch(
+  private func executePlatformTaskSwitch<TResult>(
     _ onMain: Bool,
-    _ taskAction: @escaping () async throws -> Void,
-  ) -> Void {
-    let task: @Sendable () async -> Void = {
+    _ allowReport: Bool,
+    _ taskAction: @escaping () async throws -> TResult,
+  ) -> Task<TResult, Error> {
+    let task: @Sendable () async throws -> TResult = {
       do {
-        try await taskAction()
+        return try await taskAction()
       }
       catch {
-        try? await self.invokeReceivePlatformException("\(error.localizedDescription)")
+        if allowReport {
+          self.executePlatformTaskSwitch(
+            false,
+            false,
+            {
+              try await self.invokeReceivePlatformException("\(error.localizedDescription)")
+              return
+            },
+          )
+        }
+        throw error
       }
-      return
     }
+    var result: Task<TResult, Error>? = nil
     if onMain {
-      Task { @MainActor in
-        await task()
+      result = Task<TResult, Error> { @MainActor in
+        try await task()
       }
     }
     else {
-      Task {
-        await task()
+      result = Task<TResult, Error>.detached {
+        try await task()
       }
     }
-    return
+    return result!
   }
 
   // ----------------
@@ -710,6 +774,7 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
     return path
   }
 
+  @MainActor
   private func openExternalLink(
     _ link: URL,
   ) async throws -> Void {
@@ -719,6 +784,7 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
     return
   }
 
+  @MainActor
   private func getCurrentScreen(
   ) throws -> NSScreen {
     let window = try self.getCurrentWindow()
@@ -742,16 +808,20 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
     withReplyEvent replyEvent: NSAppleEventDescriptor,
   ) {
     return try! self.executePlatformTask(
-      true,
       {
         return
       },
       {
         let link = event.paramDescriptor(forKeyword: AEKeyword(keyDirectObject))?.stringValue
         if link != nil {
-          self.executePlatformTaskSwitch(false, {
-            try await self.invokeReceiveApplicationLink(link!)
-          })
+          self.executePlatformTaskSwitch(
+            false,
+            true,
+            {
+              try await self.invokeReceiveApplicationLink(link!)
+              return
+            },
+          )
         }
         return
       },
@@ -765,7 +835,6 @@ class PlatformIntegrationManager: NSObject, UNUserNotificationCenterDelegate {
     willPresent notification: UNNotification,
   ) async -> UNNotificationPresentationOptions {
     return try! self.executePlatformTask(
-      true,
       {
         return [.sound, .list, .banner]
       },

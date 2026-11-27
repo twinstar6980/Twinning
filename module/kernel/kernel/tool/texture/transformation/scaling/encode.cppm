@@ -23,14 +23,14 @@ export namespace Twinning::Kernel::Tool::Texture::Transformation::Scaling {
 			auto raw_buffer = Array<Image::Pixel>{raw.size().area()};
 			auto ripe_buffer = Array<Image::Pixel>{ripe.size().area()};
 			for (auto & y : SizeRange{raw.size().height}) {
-				Range::assign_from(raw_buffer.sub(raw.size().width * y, raw.size().width), raw[y]);
+				Range::assign_from(raw_buffer.sub(raw.size().width * y, raw.size().width), raw.row(y));
 			}
 			Dependency::avir::CImageResizer<>{8}.resizeImage(
-				unmake_pointer_unsafe<std::uint8_t>(raw_buffer.begin()),
+				unmake_pointer_unsafe<std::uint8_t>(raw_buffer.data()),
 				unmake_box<int>(raw.size().width),
 				unmake_box<int>(raw.size().height),
 				0,
-				unmake_pointer_unsafe<std::uint8_t>(ripe_buffer.begin()),
+				unmake_pointer_unsafe<std::uint8_t>(ripe_buffer.data()),
 				unmake_box<int>(ripe.size().width),
 				unmake_box<int>(ripe.size().height),
 				4,
@@ -38,7 +38,7 @@ export namespace Twinning::Kernel::Tool::Texture::Transformation::Scaling {
 				nullptr
 			);
 			for (auto & y : SizeRange{ripe.size().height}) {
-				Range::assign_from(ripe[y], ripe_buffer.sub(ripe.size().width * y, ripe.size().width));
+				Range::assign_from(ripe.row(y), ripe_buffer.sub(ripe.size().width * y, ripe.size().width));
 			}
 			return;
 		}

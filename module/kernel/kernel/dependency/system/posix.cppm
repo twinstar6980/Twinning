@@ -29,6 +29,8 @@ export module twinning.kernel.dependency.system.posix;
 
 export namespace Twinning::Kernel::Dependency::system::posix {
 
+	using $ssize_t = ssize_t;
+
 	using $off_t = off_t;
 
 	using $stat = struct stat;

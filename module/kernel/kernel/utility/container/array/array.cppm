@@ -6,12 +6,12 @@ export module twinning.kernel.utility.container.array.array;
 import twinning.kernel.utility.builtin;
 import twinning.kernel.utility.trait;
 import twinning.kernel.utility.box;
-import twinning.kernel.utility.exception.utility;
-import twinning.kernel.utility.memory.allocation;
-import twinning.kernel.utility.math.utility;
-import twinning.kernel.utility.container.list.list_view;
-import twinning.kernel.utility.range.algorithm;
+import twinning.kernel.utility.exception;
 import twinning.kernel.utility.range.generic_range;
+import twinning.kernel.utility.range.algorithm;
+import twinning.kernel.utility.memory.utility;
+import twinning.kernel.utility.math.utility;
+import twinning.kernel.utility.container.array.array_view;
 
 export namespace Twinning::Kernel {
 
@@ -25,27 +25,25 @@ export namespace Twinning::Kernel {
 
 		using Element = TElement;
 
-		using Iterator = Pointer<Element>;
-
-		using View = ListView<Element, k_false>;
-
 		using VariableElement = Element;
 
-		using VariableIterator = Pointer<Element>;
+		using VariableIterator = Pointer<VariableElement>;
 
-		using VariableView = ListView<Element, k_false>;
+		using VariableView = ArrayView<Element, k_false>;
 
 		using ConstantElement = Element const;
 
-		using ConstantIterator = Pointer<Element const>;
+		using ConstantIterator = Pointer<ConstantElement>;
 
-		using ConstantView = ListView<Element, k_true>;
+		using ConstantView = ArrayView<Element, k_true>;
 
 	protected:
 
-		Iterator m_data;
+		VariableIterator m_data;
 
 		Size m_size;
+
+		Size m_capacity;
 
 	public:
 
@@ -62,7 +60,8 @@ export namespace Twinning::Kernel {
 		Array(
 		) :
 			m_data{},
-			m_size{} {
+			m_size{},
+			m_capacity{} {
 			return;
 		}
 
@@ -88,7 +87,7 @@ export namespace Twinning::Kernel {
 			Size const & size
 		) :
 			Array{} {
-			thiz.allocate(size);
+			thiz.allocate_full(size);
 			return;
 		}
 
@@ -100,14 +99,6 @@ export namespace Twinning::Kernel {
 			return;
 		}
 
-		explicit Array(
-			ConstantIterator const & begin,
-			Size const &             size
-		) :
-			Array{ConstantView{begin, size}} {
-			return;
-		}
-
 		#pragma endregion
 
 		#pragma region operator
@@ -115,6 +106,7 @@ export namespace Twinning::Kernel {
 		auto operator =(
 			Array const & that
 		) -> Array & {
+			M_avoid_self_assignment();
 			thiz.assign(that);
 			return thiz;
 		}
@@ -122,7 +114,8 @@ export namespace Twinning::Kernel {
 		auto operator =(
 			Array && that
 		) -> Array & {
-			thiz.bind(that);
+			M_avoid_self_assignment();
+			thiz.bind(that.m_data, that.m_size, that.m_capacity);
 			that.unbind();
 			return thiz;
 		}
@@ -132,7 +125,7 @@ export namespace Twinning::Kernel {
 		auto operator =(
 			ConstantView const & that
 		) -> Array & {
-			thiz.assign(that);
+			thiz.assign(auto{that});
 			return thiz;
 		}
 
@@ -148,14 +141,6 @@ export namespace Twinning::Kernel {
 			Size const & index
 		) const -> ConstantElement & {
 			return thiz.at(index);
-		}
-
-		// ----------------
-
-		auto operator ()(
-			Size const & index
-		) -> VariableElement & {
-			return thiz.at_force(index);
 		}
 
 		// ----------------
@@ -182,33 +167,39 @@ export namespace Twinning::Kernel {
 			return unsafe_cast<ConstantView>(thiz);
 		}
 
-		// ----------------
+		#pragma endregion
 
-		auto view(
-		) -> VariableView {
-			return thiz.as_view();
+		#pragma region data
+
+		auto data(
+		) -> VariableIterator {
+			return thiz.as_view().data();
 		}
 
-		auto view(
-		) const -> ConstantView {
-			return thiz.as_view();
+		auto data(
+		) const -> ConstantIterator {
+			return thiz.as_view().data();
 		}
 
 		#pragma endregion
 
-		#pragma region size & index
+		#pragma region size
 
 		auto size(
 		) const -> Size {
 			return thiz.as_view().size();
 		}
 
+		// ----------------
+
 		auto empty(
 		) const -> Boolean {
 			return thiz.as_view().empty();
 		}
 
-		// ----------------
+		#pragma endregion
+
+		#pragma region index
 
 		auto begin_index(
 		) const -> Size {
@@ -314,42 +305,61 @@ export namespace Twinning::Kernel {
 
 		auto sub(
 			Size const & begin,
-			Size const & size
+			Size const & count
 		) -> VariableView {
-			return thiz.as_view().sub(begin, size);
+			return thiz.as_view().sub(begin, count);
 		}
 
 		auto head(
-			Size const & size
+			Size const & count
 		) -> VariableView {
-			return thiz.as_view().head(size);
+			return thiz.as_view().head(count);
 		}
 
 		auto tail(
-			Size const & size
+			Size const & count
 		) -> VariableView {
-			return thiz.as_view().tail(size);
+			return thiz.as_view().tail(count);
 		}
 
 		// ----------------
 
 		auto sub(
 			Size const & begin,
-			Size const & size
+			Size const & count
 		) const -> ConstantView {
-			return thiz.as_view().sub(begin, size);
+			return thiz.as_view().sub(begin, count);
 		}
 
 		auto head(
-			Size const & size
+			Size const & count
 		) const -> ConstantView {
-			return thiz.as_view().head(size);
+			return thiz.as_view().head(count);
 		}
 
 		auto tail(
-			Size const & size
+			Size const & count
 		) const -> ConstantView {
-			return thiz.as_view().tail(size);
+			return thiz.as_view().tail(count);
+		}
+
+		#pragma endregion
+
+		#pragma region capacity
+
+		auto capacity(
+		) const -> Size {
+			return thiz.m_capacity;
+		}
+
+		auto reserve(
+		) const -> Size {
+			return thiz.capacity() - thiz.size();
+		}
+
+		auto full(
+		) const -> Boolean {
+			return thiz.size() == thiz.capacity();
 		}
 
 		#pragma endregion
@@ -360,125 +370,214 @@ export namespace Twinning::Kernel {
 		) -> Void {
 			thiz.m_data = k_null_pointer;
 			thiz.m_size = 0_sz;
+			thiz.m_capacity = 0_sz;
 			return;
 		}
 
 		auto bind(
-			Iterator const & begin,
-			Size const &     size
+			VariableIterator const & data,
+			Size const &             size,
+			Size const &             capacity
 		) -> Void {
+			assert_test(size <= capacity);
 			thiz.reset();
-			thiz.m_data = begin;
+			thiz.m_data = data;
 			thiz.m_size = size;
+			thiz.m_capacity = capacity;
 			return;
-		}
-
-		auto bind(
-			View const & view
-		) -> Void {
-			return thiz.bind(view.begin(), view.size());
 		}
 
 		#pragma endregion
 
-		#pragma region allocate
+		#pragma region allocation
 
 		auto reset(
 		) -> Void {
 			if (thiz.m_data != k_null_pointer) {
-				free_instance_array(thiz.m_data);
+				Memory::free_array(thiz.m_data);
 			}
 			thiz.m_size = 0_sz;
+			thiz.m_capacity = 0_sz;
 			return;
 		}
 
 		auto allocate(
-			Size const & size
+			Size const & capacity
 		) -> Void {
 			thiz.reset();
-			thiz.m_data = allocate_instance_array<Element>(size);
-			thiz.m_size = size;
+			thiz.m_data = Memory::allocate_array<Element>(capacity);
+			thiz.m_size = 0_sz;
+			thiz.m_capacity = capacity;
 			return;
 		}
 
-		// ----------------
+		auto allocate_full(
+			Size const & capacity
+		) -> Void {
+			thiz.allocate(capacity);
+			thiz.resize(capacity);
+			return;
+		}
 
-		auto allocate_retain(
-			Size const & size
+		auto reallocate(
+			Size const & capacity
 		) -> Void {
 			auto old = as_moveable(thiz);
-			auto old_size = Math::minimum(size, old.size());
-			thiz.allocate(size);
-			Range::assign_from(thiz.head(old_size), Range::make_moveable_range_of(old.head(old_size)));
+			auto old_size = Math::minimum(capacity, old.size());
+			thiz.allocate(capacity);
+			thiz.resize(old_size);
+			Range::assign_from(thiz, Range::make_moveable_range_of(old.head(old_size)));
 			old.reset();
 			return;
 		}
 
-		auto shrink(
-			Size const & size
-		) -> Void {
-			assert_test(size <= thiz.size());
-			return thiz.allocate_retain(thiz.size() - size);
-		}
+		#pragma endregion
 
-		auto expand(
+		#pragma region resize
+
+		auto resize(
 			Size const & size
 		) -> Void {
-			return thiz.allocate_retain(thiz.size() + size);
+			assert_test(size <= thiz.capacity());
+			thiz.m_size = size;
+			return;
 		}
 
 		#pragma endregion
 
 		#pragma region assign
 
-		template <typename TRangeObject> requires
-			CategoryConstraint<IsValid<TRangeObject>>
-			&& (IsRange<AsPure<TRangeObject>>)
+		template <typename TRange> requires
+			CategoryConstraint<IsValid<TRange>>
+			&& (IsRange<AsPure<TRange>>)
 		auto assign(
-			TRangeObject && range
+			TRange && range
 		) -> Void {
-			thiz.allocate(Range::size(as_forward<TRangeObject>(range)));
-			Range::assign_from(thiz, as_forward<TRangeObject>(range));
+			auto _ = as_moveable(thiz);
+			thiz.allocate_full(Range::size(as_forward<TRange>(range)));
+			Range::assign_from(thiz, as_forward<TRange>(range));
 			return;
 		}
 
-		template <typename TRangeObject, typename TTransformer> requires
-			CategoryConstraint<IsValid<TRangeObject> && IsPureInstance<TTransformer>>
-			&& (IsRange<AsPure<TRangeObject>>)
+		template <typename TRange, typename TTransformer> requires
+			CategoryConstraint<IsValid<TRange> && IsPureInstance<TTransformer>>
+			&& (IsRange<AsPure<TRange>>)
 			&& (IsGenericCallable<TTransformer>)
 		auto assign(
-			TRangeObject &&      range,
+			TRange &&            range,
 			TTransformer const & transformer
 		) -> Void {
-			thiz.allocate(Range::size(as_forward<TRangeObject>(range)));
-			Range::assign_from(thiz, as_forward<TRangeObject>(range), transformer);
+			auto _ = as_moveable(thiz);
+			thiz.allocate_full(Range::size(as_forward<TRange>(range)));
+			Range::assign_from(thiz, as_forward<TRange>(range), transformer);
 			return;
 		}
 
-		template <typename TRangeObject, typename TConverter> requires
-			CategoryConstraint<IsValid<TRangeObject> && IsPureInstance<TConverter>>
-			&& (IsRange<AsPure<TRangeObject>>)
+		template <typename TRange, typename TConverter> requires
+			CategoryConstraint<IsValid<TRange> && IsPureInstance<TConverter>>
+			&& (IsRange<AsPure<TRange>>)
 			&& (IsGenericCallable<TConverter>)
 		auto convert(
-			TRangeObject &&    range,
+			TRange &&          range,
 			TConverter const & converter
 		) -> Void {
-			thiz.allocate(Range::size(as_forward<TRangeObject>(range)));
-			Range::convert_from(thiz, as_forward<TRangeObject>(range), converter);
+			auto _ = as_moveable(thiz);
+			thiz.allocate_full(Range::size(as_forward<TRange>(range)));
+			Range::convert_from(thiz, as_forward<TRange>(range), converter);
 			return;
 		}
 
 		#pragma endregion
 
-		#pragma region element force
+		#pragma region insert
 
-		auto at_force(
-			Size const & index
+		template <typename ... TArgument> requires
+			CategoryConstraint<IsValid<TArgument ...>>
+			&& (IsConstructible<Element, TArgument && ...>)
+		auto insert(
+			Size const &     position,
+			TArgument && ... argument
 		) -> VariableElement & {
-			if (index >= thiz.end_index()) {
-				thiz.allocate_retain(index + 1_sz);
-			}
-			return thiz.at(index);
+			auto element = Element{as_forward<TArgument>(argument) ...};
+			thiz.insert_space(position, 1_sz);
+			restruct(thiz.at(position), as_moveable(element));
+			return thiz.at(position);
+		}
+
+		template <typename TRange> requires
+			CategoryConstraint<IsValid<TRange>>
+			&& (IsRange<AsPure<TRange>>)
+		auto insert_range(
+			Size const & position,
+			TRange &&    range
+		) -> Void {
+			// NOTE: BUG: ub if memory overlap
+			auto size = Range::size(as_forward<TRange>(range));
+			thiz.insert_space(position, size);
+			Range::restruct_from(thiz.sub(position, size), as_forward<TRange>(range));
+			return;
+		}
+
+		// ----------------
+
+		template <typename ... TArgument> requires
+			CategoryConstraint<IsValid<TArgument ...>>
+			&& (IsConstructible<Element, TArgument && ...>)
+		auto prepend(
+			TArgument && ... argument
+		) -> VariableElement & {
+			return thiz.insert(thiz.begin_index(), as_forward<TArgument>(argument) ...);
+		}
+
+		template <typename TRange> requires
+			CategoryConstraint<IsValid<TRange>>
+			&& (IsRange<AsPure<TRange>>)
+		auto prepend_range(
+			TRange && range
+		) -> Void {
+			return thiz.insert_range(thiz.begin_index(), as_forward<TRange>(range));
+		}
+
+		// ----------------
+
+		template <typename ... TArgument> requires
+			CategoryConstraint<IsValid<TArgument ...>>
+			&& (IsConstructible<Element, TArgument && ...>)
+		auto append(
+			TArgument && ... argument
+		) -> VariableElement & {
+			return thiz.insert(thiz.end_index(), as_forward<TArgument>(argument) ...);
+		}
+
+		template <typename TRange> requires
+			CategoryConstraint<IsValid<TRange>>
+			&& (IsRange<AsPure<TRange>>)
+		auto append_range(
+			TRange && range
+		) -> Void {
+			return thiz.insert_range(thiz.end_index(), as_forward<TRange>(range));
+		}
+
+		#pragma endregion
+
+		#pragma region remove
+
+		auto remove(
+			Size const & begin,
+			Size const & count
+		) -> Void {
+			assert_test(begin + count <= thiz.end_index());
+			auto move_count = thiz.size() - (begin + count);
+			Range::assign_from(thiz.sub(begin, move_count), Range::make_moveable_range_of(thiz.sub(begin + count, move_count)));
+			Range::restruct(thiz.tail(count));
+			thiz.m_size -= count;
+			return;
+		}
+
+		auto remove_at(
+			Size const & position
+		) -> Void {
+			return thiz.remove(position, 1_sz);
 		}
 
 		#pragma endregion
@@ -491,7 +590,30 @@ export namespace Twinning::Kernel {
 			Array const & thix,
 			Array const & that
 		) -> bool {
-			return Range::equal(thix, that);
+			return thix.as_view() == that.as_view();
+		}
+
+		#pragma endregion
+
+	protected:
+
+		#pragma region insert space
+
+		auto insert_space(
+			Size const & position,
+			Size const & count
+		) -> Void {
+			assert_test(position <= thiz.end_index());
+			if (count > thiz.reserve()) {
+				thiz.reallocate((thiz.size() + count) * 2_sz);
+			}
+			auto shift_begin = thiz.end_index();
+			auto shift_count = thiz.end_index() - position;
+			thiz.m_size += count;
+			if (shift_count != 0_sz) {
+				Range::assign_from(Range::make_reverse_range_n(thiz.end(), shift_count), Range::make_moveable_range_of(Range::make_reverse_range_n(thiz.iterator(shift_begin), shift_count)));
+			}
+			return;
 		}
 
 		#pragma endregion

@@ -78,7 +78,7 @@ class CommandPanel extends StatelessWidget {
             ),
             Gap.horizontal(4),
           ]),
-          StyledDivider.standard(),
+          StyledDivider.standard(direction: .horizontal),
           ...this.itemConfiguration.argument.mapIndexed((argumentIndex, argumentConfiguration) => BoxContainer.of(
             margin: !this.expanded.value && this.argument[argumentIndex].value == null ? .zero : .fromLTRB(0, 8, 0, 8),
             child: ArgumentBar(
@@ -94,7 +94,7 @@ class CommandPanel extends StatelessWidget {
             Gap.vertical(16),
           ],
           if (!this.expanded.value) ...[
-            StyledDivider.standard(),
+            StyledDivider.standard(direction: .horizontal),
           ],
           Gap.vertical(8),
           FlexContainer.horizontal([

@@ -319,52 +319,74 @@ enum StyledDividerVariant {
   minimal,
 }
 
+typedef StyledDividerDirection = lib.Axis;
+
 class StyledDivider extends StatelessWidget {
 
   const StyledDivider._({
     super.key,
     required this.variant,
+    required this.direction,
     required this.indent,
   });
 
   const StyledDivider.standard({
-    Key?    key = null,
-    Floater indent = 0,
+    Key?                            key = null,
+    required StyledDividerDirection direction,
+    Floater                         indent = 0,
   }) : this._(
     key: key,
     variant: .standard,
+    direction: direction,
     indent: indent,
   );
 
   const StyledDivider.minimal({
-    Key?    key = null,
-    Floater indent = 0,
+    Key?                            key = null,
+    required StyledDividerDirection direction,
+    Floater                         indent = 0,
   }) : this._(
     key: key,
     variant: .minimal,
+    direction: direction,
     indent: indent,
   );
 
   // ----------------
 
-  final StyledDividerVariant variant;
-  final Floater              indent;
+  final StyledDividerVariant   variant;
+  final StyledDividerDirection direction;
+  final Floater                indent;
 
   // ----------------
 
   @override
   build(context) {
     return switch (this.variant) {
-      .standard => material.Divider(
-        height: 16,
-        indent: this.indent,
-        endIndent: this.indent,
-      ),
-      .minimal => material.Divider(
-        height: 1,
-        indent: this.indent,
-        endIndent: this.indent,
-      ),
+      .standard => switch (this.direction) {
+        .horizontal => material.Divider(
+          height: 16,
+          indent: this.indent,
+          endIndent: this.indent,
+        ),
+        .vertical => material.VerticalDivider(
+          width: 16,
+          indent: this.indent,
+          endIndent: this.indent,
+        ),
+      },
+      .minimal => switch (this.direction) {
+        .horizontal => material.Divider(
+          height: 1,
+          indent: this.indent,
+          endIndent: this.indent,
+        ),
+        .vertical => material.VerticalDivider(
+          width: 1,
+          indent: this.indent,
+          endIndent: this.indent,
+        ),
+      },
     };
   }
 
@@ -2613,7 +2635,7 @@ class _StyledModalBottomSheetState extends State<StyledModalBottomSheet> {
             ).withFlexExpanded(),
           ]),
         ),
-        StyledDivider.minimal(indent: 12),
+        StyledDivider.minimal(direction: .horizontal, indent: 12),
         StatefulBuilder(
           builder: (context, setStateForPanel) => FlexContainer.vertical(mainStretch: false, [
             ...this.widget.contentBuilder(context, setStateForPanel),

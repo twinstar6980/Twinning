@@ -6,18 +6,17 @@ export module twinning.kernel.utility.storage.utility;
 import twinning.kernel.utility.builtin;
 import twinning.kernel.utility.trait;
 import twinning.kernel.utility.box;
-import twinning.kernel.utility.exception.utility;
+import twinning.kernel.utility.exception;
 import twinning.kernel.utility.storage.path;
 import twinning.kernel.utility.miscellaneous.finalizer;
-import twinning.kernel.utility.miscellaneous.byte_series.container;
-import twinning.kernel.utility.string.character_type;
+import twinning.kernel.utility.binary.binary;
+import twinning.kernel.utility.string.utility;
 import twinning.kernel.utility.string.basic_string_view;
 import twinning.kernel.utility.string.basic_string;
 import twinning.kernel.utility.string.string;
-import twinning.kernel.utility.container.optional.optional;
-import twinning.kernel.utility.container.optional.null_optional;
-import twinning.kernel.utility.container.list.list;
-import twinning.kernel.utility.range.number_range;
+import twinning.kernel.utility.container.optional;
+import twinning.kernel.utility.container.list;
+import twinning.kernel.utility.range.integer_range;
 import twinning.kernel.utility.math.utility;
 import twinning.kernel.utility.miscellaneous.system_native_string;
 import twinning.kernel.dependency.system.win32;
@@ -57,8 +56,8 @@ export namespace Twinning::Kernel::Storage {
 			Path const & value
 		) -> std::filesystem::path {
 			auto value_string = value.emit_native();
-			assert_test(is_safe_null_terminated_string(value_string));
-			return std::filesystem::path{unsafe_cast<std::u8string_view>(make_std_string_view(value_string))};
+			assert_test(is_safe_null_terminated_string(value_string.as_view()));
+			return std::filesystem::path{unsafe_cast<std::u8string_view>(to_std_string_view(value_string))};
 		}
 
 		#pragma endregion
@@ -120,7 +119,7 @@ export namespace Twinning::Kernel::Storage {
 		#pragma region file
 
 		inline auto open_file(
-			Pointer<Void> & handle,
+			std::intptr_t & handle,
 			Path const &    path,
 			Boolean const & mode_create,
 			Boolean const & mode_read,
@@ -129,7 +128,7 @@ export namespace Twinning::Kernel::Storage {
 			assert_test(mode_read || mode_write);
 			#if defined M_system_windows
 			auto native_handle = Dependency::system::win32::$CreateFileW(
-				unmake_pointer_unsafe<wchar_t>(SystemNativeString::to_native(path.emit_native(), true).begin()),
+				unmake_pointer_unsafe<wchar_t>(SystemNativeString::to_native(path.emit_native(), true).data()),
 				(!mode_read ? 0 : Dependency::system::win32::$GENERIC_READ) | (!mode_write ? 0 : Dependency::system::win32::$GENERIC_WRITE),
 				Dependency::system::win32::$FILE_SHARE_READ | Dependency::system::win32::$FILE_SHARE_WRITE | Dependency::system::win32::$FILE_SHARE_DELETE,
 				nullptr,
@@ -138,7 +137,7 @@ export namespace Twinning::Kernel::Storage {
 				nullptr
 			);
 			assert_test(native_handle != Dependency::system::win32::$INVALID_HANDLE_VALUE);
-			handle = make_pointer_unsafe<Void>(native_handle);
+			handle = reinterpret_cast<std::intptr_t>(native_handle);
 			return make_finalizer(
 				[native_handle] {
 					auto state_b = Dependency::system::win32::$BOOL{};
@@ -162,12 +161,12 @@ export namespace Twinning::Kernel::Storage {
 				flag |= Dependency::system::posix::$O_CREAT | Dependency::system::posix::$O_EXCL;
 			}
 			auto native_handle = Dependency::system::posix::$open(
-				unmake_pointer_unsafe<char>(SystemNativeString::to_native(path.emit_native(), true).begin()),
+				unmake_pointer_unsafe<char>(SystemNativeString::to_native(path.emit_native(), true).data()),
 				flag,
 				0644
 			);
 			assert_test(native_handle != -1);
-			handle = make_pointer_unsafe<Void>(reinterpret_cast<void *>(native_handle));
+			handle = static_cast<std::intptr_t>(native_handle);
 			return make_finalizer(
 				[native_handle] {
 					auto state_i = int{};
@@ -179,13 +178,14 @@ export namespace Twinning::Kernel::Storage {
 		}
 
 		inline auto seek_file(
-			Pointer<Void> const & handle,
+			std::intptr_t const & handle,
 			Size const &          position
 		) -> Void {
 			#if defined M_system_windows
 			auto state_b = Dependency::system::win32::$BOOL{};
+			auto native_handle = reinterpret_cast<Dependency::system::win32::$HANDLE>(handle);
 			state_b = Dependency::system::win32::$SetFilePointerEx(
-				static_cast<Dependency::system::win32::$HANDLE>(handle.value),
+				native_handle,
 				Dependency::system::win32::$LARGE_INTEGER{
 					.QuadPart = unmake_box<Dependency::system::win32::$LONGLONG>(position),
 				},
@@ -196,8 +196,9 @@ export namespace Twinning::Kernel::Storage {
 			#endif
 			#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
 			auto state_o = Dependency::system::posix::$off_t{};
+			auto native_handle = static_cast<int>(handle);
 			state_o = Dependency::system::posix::$lseek(
-				static_cast<int>(reinterpret_cast<std::intptr_t>(handle.value)),
+				native_handle,
 				unmake_box<Dependency::system::posix::$off_t>(position),
 				Dependency::system::posix::$SEEK_SET
 			);
@@ -209,14 +210,15 @@ export namespace Twinning::Kernel::Storage {
 		// ----------------
 
 		inline auto size_file(
-			Pointer<Void> const & handle
+			std::intptr_t const & handle
 		) -> Size {
 			auto result = Size{};
 			#if defined M_system_windows
 			auto state_b = Dependency::system::win32::$BOOL{};
+			auto native_handle = reinterpret_cast<Dependency::system::win32::$HANDLE>(handle);
 			auto native_position = Dependency::system::win32::$LARGE_INTEGER{};
 			state_b = Dependency::system::win32::$GetFileSizeEx(
-				static_cast<Dependency::system::win32::$HANDLE>(handle.value),
+				native_handle,
 				&native_position
 			);
 			assert_test(state_b != Dependency::system::win32::$FALSE);
@@ -224,33 +226,36 @@ export namespace Twinning::Kernel::Storage {
 			#endif
 			#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
 			auto state_i = int{};
-			auto stat = Dependency::system::posix::$stat{};
+			auto native_handle = static_cast<int>(handle);
+			auto native_stat = Dependency::system::posix::$stat{};
 			state_i = Dependency::system::posix::$fstat(
-				static_cast<int>(reinterpret_cast<std::intptr_t>(handle.value)),
-				&stat
+				native_handle,
+				&native_stat
 			);
 			assert_test(state_i != -1);
-			result = make_box<Size>(stat.st_size);
+			result = make_box<Size>(native_stat.st_size);
 			#endif
 			return result;
 		}
 
 		inline auto resize_file(
-			Pointer<Void> const & handle,
+			std::intptr_t const & handle,
 			Size const &          size
 		) -> Void {
 			#if defined M_system_windows
 			auto state_b = Dependency::system::win32::$BOOL{};
 			seek_file(handle, size);
+			auto native_handle = reinterpret_cast<Dependency::system::win32::$HANDLE>(handle);
 			state_b = Dependency::system::win32::$SetEndOfFile(
-				static_cast<Dependency::system::win32::$HANDLE>(handle.value)
+				native_handle
 			);
 			assert_test(state_b != Dependency::system::win32::$FALSE);
 			#endif
 			#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
 			auto state_i = int{};
+			auto native_handle = static_cast<int>(handle);
 			state_i = Dependency::system::posix::$ftruncate(
-				static_cast<int>(reinterpret_cast<std::intptr_t>(handle.value)),
+				native_handle,
 				unmake_box<Dependency::system::posix::$off_t>(size)
 			);
 			assert_test(state_i != -1);
@@ -261,18 +266,19 @@ export namespace Twinning::Kernel::Storage {
 		// ----------------
 
 		inline auto read_file(
-			Pointer<Void> const &        handle,
-			VariableByteListView const & data
+			std::intptr_t const &      handle,
+			VariableBinaryView const & data
 		) -> Void {
 			#if defined M_system_windows
 			auto state_b = Dependency::system::win32::$BOOL{};
+			auto native_handle = reinterpret_cast<Dependency::system::win32::$HANDLE>(handle);
 			auto current_position = 0_sz;
 			while (current_position != data.size()) {
 				auto current_count = Math::minimum(0x40000000_sz, data.size() - current_position);
 				auto current_count_actual = Dependency::system::win32::$DWORD{};
 				state_b = Dependency::system::win32::$ReadFile(
-					static_cast<Dependency::system::win32::$HANDLE>(handle.value),
-					unmake_pointer_unsafe<void>(data.begin() + current_position),
+					native_handle,
+					unmake_pointer_unsafe<void>(data.data() + current_position),
 					unmake_box<Dependency::system::win32::$DWORD>(current_count),
 					&current_count_actual,
 					nullptr
@@ -283,15 +289,17 @@ export namespace Twinning::Kernel::Storage {
 			}
 			#endif
 			#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
+			auto native_handle = static_cast<int>(handle);
 			auto current_position = 0_sz;
 			while (current_position != data.size()) {
 				auto current_count = Math::minimum(0x40000000_sz, data.size() - current_position);
-				auto current_count_actual = Dependency::system::posix::$read(
-					static_cast<int>(reinterpret_cast<std::intptr_t>(handle.value)),
-					unmake_pointer_unsafe<void>(data.begin() + current_position),
+				auto current_count_actual = Dependency::system::posix::$ssize_t{};
+				current_count_actual = Dependency::system::posix::$read(
+					native_handle,
+					unmake_pointer_unsafe<void>(data.data() + current_position),
 					unmake_box<std::size_t>(current_count)
 				);
-				assert_test(current_count_actual != -1);
+				assert_test(current_count_actual != -1z);
 				assert_test(make_box<Size>(current_count_actual) == current_count);
 				current_position += current_count;
 			}
@@ -300,18 +308,19 @@ export namespace Twinning::Kernel::Storage {
 		}
 
 		inline auto write_file(
-			Pointer<Void> const &        handle,
-			ConstantByteListView const & data
+			std::intptr_t const &      handle,
+			ConstantBinaryView const & data
 		) -> Void {
 			#if defined M_system_windows
 			auto state_b = Dependency::system::win32::$BOOL{};
+			auto native_handle = reinterpret_cast<Dependency::system::win32::$HANDLE>(handle);
 			auto current_position = 0_sz;
 			while (current_position != data.size()) {
 				auto current_count = Math::minimum(0x40000000_sz, data.size() - current_position);
 				auto current_count_actual = Dependency::system::win32::$DWORD{};
 				state_b = Dependency::system::win32::$WriteFile(
-					static_cast<Dependency::system::win32::$HANDLE>(handle.value),
-					unmake_pointer_unsafe<void>(data.begin() + current_position),
+					native_handle,
+					unmake_pointer_unsafe<void>(data.data() + current_position),
 					unmake_box<Dependency::system::win32::$DWORD>(current_count),
 					&current_count_actual,
 					nullptr
@@ -322,15 +331,17 @@ export namespace Twinning::Kernel::Storage {
 			}
 			#endif
 			#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
+			auto native_handle = static_cast<int>(handle);
 			auto current_position = 0_sz;
 			while (current_position != data.size()) {
 				auto current_count = Math::minimum(0x40000000_sz, data.size() - current_position);
-				auto current_count_actual = Dependency::system::posix::$write(
-					static_cast<int>(reinterpret_cast<std::intptr_t>(handle.value)),
-					unmake_pointer_unsafe<void>(data.begin() + current_position),
+				auto current_count_actual = Dependency::system::posix::$ssize_t{};
+				current_count_actual = Dependency::system::posix::$write(
+					native_handle,
+					unmake_pointer_unsafe<void>(data.data() + current_position),
 					unmake_box<std::size_t>(current_count)
 				);
-				assert_test(current_count_actual != -1);
+				assert_test(current_count_actual != -1z);
 				assert_test(make_box<Size>(current_count_actual) == current_count);
 				current_position += current_count;
 			}
@@ -379,7 +390,7 @@ export namespace Twinning::Kernel::Storage {
 			auto is_directory = Boolean{};
 			#if defined M_system_windows
 			auto attribute = Dependency::system::win32::$GetFileAttributesW(
-				unmake_pointer_unsafe<wchar_t>(SystemNativeString::to_native(target.emit_native(), true).begin())
+				unmake_pointer_unsafe<wchar_t>(SystemNativeString::to_native(target.emit_native(), true).data())
 			);
 			is_directory = attribute != Dependency::system::win32::$INVALID_FILE_ATTRIBUTES && (attribute & Dependency::system::win32::$FILE_ATTRIBUTE_DIRECTORY) != 0;
 			#endif
@@ -394,7 +405,7 @@ export namespace Twinning::Kernel::Storage {
 		else if (type == Detail::FileType::Constant::directory()) {
 			create_directory(placement);
 			for (auto & item : std::filesystem::directory_iterator{Detail::emit_path(target), std::filesystem::directory_options::none}) {
-				auto item_name = make_string(unsafe_cast<std::string>(item.path().filename().generic_u8string()));
+				auto item_name = from_std_string(unsafe_cast<std::string>(item.path().filename().generic_u8string()));
 				copy(target.join(item_name), placement.join(item_name), follow_link);
 			}
 		}
@@ -488,7 +499,7 @@ export namespace Twinning::Kernel::Storage {
 	) -> Path {
 		assert_test(exist_link(target));
 		auto referent = std::filesystem::read_symlink(Detail::emit_path(target));
-		return Path{make_string(unsafe_cast<std::string>(referent.generic_u8string()))};
+		return Path{from_std_string(unsafe_cast<std::string>(referent.generic_u8string()))};
 	}
 
 	#pragma endregion
@@ -513,8 +524,8 @@ export namespace Twinning::Kernel::Storage {
 		if (target_parent.has() && !exist_directory(target_parent.get())) {
 			create_directory(target_parent.get());
 		}
-		auto handle = Pointer<Void>{};
-		auto handle_finalizer = Detail::open_file(handle, target, k_true, k_true, k_true);
+		auto handle = std::intptr_t{-1};
+		auto _ = Detail::open_file(handle, target, k_true, k_true, k_true);
 		return;
 	}
 
@@ -524,8 +535,8 @@ export namespace Twinning::Kernel::Storage {
 		Path const & target
 	) -> Size {
 		assert_test(exist_file(target));
-		auto handle = Pointer<Void>{};
-		auto handle_finalizer = Detail::open_file(handle, target, k_false, k_true, k_false);
+		auto handle = std::intptr_t{-1};
+		auto _ = Detail::open_file(handle, target, k_false, k_true, k_false);
 		return Detail::size_file(handle);
 	}
 
@@ -534,8 +545,8 @@ export namespace Twinning::Kernel::Storage {
 		Size const & size
 	) -> Void {
 		assert_test(exist_file(target));
-		auto handle = Pointer<Void>{};
-		auto handle_finalizer = Detail::open_file(handle, target, k_false, k_false, k_true);
+		auto handle = std::intptr_t{-1};
+		auto _ = Detail::open_file(handle, target, k_false, k_false, k_true);
 		Detail::resize_file(handle, size);
 		return;
 	}
@@ -543,13 +554,13 @@ export namespace Twinning::Kernel::Storage {
 	// ----------------
 
 	inline auto read_file(
-		Path const &                 target,
-		Size const &                 offset,
-		VariableByteListView const & data
+		Path const &               target,
+		Size const &               offset,
+		VariableBinaryView const & data
 	) -> Void {
 		assert_test(exist_file(target));
-		auto handle = Pointer<Void>{};
-		auto handle_finalizer = Detail::open_file(handle, target, k_false, k_true, k_false);
+		auto handle = std::intptr_t{-1};
+		auto _ = Detail::open_file(handle, target, k_false, k_true, k_false);
 		auto capacity = Detail::size_file(handle);
 		assert_test(capacity >= offset + data.size());
 		Detail::seek_file(handle, offset);
@@ -558,13 +569,13 @@ export namespace Twinning::Kernel::Storage {
 	}
 
 	inline auto write_file(
-		Path const &                 target,
-		Size const &                 offset,
-		ConstantByteListView const & data
+		Path const &               target,
+		Size const &               offset,
+		ConstantBinaryView const & data
 	) -> Void {
 		assert_test(exist_file(target));
-		auto handle = Pointer<Void>{};
-		auto handle_finalizer = Detail::open_file(handle, target, k_false, k_false, k_true);
+		auto handle = std::intptr_t{-1};
+		auto _ = Detail::open_file(handle, target, k_false, k_false, k_true);
 		auto capacity = Detail::size_file(handle);
 		assert_test(capacity >= offset + data.size());
 		Detail::seek_file(handle, offset);
@@ -606,74 +617,72 @@ export namespace Twinning::Kernel::Storage {
 	) -> List<Path> {
 		assert_test(exist_directory(target));
 		auto result_count = 0_sz;
+		[&](
+			this auto && self,
+			Path const & current_target,
+			Size const & current_depth
+		) -> Void {
+				if (!depth.has() || current_depth < depth.get()) {
+					for (auto & item : std::filesystem::directory_iterator{Detail::emit_path(current_target), std::filesystem::directory_options::none}) {
+						auto item_type = Detail::resolve_type(item.symlink_status().type());
+						auto item_name = from_std_string(unsafe_cast<std::string>(item.path().filename().generic_u8string()));
+						if (follow_link && item_type == Detail::FileType::Constant::link()) {
+							auto referent_type = Detail::resolve_type(item.status().type());
+							if (referent_type != Detail::FileType::Constant::none()) {
+								item_type = referent_type;
+							}
+						}
+						if (allow_link && item_type == Detail::FileType::Constant::link()) {
+							++result_count;
+						}
+						if (allow_file && item_type == Detail::FileType::Constant::file()) {
+							++result_count;
+						}
+						if (allow_directory && item_type == Detail::FileType::Constant::directory()) {
+							++result_count;
+						}
+						if (item_type == Detail::FileType::Constant::directory()) {
+							self(current_target.join(item_name), current_depth + 1_sz);
+						}
+					}
+				}
+				return;
+			}(target, 0_sz);
 		auto result = List<Path>{};
-		auto iterate_count = [&]<typename TSelf>(
-			TSelf const & self,
-			Path const &  current_target,
-			Size const &  current_depth
-		) -> Void {
-			if (!depth.has() || current_depth < depth.get()) {
-				for (auto & item : std::filesystem::directory_iterator{Detail::emit_path(current_target), std::filesystem::directory_options::none}) {
-					auto item_type = Detail::resolve_type(item.symlink_status().type());
-					auto item_name = make_string(unsafe_cast<std::string>(item.path().filename().generic_u8string()));
-					if (follow_link && item_type == Detail::FileType::Constant::link()) {
-						auto referent_type = Detail::resolve_type(item.status().type());
-						if (referent_type != Detail::FileType::Constant::none()) {
-							item_type = referent_type;
-						}
-					}
-					if (allow_link && item_type == Detail::FileType::Constant::link()) {
-						++result_count;
-					}
-					if (allow_file && item_type == Detail::FileType::Constant::file()) {
-						++result_count;
-					}
-					if (allow_directory && item_type == Detail::FileType::Constant::directory()) {
-						++result_count;
-					}
-					if (item_type == Detail::FileType::Constant::directory()) {
-						self(self, current_target.join(item_name), current_depth + 1_sz);
-					}
-				}
-			}
-			return;
-		};
-		auto iterate = [&]<typename TSelf>(
-			TSelf const & self,
-			Path const &  current_target,
-			Path const &  current_item,
-			Size const &  current_depth
-		) -> Void {
-			if (!depth.has() || current_depth < depth.get()) {
-				for (auto & item : std::filesystem::directory_iterator{Detail::emit_path(current_target), std::filesystem::directory_options::none}) {
-					auto item_type = Detail::resolve_type(item.symlink_status().type());
-					auto item_name = make_string(unsafe_cast<std::string>(item.path().filename().generic_u8string()));
-					auto item_path = current_item.join(item_name);
-					if (follow_link && item_type == Detail::FileType::Constant::link()) {
-						auto referent_type = Detail::resolve_type(item.status().type());
-						if (referent_type != Detail::FileType::Constant::none()) {
-							item_type = referent_type;
-						}
-					}
-					if (allow_link && item_type == Detail::FileType::Constant::link()) {
-						result.append(item_path);
-					}
-					if (allow_file && item_type == Detail::FileType::Constant::file()) {
-						result.append(item_path);
-					}
-					if (allow_directory && item_type == Detail::FileType::Constant::directory()) {
-						result.append(item_path);
-					}
-					if (item_type == Detail::FileType::Constant::directory()) {
-						self(self, current_target.join(item_name), item_path, current_depth + 1_sz);
-					}
-				}
-			}
-			return;
-		};
-		iterate_count(iterate_count, target, 0_sz);
 		result.allocate(result_count);
-		iterate(iterate, target, Path{PathType::Constant::detached()}, 0_sz);
+		[&](
+			this auto && self,
+			Path const & current_target,
+			Path const & current_item,
+			Size const & current_depth
+		) -> Void {
+				if (!depth.has() || current_depth < depth.get()) {
+					for (auto & item : std::filesystem::directory_iterator{Detail::emit_path(current_target), std::filesystem::directory_options::none}) {
+						auto item_type = Detail::resolve_type(item.symlink_status().type());
+						auto item_name = from_std_string(unsafe_cast<std::string>(item.path().filename().generic_u8string()));
+						auto item_path = current_item.join(item_name);
+						if (follow_link && item_type == Detail::FileType::Constant::link()) {
+							auto referent_type = Detail::resolve_type(item.status().type());
+							if (referent_type != Detail::FileType::Constant::none()) {
+								item_type = referent_type;
+							}
+						}
+						if (allow_link && item_type == Detail::FileType::Constant::link()) {
+							result.append(item_path);
+						}
+						if (allow_file && item_type == Detail::FileType::Constant::file()) {
+							result.append(item_path);
+						}
+						if (allow_directory && item_type == Detail::FileType::Constant::directory()) {
+							result.append(item_path);
+						}
+						if (item_type == Detail::FileType::Constant::directory()) {
+							self(current_target.join(item_name), item_path, current_depth + 1_sz);
+						}
+					}
+				}
+				return;
+			}(target, Path{PathType::Constant::detached()}, 0_sz);
 		return result;
 	}
 

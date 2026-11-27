@@ -138,7 +138,7 @@ namespace Twinning.Script.XmlHelper {
 	): void {
 		let data = Kernel.String.default();
 		Kernel.Tool.Data.Serialization.Xml.Encode.process(data, Kernel.Notation.Xml.Node.value(value));
-		let data_byte = Kernel.Miscellaneous.cast_moveable_String_to_ByteArray(data);
+		let data_byte = Kernel.Miscellaneous.cast_moveable_String_to_Binary(data);
 		StorageHelper.write_file_data(path, data_byte.view());
 		return;
 	}
@@ -147,7 +147,7 @@ namespace Twinning.Script.XmlHelper {
 		path: StoragePath,
 	): TValue {
 		let data_byte = StorageHelper.read_file_data(path);
-		let data = Kernel.Miscellaneous.cast_moveable_ByteArray_to_String(data_byte);
+		let data = Kernel.Miscellaneous.cast_moveable_Binary_to_String(data_byte);
 		let value = Kernel.Notation.Xml.Node.default<TValue>();
 		Kernel.Tool.Data.Serialization.Xml.Decode.process(data, value);
 		return value.value;

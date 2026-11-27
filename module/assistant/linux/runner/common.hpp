@@ -37,6 +37,7 @@
 #include <map>
 #include <functional>
 #include <thread>
+#include <future>
 #include <filesystem>
 #include <utility>
 

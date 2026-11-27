@@ -5,7 +5,7 @@ module;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Weverything"
 
-#include "dependency/libpng/png.h"
+#include "dependency/libpng/origin/png.h"
 
 #pragma clang diagnostic pop
 

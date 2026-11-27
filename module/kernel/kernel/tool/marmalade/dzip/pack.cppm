@@ -12,8 +12,8 @@ import twinning.kernel.tool.data.compression.deflate.common;
 import twinning.kernel.tool.data.compression.deflate.compress;
 import twinning.kernel.tool.data.compression.bzip2.common;
 import twinning.kernel.tool.data.compression.bzip2.compress;
-import twinning.kernel.tool.data.compression.lzma.common;
-import twinning.kernel.tool.data.compression.lzma.compress;
+import twinning.kernel.tool.data.compression.lzma1.common;
+import twinning.kernel.tool.data.compression.lzma1.compress;
 
 export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 
@@ -28,19 +28,19 @@ export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 		// ----------------
 
 		inline static auto process_package(
-			OutputByteStreamView &      data,
+			OutputBinaryStreamView &    data,
 			Definition::Package const & definition,
 			Path const &                resource_directory
 		) -> Void {
 			data.write_constant(Structure::k_magic_marker);
 			struct {
-				OutputByteStreamView archive_setting{};
-				OutputByteStreamView resource_file{};
-				OutputByteStreamView resource_directory{};
-				OutputByteStreamView resource_information{};
-				OutputByteStreamView chunk_setting{};
-				OutputByteStreamView chunk_information{};
-				OutputByteStreamView archive_resource_information{};
+				OutputBinaryStreamView archive_setting{};
+				OutputBinaryStreamView resource_file{};
+				OutputBinaryStreamView resource_directory{};
+				OutputBinaryStreamView resource_information{};
+				OutputBinaryStreamView chunk_setting{};
+				OutputBinaryStreamView chunk_information{};
+				OutputBinaryStreamView archive_resource_information{};
 			} information_data = {};
 			{
 				auto information_structure = Structure::Information<t_version>{};
@@ -69,45 +69,31 @@ export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 						++global_chunk_index;
 					}
 				}
-				information_data.archive_setting = OutputByteStreamView{
-					data.forward_view(bs_size(information_structure.archive_setting))
-				};
-				information_data.resource_file = OutputByteStreamView{
-					data.forward_view(
-						[&] {
-							auto size = 0_sz;
-							for (auto & element : information_structure.resource_file) {
-								size += bs_size(element);
-								size += bs_size(CharacterType::k_null);
-							}
-							return size;
-						}()
-					)
-				};
-				information_data.resource_directory = OutputByteStreamView{
-					data.forward_view(
-						[&] {
-							auto size = 0_sz;
-							for (auto & element : information_structure.resource_directory.tail(information_structure.resource_directory.size() - 1_sz)) {
-								size += bs_size(element);
-								size += bs_size(CharacterType::k_null);
-							}
-							return size;
-						}()
-					)
-				};
-				information_data.resource_information = OutputByteStreamView{
-					data.forward_view(bs_size(information_structure.resource_information))
-				};
-				information_data.chunk_setting = OutputByteStreamView{
-					data.forward_view(bs_size(information_structure.chunk_setting))
-				};
-				information_data.chunk_information = OutputByteStreamView{
-					data.forward_view(bs_size(information_structure.chunk_information))
-				};
-				information_data.archive_resource_information = OutputByteStreamView{
-					data.forward_view(bs_size(information_structure.archive_resource_information))
-				};
+				information_data.archive_setting = data.split_forward(binary_size_of(information_structure.archive_setting));
+				information_data.resource_file = data.split_forward(
+					[&] {
+						auto size = 0_sz;
+						for (auto & element : information_structure.resource_file) {
+							size += binary_size_of(element);
+							size += binary_size_of(StringUtility::k_null_character);
+						}
+						return size;
+					}()
+				);
+				information_data.resource_directory = data.split_forward(
+					[&] {
+						auto size = 0_sz;
+						for (auto & element : Range::slice_tail(information_structure.resource_directory, information_structure.resource_directory.size() - 1_sz)) {
+							size += binary_size_of(element);
+							size += binary_size_of(StringUtility::k_null_character);
+						}
+						return size;
+					}()
+				);
+				information_data.resource_information = data.split_forward(binary_size_of(information_structure.resource_information));
+				information_data.chunk_setting = data.split_forward(binary_size_of(information_structure.chunk_setting));
+				information_data.chunk_information = data.split_forward(binary_size_of(information_structure.chunk_information));
+				information_data.archive_resource_information = data.split_forward(binary_size_of(information_structure.archive_resource_information));
 			}
 			auto information_structure = Structure::Information<t_version>{};
 			information_structure.archive_setting.version = cast_box<Structure::VersionNumber>(t_version.number);
@@ -118,7 +104,7 @@ export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 			information_structure.archive_resource_information.allocate_full(0_sz);
 			information_structure.resource_directory.append(""_sv);
 			auto global_chunk_index = 0_sz;
-			auto chunk_data_container = ByteArray{};
+			auto chunk_data_container = Binary{};
 			for (auto & resource_index : SizeRange{definition.resource.size()}) {
 				auto & resource_definition = definition.resource[resource_index];
 				auto & resource_information_structure = information_structure.resource_information[resource_index];
@@ -175,23 +161,19 @@ export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<t_version>::zlib)) {
 						chunk_size_uncompressed = Storage::size_file(resource_path);
-						if (chunk_data_container.size() < chunk_size_uncompressed) {
-							chunk_data_container.allocate(chunk_size_uncompressed);
-						}
-						auto chunk_data = chunk_data_container.head(chunk_size_uncompressed);
+						auto chunk_data = use_binary_buffer(chunk_data_container, chunk_size_uncompressed);
 						Storage::read_file(resource_path, 0_sz, chunk_data);
-						Data::Compression::Deflate::Compress::process(as_left(InputByteStreamView{chunk_data}), data, 9_i, 15_i, 9_i, Data::Compression::Deflate::StrategyMode::Constant::default_mode(), Data::Compression::Deflate::WrapperType::Constant::gzip());
+						auto chunk_stream = like_binary_stream<StreamMode::Constant::input()>(data, chunk_data);
+						Data::Compression::Deflate::Compress::process(chunk_stream, data, Data::Compression::Deflate::Container::Constant::gzip(), 9_i, 15_i, 9_i, Data::Compression::Deflate::StrategyMode::Constant::default_mode());
 						data.backward(8_sz); // NOTE: EXPLAIN: overwrite gzip trail
 						chunk_size_compressed = chunk_size_uncompressed;
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<t_version>::bzip2)) {
 						chunk_size_uncompressed = Storage::size_file(resource_path);
-						if (chunk_data_container.size() < chunk_size_uncompressed) {
-							chunk_data_container.allocate(chunk_size_uncompressed);
-						}
-						auto chunk_data = chunk_data_container.head(chunk_size_uncompressed);
+						auto chunk_data = use_binary_buffer(chunk_data_container, chunk_size_uncompressed);
 						Storage::read_file(resource_path, 0_sz, chunk_data);
-						Data::Compression::Bzip2::Compress::process(as_left(InputByteStreamView{chunk_data}), data, 9_i, 0_i);
+						auto chunk_stream = like_binary_stream<StreamMode::Constant::input()>(data, chunk_data);
+						Data::Compression::Bzip2::Compress::process(chunk_stream, data, Data::Compression::Bzip2::Container::Constant::none(), 9_i, 0_i);
 						chunk_size_compressed = chunk_size_uncompressed;
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<t_version>::mp3)) {
@@ -208,18 +190,16 @@ export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<t_version>::copy_coded)) {
 						chunk_size_uncompressed = Storage::size_file(resource_path);
-						auto chunk_data = data.forward_view(chunk_size_uncompressed);
+						auto chunk_data = data.split_forward(chunk_size_uncompressed).view();
 						Storage::read_file(resource_path, 0_sz, chunk_data);
 						chunk_size_compressed = chunk_size_uncompressed;
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<t_version>::lzma)) {
 						chunk_size_uncompressed = Storage::size_file(resource_path);
-						if (chunk_data_container.size() < chunk_size_uncompressed) {
-							chunk_data_container.allocate(chunk_size_uncompressed);
-						}
-						auto chunk_data = chunk_data_container.head(chunk_size_uncompressed);
+						auto chunk_data = use_binary_buffer(chunk_data_container, chunk_size_uncompressed);
 						Storage::read_file(resource_path, 0_sz, chunk_data);
-						Data::Compression::Lzma::Compress::process(as_left(InputByteStreamView{chunk_data}), data, 9_i);
+						auto chunk_stream = like_binary_stream<StreamMode::Constant::input()>(data, chunk_data);
+						Data::Compression::Lzma1::Compress::process(chunk_stream, data, Data::Compression::Lzma1::Container::Constant::alone(), 9_i);
 						chunk_size_compressed = chunk_size_uncompressed;
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<t_version>::random_access)) {
@@ -240,12 +220,12 @@ export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 			{
 				information_data.archive_setting.write(information_structure.archive_setting);
 				for (auto & element : information_structure.resource_file) {
-					StringParser::write_string_until(unsafe_cast<OutputCharacterStreamView>(information_data.resource_file), element, CharacterType::k_null);
-					unsafe_cast<OutputCharacterStreamView>(information_data.resource_file).write_constant(CharacterType::k_null);
+					StringUtility::write_string_until(unsafe_cast<OutputStringStreamView>(information_data.resource_file), element, StringUtility::k_null_character);
+					unsafe_cast<OutputStringStreamView>(information_data.resource_file).write_constant(StringUtility::k_null_character);
 				}
-				for (auto & element : information_structure.resource_directory.tail(information_structure.resource_directory.size() - 1_sz)) {
-					StringParser::write_string_until(unsafe_cast<OutputCharacterStreamView>(information_data.resource_directory), element, CharacterType::k_null);
-					unsafe_cast<OutputCharacterStreamView>(information_data.resource_directory).write_constant(CharacterType::k_null);
+				for (auto & element : Range::slice_tail(information_structure.resource_directory, information_structure.resource_directory.size() - 1_sz)) {
+					StringUtility::write_string_until(unsafe_cast<OutputStringStreamView>(information_data.resource_directory), element, StringUtility::k_null_character);
+					unsafe_cast<OutputStringStreamView>(information_data.resource_directory).write_constant(StringUtility::k_null_character);
 				}
 				information_data.resource_information.write(information_structure.resource_information);
 				information_data.chunk_setting.write(information_structure.chunk_setting);
@@ -258,11 +238,11 @@ export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 		// ----------------
 
 		inline static auto process(
-			OutputByteStreamView &      data_,
+			OutputBinaryStreamView &    data_,
 			Definition::Package const & definition,
 			Path const &                resource_directory
 		) -> Void {
-			M_use_zps_of(data);
+			M_use_split_stream_of(data);
 			return process_package(data, definition, resource_directory);
 		}
 

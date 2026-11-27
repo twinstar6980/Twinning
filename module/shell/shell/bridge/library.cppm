@@ -3,6 +3,7 @@ module;
 #include "shell/common.hpp"
 
 export module twinning.shell.bridge.library;
+import twinning.shell.utility.exception;
 import twinning.shell.utility.library;
 import twinning.shell.bridge.service;
 
@@ -14,9 +15,9 @@ export namespace Twinning::Shell::Bridge {
 
 	protected:
 
-		LibraryLoader m_handle;
+		std::intptr_t m_handle;
 
-		Service * m_symbol;
+		std::add_pointer_t<Service> m_symbol;
 
 	public:
 
@@ -33,7 +34,11 @@ export namespace Twinning::Shell::Bridge {
 		// ----------------
 
 		Library(
-		) = default;
+		) :
+			m_handle{-1},
+			m_symbol{} {
+			return;
+		}
 
 		Library(
 			Library const & that
@@ -71,13 +76,12 @@ export namespace Twinning::Shell::Bridge {
 		) -> void {
 			assert_test(!thiz.state());
 			assert_test(symbol != nullptr);
+			thiz.m_symbol = symbol;
 			try {
-				thiz.m_symbol = symbol;
 				thiz.m_symbol->initialize();
 			}
 			catch (...) {
-				thiz.m_symbol = nullptr;
-				throw;
+				// ignored
 			}
 			return;
 		}
@@ -86,15 +90,22 @@ export namespace Twinning::Shell::Bridge {
 			std::string_view const & path
 		) -> void {
 			assert_test(!thiz.state());
-			thiz.m_handle.open(path);
+			auto handle = Shell::Library::open(path);
+			auto symbol = std::add_pointer_t<Service>{nullptr};
 			try {
-				thiz.m_symbol = thiz.m_handle.lookup<Service>("_ZN8Twinning6Kernel9Interface7serviceE");
+				symbol = Shell::Library::lookup<Service>(handle, "_ZN8Twinning6Kernel9Interface7serviceE"sv);
+			}
+			catch (...) {
+				Shell::Library::close(handle);
+				throw;
+			}
+			thiz.m_handle = handle;
+			thiz.m_symbol = symbol;
+			try {
 				thiz.m_symbol->initialize();
 			}
 			catch (...) {
-				thiz.m_symbol = nullptr;
-				thiz.m_handle.close();
-				throw;
+				// ignored
 			}
 			return;
 		}
@@ -102,10 +113,16 @@ export namespace Twinning::Shell::Bridge {
 		auto close(
 		) -> void {
 			assert_test(thiz.state());
-			thiz.m_symbol->finalize();
+			try {
+				thiz.m_symbol->finalize();
+			}
+			catch (...) {
+				// ignored
+			}
 			thiz.m_symbol = nullptr;
-			if (thiz.m_handle.state()) {
-				thiz.m_handle.close();
+			if (thiz.m_handle != -1) {
+				Shell::Library::close(thiz.m_handle);
+				thiz.m_handle = -1;
 			}
 			return;
 		}

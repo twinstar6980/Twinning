@@ -9,7 +9,7 @@ import twinning.kernel.utility.trait.category;
 import twinning.kernel.utility.trait.callable;
 import twinning.kernel.utility.trait.package.type_package;
 import twinning.kernel.utility.trait.package.value_package;
-import twinning.kernel.utility.exception.utility;
+import twinning.kernel.utility.exception;
 
 export namespace Twinning::Kernel::Trait::Generalization {
 
@@ -93,7 +93,7 @@ export namespace Twinning::Kernel::Trait::Generalization {
 		auto has_case = false;
 		each<TPackage>(
 			[&]<auto t_index, auto t_element>(ValuePackage<t_index>, ValuePackage<t_element>) {
-				if (t_element == value) {
+				if (!has_case && t_element == value) {
 					executor(ValuePackage<t_index>{}, ValuePackage<t_element>{});
 					has_case = true;
 				}

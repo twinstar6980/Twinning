@@ -70,14 +70,14 @@ export namespace Twinning::Shell::Bridge {
 		inline static auto parse(
 			Message const & instance
 		) -> MessageProxy {
-			assert_test(instance.data != nullptr && instance.size != 0);
+			assert_test(instance.data != nullptr && instance.size != 0zu);
 			auto proxy = MessageProxy{};
-			auto data_position = std::size_t{0};
+			auto data_position = 0zu;
 			auto next_integer = [&]() -> std::size_t {
 				auto data_size = sizeof(std::size_t);
 				assert_test(data_position <= data_position + data_size && data_position + data_size <= static_cast<std::size_t>(instance.size));
 				auto value = std::size_t{};
-				std::memcpy(&value, instance.data + data_position, data_size);
+				std::memmove(&value, instance.data + data_position, data_size);
 				data_position += data_size;
 				return value;
 			};
@@ -86,14 +86,14 @@ export namespace Twinning::Shell::Bridge {
 				assert_test(data_position <= data_position + data_size && data_position + data_size <= static_cast<std::size_t>(instance.size));
 				auto value = std::string{};
 				value.resize(size);
-				std::memcpy(value.data(), instance.data + data_position, data_size);
+				std::memmove(value.data(), instance.data + data_position, data_size);
 				data_position += data_size;
 				return value;
 			};
 			auto & value = proxy.value;
 			auto   value_size = next_integer();
 			value.reserve(value_size);
-			for (auto value_index = std::size_t{0}; value_index < value_size; ++value_index) {
+			for (auto value_index = 0zu; value_index < value_size; ++value_index) {
 				auto value_item_size = next_integer();
 				auto value_item = next_string(value_item_size);
 				value.emplace_back(std::move(value_item));
@@ -106,24 +106,24 @@ export namespace Twinning::Shell::Bridge {
 			Message &            instance,
 			MessageProxy const & proxy
 		) -> void {
-			assert_test(instance.data == nullptr && instance.size == 0);
-			auto data_position = std::size_t{0};
+			assert_test(instance.data == nullptr && instance.size == 0zu);
+			auto data_position = 0zu;
 			auto next_integer = [&](std::size_t const & value) -> void {
 				auto data_size = sizeof(std::size_t);
 				assert_test(data_position <= data_position + data_size && data_position + data_size <= instance.size);
-				std::memcpy(instance.data + data_position, &value, data_size);
+				std::memmove(instance.data + data_position, &value, data_size);
 				data_position += data_size;
 				return;
 			};
 			auto next_string = [&](std::string const & value) -> void {
 				auto data_size = sizeof(std::uint8_t) * value.size();
 				assert_test(data_position <= data_position + data_size && data_position + data_size <= instance.size);
-				std::memcpy(instance.data + data_position, value.data(), data_size);
+				std::memmove(instance.data + data_position, value.data(), data_size);
 				data_position += data_size;
 				return;
 			};
 			auto & value = proxy.value;
-			auto   data_size = std::size_t{0};
+			auto   data_size = 0zu;
 			data_size += sizeof(std::size_t);
 			for (auto & value_item : value) {
 				data_size += sizeof(std::size_t);
@@ -133,7 +133,7 @@ export namespace Twinning::Shell::Bridge {
 			instance.size = data_size;
 			auto value_size = value.size();
 			next_integer(value_size);
-			for (auto value_index = std::size_t{0}; value_index < value_size; ++value_index) {
+			for (auto value_index = 0zu; value_index < value_size; ++value_index) {
 				auto & value_item = value[value_index];
 				auto   value_item_size = value_item.size();
 				next_integer(value_item_size);
@@ -146,7 +146,7 @@ export namespace Twinning::Shell::Bridge {
 		inline static auto destruct(
 			Message & instance
 		) -> void {
-			assert_test(instance.data != nullptr && instance.size != 0);
+			assert_test(instance.data != nullptr && instance.size != 0zu);
 			delete[] instance.data;
 			instance.data = nullptr;
 			instance.size = 0;
@@ -175,7 +175,7 @@ export namespace Twinning::Shell::Bridge {
 		ExecutorProxy(
 		) :
 			value{[](auto &, auto &, auto &) -> auto {
-				throw std::runtime_error{std::format("UnimplementedException")};
+				throw std::runtime_error{std::format("UnimplementedException"sv)};
 			}} {
 			return;
 		}
@@ -215,6 +215,8 @@ export namespace Twinning::Shell::Bridge {
 
 		#pragma region convert
 
+		inline static auto g_mutex = std::mutex{};
+
 		inline static auto g_guard = std::unordered_map<std::add_pointer_t<Executor>, ExecutorProxy>{};
 
 		// ----------------
@@ -234,49 +236,38 @@ export namespace Twinning::Shell::Bridge {
 					auto argument = std::add_pointer_t<Message>{nullptr};
 					auto result = std::add_pointer_t<Message>{nullptr};
 					auto exception = std::add_pointer_t<Message>{nullptr};
-					auto finalizer_action = std::vector<std::function<void ()>>{};
-					finalizer_action.reserve(4);
-					auto finalizer = make_finalizer(
+					callback = new Executor{};
+					argument = new Message{};
+					result = new Message{};
+					exception = new Message{};
+					auto _ = make_finalizer(
 						[&] {
-							for (auto & action : std::ranges::views::reverse(finalizer_action)) {
-								action();
-							}
+							delete callback;
+							delete argument;
+							delete result;
+							delete exception;
 						}
 					);
-					{
-						callback = new Executor{};
-						argument = new Message{};
-						result = new Message{};
-						exception = new Message{};
-						finalizer_action.emplace_back(
-							[&] {
-								delete callback;
-								delete argument;
-								delete result;
-								delete exception;
-							}
-						);
-						ExecutorProxy::construct(*callback, callback_proxy);
-						finalizer_action.emplace_back(
-							[&] {
-								ExecutorProxy::destruct(*callback);
-							}
-						);
-						MessageProxy::construct(*argument, argument_proxy);
-						finalizer_action.emplace_back(
-							[&] {
-								MessageProxy::destruct(*argument);
-							}
-						);
-						(*self).invoke(self, callback, argument, result, exception);
-						finalizer_action.emplace_back(
-							[&] {
-								(*self).clear(self, callback, argument, result, exception);
-							}
-						);
-						result_proxy = MessageProxy::parse(*result);
-						exception_proxy = MessageProxy::parse(*exception);
-					}
+					ExecutorProxy::construct(*callback, callback_proxy);
+					auto _ = make_finalizer(
+						[&] {
+							ExecutorProxy::destruct(*callback);
+						}
+					);
+					MessageProxy::construct(*argument, argument_proxy);
+					auto _ = make_finalizer(
+						[&] {
+							MessageProxy::destruct(*argument);
+						}
+					);
+					(*self).invoke(self, callback, argument, result, exception);
+					auto _ = make_finalizer(
+						[&] {
+							(*self).clear(self, callback, argument, result, exception);
+						}
+					);
+					result_proxy = MessageProxy::parse(*result);
+					exception_proxy = MessageProxy::parse(*exception);
 					if (!exception_proxy.value.empty()) {
 						throw std::runtime_error{exception_proxy.value.front()};
 					}
@@ -290,7 +281,8 @@ export namespace Twinning::Shell::Bridge {
 			ExecutorProxy const & proxy
 		) -> void {
 			assert_test(instance.invoke == nullptr && instance.clear == nullptr);
-			assert_test(g_guard.emplace(&instance, proxy).second);
+			auto _ = std::lock_guard{g_mutex};
+			assert_test(g_guard.try_emplace(&instance, proxy).second);
 			instance.invoke = [](
 				std::add_pointer_t<Executor> self,
 				std::add_pointer_t<Executor> callback,
@@ -298,7 +290,10 @@ export namespace Twinning::Shell::Bridge {
 				std::add_pointer_t<Message>  result,
 				std::add_pointer_t<Message>  exception
 			) -> void {
-					auto & guard = g_guard.at(self);
+					auto & guard = [&]() -> auto & {
+						auto _ = std::lock_guard{g_mutex};
+						return g_guard.at(self);
+					}();
 					#if defined M_build_release
 					try
 					#endif
@@ -325,7 +320,10 @@ export namespace Twinning::Shell::Bridge {
 				std::add_pointer_t<Message>  result,
 				std::add_pointer_t<Message>  exception
 			) -> void {
-					auto & guard = g_guard.at(self);
+					auto & guard = [&]() -> auto & {
+						auto _ = std::lock_guard{g_mutex};
+						return g_guard.at(self);
+					}();
 					if (result != nullptr) {
 						MessageProxy::destruct(*result);
 					}
@@ -341,7 +339,8 @@ export namespace Twinning::Shell::Bridge {
 			Executor & instance
 		) -> void {
 			assert_test(instance.invoke != nullptr && instance.clear != nullptr);
-			assert_test(g_guard.erase(&instance) == 1);
+			auto _ = std::lock_guard{g_mutex};
+			assert_test(g_guard.erase(&instance) == 1zu);
 			instance.invoke = nullptr;
 			instance.clear = nullptr;
 			return;

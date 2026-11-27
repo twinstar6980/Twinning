@@ -82,9 +82,9 @@ namespace Twinning.Script.Executor.Implementation.Popcap.ResourceStreamBundle {
 						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /(\.rsb\.bundle)?$/i, '.rsb'),
 					}),
 				],
-				worker: ({bundle_directory, data_file, version_number, version_extended_texture_information_for_pvz2cn, layout_mode, input_packet, output_new_packet, buffer_size}, store: {buffer: Kernel.ByteArray}) => {
+				worker: ({bundle_directory, data_file, version_number, version_extended_texture_information_for_pvz2cn, layout_mode, input_packet, output_new_packet, buffer_size}, store: {buffer: Kernel.Binary}) => {
 					if (store.buffer === undefined) {
-						store.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size.value()));
+						store.buffer = Kernel.Binary.allocate(Kernel.Size.value(buffer_size.value()));
 					}
 					let relative_path = Support.Popcap.ResourceStreamBundle.make_layout_path(layout_mode as any);
 					let definition_file = bundle_directory.join('definition.json');

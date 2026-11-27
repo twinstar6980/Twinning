@@ -5,7 +5,7 @@ module;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Weverything"
 
-#include "dependency/avir/avir.h"
+#include "dependency/avir/origin/avir.h"
 
 #pragma clang diagnostic pop
 

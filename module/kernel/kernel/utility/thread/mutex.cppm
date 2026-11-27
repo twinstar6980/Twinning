@@ -6,7 +6,7 @@ export module twinning.kernel.utility.thread.mutex;
 import twinning.kernel.utility.builtin;
 import twinning.kernel.utility.trait;
 import twinning.kernel.utility.box;
-import twinning.kernel.utility.exception.utility;
+import twinning.kernel.utility.exception;
 
 export namespace Twinning::Kernel::Thread {
 
@@ -17,6 +17,8 @@ export namespace Twinning::Kernel::Thread {
 	private:
 
 		std::mutex m_mutex;
+
+		std::thread::id m_owner;
 
 	public:
 
@@ -29,7 +31,8 @@ export namespace Twinning::Kernel::Thread {
 
 		Mutex(
 		) :
-			m_mutex{} {
+			m_mutex{},
+			m_owner{} {
 			return;
 		}
 
@@ -60,13 +63,23 @@ export namespace Twinning::Kernel::Thread {
 		auto lock(
 		) -> Void {
 			thiz.m_mutex.lock();
+			thiz.m_owner = std::this_thread::get_id();
 			return;
 		}
 
 		auto unlock(
 		) -> Void {
+			assert_test(thiz.m_owner == std::this_thread::get_id());
+			thiz.m_owner = std::thread::id{};
 			thiz.m_mutex.unlock();
 			return;
+		}
+
+		// ----------------
+
+		auto is_locked_in_current(
+		) const -> Boolean {
+			return thiz.m_owner == std::this_thread::get_id();
 		}
 
 		#pragma endregion

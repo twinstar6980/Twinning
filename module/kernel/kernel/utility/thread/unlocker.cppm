@@ -6,7 +6,7 @@ export module twinning.kernel.utility.thread.unlocker;
 import twinning.kernel.utility.builtin;
 import twinning.kernel.utility.trait;
 import twinning.kernel.utility.box;
-import twinning.kernel.utility.exception.utility;
+import twinning.kernel.utility.exception;
 import twinning.kernel.utility.thread.mutex;
 
 export namespace Twinning::Kernel::Thread {
@@ -48,6 +48,7 @@ export namespace Twinning::Kernel::Thread {
 			Mutex & mutex
 		) :
 			m_mutex{mutex} {
+			assert_test(thiz.m_mutex.is_locked_in_current());
 			thiz.m_mutex.unlock();
 			return;
 		}

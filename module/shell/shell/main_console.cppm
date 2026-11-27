@@ -87,39 +87,39 @@ export namespace Twinning::Shell {
 		) -> std::vector<std::string> override {
 			assert_test(thiz.m_running);
 			auto result = std::vector<std::string>{};
-			assert_test(argument.size() >= 1);
+			assert_test(argument.size() >= 1zu);
 			switch (hash_string(argument[0])) {
 				case hash_string("query_context"sv): {
-					assert_test(argument.size() == 2);
+					assert_test(argument.size() == 2zu);
 					auto detail = thiz.handle_query_context(
 						argument[1]
 					);
-					result.emplace_back(std::move(std::get<0>(detail)));
+					result.emplace_back(std::move(std::get<0zu>(detail)));
 					break;
 				}
 				case hash_string("check_mode"sv): {
-					assert_test(argument.size() == 2);
+					assert_test(argument.size() == 2zu);
 					auto detail = thiz.handle_check_mode(
 						argument[1]
 					);
-					result.emplace_back(std::get<0>(detail) ? "true"sv : "false"sv);
+					result.emplace_back(std::get<0zu>(detail) ? "true"sv : "false"sv);
 					break;
 				}
 				case hash_string("output_text"sv): {
-					assert_test(argument.size() == 2);
+					assert_test(argument.size() == 2zu);
 					auto detail = thiz.handle_output_text(
 						argument[1]
 					);
 					break;
 				}
 				case hash_string("input_text"sv): {
-					assert_test(argument.size() == 1);
+					assert_test(argument.size() == 1zu);
 					auto detail = thiz.handle_input_text(
 					);
-					result.emplace_back(std::move(std::get<0>(detail)));
+					result.emplace_back(std::move(std::get<0zu>(detail)));
 					break;
 				}
-				default: throw std::runtime_error{std::format("Exception: invalid method")};
+				default: throw std::runtime_error{std::format("Exception: invalid method"sv)};
 			}
 			return result;
 		}
@@ -259,17 +259,17 @@ export namespace Twinning::Shell {
 					args.emplace_back(SystemNativeString::from_native(static_cast<char const *>(arg)));
 					#endif
 				}
-				assert_test(args.size() >= 3);
-				auto result = thiz.launch_session(static_cast<Bridge::Service *>(extra), args[1], args[2], std::vector<std::string>{args.begin() + 3, args.end()});
+				assert_test(args.size() >= 3zu);
+				auto result = thiz.launch_session(static_cast<Bridge::Service *>(extra), args[1zu], args[2zu], std::vector<std::string>{args.begin() + 3zu, args.end()});
 				return result.has_value() ? 0 : 1;
 			}
 			#if defined M_build_release
 			catch (...) {
 				auto exception = parse_current_exception();
-				Interaction::output_text("EXCEPTION");
-				Interaction::output_text("\n");
+				Interaction::output_text("EXCEPTION"s);
+				Interaction::output_text("\n"s);
 				Interaction::output_text(exception);
-				Interaction::output_text("\n");
+				Interaction::output_text("\n"s);
 				return 1;
 			}
 			#endif
@@ -302,18 +302,18 @@ export namespace Twinning::Shell {
 				exception.emplace(parse_current_exception());
 			}
 			if (!exception.has_value()) {
-				Interaction::output_text("SUCCEEDED");
-				Interaction::output_text("\n");
+				Interaction::output_text("SUCCEEDED"s);
+				Interaction::output_text("\n"s);
 				for (auto & result_item : result.value()) {
 					Interaction::output_text(result_item);
 					Interaction::output_text("\n");
 				}
 			}
 			else {
-				Interaction::output_text("FAILED");
-				Interaction::output_text("\n");
+				Interaction::output_text("FAILED"s);
+				Interaction::output_text("\n"s);
 				Interaction::output_text(exception.value());
-				Interaction::output_text("\n");
+				Interaction::output_text("\n"s);
 			}
 			return exception.has_value() ? std::nullopt : result;
 		}

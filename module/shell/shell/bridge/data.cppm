@@ -12,7 +12,7 @@ export namespace Twinning::Shell::Bridge {
 
 		std::add_pointer_t<std::uint8_t> data{nullptr};
 
-		std::size_t size{0};
+		std::size_t size{0zu};
 
 	};
 

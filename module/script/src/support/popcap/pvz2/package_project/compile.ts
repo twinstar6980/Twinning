@@ -11,7 +11,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Compile {
 		variable_list: Array<Variable>,
 		resource_state: ResourceState,
 		group_identifier: string,
-		buffer: Kernel.ByteArray,
+		buffer: Kernel.Binary,
 	): void {
 		Console.information(`compiling ...`, [`${package_setting.name}/${part_name}/${group_name}/${resource_name}`]);
 		let resource_directory = make_scope_root_path(project_directory, part_name, group_name, resource_name);
@@ -38,7 +38,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Compile {
 			},
 		};
 		variable_list.unshift(runtime_variable.group, runtime_variable.resolution, runtime_variable.locale);
-		let resource_identifier = parse_variable_string(resource_name, variable_list).toUpperCase();
+		let resource_identifier = parse_variable_string(resource_name, variable_list, []).toUpperCase();
 		switch (resource_setting.type) {
 			case 'dummy': {
 				let resource_property = resource_setting.property as DummyResourceProperty;
@@ -64,7 +64,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Compile {
 				let source_file = make_scope_child_path(resource_directory, 'source.bin');
 				{
 					StorageHelper.remove_if(make_build_package_bundle_packet_path(project_directory, package_setting.name, group_identifier, resource_setting.category));
-					let resource_path = parse_variable_string(resource_property.path, variable_list);
+					let resource_path = parse_variable_string(resource_property.path, variable_list, []);
 					let package_resource_file = make_build_package_bundle_resource_path(project_directory, package_setting.name, resource_path);
 					StorageHelper.remove_if(package_resource_file);
 					if (KernelX.is_windows || KernelX.is_linux || KernelX.is_macintosh) {
@@ -102,7 +102,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Compile {
 				let source_file = make_scope_child_path(resource_directory, 'source.ptx');
 				{
 					StorageHelper.remove_if(make_build_package_bundle_packet_path(project_directory, package_setting.name, group_identifier, resource_setting.category));
-					let resource_path = parse_variable_string(resource_property.path, variable_list) + '.ptx';
+					let resource_path = parse_variable_string(resource_property.path, variable_list, []) + '.ptx';
 					let package_resource_file = make_build_package_bundle_resource_path(project_directory, package_setting.name, resource_path);
 					StorageHelper.remove_if(package_resource_file);
 					if (KernelX.is_windows || KernelX.is_linux || KernelX.is_macintosh) {
@@ -114,8 +114,8 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Compile {
 					let resource_manifest_additional_sprite: Array<TextureResourcePropertySpriteProperty> = [];
 					for (let sprite_resource_property of resource_property.sprite) {
 						resource_manifest_additional_sprite.push({
-							identifier: parse_variable_string(sprite_resource_property.identifier, variable_list),
-							path: parse_variable_string(sprite_resource_property.path, variable_list),
+							identifier: parse_variable_string(sprite_resource_property.identifier, variable_list, []),
+							path: parse_variable_string(sprite_resource_property.path, variable_list, []),
 							position: sprite_resource_property.position,
 							size: sprite_resource_property.size,
 							offset: sprite_resource_property.offset,
@@ -158,7 +158,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Compile {
 				let conversion_setting = find_conversion_setting_strict(package_setting.conversion, 'rton', resource_property.conversion);
 				{
 					StorageHelper.remove_if(make_build_package_bundle_packet_path(project_directory, package_setting.name, group_identifier, resource_setting.category));
-					let resource_path = parse_variable_string(resource_property.path, variable_list) + '.rton';
+					let resource_path = parse_variable_string(resource_property.path, variable_list, []) + '.rton';
 					let package_resource_file = make_build_package_bundle_resource_path(project_directory, package_setting.name, resource_path);
 					StorageHelper.remove_if(package_resource_file);
 					KernelX.Tool.Popcap.ReflectionObjectNotation.encode_cipher_fs(package_resource_file, source_file, true, true, conversion_setting.version, conversion_setting.key, buffer.view());
@@ -204,7 +204,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Compile {
 					};
 					runtime_variable.resolution.value = resource_resolution.toString();
 					StorageHelper.remove_if(make_build_package_bundle_packet_path(project_directory, package_setting.name, group_identifier, resource_category));
-					let resource_path = parse_variable_string(resource_property.path, variable_list) + '.ptx';
+					let resource_path = parse_variable_string(resource_property.path, variable_list, []) + '.ptx';
 					let package_resource_file = make_build_package_bundle_resource_path(project_directory, package_setting.name, resource_path);
 					StorageHelper.remove_if(package_resource_file);
 					let sprite_resource_manifest_list: Array<TextureResourcePropertySpriteProperty> = [];
@@ -224,6 +224,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Compile {
 							let current_sprite = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(current_sprite_size));
 							let current_sprite_view = current_sprite.view();
 							Kernel.Tool.Texture.Transformation.Scaling.Encode.process(sprite_view, current_sprite_view);
+							sprite_list[sprite_name] = [current_sprite, current_sprite_view];
 						}
 					}
 					let sprite_item_map = ConvertHelper.record_transform(sprite_list, (key, value) => ([key, {width: Number(value[1].size().value[0]), height: Number(value[1].size().value[1])}]));
@@ -234,8 +235,8 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Compile {
 					for (let sprite_resource_property of resource_property.sprite) {
 						let sprite_rect = sprite_rect_list[sprite_resource_property.source];
 						let sprite_resource_manifest: TextureResourcePropertySpriteProperty = {
-							identifier: parse_variable_string(sprite_resource_property.identifier, variable_list),
-							path: parse_variable_string(sprite_resource_property.path, variable_list),
+							identifier: parse_variable_string(sprite_resource_property.identifier, variable_list, []),
+							path: parse_variable_string(sprite_resource_property.path, variable_list, []),
 							position: [BigInt(sprite_rect.x), BigInt(sprite_rect.y)],
 							size: [BigInt(sprite_rect.width), BigInt(sprite_rect.height)],
 							offset: sprite_resource_property.offset,
@@ -257,9 +258,9 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Compile {
 					if (buffer.size().value < resource_data_size) {
 						buffer.allocate(Kernel.Size.value(resource_data_size));
 					}
-					let resource_data = Kernel.ByteStreamView.watch(buffer.view());
+					let resource_data = Kernel.BinaryStreamView.watch(buffer.view());
 					Support.Popcap.Texture.Encoding.encode(resource_data, atlas_view, conversion_setting.format, texture_encode_option);
-					StorageHelper.write_file_data(package_resource_file, resource_data.stream_view());
+					StorageHelper.write_file_data(package_resource_file, resource_data.split_stream().view());
 					resource_state.push({
 						category: resource_category,
 						definition: {
@@ -291,12 +292,12 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Compile {
 				break;
 			}
 			case 'special_pam': {
-				let resource_property = resource_setting.property as SpecialWemResourceProperty;
+				let resource_property = resource_setting.property as SpecialPamResourceProperty;
 				let source_file = make_scope_child_path(resource_directory, 'source.json');
 				let conversion_setting = find_conversion_setting_strict(package_setting.conversion, 'pam', resource_property.conversion);
 				{
 					StorageHelper.remove_if(make_build_package_bundle_packet_path(project_directory, package_setting.name, group_identifier, resource_setting.category));
-					let resource_path = parse_variable_string(resource_property.path, variable_list) + '.pam';
+					let resource_path = parse_variable_string(resource_property.path, variable_list, []) + '.pam';
 					let package_resource_file = make_build_package_bundle_resource_path(project_directory, package_setting.name, resource_path);
 					StorageHelper.remove_if(package_resource_file);
 					KernelX.Tool.Popcap.Animation.encode_fs(package_resource_file, source_file, conversion_setting.version, buffer.view());
@@ -330,7 +331,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Compile {
 				let conversion_setting = find_conversion_setting_strict(package_setting.conversion, 'wem', resource_property.conversion);
 				{
 					StorageHelper.remove_if(make_build_package_bundle_packet_path(project_directory, package_setting.name, group_identifier, resource_setting.category));
-					let resource_path = parse_variable_string(resource_property.path, variable_list) + '.wem';
+					let resource_path = parse_variable_string(resource_property.path, variable_list, []) + '.wem';
 					let package_resource_file = make_build_package_bundle_resource_path(project_directory, package_setting.name, resource_path);
 					StorageHelper.remove_if(package_resource_file);
 					Support.Wwise.Media.Encode.encode_fs(source_file, package_resource_file, conversion_setting.format);
@@ -373,12 +374,12 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Compile {
 		package_setting: PackageSetting,
 		variable_list: Array<Variable>,
 		group_state: GroupState,
-		buffer: Kernel.ByteArray,
+		buffer: Kernel.Binary,
 	): void {
 		let group_directory = make_scope_root_path(project_directory, part_name, group_name);
 		let group_setting = JsonHelper.decode_file(make_scope_setting_path(group_directory)) as GroupSetting;
 		variable_list = merge_variable_list(variable_list, group_setting.variable);
-		group_state.identifier = parse_variable_string(group_name, variable_list);
+		group_state.identifier = parse_variable_string(group_name, variable_list, []);
 		for (let resource_name of list_scope_child_name(group_directory, resource_scope)) {
 			compile_resource(project_directory, part_name, group_name, resource_name, package_setting, variable_list, query_state_of_resource(group_state, resource_name), group_state.identifier, buffer);
 		}
@@ -392,7 +393,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Compile {
 		package_setting: PackageSetting,
 		variable_list: Array<Variable>,
 		part_state: PartState,
-		buffer: Kernel.ByteArray,
+		buffer: Kernel.Binary,
 	): void {
 		let part_directory = make_scope_root_path(project_directory, part_name);
 		let part_setting = JsonHelper.decode_file(make_scope_setting_path(part_directory)) as PartSetting;
@@ -409,7 +410,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Compile {
 		package_setting: PackageSetting,
 		variable_list: Array<Variable>,
 		package_state: PackageState,
-		buffer: Kernel.ByteArray,
+		buffer: Kernel.Binary,
 	): void {
 		variable_list = merge_variable_list(variable_list, package_setting.variable);
 		for (let part_name of list_scope_child_name(project_directory, part_scope)) {
@@ -430,7 +431,7 @@ namespace Twinning.Script.Support.Popcap.Pvz2.PackageProject.Compile {
 		buffer_size: bigint,
 	): void {
 		check_version_file(project_directory);
-		let buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size));
+		let buffer = Kernel.Binary.allocate(Kernel.Size.value(buffer_size));
 		let project_setting = JsonHelper.decode_file(make_scope_setting_path(project_directory)) as ProjectSetting;
 		if (target_scope === null) {
 			target_scope = [[]];

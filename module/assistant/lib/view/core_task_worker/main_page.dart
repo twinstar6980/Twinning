@@ -145,14 +145,14 @@ class _MainPageState extends State<MainPage> implements ModulePageState {
       var library = bridge.Library();
       try {
         await StorageHelper.copy(this.widget.setting.kernel, kernel, true);
-        library.open(kernel);
+        await library.open(kernel);
         result = await bridge.Launcher.launch(this._sessionClient, library, this.widget.setting.script.emit(), this.widget.setting.argument + this._additionalArgument);
       }
       catch (e, s) {
         exception = (exception: e, stack: s);
       }
       if (library.state()) {
-        library.close();
+        await library.close();
       }
       await temporaryDirectoryFinalizer.dispose();
     }
@@ -449,7 +449,7 @@ class _MainPageBridgeClient extends bridge.Client {
         assertTest(argument.length == 5);
         var detail = await this.handlePickStorageItem(
           argument[1],
-          argument[2].selfLet((it) => .parse(it)),
+          argument[2].selfLet((it) => ConvertHelper.parseBooleanFromString(it)),
           argument[3].selfLet((it) => .of(it)),
           argument[4],
         );

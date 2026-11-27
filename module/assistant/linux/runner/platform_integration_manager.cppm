@@ -72,7 +72,7 @@ export {
 
 		#pragma region utility
 
-		static constexpr auto hash_string(
+		inline static constexpr auto hash_string(
 			std::string_view const & string
 		) -> std::uint64_t {
 			auto offset = std::uint64_t{14695981039346656037ull};
@@ -88,12 +88,13 @@ export {
 		// ----------------
 
 		template <typename TFinalizer>
-		static constexpr auto make_finalizer(
+		inline static constexpr auto make_finalizer(
 			TFinalizer const & finalizer
 		) -> std::unique_ptr<TFinalizer, void (*)(std::add_pointer_t<TFinalizer>)> {
 			return std::unique_ptr<TFinalizer, void (*)(std::add_pointer_t<TFinalizer>)>{new TFinalizer{finalizer}, [](std::add_pointer_t<TFinalizer> it) -> void {
 				(*it)();
 				delete it;
+				return;
 			}};
 		}
 
@@ -103,7 +104,7 @@ export {
 
 		#pragma region singleton
 
-		static auto instance(
+		inline static auto instance(
 		) -> PlatformIntegrationManager & {
 			static auto value = PlatformIntegrationManager{nullptr};
 			return value;
@@ -128,15 +129,12 @@ export {
 			GApplication * & with_application,
 			FlView * &       also_view
 		) -> void {
-			return thiz.execute_platform_task(
-				false,
-				std::function{[] {
-					return;
-				}},
+			return thiz.execute_platform_task<void>(
+				std::nullopt,
 				std::function{[&] {
 					thiz.m_application = GTK_APPLICATION(with_application);
 					auto codec = fl_standard_method_codec_new();
-					auto response_finalizer = make_finalizer(
+					auto _ = make_finalizer(
 						[&] {
 							g_object_unref(codec);
 						}
@@ -154,7 +152,8 @@ export {
 						gpointer          user_data
 					) -> void {
 							auto & self = *static_cast<PlatformIntegrationManager *>(user_data);
-							self.execute_platform_task_switch(
+							self.execute_platform_task_switch<void>(
+								true,
 								true,
 								std::function{[&, method_call = g_object_ref(method_call)] {
 									auto response = std::add_pointer_t<FlMethodResponse>{nullptr};
@@ -172,6 +171,7 @@ export {
 									fl_method_call_respond(method_call, response, nullptr);
 									g_object_unref(response);
 									g_object_unref(method_call);
+									return;
 								}}
 							);
 							return;
@@ -190,13 +190,12 @@ export {
 			MyApplication & host,
 			GObject * &     with_object
 		) -> void {
-			return thiz.execute_platform_task(
-				false,
-				std::function{[] {
-					return;
-				}},
+			return thiz.execute_platform_task<void>(
+				std::nullopt,
 				std::function{[&] {
 					g_clear_object(&thiz.m_channel);
+					thiz.m_channel = nullptr;
+					thiz.m_application = nullptr;
 					return;
 				}}
 			);
@@ -213,9 +212,9 @@ export {
 			FlValue * const &   argument
 		) -> FlValue * {
 			assert_test(fl_value_get_type(argument) == FL_VALUE_TYPE_MAP);
-			auto result = fl_value_new_map();
 			auto result_state = false;
-			auto result_finalizer = thiz.make_finalizer(
+			auto result = fl_value_new_map();
+			auto _ = make_finalizer(
 				[&] {
 					if (!result_state) {
 						fl_value_unref(result);
@@ -432,7 +431,7 @@ export {
 				"_Accept",
 				"_Cancel"
 			);
-			auto dialog_finalizer = make_finalizer(
+			auto _ = make_finalizer(
 				[&] {
 					g_object_unref(dialog);
 				}
@@ -453,7 +452,7 @@ export {
 			auto dialog_response = gtk_native_dialog_run(GTK_NATIVE_DIALOG(dialog));
 			if (dialog_response == GTK_RESPONSE_ACCEPT) {
 				auto target_list = gtk_file_chooser_get_filenames(GTK_FILE_CHOOSER(dialog));
-				auto event_finalizer = make_finalizer(
+				auto _ = make_finalizer(
 					[&] {
 						g_slist_free_full(target_list, g_free);
 					}
@@ -498,14 +497,14 @@ export {
 			auto error = std::add_pointer_t<GError>{nullptr};
 			connection = g_bus_get_sync(G_BUS_TYPE_SESSION, nullptr, &error);
 			if (connection == nullptr) {
-				auto error_finalizer = make_finalizer(
+				auto _ = make_finalizer(
 					[&] {
 						g_error_free(error);
 					}
 				);
-				throw std::runtime_error{std::string{"Exception: "} + error->message};
+				throw std::runtime_error{std::format("Exception: {}", error->message)};
 			}
-			auto connection_finalizer = make_finalizer(
+			auto _ = make_finalizer(
 				[&] {
 					g_object_unref(connection);
 				}
@@ -590,88 +589,152 @@ export {
 		auto invoke(
 			std::string const &                 method,
 			std::map<std::string, FlValue *> && argument
-		) -> void {
+		) -> std::unique_ptr<FlValue, void (*)(std::add_pointer_t<FlValue>)> {
 			auto raw_argument = fl_value_new_map();
+			auto _ = make_finalizer(
+				[&] {
+					fl_value_unref(raw_argument);
+				}
+			);
 			for (auto & argument_item : argument) {
 				thiz.infuse_flutter_value_map(raw_argument, argument_item.first, std::move(argument_item.second));
 			}
-			thiz.execute_platform_task_switch(
+			auto raw_result_guard = std::promise<FlValue *>();
+			thiz.execute_platform_task_switch<void>(
 				true,
-				std::function{[&, method, raw_argument = std::move(raw_argument)] {
-					fl_method_channel_invoke_method(thiz.m_channel, method.data(), raw_argument, nullptr, nullptr, nullptr);
+				false,
+				std::function{[&] {
+					fl_method_channel_invoke_method(
+						thiz.m_channel,
+						method.data(),
+						raw_argument,
+						nullptr,
+						[](
+							GObject *      object,
+							GAsyncResult * result,
+							gpointer       user_data
+						) -> void {
+							auto & raw_result_guard = *static_cast<std::promise<FlValue *> *>(user_data);
+							auto error = std::add_pointer_t<GError>{nullptr};
+							auto response = fl_method_channel_invoke_method_finish(FL_METHOD_CHANNEL(object), result, &error);
+							if (response == nullptr) {
+								auto _ = make_finalizer(
+									[&] {
+										g_error_free(error);
+									}
+								);
+								raw_result_guard.set_exception(std::make_exception_ptr(std::runtime_error{std::format("Exception: {}", error->message)}));
+								return;
+							}
+							auto _ = make_finalizer(
+								[&] {
+									g_object_unref(response);
+								}
+							);
+							if (FL_IS_METHOD_SUCCESS_RESPONSE(response)) {
+								auto response_data = FL_METHOD_SUCCESS_RESPONSE(response);
+								auto raw_result = fl_method_success_response_get_result(response_data);
+								raw_result_guard.set_value(fl_value_ref(raw_result));
+							}
+							else if (FL_IS_METHOD_ERROR_RESPONSE(response)) {
+								auto response_data = FL_METHOD_ERROR_RESPONSE(response);
+								auto error_code = fl_method_error_response_get_code(response_data);
+								auto error_message = fl_method_error_response_get_message(response_data);
+								raw_result_guard.set_exception(std::make_exception_ptr(std::runtime_error{std::format("{}: {}", error_code, error_message)}));
+							}
+							else if (FL_IS_METHOD_NOT_IMPLEMENTED_RESPONSE(response)) {
+								raw_result_guard.set_exception(std::make_exception_ptr(std::runtime_error{"unimplemented"}));
+							}
+							return;
+						},
+						&raw_result_guard
+					);
+					return;
 				}}
-			);
-			return;
+			).get();
+			auto raw_result = raw_result_guard.get_future().get();
+			auto result = std::unique_ptr<FlValue, void (*)(std::add_pointer_t<FlValue>)>{raw_result, [](std::add_pointer_t<FlValue> it) -> void {
+				fl_value_unref(it);
+				return;
+			}};
+			assert_test(fl_value_get_type(result.get()) == FL_VALUE_TYPE_MAP);
+			return result;
 		}
 
 		// ----------------
 
 		auto invoke_receive_platform_exception(
 			std::string const & message
-		) -> void {
-			return thiz.invoke(
+		) -> std::tuple<> {
+			auto detail = thiz.invoke(
 				"receive_platform_exception",
 				std::map<std::string, FlValue *>{{
 					std::make_pair("message", thiz.encode_flutter_value(auto{message})),
 				}}
 			);
+			return std::make_tuple();
 		}
 
 		// ----------------
 
 		auto invoke_receive_application_link(
 			std::string const & target
-		) -> void {
-			return thiz.invoke(
+		) -> std::tuple<> {
+			auto detail = thiz.invoke(
 				"receive_application_link",
 				std::map<std::string, FlValue *>{{
 					std::make_pair("target", thiz.encode_flutter_value(auto{target})),
 				}}
 			);
+			return std::make_tuple();
 		}
 
 		// ----------------
 
 		auto invoke_receive_application_drag_enter(
-		) -> void {
-			return thiz.invoke(
+		) -> std::tuple<> {
+			auto detail = thiz.invoke(
 				"receive_application_drag_enter",
 				std::map<std::string, FlValue *>{
 				}
 			);
+			return std::make_tuple();
 		}
 
 		auto invoke_receive_application_drag_over(
 			std::int64_t const & location_x,
 			std::int64_t const & location_y
-		) -> void {
-			return thiz.invoke(
+		) -> std::tuple<> {
+			auto detail = thiz.invoke(
 				"receive_application_drag_over",
 				std::map<std::string, FlValue *>{{
 					std::make_pair("location_x", thiz.encode_flutter_value(auto{location_x})),
 					std::make_pair("location_y", thiz.encode_flutter_value(auto{location_y})),
 				}}
 			);
+			return std::make_tuple();
 		}
 
 		auto invoke_receive_application_drag_leave(
-		) -> void {
-			return thiz.invoke(
+		) -> std::tuple<> {
+			auto detail = thiz.invoke(
 				"receive_application_drag_leave",
 				std::map<std::string, FlValue *>{
 				}
 			);
+			return std::make_tuple();
 		}
 
 		auto invoke_receive_application_drag_drop(
 			std::vector<std::string> const & target
-		) -> void {
-			return thiz.invoke(
+		) -> std::tuple<> {
+			auto detail = thiz.invoke(
 				"receive_application_drag_drop",
 				std::map<std::string, FlValue *>{{
 					std::make_pair("target", thiz.encode_flutter_value(auto{target})),
 				}}
 			);
+			return std::make_tuple();
 		}
 
 		#pragma endregion
@@ -714,21 +777,34 @@ export {
 					gpointer         user_data
 				) -> gboolean {
 						auto & self = *static_cast<PlatformIntegrationManager *>(user_data);
-						return self.execute_platform_task(
-							true,
+						return self.execute_platform_task<gboolean>(
 							std::function{[] {
 								return static_cast<gboolean>(FALSE);
 							}},
 							std::function{[&] {
 								if (!self.m_drag_inside) {
 									self.m_drag_inside = true;
-									self.invoke_receive_application_drag_enter();
+									self.execute_platform_task_switch<void>(
+										false,
+										true,
+										[&] {
+											self.invoke_receive_application_drag_enter();
+											return;
+										}
+									);
 								}
 								else {
 									auto window_inset = self.get_current_window_inset();
 									auto location_x = static_cast<std::int64_t>(x - std::get<0>(window_inset));
 									auto location_y = static_cast<std::int64_t>(y - std::get<1>(window_inset));
-									self.invoke_receive_application_drag_over(location_x, location_y);
+									self.execute_platform_task_switch<void>(
+										false,
+										true,
+										[&, location_x = std::move(location_x), location_y = std::move(location_y)] {
+											self.invoke_receive_application_drag_over(location_x, location_y);
+											return;
+										}
+									);
 								}
 								return static_cast<gboolean>(TRUE);
 							}}
@@ -748,8 +824,7 @@ export {
 					gpointer         user_data
 				) -> void {
 						auto & self = *static_cast<PlatformIntegrationManager *>(user_data);
-						return self.execute_platform_task(
-							true,
+						return self.execute_platform_task<void>(
 							std::function{[] {
 								return;
 							}},
@@ -757,13 +832,20 @@ export {
 								self.m_drag_inside = false;
 								auto event = gtk_get_current_event();
 								assert_test(event != nullptr);
-								auto event_finalizer = make_finalizer(
+								auto _ = make_finalizer(
 									[&] {
 										gdk_event_free(event);
 									}
 								);
 								if (event->type != GDK_DROP_START) {
-									self.invoke_receive_application_drag_leave();
+									self.execute_platform_task_switch<void>(
+										false,
+										true,
+										[&] {
+											self.invoke_receive_application_drag_leave();
+											return;
+										}
+									);
 								}
 								return;
 							}}
@@ -787,8 +869,7 @@ export {
 					gpointer           user_data
 				) -> void {
 						auto & self = *static_cast<PlatformIntegrationManager *>(user_data);
-						return self.execute_platform_task(
-							true,
+						return self.execute_platform_task<void>(
 							std::function{[] {
 								return;
 							}},
@@ -796,26 +877,33 @@ export {
 								self.m_drag_inside = false;
 								auto target_uri = gtk_selection_data_get_uris(data);
 								assert_test(target_uri != nullptr);
-								auto target_uri_finalizer = make_finalizer(
+								auto _ = make_finalizer(
 									[&] {
 										g_strfreev(target_uri);
 									}
 								);
 								auto target = std::vector<std::string>{};
-								for (auto target_index = std::size_t{0}; target_uri[target_index] != nullptr; ++target_index) {
+								for (auto target_index = 0zu; target_uri[target_index] != nullptr; ++target_index) {
 									auto target_item = g_filename_from_uri(target_uri[target_index], nullptr, nullptr);
 									if (target_item == nullptr) {
 										target.clear();
 										break;
 									}
-									auto target_item_finalizer = make_finalizer(
+									auto _ = make_finalizer(
 										[&] {
 											g_free(target_item);
 										}
 									);
 									target.emplace_back(target_item);
 								}
-								self.invoke_receive_application_drag_drop(target);
+								self.execute_platform_task_switch<void>(
+									false,
+									true,
+									[&, target = std::move(target)] {
+										self.invoke_receive_application_drag_drop(target);
+										return;
+									}
+								);
 								gtk_drag_finish(context, target.empty() ? FALSE : TRUE, FALSE, time);
 								return;
 							}}
@@ -833,55 +921,90 @@ export {
 
 		template <typename TResult>
 		auto execute_platform_task(
-			bool const &                 handle_exception,
-			std::function<TResult ()> && fallback_action,
-			std::function<TResult ()> && task_action
+			std::optional<std::function<TResult ()>> && fallback_action,
+			std::function<TResult ()> &&                task_action
 		) -> TResult {
 			auto task = [&] {
 				try {
 					return task_action();
 				}
 				catch (...) {
-					if (!handle_exception) {
+					if (!fallback_action.has_value()) {
 						throw;
 					}
-					thiz.invoke_receive_platform_exception(thiz.parse_current_exception());
-					return fallback_action();
+					auto exception_message = thiz.parse_current_exception();
+					thiz.execute_platform_task_switch<void>(
+						false,
+						false,
+						[&, exception_message = std::move(exception_message)] {
+							thiz.invoke_receive_platform_exception(exception_message);
+							return;
+						}
+					);
+					return fallback_action.value()();
 				}
 			};
 			return task();
 		}
 
+		template <typename TResult>
 		auto execute_platform_task_switch(
-			bool const &              on_main,
-			std::function<void ()> && task_action
-		) -> void {
-			auto task = [&, task_action = std::move(task_action)] {
+			bool const &                 on_main,
+			bool const &                 allow_report,
+			std::function<TResult ()> && task_action
+		) -> std::future<TResult> {
+			auto result = std::make_shared<std::promise<TResult>>();
+			auto task = [&, allow_report, task_action = std::move(task_action), result] {
 				try {
-					task_action();
+					if constexpr (std::is_same_v<TResult, void>) {
+						task_action();
+						result->set_value();
+					}
+					else {
+						result->set_value(task_action());
+					}
+					return;
 				}
 				catch (...) {
-					thiz.invoke_receive_platform_exception(thiz.parse_current_exception());
+					result->set_exception(std::current_exception());
+					if (allow_report) {
+						auto exception_message = thiz.parse_current_exception();
+						thiz.execute_platform_task_switch<void>(
+							false,
+							false,
+							[&, exception_message = std::move(exception_message)] {
+								thiz.invoke_receive_platform_exception(exception_message);
+								return;
+							}
+						);
+					}
+					return;
 				}
-				return;
 			};
-			if (on_main) {
-				g_main_context_invoke(
-					g_main_context_default(),
-					[](
-					gpointer user_data
-				) -> gboolean {
-						auto data = std::unique_ptr<std::function<void ()>>{static_cast<std::function<void ()> *>(user_data)};
-						data->operator()();
-						return G_SOURCE_REMOVE;
-					},
-					new std::function<void ()>{std::move(task)}
-				);
+			try {
+				if (on_main) {
+					auto data = std::make_unique<std::function<void ()>>(std::move(task));
+					g_main_context_invoke(
+						g_main_context_default(),
+						[](
+						gpointer user_data
+					) -> gboolean {
+							auto data = std::unique_ptr<std::function<void ()>>{static_cast<std::function<void ()> *>(user_data)};
+							data->operator()();
+							return G_SOURCE_REMOVE;
+						},
+						data.get()
+					);
+					data.release();
+				}
+				else {
+					std::thread{std::move(task)}.detach();
+				}
 			}
-			else {
-				std::thread{std::move(task)}.detach();
+			catch (...) {
+				result->set_exception(std::current_exception());
 			}
-			return;
+			return result->get_future();
 		}
 
 		// ----------------
@@ -1000,12 +1123,12 @@ export {
 			auto error = std::add_pointer_t<GError>{nullptr};
 			state_b = gtk_show_uri_on_window(nullptr, link.data(), GDK_CURRENT_TIME, &error);
 			if (!state_b) {
-				auto error_finalizer = make_finalizer(
+				auto _ = make_finalizer(
 					[&] {
 						g_error_free(error);
 					}
 				);
-				throw std::runtime_error{std::string{"Exception: "} + error->message};
+				throw std::runtime_error{std::format("Exception: {}", error->message)};
 			}
 			return;
 		}

@@ -6,7 +6,7 @@ export module twinning.kernel.utility.range.generic_range;
 import twinning.kernel.utility.builtin;
 import twinning.kernel.utility.trait;
 import twinning.kernel.utility.box;
-import twinning.kernel.utility.exception.utility;
+import twinning.kernel.utility.exception;
 import twinning.kernel.utility.range.reverse_iterator;
 import twinning.kernel.utility.range.moveable_iterator;
 
@@ -113,9 +113,9 @@ export namespace Twinning::Kernel::Range {
 		&& (IsIterator<TIterator>)
 	inline constexpr auto make_range_n(
 		TIterator const & begin,
-		Size const &      size
+		Size const &      count
 	) -> GenericRange<TIterator> {
-		return make_range(begin, begin + size);
+		return make_range(begin, begin + count);
 	}
 
 	template <typename TRange> requires
@@ -144,9 +144,9 @@ export namespace Twinning::Kernel::Range {
 		&& (IsIterator<TIterator>)
 	inline constexpr auto make_reverse_range_n(
 		TIterator const & end,
-		Size const &      size
+		Size const &      count
 	) -> GenericRange<ReverseIterator<TIterator>> {
-		return make_reverse_range(end, end - size);
+		return make_reverse_range(end, end - count);
 	}
 
 	template <typename TRange> requires
@@ -175,9 +175,9 @@ export namespace Twinning::Kernel::Range {
 		&& (IsIterator<TIterator>)
 	inline constexpr auto make_moveable_range_n(
 		TIterator const & begin,
-		Size const &      size
+		Size const &      count
 	) -> GenericRange<MoveableIterator<TIterator>> {
-		return make_moveable_range(begin, begin + size);
+		return make_moveable_range(begin, begin + count);
 	}
 
 	template <typename TRange> requires

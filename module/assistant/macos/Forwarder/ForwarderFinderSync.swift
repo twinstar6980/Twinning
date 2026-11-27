@@ -62,10 +62,13 @@ class ForwarderFinderSync: FIFinderSync {
   private func actionForward(
     _ sender: AnyObject?,
   ) -> Void {
-    let resource = FIFinderSyncController.default().selectedItemURLs()!
+    let resource = FIFinderSyncController.default().selectedItemURLs()
     Task {
       do {
-        try await self.forwardResource(resource)
+        guard resource != nil else {
+          throw NSError(domain: "failed to get resource.", code: 0)
+        }
+        try await self.forwardResource(resource!)
       }
       catch {
         await self.showException(error)

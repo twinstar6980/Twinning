@@ -47,35 +47,33 @@ export namespace Twinning::Kernel::Tool::ProtocolBufferVariableLengthInteger {
 
 	#pragma region parameter
 
-	inline constexpr auto k_z = Byte{0b00000000_b};
+	inline constexpr auto k_shift = Size{7_sz};
 
-	inline constexpr auto k_b = Byte{0b10000000_b};
-
-	inline constexpr auto k_x = Byte{0b01111111_b};
+	inline constexpr auto k_top = Byte{0b1_b << k_shift};
 
 	#pragma endregion
 
 	#pragma region encode & decode for unsigned
 
 	inline auto encode_u32(
-		OutputByteStreamView & stream,
-		IntegerU32             value
+		OutputBinaryStreamView & stream,
+		IntegerU32               value
 	) -> Void {
-		while (value >= cast_box<IntegerU32>(k_b)) {
-			stream.write(cast_box_unsafe<Byte>(value) & k_x | k_b);
-			value >>= 7_sz;
+		while (value >= cast_box<IntegerU32>(k_top)) {
+			stream.write(cast_box_unsafe<Byte>(value) & ~k_top | k_top);
+			value >>= k_shift;
 		}
 		stream.write(cast_box_unsafe<Byte>(value));
 		return;
 	}
 
 	inline auto encode_u64(
-		OutputByteStreamView & stream,
-		IntegerU64             value
+		OutputBinaryStreamView & stream,
+		IntegerU64               value
 	) -> Void {
-		while (value >= cast_box<IntegerU64>(k_b)) {
-			stream.write(cast_box_unsafe<Byte>(value) & k_x | k_b);
-			value >>= 7_sz;
+		while (value >= cast_box<IntegerU64>(k_top)) {
+			stream.write(cast_box_unsafe<Byte>(value) & ~k_top | k_top);
+			value >>= k_shift;
 		}
 		stream.write(cast_box_unsafe<Byte>(value));
 		return;
@@ -84,34 +82,40 @@ export namespace Twinning::Kernel::Tool::ProtocolBufferVariableLengthInteger {
 	// ----------------
 
 	inline auto decode_u32(
-		InputByteStreamView & stream
+		InputBinaryStreamView & stream
 	) -> IntegerU32 {
 		auto value = 0_iu32;
-		for (auto & shift_count : SizeRange{0_sz, k_type_bit_count<IntegerU32>, 7_sz}) {
+		for (auto & shift_index : SizeRange{Math::compute_padded_unit_count(type_bit_size_of<IntegerU32>(), k_shift)}) {
+			auto shift_count = k_shift * shift_index;
 			auto byte = stream.read_of();
-			if ((byte & k_b) != k_z) {
-				value |= cast_box<IntegerU32>(byte & k_x) << shift_count;
-			}
-			else {
+			if ((byte & k_top) == 0_b) {
+				assert_test(shift_count != 28_sz || byte <= 0b0000'1111_b);
 				value |= cast_box<IntegerU32>(byte) << shift_count;
 				break;
+			}
+			else {
+				assert_test(shift_count != 28_sz);
+				value |= cast_box<IntegerU32>(byte & ~k_top) << shift_count;
 			}
 		}
 		return value;
 	}
 
 	inline auto decode_u64(
-		InputByteStreamView & stream
+		InputBinaryStreamView & stream
 	) -> IntegerU64 {
 		auto value = 0_iu64;
-		for (auto & shift_count : SizeRange{0_sz, k_type_bit_count<IntegerU64>, 7_sz}) {
+		for (auto & shift_index : SizeRange{Math::compute_padded_unit_count(type_bit_size_of<IntegerU64>(), k_shift)}) {
+			auto shift_count = k_shift * shift_index;
 			auto byte = stream.read_of();
-			if ((byte & k_b) != k_z) {
-				value |= cast_box<IntegerU64>(byte & k_x) << shift_count;
-			}
-			else {
+			if ((byte & k_top) == 0_b) {
+				assert_test(shift_count != 63_sz || byte <= 0b0000000'1_b);
 				value |= cast_box<IntegerU64>(byte) << shift_count;
 				break;
+			}
+			else {
+				assert_test(shift_count != 63_sz);
+				value |= cast_box<IntegerU64>(byte & ~k_top) << shift_count;
 			}
 		}
 		return value;
@@ -122,15 +126,15 @@ export namespace Twinning::Kernel::Tool::ProtocolBufferVariableLengthInteger {
 	#pragma region encode & decode for signed
 
 	inline auto encode_s32(
-		OutputByteStreamView & stream,
-		IntegerS32 const &     value
+		OutputBinaryStreamView & stream,
+		IntegerS32 const &       value
 	) -> Void {
 		return encode_u32(stream, ZigZag::encode_32(value));
 	}
 
 	inline auto encode_s64(
-		OutputByteStreamView & stream,
-		IntegerS64 const &     value
+		OutputBinaryStreamView & stream,
+		IntegerS64 const &       value
 	) -> Void {
 		return encode_u64(stream, ZigZag::encode_64(value));
 	}
@@ -138,13 +142,13 @@ export namespace Twinning::Kernel::Tool::ProtocolBufferVariableLengthInteger {
 	// ----------------
 
 	inline auto decode_s32(
-		InputByteStreamView & stream
+		InputBinaryStreamView & stream
 	) -> IntegerS32 {
 		return ZigZag::decode_32(decode_u32(stream));
 	}
 
 	inline auto decode_s64(
-		InputByteStreamView & stream
+		InputBinaryStreamView & stream
 	) -> IntegerS64 {
 		return ZigZag::decode_64(decode_u64(stream));
 	}

@@ -16,7 +16,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Json {
 		// ----------------
 
 		inline static auto process_value(
-			OutputCharacterStreamView &   data,
+			OutputStringStreamView &      data,
 			Notation::Json::Value const & value,
 			Boolean const &               disable_array_trailing_comma,
 			Boolean const &               disable_array_line_breaking,
@@ -30,26 +30,26 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Json {
 			) -> Void {
 				if (!disable_line_breaking) {
 					data.write('\n'_c);
-					StringParser::write_character_repeat(data, '\t'_c, indent_level + (is_inner ? (1_sz) : (0_sz)));
+					data.write_space(indent_level + (is_inner ? (1_sz) : (0_sz)), '\t'_c);
 				}
 				return;
 			};
 			switch (value.type().value) {
 				case Notation::Json::ValueType::Constant::null().value: {
-					StringParser::write_null(data, value.get_null());
+					data.write(value.get_null());
 					break;
 				}
 				case Notation::Json::ValueType::Constant::boolean().value: {
-					StringParser::write_boolean(data, value.get_boolean());
+					data.write(value.get_boolean());
 					break;
 				}
 				case Notation::Json::ValueType::Constant::number().value: {
-					StringParser::write_number(data, value.get_number(), k_true);
+					data.write(value.get_number(), k_true);
 					break;
 				}
 				case Notation::Json::ValueType::Constant::string().value: {
 					data.write('"'_c);
-					StringParser::write_escape_utf8_string_until(data, as_left(InputCharacterStreamView{value.get_string()}), '"'_c);
+					StringUtility::write_escape_utf8_string_until(data, as_left(InputStringStreamView{value.get_string()}), '"'_c);
 					data.write('"'_c);
 					break;
 				}
@@ -74,7 +74,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Json {
 					for (auto & member : object) {
 						write_space(disable_object_line_breaking, k_true);
 						data.write('"'_c);
-						StringParser::write_escape_utf8_string_until(data, as_left(InputCharacterStreamView{member.key}), '"'_c);
+						StringUtility::write_escape_utf8_string_until(data, as_left(InputStringStreamView{member.key}), '"'_c);
 						data.write('"'_c);
 						data.write(':'_c);
 						if (!disable_object_line_breaking) {
@@ -96,7 +96,7 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Json {
 		}
 
 		inline static auto process_whole(
-			OutputCharacterStreamView &   data,
+			OutputStringStreamView &      data,
 			Notation::Json::Value const & value,
 			Boolean const &               disable_array_trailing_comma,
 			Boolean const &               disable_array_line_breaking,
@@ -110,14 +110,14 @@ export namespace Twinning::Kernel::Tool::Data::Serialization::Json {
 		// ----------------
 
 		inline static auto process(
-			OutputCharacterStreamView &   data_,
+			OutputStringStreamView &      data_,
 			Notation::Json::Value const & value,
 			Boolean const &               disable_array_trailing_comma,
 			Boolean const &               disable_array_line_breaking,
 			Boolean const &               disable_object_trailing_comma,
 			Boolean const &               disable_object_line_breaking
 		) -> Void {
-			M_use_zps_of(data);
+			M_use_split_stream_of(data);
 			return process_whole(data, value, disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking);
 		}
 

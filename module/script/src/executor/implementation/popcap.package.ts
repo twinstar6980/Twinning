@@ -62,9 +62,9 @@ namespace Twinning.Script.Executor.Implementation.Popcap.Package {
 						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /(\.pak\.bundle)?$/i, '.pak'),
 					}),
 				],
-				worker: ({bundle_directory, data_file, version_number, version_compress_resource_data, buffer_size}, store: {buffer: Kernel.ByteArray}) => {
+				worker: ({bundle_directory, data_file, version_number, version_compress_resource_data, buffer_size}, store: {buffer: Kernel.Binary}) => {
 					if (store.buffer === undefined) {
-						store.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size.value()));
+						store.buffer = Kernel.Binary.allocate(Kernel.Size.value(buffer_size.value()));
 					}
 					let definition_file = bundle_directory.join('definition.json');
 					let resource_directory = bundle_directory.join('resource');

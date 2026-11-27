@@ -116,6 +116,7 @@ function apply_compiler_option_basic(target)
 			'_UNICODE', -- enable unicode mode
 			'NOMINMAX', -- suppress windows's min|max macro
 			'_WINSOCKAPI_', -- suppress winsock.h
+			'WIN32_LEAN_AND_MEAN', -- lean windows.h
 			'_UCRT_NOISY_NAN', -- enable legacy NAN macro in Windows SDK 26100+
 			'_CRT_SECURE_NO_WARNINGS', -- disable secure check warning
 			{ private = true }
@@ -155,6 +156,7 @@ function apply_compiler_option_warning_regular(target)
 		'-Wno-pre-c++17-compat',
 		'-Wno-pre-c++26-compat',
 		'-Wno-ctad-maybe-unsupported',
+		'-Wno-undefined-func-template',
 		'-Wno-redundant-parens',
 		'-Wno-dollar-in-identifier-extension',
 		'-Wno-disabled-macro-expansion',
@@ -188,6 +190,8 @@ function apply_compiler_option_warning_regular(target)
 			'-Wno-unique-object-duplication',
 			'-Wno-thread-safety-analysis',
 			'-Wno-thread-safety-negative',
+			'-Wno-lifetime-safety-intra-tu-suggestions',
+			'-Wno-lifetime-safety-invalidation',
 			{ private = true }
 		)
 	end

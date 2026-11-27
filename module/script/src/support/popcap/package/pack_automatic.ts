@@ -6,7 +6,7 @@ namespace Twinning.Script.Support.Popcap.Package.PackAutomatic {
 		resource_directory: StoragePath,
 		version_number: [0n][number],
 		version_compress_resource_data: boolean,
-	): [Kernel.ByteArray, Kernel.Size] {
+	): [Kernel.Binary, Kernel.Size] {
 		let version_c = Kernel.Tool.Popcap.Package.Version.value({number: version_number, compress_resource_data: version_compress_resource_data});
 		let resource_list = StorageHelper.list_directory(resource_directory, null, true, false, true, false);
 		let definition_js: Kernel.Tool.Popcap.Package.Definition.JS_N.Package = {
@@ -21,14 +21,14 @@ namespace Twinning.Script.Support.Popcap.Package.PackAutomatic {
 				time: 0n,
 			});
 			let resource_size = StorageHelper.size_file(resource_directory.push(resource));
-			data_size_bound += (1 + 1 + resource.emit_windows().length + 4 + 4 + 8) + (Number(resource_size) + 16); // resource information + resource data
+			data_size_bound += (1 + 1 + resource.emit_windows().length * 4 + 4 + 4 + 8) + (Number(resource_size) + 16); // resource information + resource data
 		}
 		data_size_bound += 1; // list done flag
 		Console.information(los('support.popcap.package.pack_automatic:start'), [
 			los('support.popcap.package.pack_automatic:total', resource_list.length),
 		]);
-		let data = Kernel.ByteArray.allocate(Kernel.Size.value(BigInt(data_size_bound)));
-		let stream = Kernel.ByteStreamView.watch(data.view());
+		let data = Kernel.Binary.allocate(Kernel.Size.value(BigInt(data_size_bound)));
+		let stream = Kernel.BinaryStreamView.watch(data.view());
 		let definition = Kernel.Tool.Popcap.Package.Definition.Package.json(Kernel.Notation.Json.Value.value(definition_js), version_c);
 		Kernel.Tool.Popcap.Package.Pack.process(stream, definition, Kernel.Path.value(resource_directory.emit()), version_c);
 		Console.success(los('support.popcap.package.pack_automatic:finish'), [

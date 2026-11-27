@@ -6,15 +6,14 @@ export module twinning.kernel.utility.script.java_script.utility;
 import twinning.kernel.utility.builtin;
 import twinning.kernel.utility.trait;
 import twinning.kernel.utility.box;
-import twinning.kernel.utility.exception.utility;
+import twinning.kernel.utility.exception;
 import twinning.kernel.utility.script.java_script.value;
-import twinning.kernel.utility.memory.allocation;
+import twinning.kernel.utility.memory.utility;
 import twinning.kernel.utility.miscellaneous.finalizer;
-import twinning.kernel.utility.container.variant.variant;
-import twinning.kernel.utility.container.list.list;
+import twinning.kernel.utility.container.variant;
+import twinning.kernel.utility.container.list;
 import twinning.kernel.utility.string.string;
-import twinning.kernel.utility.string.format;
-import twinning.kernel.utility.container.optional.optional;
+import twinning.kernel.utility.container.optional;
 import twinning.kernel.utility.support.std;
 import twinning.kernel.utility.thread.mutex;
 import twinning.kernel.utility.thread.unlocker;
@@ -139,7 +138,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 		inline static auto new_instance_allocate(
 			TArgument && ... argument
 		) -> NativeValueHandler {
-			return new_instance(*allocate_instance<Value>(as_forward<TArgument>(argument) ...));
+			return new_instance(*Memory::allocate<Value>(as_forward<TArgument>(argument) ...));
 		}
 
 		#pragma endregion
@@ -162,7 +161,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 		inline auto call_native_function_wrapper_inner(
 			TArgument && ... argument
 		) -> CallableTraitOf<t_function>::Result {
-			auto unlocker = Thread::Unlocker{g_mutex};
+			auto _ = Thread::Unlocker{g_mutex};
 			return t_function(as_forward<TArgument>(argument) ...);
 		}
 
@@ -178,7 +177,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 				if constexpr (!t_forward_object) {
 					using Argument = CallableTraitOf<t_function>::Argument;
 					return call_native_function_wrapper_inner<t_function>(
-						as_forward<typename Argument::template Element<t_index>>(argument[make_box<Size>(t_index)].template to_of<AsPure<typename Argument::template Element<t_index>>>()) ...
+						as_left(argument[make_box<Size>(t_index)].template to_of<AsPure<typename Argument::template Element<t_index>>>()) ...
 					);
 				}
 				else {
@@ -186,7 +185,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 					using Argument = AsTypePackageRemoveHead<typename CallableTraitOf<t_function>::Argument, 1_szz>;
 					return call_native_function_wrapper_inner<t_function>(
 						as_left(object.to_of<Class>()),
-						as_forward<typename Argument::template Element<t_index>>(argument[make_box<Size>(t_index)].template to_of<AsPure<typename Argument::template Element<t_index>>>()) ...
+						as_left(argument[make_box<Size>(t_index)].template to_of<AsPure<typename Argument::template Element<t_index>>>()) ...
 					);
 				}
 			}(AsValuePackageOfIndex<CallableTraitOf<t_function>::Argument::size - (!t_forward_object ? (0) : (1))>{});
@@ -233,20 +232,33 @@ export namespace Twinning::Kernel::Script::JavaScript {
 
 	namespace Detail {
 
+		template <typename TArgument, typename TNativeArgument> requires
+			NoneConstraint
+		inline auto forward_native_function_by_handler_argument(
+			TNativeArgument & argument
+		) -> TArgument & {
+			if constexpr (IsSame<TNativeArgument, Value>) {
+				return as_forward<TArgument>(argument);
+			}
+			else {
+				return as_forward<TArgument>(argument.value());
+			}
+		}
+
 		template <auto t_function, typename ... TArgument> requires
 			NoneConstraint
 		inline auto proxy_native_function_by_handler(
-			NativeValueHandler<AsPure<TArgument>> & ... argument
+			AsSwitch<IsSame<AsPure<TArgument>, Value>, Value, NativeValueHandler<AsPure<TArgument>>> & ... argument
 		) -> auto {
 			using Result = CallableTraitOf<t_function>::Result;
-			if constexpr (IsVoid<Result>) {
-				return t_function(as_forward<TArgument>(argument.value()) ...);
+			if constexpr (IsVoid<Result> || IsSame<AsPure<Result>, Value>) {
+				return t_function(forward_native_function_by_handler_argument<TArgument>(argument) ...);
 			}
 			else if constexpr (IsInstance<Result>) {
-				return NativeValueHandler<AsPure<Result>>::new_instance_allocate(t_function(as_forward<TArgument>(argument.value()) ...));
+				return NativeValueHandler<AsPure<Result>>::new_instance_allocate(t_function(forward_native_function_by_handler_argument<TArgument>(argument) ...));
 			}
 			else {
-				return NativeValueHandler<AsPure<Result>>::new_reference(t_function(as_forward<TArgument>(argument.value()) ...));
+				return NativeValueHandler<AsPure<Result>>::new_reference(t_function(forward_native_function_by_handler_argument<TArgument>(argument) ...));
 			}
 		}
 
@@ -337,7 +349,7 @@ export namespace Twinning::Kernel::Script::JavaScript {
 			Value &   obj
 		) -> Void {
 			auto opaque = make_pointer_unsafe<NativeValueHandler<TClass>>(Dependency::quickjs_ng::$JS_GetOpaque(obj._value(), unmake_box<Dependency::quickjs_ng::$JSClassID>(g_native_class_identifier<TClass>)));
-			free_instance(opaque);
+			Memory::free(opaque);
 			return;
 		}
 

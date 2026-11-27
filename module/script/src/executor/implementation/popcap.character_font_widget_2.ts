@@ -49,9 +49,9 @@ namespace Twinning.Script.Executor.Implementation.Popcap.CharacterFontWidget2 {
 						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /(\.cfw2\.json)?$/i, '.cfw2'),
 					}),
 				],
-				worker: ({definition_file, data_file, buffer_size}, store: {buffer: Kernel.ByteArray}) => {
+				worker: ({definition_file, data_file, buffer_size}, store: {buffer: Kernel.Binary}) => {
 					if (store.buffer === undefined) {
-						store.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size.value()));
+						store.buffer = Kernel.Binary.allocate(Kernel.Size.value(buffer_size.value()));
 					}
 					KernelX.Tool.Popcap.CharacterFontWidget2.encode_fs(data_file, definition_file, {}, store.buffer.view());
 					return;

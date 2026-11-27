@@ -694,7 +694,7 @@ class ListContainer extends StatelessWidget {
     ScrollController?                                             controller = null,
     required Integer                                              itemCount,
     required Widget Function(BuildContext context, Integer index) itemBuilder,
-    Void Function(Integer newIndex, Integer oldIndex)?            onReorder = null,
+    Void Function(Integer oldIndex, Integer newIndex)?            onReorder = null,
   }) : this._(
     key: key,
     shrink: shrink,
@@ -712,7 +712,7 @@ class ListContainer extends StatelessWidget {
   final ScrollController?                                    controller;
   final Integer                                              itemCount;
   final Widget Function(BuildContext context, Integer index) itemBuilder;
-  final Void Function(Integer newIndex, Integer oldIndex)?   onReorder;
+  final Void Function(Integer oldIndex, Integer newIndex)?   onReorder;
 
   // ----------------
 

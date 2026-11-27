@@ -18,7 +18,7 @@ namespace Twinning.Script.AssemblyHelper {
 
 	export function find_call_instruction(
 		platform_type: PlatformType,
-		data: ByteStreamView,
+		data: BinaryStreamView,
 		limit: number,
 		address: Array<number>,
 		overwrite: boolean,

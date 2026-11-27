@@ -6,8 +6,7 @@ export module twinning.kernel.utility.container.stream.stream_mode;
 import twinning.kernel.utility.builtin;
 import twinning.kernel.utility.trait;
 import twinning.kernel.utility.box;
-import twinning.kernel.utility.exception.utility;
-import twinning.kernel.utility.container.list.list_view;
+import twinning.kernel.utility.exception;
 
 export namespace Twinning::Kernel {
 

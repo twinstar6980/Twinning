@@ -20,11 +20,36 @@ export {
 
 		#pragma region constructor
 
-		explicit ForwarderExplorerCommand(
+		~ForwarderExplorerCommand(
+		) = default;
+
+		// ----------------
+
+		ForwarderExplorerCommand(
 		) :
 			winrt::implements<ForwarderExplorerCommand, IExplorerCommand>{} {
 			return;
 		}
+
+		ForwarderExplorerCommand(
+			ForwarderExplorerCommand const & that
+		) = delete;
+
+		ForwarderExplorerCommand(
+			ForwarderExplorerCommand && that
+		) = delete;
+
+		#pragma endregion
+
+		#pragma region operator
+
+		auto operator =(
+			ForwarderExplorerCommand const & that
+		) -> ForwarderExplorerCommand & = delete;
+
+		auto operator =(
+			ForwarderExplorerCommand && that
+		) -> ForwarderExplorerCommand & = delete;
 
 		#pragma endregion
 
@@ -222,14 +247,14 @@ export {
 		) const -> std::string {
 			auto state_d = DWORD{};
 			auto path_data = std::vector<wchar_t>{};
-			path_data.reserve(256);
+			path_data.resize(256);
 			while (true) {
-				state_d = GetModuleFileNameW(handle, path_data.data(), static_cast<DWORD>(path_data.capacity()));
-				if (state_d != 0 && state_d != path_data.capacity()) {
+				state_d = GetModuleFileNameW(handle, path_data.data(), static_cast<DWORD>(path_data.size()));
+				if (state_d != 0 && state_d != path_data.size()) {
 					break;
 				}
 				assert_test(GetLastError() == ERROR_INSUFFICIENT_BUFFER);
-				path_data.reserve(path_data.capacity() * 2);
+				path_data.resize(path_data.size() * 2);
 			}
 			auto path_h = std::wstring{path_data.data(), state_d};
 			return winrt::to_string(path_h);
@@ -311,11 +336,36 @@ export {
 
 		#pragma region constructor
 
-		explicit ForwarderExplorerCommandClassFactory(
+		~ForwarderExplorerCommandClassFactory(
+		) = default;
+
+		// ----------------
+
+		ForwarderExplorerCommandClassFactory(
 		) :
 			winrt::implements<ForwarderExplorerCommandClassFactory, IClassFactory>{} {
 			return;
 		}
+
+		ForwarderExplorerCommandClassFactory(
+			ForwarderExplorerCommandClassFactory const & that
+		) = delete;
+
+		ForwarderExplorerCommandClassFactory(
+			ForwarderExplorerCommandClassFactory && that
+		) = delete;
+
+		#pragma endregion
+
+		#pragma region operator
+
+		auto operator =(
+			ForwarderExplorerCommandClassFactory const & that
+		) -> ForwarderExplorerCommandClassFactory & = delete;
+
+		auto operator =(
+			ForwarderExplorerCommandClassFactory && that
+		) -> ForwarderExplorerCommandClassFactory & = delete;
 
 		#pragma endregion
 

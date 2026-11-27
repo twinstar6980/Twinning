@@ -6,11 +6,57 @@ export module twinning.kernel.utility.math.utility;
 import twinning.kernel.utility.builtin;
 import twinning.kernel.utility.trait;
 import twinning.kernel.utility.box;
-import twinning.kernel.utility.exception.utility;
+import twinning.kernel.utility.exception;
 
 export namespace Twinning::Kernel::Math {
 
 	#pragma region check
+
+	template <typename TValue> requires
+		CategoryConstraint<IsPureInstance<TValue>>
+		&& (IsFloaterBox<TValue>)
+	inline constexpr auto is_finite(
+		TValue const & value
+	) -> Boolean {
+		return std::isfinite(unmake_box<typename TValue::Value>(value));
+	}
+
+	template <typename TValue> requires
+		CategoryConstraint<IsPureInstance<TValue>>
+		&& (IsFloaterBox<TValue>)
+	inline constexpr auto is_infinity(
+		TValue const & value
+	) -> Boolean {
+		return std::isinf(unmake_box<typename TValue::Value>(value));
+	}
+
+	template <typename TValue> requires
+		CategoryConstraint<IsPureInstance<TValue>>
+		&& (IsFloaterBox<TValue>)
+	inline constexpr auto is_invalid(
+		TValue const & value
+	) -> Boolean {
+		return std::isnan(unmake_box<typename TValue::Value>(value));
+	}
+
+	// ----------------
+
+	template <typename TValue> requires
+		CategoryConstraint<IsPureInstance<TValue>>
+		&& (IsFloaterBox<TValue>)
+	inline constexpr auto extract(
+		TValue const & value,
+		TValue &       significand,
+		Integer &      exponent
+	) -> Void {
+		auto exponent_value = int{};
+		auto significand_value = std::frexp(unmake_box<typename TValue::Value>(value), &exponent_value);
+		significand = make_box<TValue>(significand_value);
+		exponent = make_box<Integer>(exponent_value);
+		return;
+	}
+
+	// ----------------
 
 	template <typename TValue> requires
 		CategoryConstraint<IsPureInstance<TValue>>
@@ -58,6 +104,24 @@ export namespace Twinning::Kernel::Math {
 		return make_box<TValue>(std::round(unmake_box<typename TValue::Value>(value)));
 	}
 
+	template <typename TValue> requires
+		CategoryConstraint<IsPureInstance<TValue>>
+		&& (IsFloaterBox<TValue>)
+	inline constexpr auto ceil(
+		TValue const & value
+	) -> TValue {
+		return make_box<TValue>(std::ceil(unmake_box<typename TValue::Value>(value)));
+	}
+
+	template <typename TValue> requires
+		CategoryConstraint<IsPureInstance<TValue>>
+		&& (IsFloaterBox<TValue>)
+	inline constexpr auto floor(
+		TValue const & value
+	) -> TValue {
+		return make_box<TValue>(std::floor(unmake_box<typename TValue::Value>(value)));
+	}
+
 	#pragma endregion
 
 	#pragma region padding
@@ -66,6 +130,7 @@ export namespace Twinning::Kernel::Math {
 		Size const & value,
 		Size const & unit
 	) -> Boolean {
+		assert_test(unit != 0_sz);
 		return value % unit == 0_sz;
 	}
 
@@ -73,6 +138,7 @@ export namespace Twinning::Kernel::Math {
 		Size const & value,
 		Size const & unit
 	) -> Size {
+		assert_test(unit != 0_sz);
 		return is_padded_size(value, unit) ? (value) : ((value / unit + 1_sz) * unit);
 	}
 
@@ -80,7 +146,16 @@ export namespace Twinning::Kernel::Math {
 		Size const & value,
 		Size const & unit
 	) -> Size {
+		assert_test(unit != 0_sz);
 		return compute_padded_size(value, unit) - value;
+	}
+
+	inline constexpr auto compute_padded_unit_count(
+		Size const& value,
+		Size const& unit
+	) -> Size {
+		assert_test(unit != 0_sz);
+		return is_padded_size(value, unit) ? (value / unit) : (value / unit + 1_sz);
 	}
 
 	// ----------------

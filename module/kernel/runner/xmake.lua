@@ -1,5 +1,3 @@
--- runner
-
 target('runner', function()
 	set_group('source')
 	set_kind('binary')

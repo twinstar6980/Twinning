@@ -1,33 +1,29 @@
--- PVRTCCompressor
--- ? 234ecb7db4785bd3c971d01d7f5556192fe9ab28
--- https://github.com/brenwill/PVRTCCompressor
-
 target('dependency.PVRTCCompressor', function()
 	set_group('source/dependency')
 	set_kind('static')
 	add_headerfiles(
-		'AlphaBitmap.h',
-		'BitScale.h',
-		'BitUtility.h',
-		'Bitmap.h',
-		'ColorRgba.h',
-		'Interval.h',
-		'MortonTable.h',
-		'Point2.h',
-		'PvrTcDecoder.h',
-		'PvrTcEncoder.h',
-		'PvrTcPacket.h',
-		'RgbBitmap.h',
-		'RgbaBitmap.h',
+		'origin/AlphaBitmap.h',
+		'origin/Bitmap.h',
+		'origin/BitScale.h',
+		'origin/BitUtility.h',
+		'origin/ColorRgba.h',
+		'origin/Interval.h',
+		'origin/MortonTable.h',
+		'origin/Point2.h',
+		'origin/PvrTcDecoder.h',
+		'origin/PvrTcEncoder.h',
+		'origin/PvrTcPacket.h',
+		'origin/RgbaBitmap.h',
+		'origin/RgbBitmap.h',
 		{ install = false }
 	)
 	add_files(
-		'BitScale.cpp',
-		'MortonTable.cpp',
-		'PvrTcDecoder.cpp',
-		'PvrTcEncoder.cpp',
-		'PvrTcPacket.cpp',
-		'main.cpp',
+		'origin/BitScale.cpp',
+		'origin/main.cpp',
+		'origin/MortonTable.cpp',
+		'origin/PvrTcDecoder.cpp',
+		'origin/PvrTcEncoder.cpp',
+		'origin/PvrTcPacket.cpp',
 		{}
 	)
 	add_includedirs(

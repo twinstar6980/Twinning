@@ -30,7 +30,7 @@ export namespace Twinning::Kernel {
 
 	#pragma endregion
 
-	#pragma region regular type
+	#pragma region regular
 
 	M_simple_derived_class(Enumerated, Enumerated8, Enumerated8);
 

@@ -23,9 +23,9 @@ namespace Twinning::Kernel::Interface {
 		}
 		else {
 			auto script_path = Path{script};
-			auto script_data = ByteArray{Storage::size_file(script_path)};
-			Storage::read_file(script_path, 0_sz, script_data.view());
-			script_text.bind(from_byte_view<Character>(script_data.view()));
+			auto script_data = Binary{Storage::size_file(script_path)};
+			Storage::read_file(script_path, 0_sz, script_data.as_view());
+			script_text.bind(cast_pointer<Character>(script_data.data()), script_data.size(), script_data.capacity());
 			script_data.unbind();
 		}
 		auto result = Kernel::Executor::execute(callback, script_text, argument);
@@ -46,18 +46,18 @@ namespace Twinning::Kernel::Interface {
 			case "execute"_shz: {
 				assert_test(argument.size() >= 2_sz);
 				auto & detail_script = argument[2_ix];
-				auto   detail_argument = List<String>{argument.tail(argument.size() - 3_ix)};
+				auto   detail_argument = make_list_of<String>(Range::slice_tail(argument, argument.size() - 3_ix));
 				auto   detail = service_executor_execute(
 					callback_proxy,
 					detail_script,
 					detail_argument
 				);
 				auto & detail_result = detail.get<1_ix>();
-				result.append_list(detail_result);
+				result.append_range(Range::make_moveable_range_of(detail_result));
 				break;
 			}
 			default: {
-				throw UnnamedException{make_std_string("invalid method"_sv)};
+				throw UnnamedException{to_std_string("invalid method"_sv)};
 			}
 		}
 		return;

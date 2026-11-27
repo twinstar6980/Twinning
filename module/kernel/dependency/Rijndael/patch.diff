@@ -1,0 +1,129 @@
+diff --git a/Rijndael.cpp b/Rijndael.cpp
+index e458fa4..aab2148 100644
+--- a/Rijndael.cpp
++++ b/Rijndael.cpp
+@@ -942,11 +942,11 @@ CRijndael::~CRijndael()
+ void CRijndael::MakeKey(char const* key, char const* chain, int keylength, int blockSize)
+ {
+ 	if(NULL == key)
+-		throw exception("Empty key");
++		throw runtime_error("Empty key");
+ 	if(!(16==keylength || 24==keylength || 32==keylength))
+-		throw exception("Incorrect key length");
++		throw runtime_error("Incorrect key length");
+ 	if(!(16==blockSize || 24==blockSize || 32==blockSize))
+-		throw exception("Incorrect block length");
++		throw runtime_error("Incorrect block length");
+ 	m_keylength = keylength;
+ 	m_blockSize = blockSize;
+ 	//Initialize the chain
+@@ -1049,7 +1049,7 @@ void CRijndael::MakeKey(char const* key, char const* chain, int keylength, int b
+ void CRijndael::DefEncryptBlock(char const* in, char* result)
+ {
+ 	if(false==m_bKeyInit)
+-		throw exception(sm_szErrorMsg1);
++		throw runtime_error(sm_szErrorMsg1);
+ 	int* Ker = m_Ke[0];
+ 	int t0 = ((unsigned char)*(in++) << 24);
+ 	t0 |= ((unsigned char)*(in++) << 16);
+@@ -1124,7 +1124,7 @@ void CRijndael::DefEncryptBlock(char const* in, char* result)
+ void CRijndael::DefDecryptBlock(char const* in, char* result)
+ {
+ 	if(false==m_bKeyInit)
+-		throw exception(sm_szErrorMsg1);
++		throw runtime_error(sm_szErrorMsg1);
+ 	int* Kdr = m_Kd[0];
+ 	int t0 = ((unsigned char)*(in++) << 24);
+ 	t0 = t0 | ((unsigned char)*(in++) << 16);
+@@ -1197,7 +1197,7 @@ void CRijndael::DefDecryptBlock(char const* in, char* result)
+ void CRijndael::EncryptBlock(char const* in, char* result)
+ {
+ 	if(false==m_bKeyInit)
+-		throw exception(sm_szErrorMsg1);
++		throw runtime_error(sm_szErrorMsg1);
+ 	if(DEFAULT_BLOCK_SIZE == m_blockSize)
+ 	{
+ 		DefEncryptBlock(in, result);
+@@ -1247,7 +1247,7 @@ void CRijndael::EncryptBlock(char const* in, char* result)
+ void CRijndael::DecryptBlock(char const* in, char* result)
+ {
+ 	if(false==m_bKeyInit)
+-		throw exception(sm_szErrorMsg1);
++		throw runtime_error(sm_szErrorMsg1);
+ 	if(DEFAULT_BLOCK_SIZE == m_blockSize)
+ 	{
+ 		DefDecryptBlock(in, result);
+@@ -1294,10 +1294,10 @@ void CRijndael::DecryptBlock(char const* in, char* result)
+ void CRijndael::Encrypt(char const* in, char* result, size_t n, int iMode)
+ {
+ 	if(false==m_bKeyInit)
+-		throw exception(sm_szErrorMsg1);
++		throw runtime_error(sm_szErrorMsg1);
+ 	//n should be > 0 and multiple of m_blockSize
+ 	if(0==n || n%m_blockSize!=0)
+-		throw exception(sm_szErrorMsg2);
++		throw runtime_error(sm_szErrorMsg2);
+ 	int i;
+ 	char const* pin;
+ 	char* presult;
+@@ -1337,10 +1337,10 @@ void CRijndael::Encrypt(char const* in, char* result, size_t n, int iMode)
+ void CRijndael::Decrypt(char const* in, char* result, size_t n, int iMode)
+ {
+ 	if(false==m_bKeyInit)
+-		throw exception(sm_szErrorMsg1);
++		throw runtime_error(sm_szErrorMsg1);
+ 	//n should be > 0 and multiple of m_blockSize
+ 	if(0==n || n%m_blockSize!=0)
+-		throw exception(sm_szErrorMsg2);
++		throw runtime_error(sm_szErrorMsg2);
+ 	int i;
+ 	char const* pin;
+ 	char* presult;
+diff --git a/Rijndael.h b/Rijndael.h
+index b62cea1..49b89bc 100644
+--- a/Rijndael.h
++++ b/Rijndael.h
+@@ -6,6 +6,7 @@
+ 
+ #include <exception>
+ #include <cstring>
++#include <stdexcept>
+ 
+ using namespace std;
+ 
+@@ -77,7 +78,7 @@ private:
+ 	void Xor(char* buff, char const* chain)
+ 	{
+ 		if(false==m_bKeyInit)
+-			throw exception(sm_szErrorMsg1);
++			throw runtime_error(sm_szErrorMsg1);
+ 		for(int i=0; i<m_blockSize; i++)
+ 			*(buff++) ^= *(chain++);	
+ 	}
+@@ -113,7 +114,7 @@ public:
+ 	int GetKeyLength()
+ 	{
+ 		if(false==m_bKeyInit)
+-			throw exception(sm_szErrorMsg1);
++			throw runtime_error(sm_szErrorMsg1);
+ 		return m_keylength;
+ 	}
+ 
+@@ -121,7 +122,7 @@ public:
+ 	int	GetBlockSize()
+ 	{
+ 		if(false==m_bKeyInit)
+-			throw exception(sm_szErrorMsg1);
++			throw runtime_error(sm_szErrorMsg1);
+ 		return m_blockSize;
+ 	}
+ 	
+@@ -129,7 +130,7 @@ public:
+ 	int GetRounds()
+ 	{
+ 		if(false==m_bKeyInit)
+-			throw exception(sm_szErrorMsg1);
++			throw runtime_error(sm_szErrorMsg1);
+ 		return m_iROUNDS;
+ 	}
+ 

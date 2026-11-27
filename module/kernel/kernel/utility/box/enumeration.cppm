@@ -38,7 +38,10 @@ export namespace Twinning::Kernel {
 		// ----------------
 
 		constexpr EnumerationBox(
-		) = default;
+		) :
+			EnumeratedBox{} {
+			return;
+		}
 
 		constexpr EnumerationBox(
 			EnumerationBox const & that

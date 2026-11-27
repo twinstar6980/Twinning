@@ -1,5 +1,5 @@
 {
-	"byte_stream_use_big_endian": false,
+	"binary_stream_endian": null,
 	"common_buffer_size": "64.0m",
 	"json_format_disable_array_trailing_comma": false,
 	"json_format_disable_array_line_breaking": false,
@@ -58,21 +58,56 @@
 			},
 		},
 		"data.hashing": {
-			"md5.hash": {
-				"filter": "()$",
-				"argument": {
-					"target_file": "?input",
-				},
-				"batch": {
-					"target_file": "?input",
-				},
-			},
 			"fnv.hash": {
 				"filter": "()$",
 				"argument": {
 					"target_file": "?input",
 					"mode": "?input",
-					"bit_count": "?input",
+					"length": "?input",
+				},
+				"batch": {
+					"target_file": "?input",
+				},
+			},
+			"crc.hash": {
+				"filter": "()$",
+				"argument": {
+					"target_file": "?input",
+					"mode": "?input",
+					"length": "?input",
+				},
+				"batch": {
+					"target_file": "?input",
+				},
+			},
+			"adler.hash": {
+				"filter": "()$",
+				"argument": {
+					"target_file": "?input",
+					"mode": "?input",
+					"length": "?input",
+				},
+				"batch": {
+					"target_file": "?input",
+				},
+			},
+			"md.hash": {
+				"filter": "()$",
+				"argument": {
+					"target_file": "?input",
+					"mode": "?input",
+					"length": "?input",
+				},
+				"batch": {
+					"target_file": "?input",
+				},
+			},
+			"sha.hash": {
+				"filter": "()$",
+				"argument": {
+					"target_file": "?input",
+					"mode": "?input",
+					"length": "?input",
 				},
 				"batch": {
 					"target_file": "?input",
@@ -80,22 +115,24 @@
 			},
 		},
 		"data.encoding": {
-			"base64.encode": {
+			"base.encode": {
 				"filter": "()$",
 				"argument": {
 					"raw_file": "?input",
 					"ripe_file": "?automatic",
+					"mode": "?input",
 				},
 				"batch": {
 					"raw_file": "?input",
 					"ripe_file": "?automatic",
 				},
 			},
-			"base64.decode": {
+			"base.decode": {
 				"filter": "()$",
 				"argument": {
 					"ripe_file": "?input",
 					"raw_file": "?automatic",
+					"mode": "?input",
 				},
 				"batch": {
 					"ripe_file": "?input",
@@ -153,6 +190,7 @@
 				"argument": {
 					"raw_file": "?input",
 					"ripe_file": "?automatic",
+					"container": "?input",
 				},
 				"batch": {
 					"raw_file": "?input",
@@ -164,52 +202,7 @@
 				"argument": {
 					"ripe_file": "?input",
 					"raw_file": "?automatic",
-					"buffer_size": "?input",
-				},
-				"batch": {
-					"ripe_file": "?input",
-					"raw_file": "?automatic",
-				},
-			},
-			"zlib.compress": {
-				"filter": "()$",
-				"argument": {
-					"raw_file": "?input",
-					"ripe_file": "?automatic",
-				},
-				"batch": {
-					"raw_file": "?input",
-					"ripe_file": "?automatic",
-				},
-			},
-			"zlib.uncompress": {
-				"filter": "()$",
-				"argument": {
-					"ripe_file": "?input",
-					"raw_file": "?automatic",
-					"buffer_size": "?input",
-				},
-				"batch": {
-					"ripe_file": "?input",
-					"raw_file": "?automatic",
-				},
-			},
-			"gzip.compress": {
-				"filter": "()$",
-				"argument": {
-					"raw_file": "?input",
-					"ripe_file": "?automatic",
-				},
-				"batch": {
-					"raw_file": "?input",
-					"ripe_file": "?automatic",
-				},
-			},
-			"gzip.uncompress": {
-				"filter": "()$",
-				"argument": {
-					"ripe_file": "?input",
-					"raw_file": "?automatic",
+					"container": "?input",
 					"buffer_size": "?input",
 				},
 				"batch": {
@@ -222,6 +215,7 @@
 				"argument": {
 					"raw_file": "?input",
 					"ripe_file": "?automatic",
+					"container": "?input",
 				},
 				"batch": {
 					"raw_file": "?input",
@@ -233,6 +227,7 @@
 				"argument": {
 					"ripe_file": "?input",
 					"raw_file": "?automatic",
+					"container": "?input",
 					"buffer_size": "?input",
 				},
 				"batch": {
@@ -240,22 +235,174 @@
 					"raw_file": "?automatic",
 				},
 			},
-			"lzma.compress": {
+			"lzma1.compress": {
 				"filter": "()$",
 				"argument": {
 					"raw_file": "?input",
 					"ripe_file": "?automatic",
+					"container": "?input",
 				},
 				"batch": {
 					"raw_file": "?input",
 					"ripe_file": "?automatic",
 				},
 			},
-			"lzma.uncompress": {
+			"lzma1.uncompress": {
 				"filter": "()$",
 				"argument": {
 					"ripe_file": "?input",
 					"raw_file": "?automatic",
+					"container": "?input",
+					"buffer_size": "?input",
+				},
+				"batch": {
+					"ripe_file": "?input",
+					"raw_file": "?automatic",
+				},
+			},
+			"lzma2.compress": {
+				"filter": "()$",
+				"argument": {
+					"raw_file": "?input",
+					"ripe_file": "?automatic",
+					"container": "?input",
+				},
+				"batch": {
+					"raw_file": "?input",
+					"ripe_file": "?automatic",
+				},
+			},
+			"lzma2.uncompress": {
+				"filter": "()$",
+				"argument": {
+					"ripe_file": "?input",
+					"raw_file": "?automatic",
+					"container": "?input",
+					"buffer_size": "?input",
+				},
+				"batch": {
+					"ripe_file": "?input",
+					"raw_file": "?automatic",
+				},
+			},
+			"lz4.compress": {
+				"filter": "()$",
+				"argument": {
+					"raw_file": "?input",
+					"ripe_file": "?automatic",
+					"container": "?input",
+				},
+				"batch": {
+					"raw_file": "?input",
+					"ripe_file": "?automatic",
+				},
+			},
+			"lz4.uncompress": {
+				"filter": "()$",
+				"argument": {
+					"ripe_file": "?input",
+					"raw_file": "?automatic",
+					"container": "?input",
+					"buffer_size": "?input",
+				},
+				"batch": {
+					"ripe_file": "?input",
+					"raw_file": "?automatic",
+				},
+			},
+			"lzo.compress": {
+				"filter": "()$",
+				"argument": {
+					"raw_file": "?input",
+					"ripe_file": "?automatic",
+					"container": "?input",
+				},
+				"batch": {
+					"raw_file": "?input",
+					"ripe_file": "?automatic",
+				},
+			},
+			"lzo.uncompress": {
+				"filter": "()$",
+				"argument": {
+					"ripe_file": "?input",
+					"raw_file": "?automatic",
+					"container": "?input",
+					"buffer_size": "?input",
+				},
+				"batch": {
+					"ripe_file": "?input",
+					"raw_file": "?automatic",
+				},
+			},
+			"brotli.compress": {
+				"filter": "()$",
+				"argument": {
+					"raw_file": "?input",
+					"ripe_file": "?automatic",
+					"container": "?input",
+				},
+				"batch": {
+					"raw_file": "?input",
+					"ripe_file": "?automatic",
+				},
+			},
+			"brotli.uncompress": {
+				"filter": "()$",
+				"argument": {
+					"ripe_file": "?input",
+					"raw_file": "?automatic",
+					"container": "?input",
+					"buffer_size": "?input",
+				},
+				"batch": {
+					"ripe_file": "?input",
+					"raw_file": "?automatic",
+				},
+			},
+			"snappy.compress": {
+				"filter": "()$",
+				"argument": {
+					"raw_file": "?input",
+					"ripe_file": "?automatic",
+					"container": "?input",
+				},
+				"batch": {
+					"raw_file": "?input",
+					"ripe_file": "?automatic",
+				},
+			},
+			"snappy.uncompress": {
+				"filter": "()$",
+				"argument": {
+					"ripe_file": "?input",
+					"raw_file": "?automatic",
+					"container": "?input",
+					"buffer_size": "?input",
+				},
+				"batch": {
+					"ripe_file": "?input",
+					"raw_file": "?automatic",
+				},
+			},
+			"zstd.compress": {
+				"filter": "()$",
+				"argument": {
+					"raw_file": "?input",
+					"ripe_file": "?automatic",
+					"container": "?input",
+				},
+				"batch": {
+					"raw_file": "?input",
+					"ripe_file": "?automatic",
+				},
+			},
+			"zstd.uncompress": {
+				"filter": "()$",
+				"argument": {
+					"ripe_file": "?input",
+					"raw_file": "?automatic",
+					"container": "?input",
 					"buffer_size": "?input",
 				},
 				"batch": {

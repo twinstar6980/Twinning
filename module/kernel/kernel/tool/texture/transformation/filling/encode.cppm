@@ -26,8 +26,8 @@ export namespace Twinning::Kernel::Tool::Texture::Transformation::Filling {
 			assert_test(raw.size() == ripe.size());
 			for (auto & y : SizeRange{raw.size().height}) {
 				for (auto & x : SizeRange{raw.size().width}) {
-					auto & raw_pixel = raw[y][x];
-					auto & ripe_pixel = ripe[y][x];
+					auto & raw_pixel = raw[x, y];
+					auto & ripe_pixel = ripe[x, y];
 					ripe_pixel.red = fill_red.has() ? fill_red.get() : raw_pixel.red;
 					ripe_pixel.green = fill_green.has() ? fill_green.get() : raw_pixel.green;
 					ripe_pixel.blue = fill_blue.has() ? fill_blue.get() : raw_pixel.blue;

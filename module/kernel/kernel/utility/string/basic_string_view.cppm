@@ -6,11 +6,10 @@ export module twinning.kernel.utility.string.basic_string_view;
 import twinning.kernel.utility.builtin;
 import twinning.kernel.utility.trait;
 import twinning.kernel.utility.box;
-import twinning.kernel.utility.exception.utility;
-import twinning.kernel.utility.string.character_type;
-import twinning.kernel.utility.miscellaneous.character_series.container;
+import twinning.kernel.utility.exception;
+import twinning.kernel.utility.container.array.array_view;
 import twinning.kernel.utility.range.algorithm;
-import twinning.kernel.utility.range.number_range;
+import twinning.kernel.utility.range.integer_range;
 import twinning.kernel.utility.math.utility;
 
 export namespace Twinning::Kernel {
@@ -22,23 +21,23 @@ export namespace Twinning::Kernel {
 		&& (IsSameOf<t_constant, Boolean>)
 		&& (IsCharacterBox<TElement>)
 	class BasicStringView :
-		public BasicCharacterListView<TElement, t_constant> {
+		public ArrayView<TElement, t_constant> {
 
 	private:
 
-		using BasicCharacterListView = BasicCharacterListView<TElement, t_constant>;
+		using ArrayView = ArrayView<TElement, t_constant>;
 
 		using ConstantView = BasicStringView<TElement, k_true>;
 
 	public:
 
-		using typename BasicCharacterListView::Element;
+		using typename ArrayView::Element;
 
-		using BasicCharacterListView::constant;
+		using ArrayView::constant;
 
-		using typename BasicCharacterListView::QualifyElement;
+		using typename ArrayView::QualifyElement;
 
-		using typename BasicCharacterListView::QualifyIterator;
+		using typename ArrayView::QualifyIterator;
 
 	public:
 
@@ -50,7 +49,10 @@ export namespace Twinning::Kernel {
 		// ----------------
 
 		constexpr BasicStringView(
-		) = default;
+		) :
+			ArrayView{} {
+			return;
+		}
 
 		constexpr BasicStringView(
 			BasicStringView const & that
@@ -62,7 +64,7 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		using BasicCharacterListView::BasicCharacterListView;
+		using ArrayView::ArrayView;
 
 		#pragma endregion
 
@@ -90,22 +92,28 @@ export namespace Twinning::Kernel {
 
 		#pragma endregion
 
-		#pragma region case convert
+		#pragma region sub
 
-		constexpr auto as_lower_case(
-		) const -> Void requires
-			(!constant.value) &&
-			(IsSame<Element, Character>) {
-			Range::each(thiz, CharacterType::as_letter_lower);
-			return;
+		constexpr auto sub(
+			Size const & begin,
+			Size const & count
+		) const -> BasicStringView {
+			assert_test(begin + count <= thiz.size());
+			return BasicStringView{thiz.iterator(begin), count};
 		}
 
-		constexpr auto as_upper_case(
-		) const -> Void requires
-			(!constant.value) &&
-			(IsSame<Element, Character>) {
-			Range::each(thiz, CharacterType::as_letter_upper);
-			return;
+		constexpr auto head(
+			Size const & count
+		) const -> BasicStringView {
+			assert_test(count <= thiz.size());
+			return thiz.sub(thiz.begin_index(), count);
+		}
+
+		constexpr auto tail(
+			Size const & count
+		) const -> BasicStringView {
+			assert_test(count <= thiz.size());
+			return thiz.sub(thiz.end_index() - count, count);
 		}
 
 		#pragma endregion
@@ -114,8 +122,7 @@ export namespace Twinning::Kernel {
 
 		constexpr auto compare_three_way(
 			ConstantView const & that
-		) const -> StrongOrdering requires
-			(IsSame<Element, Character>) {
+		) const -> StrongOrdering {
 			auto common_size = Math::minimum(thiz.size(), that.size());
 			for (auto & index : SizeRange{common_size}) {
 				auto & thiz_element = thiz[index];
@@ -143,35 +150,9 @@ export namespace Twinning::Kernel {
 			auto result = offset;
 			for (auto & element : thiz) {
 				result ^= cast_box<IntegerU64>(element);
-				result *= prime;
+				result = unchecked_number_multiply(result, prime);
 			}
 			return result;
-		}
-
-		#pragma endregion
-
-		#pragma region sub
-
-		constexpr auto sub(
-			Size const & begin,
-			Size const & size
-		) const -> BasicStringView {
-			assert_test(begin + size <= thiz.size());
-			return BasicStringView{thiz.iterator(begin), size};
-		}
-
-		constexpr auto head(
-			Size const & size
-		) const -> BasicStringView {
-			assert_test(size <= thiz.size());
-			return thiz.sub(thiz.begin_index(), size);
-		}
-
-		constexpr auto tail(
-			Size const & size
-		) const -> BasicStringView {
-			assert_test(size <= thiz.size());
-			return thiz.sub(thiz.end_index() - size, size);
 		}
 
 		#pragma endregion
@@ -180,11 +161,19 @@ export namespace Twinning::Kernel {
 
 		#pragma region operator
 
+		inline friend constexpr auto operator ==(
+			BasicStringView const & thix,
+			BasicStringView const & that
+		) -> bool {
+			return Range::equal(thix, that);
+		}
+
+		// ----------------
+
 		inline friend constexpr auto operator <=>(
 			BasicStringView const & thix,
 			BasicStringView const & that
-		) -> StrongOrdering requires
-			(IsSame<Element, Character>) {
+		) -> StrongOrdering {
 			return thix.compare_three_way(that);
 		}
 
@@ -203,28 +192,6 @@ export namespace Twinning::Kernel {
 	template <typename TElement> requires
 		AutomaticConstraint
 	using ConstantBasicStringView = BasicStringView<TElement, k_true>;
-
-	#pragma endregion
-
-	#pragma region utility
-
-	template <typename TElement> requires
-		CategoryConstraint<IsInstance<TElement>>
-		&& (IsCharacterBox<AsPure<TElement>>)
-	inline auto null_terminated_string_size_of(
-		Pointer<TElement> const & string
-	) -> Size {
-		return make_box<Size>(std::char_traits<typename AsPure<TElement>::Value>::length(unmake_pointer_unsafe<typename AsPure<TElement>::Value>(string)));
-	}
-
-	template <typename TSource> requires
-		CategoryConstraint<IsPureInstance<TSource>>
-		&& (IsConvertible<TSource, BasicStringView<typename TSource::Element, k_true> const &>)
-	inline auto is_safe_null_terminated_string(
-		TSource const & string
-	) -> Boolean {
-		return !Range::has(string, make_box<typename TSource::Element>('\0'));
-	}
 
 	#pragma endregion
 

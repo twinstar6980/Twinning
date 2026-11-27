@@ -5,10 +5,10 @@ module;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Weverything"
 
-#include "dependency/PVRTCCompressor/PvrTcDecoder.h"
-#include "dependency/PVRTCCompressor/PvrTcEncoder.h"
-#include "dependency/PVRTCCompressor/RgbBitmap.h"
-#include "dependency/PVRTCCompressor/RgbaBitmap.h"
+#include "dependency/PVRTCCompressor/origin/PvrTcDecoder.h"
+#include "dependency/PVRTCCompressor/origin/PvrTcEncoder.h"
+#include "dependency/PVRTCCompressor/origin/RgbBitmap.h"
+#include "dependency/PVRTCCompressor/origin/RgbaBitmap.h"
 
 #pragma clang diagnostic pop
 

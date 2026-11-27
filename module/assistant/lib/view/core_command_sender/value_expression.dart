@@ -2,6 +2,7 @@ import '/common.dart';
 import '/utility/json_type.dart';
 import '/utility/wrapper.dart';
 import '/utility/convert_helper.dart';
+import '/utility/storage_size.dart';
 import '/utility/storage_path.dart';
 import '/view/core_command_sender/configuration.dart';
 
@@ -18,73 +19,28 @@ class ValueExpression {
 
 // ----------------
 
-class BooleanExpression extends ValueExpression {
-  Boolean value;
-  BooleanExpression(
+class SingleValueExpression<TValue> extends ValueExpression {
+  TValue value;
+  SingleValueExpression(
     this.value,
   );
   @override
-  operator ==(other) => other is BooleanExpression && this.value == other.value;
+  operator ==(other) => other is SingleValueExpression<TValue> && this.value == other.value;
   @override
   get hashCode => Object.hashAll([this.value]);
 }
 
-class IntegerExpression extends ValueExpression {
-  Integer value;
-  IntegerExpression(
-    this.value,
-  );
-  @override
-  operator ==(other) => other is IntegerExpression && this.value == other.value;
-  @override
-  get hashCode => Object.hashAll([this.value]);
-}
+typedef BooleanExpression = SingleValueExpression<Boolean>;
 
-class FloaterExpression extends ValueExpression {
-  Floater value;
-  FloaterExpression(
-    this.value,
-  );
-  @override
-  operator ==(other) => other is FloaterExpression && this.value == other.value;
-  @override
-  get hashCode => Object.hashAll([this.value]);
-}
+typedef IntegerExpression = SingleValueExpression<Integer>;
 
-class StringExpression extends ValueExpression {
-  String value;
-  StringExpression(
-    this.value,
-  );
-  @override
-  operator ==(other) => other is StringExpression && this.value == other.value;
-  @override
-  get hashCode => Object.hashAll([this.value]);
-}
+typedef FloaterExpression = SingleValueExpression<Floater>;
 
-class SizeExpression extends ValueExpression {
-  Floater count;
-  Integer exponent;
-  SizeExpression(
-    this.count,
-    this.exponent,
-  );
-  @override
-  operator ==(other) => other is SizeExpression && this.count == other.count && this.exponent == other.exponent;
-  @override
-  get hashCode => Object.hashAll([this.count, this.exponent]);
-}
+typedef StringExpression = SingleValueExpression<String>;
 
-class PathExpression extends ValueExpression {
-  StoragePath content;
-  PathExpression(
-    this.content,
-  );
-  @override
-  operator ==(other) => other is PathExpression && this.content == other.content;
-  @override
-  get hashCode => Object.hashAll([this.content]);
-}
+typedef SizeExpression = SingleValueExpression<StorageSize>;
+
+typedef PathExpression = SingleValueExpression<StoragePath>;
 
 // ----------------
 
@@ -100,8 +56,8 @@ class ValueExpressionHelper {
       IntegerExpression _ => '${ConvertHelper.makeIntegerToString(value.value)}',
       FloaterExpression _ => '${ConvertHelper.makeFloaterToString(value.value)}',
       StringExpression  _ => '${value.value}',
-      SizeExpression    _ => '${ConvertHelper.makeFloaterToString(value.count)}${['b', 'k', 'm', 'g'][value.exponent]}',
-      PathExpression    _ => '${value.content.emit()}',
+      SizeExpression    _ => '${value.value.emit()}',
+      PathExpression    _ => '${value.value.emit()}',
       _                   => throw UnreachableException(),
     };
   }
@@ -116,8 +72,8 @@ class ValueExpressionHelper {
       IntegerExpression _ => value.value,
       FloaterExpression _ => value.value,
       StringExpression  _ => value.value,
-      SizeExpression    _ => '${ConvertHelper.makeFloaterToString(value.count)}${['b', 'k', 'm', 'g'][value.exponent]}',
-      PathExpression    _ => '${value.content.emit()}',
+      SizeExpression    _ => '${value.value.emit()}',
+      PathExpression    _ => '${value.value.emit()}',
       _                   => throw UnreachableException(),
     };
   }
@@ -140,8 +96,7 @@ class ValueExpressionHelper {
         json.jsonString(),
       ),
       .size => SizeExpression(
-        json.jsonString().selfLet((it) => Floater.parse(it.substring(0, it.length - 1))),
-        json.jsonString().selfLet((it) => ['b', 'k', 'm', 'g'].indexOf(it[it.length - 1])).selfAlso((it) => assertTest(it != -1)),
+        json.jsonString().selfLet((it) => StorageSize.of(it)),
       ),
       .path => PathExpression(
         json.jsonString().selfLet((it) => StoragePath.of(it)),

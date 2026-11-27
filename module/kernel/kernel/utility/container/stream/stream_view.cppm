@@ -6,26 +6,28 @@ export module twinning.kernel.utility.container.stream.stream_view;
 import twinning.kernel.utility.builtin;
 import twinning.kernel.utility.trait;
 import twinning.kernel.utility.box;
-import twinning.kernel.utility.exception.utility;
-import twinning.kernel.utility.container.list.list_view;
+import twinning.kernel.utility.exception;
+import twinning.kernel.utility.container.array.array_view;
 import twinning.kernel.utility.container.stream.stream_mode;
+import twinning.kernel.utility.container.stream.stream_flag;
+import twinning.kernel.utility.range.integer_range;
 
 export namespace Twinning::Kernel {
 
 	#pragma region type
 
-	template <typename TElement, auto t_mode, template <typename, auto> typename TMListView = ListView> requires
-		CategoryConstraint<IsPureInstance<TElement>>
+	template <typename TElement, auto t_mode, template <typename, auto> typename TMArrayView = ArrayView, typename TFlag = StreamFlag> requires
+		CategoryConstraint<IsPureInstance<TElement> && IsPureInstance<TFlag>>
 		&& (IsSameOf<t_mode, StreamMode>)
 	class StreamView {
 
 	private:
 
-		using AccessStream = StreamView<TElement, StreamMode::Constant::access(), TMListView>;
+		using AccessStream = StreamView<TElement, StreamMode::Constant::access(), TMArrayView, TFlag>;
 
-		using InputStream = StreamView<TElement, StreamMode::Constant::input(), TMListView>;
+		using InputStream = StreamView<TElement, StreamMode::Constant::input(), TMArrayView, TFlag>;
 
-		using OutputStream = StreamView<TElement, StreamMode::Constant::output(), TMListView>;
+		using OutputStream = StreamView<TElement, StreamMode::Constant::output(), TMArrayView, TFlag>;
 
 	public:
 
@@ -33,51 +35,56 @@ export namespace Twinning::Kernel {
 
 		inline static constexpr auto mode = StreamMode{t_mode};
 
-		using ListView = TMListView<Element, make_box<Boolean>(t_mode == StreamMode::Constant::input())>;
+		using ArrayView = TMArrayView<Element, make_box<Boolean>(t_mode == StreamMode::Constant::input())>;
 
-		using QualifyElement = ListView::QualifyElement;
+		using Flag = TFlag;
 
-		using QualifyIterator = ListView::QualifyIterator;
+		using QualifyElement = ArrayView::QualifyElement;
+
+		using QualifyIterator = ArrayView::QualifyIterator;
 
 	protected:
 
-		ListView m_view;
+		ArrayView m_view;
 
 		Size m_position;
+
+		Flag m_flag;
 
 	public:
 
 		#pragma region constructor
 
-		~StreamView(
+		constexpr ~StreamView(
 		) = default;
 
 		// ----------------
 
-		StreamView(
+		constexpr StreamView(
 		) :
 			m_view{},
-			m_position{} {
+			m_position{},
+			m_flag{} {
 			return;
 		}
 
-		StreamView(
+		constexpr StreamView(
 			StreamView const & that
 		) = default;
 
-		StreamView(
+		constexpr StreamView(
 			StreamView && that
 		) = default;
 
 		// ----------------
 
-		explicit StreamView(
-			ListView const & view,
-			Size const &     position = 0_sz
+		explicit constexpr StreamView(
+			ArrayView const & view,
+			Size const &      position = 0_sz,
+			Flag const &      flag = Flag{}
 		) :
-			m_view{view},
-			m_position{position} {
-			assert_test(position <= view.size());
+			StreamView{} {
+			thiz.set(view, position, flag);
 			return;
 		}
 
@@ -85,11 +92,11 @@ export namespace Twinning::Kernel {
 
 		#pragma region operator
 
-		auto operator =(
+		constexpr auto operator =(
 			StreamView const & that
 		) -> StreamView & = default;
 
-		auto operator =(
+		constexpr auto operator =(
 			StreamView && that
 		) -> StreamView & = default;
 
@@ -97,70 +104,78 @@ export namespace Twinning::Kernel {
 
 		implicit operator InputStream &() requires
 			(mode == StreamMode::Constant::access()) {
-			return thiz.as_input_stream();
+			return unsafe_cast<InputStream>(thiz);
 		}
 
 		implicit operator OutputStream &() requires
 			(mode == StreamMode::Constant::access()) {
-			return thiz.as_output_stream();
+			return unsafe_cast<OutputStream>(thiz);
 		}
 
 		#pragma endregion
 
 		#pragma region set
 
-		auto reset(
+		constexpr auto reset(
 		) -> Void {
 			thiz.m_view.reset();
 			thiz.m_position = 0_sz;
+			thiz.m_flag = Flag{};
 			return;
 		}
 
-		auto set(
-			ListView const & view,
-			Size const &     position = 0_sz
+		constexpr auto set(
+			ArrayView const & view,
+			Size const &      position,
+			Flag const &      flag
 		) -> Void {
 			assert_test(position <= view.size());
 			thiz.m_view = view;
 			thiz.m_position = position;
+			thiz.m_flag = flag;
 			return;
 		}
 
 		#pragma endregion
 
-		#pragma region data
+		#pragma region view
 
-		auto data(
-		) const -> QualifyIterator {
-			return thiz.m_view.begin();
+		constexpr auto view(
+		) const -> ArrayView {
+			return thiz.m_view;
 		}
 
 		#pragma endregion
 
-		#pragma region size
+		#pragma region flag
 
-		auto size(
-		) const -> Size {
-			return thiz.m_view.size();
+		constexpr auto flag(
+		) const -> Flag {
+			return thiz.m_flag;
 		}
 
 		#pragma endregion
 
 		#pragma region position
 
-		auto position(
+		constexpr auto position(
 		) const -> Size {
 			return thiz.m_position;
 		}
 
+		constexpr auto size(
+		) const -> Size {
+			return thiz.m_view.size();
+		}
+
 		// ----------------
 
-		auto full(
+		constexpr auto full(
 		) const -> Boolean {
 			return thiz.position() >= thiz.size();
 		}
 
-		auto reserve(
+		constexpr auto reserve(
 		) const -> Size {
 			return thiz.size() - thiz.position();
 		}
@@ -169,7 +184,7 @@ export namespace Twinning::Kernel {
 
 		#pragma region set position
 
-		auto set_position(
+		constexpr auto set_position(
 			Size const & position
 		) -> Void {
 			assert_test(position <= thiz.size());
@@ -179,14 +194,14 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		auto backward(
+		constexpr auto backward(
 			Size const & size = 1_sz
 		) -> Void {
 			assert_test(size <= thiz.position());
 			return thiz.set_position(thiz.position() - size);
 		}
 
-		auto forward(
+		constexpr auto forward(
 			Size const & size = 1_sz
 		) -> Void {
 			assert_test(size <= thiz.reserve());
@@ -195,121 +210,115 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		auto backward_to_begin(
+		constexpr auto backward_to_begin(
 		) -> Void {
 			return thiz.set_position(0_sz);
 		}
 
-		auto forward_to_end(
+		constexpr auto forward_to_end(
 		) -> Void {
 			return thiz.set_position(thiz.size());
 		}
 
 		#pragma endregion
 
-		#pragma region view
+		#pragma region query
 
-		auto view(
-		) -> ListView {
-			return ListView{thiz.data(), thiz.size()};
-		}
-
-		auto sub_view(
-			Size const & begin,
-			Size const & count
-		) -> ListView {
-			assert_test(begin + count <= thiz.size());
-			return ListView{thiz.data() + begin, count};
-		}
-
-		// ----------------
-
-		auto previous_view(
-			Size const & size
-		) -> ListView {
-			assert_test(size <= thiz.position());
-			return thiz.sub_view(thiz.position() - size, size);
-		}
-
-		auto next_view(
-			Size const & size
-		) -> ListView {
-			assert_test(size <= thiz.reserve());
-			return thiz.sub_view(thiz.position(), size);
-		}
-
-		// ----------------
-
-		auto stream_view(
-		) -> ListView {
-			return thiz.sub_view(0_sz, thiz.position());
-		}
-
-		auto reserve_view(
-		) -> ListView {
-			return thiz.sub_view(thiz.position(), thiz.size() - thiz.position());
+		constexpr auto current(
+		) const -> QualifyIterator {
+			return thiz.m_view.iterator(thiz.position());
 		}
 
 		#pragma endregion
 
-		#pragma region query
+		#pragma region split
 
-		auto current_pointer(
-		) -> QualifyIterator {
-			assert_test(thiz.position() <= thiz.size());
-			return thiz.data() + thiz.position();
+		constexpr auto split_copy(
+		) -> StreamView {
+			return StreamView{thiz.m_view, thiz.position(), thiz.flag()};
+		}
+
+		constexpr auto split_sub(
+			Size const & begin,
+			Size const & count
+		) -> StreamView {
+			assert_test(begin + count <= thiz.size());
+			return StreamView{thiz.m_view.sub(begin, count), 0_sz, thiz.flag()};
+		}
+
+		constexpr auto split_all(
+		) -> StreamView {
+			return thiz.split_sub(0_sz, thiz.size());
 		}
 
 		// ----------------
 
-		auto current(
-		) -> QualifyElement & {
-			assert_test(!thiz.full());
-			return thiz.m_view[thiz.m_position];
-		}
-
-		auto next(
-		) -> QualifyElement & {
-			auto & current = thiz.current();
-			thiz.forward();
-			return current;
+		constexpr auto split_next(
+			Size const & count
+		) -> StreamView {
+			assert_test(count <= thiz.reserve());
+			return thiz.split_sub(thiz.position(), count);
 		}
 
 		// ----------------
 
-		auto forward_view(
-			Size const & size
-		) -> ListView {
-			auto view = thiz.next_view(size);
-			thiz.forward(size);
+		constexpr auto split_stream(
+		) -> StreamView {
+			return thiz.split_sub(0_sz, thiz.position());
+		}
+
+		constexpr auto split_reserve(
+		) -> StreamView {
+			return thiz.split_sub(thiz.position(), thiz.size() - thiz.position());
+		}
+
+		// ----------------
+
+		constexpr auto split_forward(
+			Size const & count
+		) -> StreamView {
+			auto view = thiz.split_next(count);
+			thiz.forward(count);
 			return view;
 		}
 
 		#pragma endregion
 
-		#pragma region write & read
+		#pragma region exchange
 
-		auto write(
+		constexpr auto write(
 			Element const & value
 		) -> Void requires
 			(mode == StreamMode::Constant::output() || mode == StreamMode::Constant::access()) {
 			assert_test(!thiz.full());
-			thiz.next() = value;
+			thiz.m_view[thiz.m_position] = value;
+			thiz.forward();
 			return;
 		}
 
-		auto read(
+		constexpr auto read(
 			Element & value
 		) -> Void requires
 			(mode == StreamMode::Constant::input() || mode == StreamMode::Constant::access()) {
 			assert_test(!thiz.full());
-			value = thiz.next();
+			value = thiz.m_view[thiz.m_position];
+			thiz.forward();
 			return;
 		}
 
 		// ----------------
 
-		auto write_constant(
+		constexpr auto read_of(
+		) -> Element requires
+			(mode == StreamMode::Constant::input() || mode == StreamMode::Constant::access()) {
+			auto value = Element{};
+			thiz.read(value);
+			return value;
+		}
+
+		// ----------------
+
+		constexpr auto write_constant(
 			Element const & value
 		) -> Void requires
 			(mode == StreamMode::Constant::output() || mode == StreamMode::Constant::access()) {
@@ -317,7 +326,7 @@ export namespace Twinning::Kernel {
 			return;
 		}
 
-		auto read_constant(
+		constexpr auto read_constant(
 			Element const & value
 		) -> Void requires
 			(mode == StreamMode::Constant::input() || mode == StreamMode::Constant::access()) {
@@ -329,58 +338,28 @@ export namespace Twinning::Kernel {
 
 		// ----------------
 
-		auto read_of(
-		) -> Element requires
-			(mode == StreamMode::Constant::input() || mode == StreamMode::Constant::access()) {
-			auto value = Element{};
-			thiz.read(value);
-			return value;
-		}
-
-		#pragma endregion
-
-		#pragma region write & read space
-
-		auto write_space(
-			Element const & value,
-			Size const &    size
+		constexpr auto write_space(
+			Size const &    size,
+			Element const & value
 		) -> Void requires
 			(mode == StreamMode::Constant::output() || mode == StreamMode::Constant::access()) {
 			assert_test(size <= thiz.reserve());
-			auto space = thiz.forward_view(size);
-			for (auto & element : space) {
-				element = value;
+			for (auto & index : SizeRange{size}) {
+				thiz.write_constant(value);
 			}
 			return;
 		}
 
-		auto read_space(
-			Element const & value,
-			Size const &    size
+		constexpr auto read_space(
+			Size const &    size,
+			Element const & value
 		) -> Void requires
 			(mode == StreamMode::Constant::input() || mode == StreamMode::Constant::access()) {
 			assert_test(size <= thiz.reserve());
-			auto space = thiz.forward_view(size);
-			for (auto & element : space) {
-				assert_test(element == value);
+			for (auto & index : SizeRange{size}) {
+				thiz.read_constant(value);
 			}
 			return;
-		}
-
-		#pragma endregion
-
-		#pragma region mode cast
-
-		auto as_input_stream(
-		) -> InputStream & requires
-			(mode == StreamMode::Constant::access()) {
-			return unsafe_cast<InputStream>(thiz);
-		}
-
-		auto as_output_stream(
-		) -> OutputStream & requires
-			(mode == StreamMode::Constant::access()) {
-			return unsafe_cast<OutputStream>(thiz);
 		}
 
 		#pragma endregion
@@ -391,17 +370,17 @@ export namespace Twinning::Kernel {
 
 	#pragma region alias
 
-	template <typename TElement, template <typename, auto> typename TListView = ListView> requires
+	template <typename TElement, template <typename, auto> typename TMArrayView = ArrayView, typename TFlag = StreamFlag> requires
 		AutomaticConstraint
-	using AccessStreamView = StreamView<TElement, StreamMode::Constant::access(), TListView>;
+	using AccessStreamView = StreamView<TElement, StreamMode::Constant::access(), TMArrayView, TFlag>;
 
-	template <typename TElement, template <typename, auto> typename TListView = ListView> requires
+	template <typename TElement, template <typename, auto> typename TMArrayView = ArrayView, typename TFlag = StreamFlag> requires
 		AutomaticConstraint
-	using InputStreamView = StreamView<TElement, StreamMode::Constant::input(), TListView>;
+	using InputStreamView = StreamView<TElement, StreamMode::Constant::input(), TMArrayView, TFlag>;
 
-	template <typename TElement, template <typename, auto> typename TListView = ListView> requires
+	template <typename TElement, template <typename, auto> typename TMArrayView = ArrayView, typename TFlag = StreamFlag> requires
 		AutomaticConstraint
-	using OutputStreamView = StreamView<TElement, StreamMode::Constant::output(), TListView>;
+	using OutputStreamView = StreamView<TElement, StreamMode::Constant::output(), TMArrayView, TFlag>;
 
 	#pragma endregion
 

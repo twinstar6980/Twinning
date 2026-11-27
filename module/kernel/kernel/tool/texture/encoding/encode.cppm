@@ -19,9 +19,9 @@ export namespace Twinning::Kernel::Tool::Texture::Encoding {
 			CategoryConstraint<>
 			&& (IsSameOf<t_size, Size>)
 		inline static auto process_pixel(
-			OutputByteStreamView & data,
-			Image::Pixel const &   pixel,
-			Format const &         format
+			OutputBinaryStreamView & data,
+			Image::Pixel const &     pixel,
+			Format const &           format
 		) -> Void {
 			auto block = IntegerU32{};
 			for (auto & channel : format.channel) {
@@ -63,42 +63,42 @@ export namespace Twinning::Kernel::Tool::Texture::Encoding {
 			}
 			if (!format.endian) {
 				if constexpr (t_size == 1_sz) {
-					data.write(cast_box_unsafe<IntegerU8>(Bitwise::extract(block, 1_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>)));
+					data.write(cast_box_unsafe<IntegerU8>(Bitwise::extract(block, 1_ix * type_bit_size_of<Byte>(), type_bit_size_of<Byte>())));
 				}
 				if constexpr (t_size == 2_sz) {
-					data.write(cast_box_unsafe<IntegerU8>(Bitwise::extract(block, 1_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>)));
-					data.write(cast_box_unsafe<IntegerU8>(Bitwise::extract(block, 2_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>)));
+					data.write(cast_box_unsafe<IntegerU8>(Bitwise::extract(block, 1_ix * type_bit_size_of<Byte>(), type_bit_size_of<Byte>())));
+					data.write(cast_box_unsafe<IntegerU8>(Bitwise::extract(block, 2_ix * type_bit_size_of<Byte>(), type_bit_size_of<Byte>())));
 				}
 				if constexpr (t_size == 3_sz) {
-					data.write(cast_box_unsafe<IntegerU8>(Bitwise::extract(block, 1_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>)));
-					data.write(cast_box_unsafe<IntegerU8>(Bitwise::extract(block, 2_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>)));
-					data.write(cast_box_unsafe<IntegerU8>(Bitwise::extract(block, 3_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>)));
+					data.write(cast_box_unsafe<IntegerU8>(Bitwise::extract(block, 1_ix * type_bit_size_of<Byte>(), type_bit_size_of<Byte>())));
+					data.write(cast_box_unsafe<IntegerU8>(Bitwise::extract(block, 2_ix * type_bit_size_of<Byte>(), type_bit_size_of<Byte>())));
+					data.write(cast_box_unsafe<IntegerU8>(Bitwise::extract(block, 3_ix * type_bit_size_of<Byte>(), type_bit_size_of<Byte>())));
 				}
 				if constexpr (t_size == 4_sz) {
-					data.write(cast_box_unsafe<IntegerU8>(Bitwise::extract(block, 1_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>)));
-					data.write(cast_box_unsafe<IntegerU8>(Bitwise::extract(block, 2_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>)));
-					data.write(cast_box_unsafe<IntegerU8>(Bitwise::extract(block, 3_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>)));
-					data.write(cast_box_unsafe<IntegerU8>(Bitwise::extract(block, 4_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>)));
+					data.write(cast_box_unsafe<IntegerU8>(Bitwise::extract(block, 1_ix * type_bit_size_of<Byte>(), type_bit_size_of<Byte>())));
+					data.write(cast_box_unsafe<IntegerU8>(Bitwise::extract(block, 2_ix * type_bit_size_of<Byte>(), type_bit_size_of<Byte>())));
+					data.write(cast_box_unsafe<IntegerU8>(Bitwise::extract(block, 3_ix * type_bit_size_of<Byte>(), type_bit_size_of<Byte>())));
+					data.write(cast_box_unsafe<IntegerU8>(Bitwise::extract(block, 4_ix * type_bit_size_of<Byte>(), type_bit_size_of<Byte>())));
 				}
 			}
 			else {
 				if constexpr (t_size == 1_sz) {
-					data.write(cast_box_unsafe<IntegerU8>(Bitwise::extract(block, 1_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>)));
+					data.write(cast_box_unsafe<IntegerU8>(Bitwise::extract(block, 1_ix * type_bit_size_of<Byte>(), type_bit_size_of<Byte>())));
 				}
 				if constexpr (t_size == 2_sz) {
-					data.write(cast_box_unsafe<IntegerU8>(Bitwise::extract(block, 2_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>)));
-					data.write(cast_box_unsafe<IntegerU8>(Bitwise::extract(block, 1_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>)));
+					data.write(cast_box_unsafe<IntegerU8>(Bitwise::extract(block, 2_ix * type_bit_size_of<Byte>(), type_bit_size_of<Byte>())));
+					data.write(cast_box_unsafe<IntegerU8>(Bitwise::extract(block, 1_ix * type_bit_size_of<Byte>(), type_bit_size_of<Byte>())));
 				}
 				if constexpr (t_size == 3_sz) {
-					data.write(cast_box_unsafe<IntegerU8>(Bitwise::extract(block, 3_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>)));
-					data.write(cast_box_unsafe<IntegerU8>(Bitwise::extract(block, 2_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>)));
-					data.write(cast_box_unsafe<IntegerU8>(Bitwise::extract(block, 1_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>)));
+					data.write(cast_box_unsafe<IntegerU8>(Bitwise::extract(block, 3_ix * type_bit_size_of<Byte>(), type_bit_size_of<Byte>())));
+					data.write(cast_box_unsafe<IntegerU8>(Bitwise::extract(block, 2_ix * type_bit_size_of<Byte>(), type_bit_size_of<Byte>())));
+					data.write(cast_box_unsafe<IntegerU8>(Bitwise::extract(block, 1_ix * type_bit_size_of<Byte>(), type_bit_size_of<Byte>())));
 				}
 				if constexpr (t_size == 4_sz) {
-					data.write(cast_box_unsafe<IntegerU8>(Bitwise::extract(block, 4_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>)));
-					data.write(cast_box_unsafe<IntegerU8>(Bitwise::extract(block, 3_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>)));
-					data.write(cast_box_unsafe<IntegerU8>(Bitwise::extract(block, 2_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>)));
-					data.write(cast_box_unsafe<IntegerU8>(Bitwise::extract(block, 1_ix * k_type_bit_count<Byte>, k_type_bit_count<Byte>)));
+					data.write(cast_box_unsafe<IntegerU8>(Bitwise::extract(block, 4_ix * type_bit_size_of<Byte>(), type_bit_size_of<Byte>())));
+					data.write(cast_box_unsafe<IntegerU8>(Bitwise::extract(block, 3_ix * type_bit_size_of<Byte>(), type_bit_size_of<Byte>())));
+					data.write(cast_box_unsafe<IntegerU8>(Bitwise::extract(block, 2_ix * type_bit_size_of<Byte>(), type_bit_size_of<Byte>())));
+					data.write(cast_box_unsafe<IntegerU8>(Bitwise::extract(block, 1_ix * type_bit_size_of<Byte>(), type_bit_size_of<Byte>())));
 				}
 			}
 			return;
@@ -107,36 +107,40 @@ export namespace Twinning::Kernel::Tool::Texture::Encoding {
 		// ----------------
 
 		inline static auto process_image(
-			OutputByteStreamView &           data,
+			OutputBinaryStreamView &         data,
 			Image::ConstantImageView const & image,
 			Format const &                   format
 		) -> Void {
 			assert_test(is_valid_format(format));
 			auto byte_count = get_pixel_byte_count(format);
 			if (byte_count == 1_sz) {
-				for (auto & row : image.data()) {
-					for (auto & pixel : row) {
+				for (auto & y : SizeRange{image.size().height}) {
+					for (auto & x : SizeRange{image.size().width}) {
+						auto & pixel = image[x, y];
 						process_pixel<1_sz>(data, pixel, format);
 					}
 				}
 			}
 			if (byte_count == 2_sz) {
-				for (auto & row : image.data()) {
-					for (auto & pixel : row) {
+				for (auto & y : SizeRange{image.size().height}) {
+					for (auto & x : SizeRange{image.size().width}) {
+						auto & pixel = image[x, y];
 						process_pixel<2_sz>(data, pixel, format);
 					}
 				}
 			}
 			if (byte_count == 3_sz) {
-				for (auto & row : image.data()) {
-					for (auto & pixel : row) {
+				for (auto & y : SizeRange{image.size().height}) {
+					for (auto & x : SizeRange{image.size().width}) {
+						auto & pixel = image[x, y];
 						process_pixel<3_sz>(data, pixel, format);
 					}
 				}
 			}
 			if (byte_count == 4_sz) {
-				for (auto & row : image.data()) {
-					for (auto & pixel : row) {
+				for (auto & y : SizeRange{image.size().height}) {
+					for (auto & x : SizeRange{image.size().width}) {
+						auto & pixel = image[x, y];
 						process_pixel<4_sz>(data, pixel, format);
 					}
 				}
@@ -147,11 +151,11 @@ export namespace Twinning::Kernel::Tool::Texture::Encoding {
 		// ----------------
 
 		inline static auto process(
-			OutputByteStreamView &           data_,
+			OutputBinaryStreamView &         data_,
 			Image::ConstantImageView const & image,
 			Format const &                   format
 		) -> Void {
-			M_use_zps_of(data);
+			M_use_split_stream_of(data);
 			return process_image(data, image, format);
 		}
 

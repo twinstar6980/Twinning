@@ -5,8 +5,8 @@ module;
 export module twinning.kernel.utility.box.number;
 import twinning.kernel.utility.builtin;
 import twinning.kernel.utility.trait;
+import twinning.kernel.utility.exception;
 import twinning.kernel.utility.box.base;
-import twinning.kernel.utility.exception.utility;
 
 export namespace Twinning::Kernel {
 
@@ -133,7 +133,11 @@ export namespace Twinning::Kernel {
 	inline constexpr auto operator +(
 		TIt const & thix
 	) -> TIt {
-		return TIt{static_cast<TIt::Value>(+thix.value)};
+		auto result = typename TIt::Value{0};
+		if constexpr (true) {
+			result = static_cast<TIt::Value>(+thix.value);
+		}
+		return TIt{result};
 	}
 
 	template <typename TIt> requires
@@ -142,7 +146,16 @@ export namespace Twinning::Kernel {
 	inline constexpr auto operator -(
 		TIt const & thix
 	) -> TIt {
-		return TIt{static_cast<TIt::Value>(-thix.value)};
+		auto result = typename TIt::Value{0};
+		if constexpr (IsSignedIntegerBox<TIt>) {
+			if (thix.value == std::numeric_limits<typename TIt::Value>::min()) {
+				throw UnsupportedException{};
+			}
+		}
+		if constexpr (true) {
+			result = static_cast<TIt::Value>(-thix.value);
+		}
+		return TIt{result};
 	}
 
 	// ----------------
@@ -154,7 +167,16 @@ export namespace Twinning::Kernel {
 		TIt const & thix,
 		TIt const & that
 	) -> TIt {
-		return TIt{static_cast<TIt::Value>(thix.value + that.value)};
+		auto result = typename TIt::Value{0};
+		if constexpr (IsIntegerBox<TIt>) {
+			if (__builtin_add_overflow(thix.value, that.value, &result)) {
+				throw UnsupportedException{};
+			}
+		}
+		if constexpr (IsFloaterBox<TIt>) {
+			result = static_cast<TIt::Value>(thix.value + that.value);
+		}
+		return TIt{result};
 	}
 
 	template <typename TIt> requires
@@ -164,7 +186,16 @@ export namespace Twinning::Kernel {
 		TIt const & thix,
 		TIt const & that
 	) -> TIt {
-		return TIt{static_cast<TIt::Value>(thix.value - that.value)};
+		auto result = typename TIt::Value{0};
+		if constexpr (IsIntegerBox<TIt>) {
+			if (__builtin_sub_overflow(thix.value, that.value, &result)) {
+				throw UnsupportedException{};
+			}
+		}
+		if constexpr (IsFloaterBox<TIt>) {
+			result = static_cast<TIt::Value>(thix.value - that.value);
+		}
+		return TIt{result};
 	}
 
 	template <typename TIt> requires
@@ -174,7 +205,16 @@ export namespace Twinning::Kernel {
 		TIt const & thix,
 		TIt const & that
 	) -> TIt {
-		return TIt{static_cast<TIt::Value>(thix.value * that.value)};
+		auto result = typename TIt::Value{0};
+		if constexpr (IsIntegerBox<TIt>) {
+			if (__builtin_mul_overflow(thix.value, that.value, &result)) {
+				throw UnsupportedException{};
+			}
+		}
+		if constexpr (IsFloaterBox<TIt>) {
+			result = static_cast<TIt::Value>(thix.value * that.value);
+		}
+		return TIt{result};
 	}
 
 	template <typename TIt> requires
@@ -184,7 +224,21 @@ export namespace Twinning::Kernel {
 		TIt const & thix,
 		TIt const & that
 	) -> TIt {
-		return TIt{static_cast<TIt::Value>(thix.value / that.value)};
+		auto result = typename TIt::Value{0};
+		if constexpr (IsIntegerBox<TIt>) {
+			if (that.value == typename TIt::Value{0}) {
+				throw UnsupportedException{};
+			}
+		}
+		if constexpr (IsSignedIntegerBox<TIt>) {
+			if (thix.value == std::numeric_limits<typename TIt::Value>::min() && that.value == typename TIt::Value{-1}) {
+				throw UnsupportedException{};
+			}
+		}
+		if constexpr (true) {
+			result = static_cast<TIt::Value>(thix.value / that.value);
+		}
+		return TIt{result};
 	}
 
 	template <typename TIt> requires
@@ -194,7 +248,21 @@ export namespace Twinning::Kernel {
 		TIt const & thix,
 		TIt const & that
 	) -> TIt {
-		return TIt{static_cast<TIt::Value>(thix.value % that.value)};
+		auto result = typename TIt::Value{0};
+		if constexpr (IsIntegerBox<TIt>) {
+			if (that.value == typename TIt::Value{0}) {
+				throw UnsupportedException{};
+			}
+		}
+		if constexpr (IsSignedIntegerBox<TIt>) {
+			if (thix.value == std::numeric_limits<typename TIt::Value>::min() && that.value == typename TIt::Value{-1}) {
+				throw UnsupportedException{};
+			}
+		}
+		if constexpr (true) {
+			result = static_cast<TIt::Value>(thix.value % that.value);
+		}
+		return TIt{result};
 	}
 
 	// ----------------
@@ -206,7 +274,7 @@ export namespace Twinning::Kernel {
 		TIt &       thix,
 		TIt const & that
 	) -> TIt & {
-		thix.value += that.value;
+		thix = thix + that;
 		return thix;
 	}
 
@@ -217,7 +285,7 @@ export namespace Twinning::Kernel {
 		TIt &       thix,
 		TIt const & that
 	) -> TIt & {
-		thix.value -= that.value;
+		thix = thix - that;
 		return thix;
 	}
 
@@ -228,7 +296,7 @@ export namespace Twinning::Kernel {
 		TIt &       thix,
 		TIt const & that
 	) -> TIt & {
-		thix.value *= that.value;
+		thix = thix * that;
 		return thix;
 	}
 
@@ -239,7 +307,7 @@ export namespace Twinning::Kernel {
 		TIt &       thix,
 		TIt const & that
 	) -> TIt & {
-		thix.value /= that.value;
+		thix = thix / that;
 		return thix;
 	}
 
@@ -250,7 +318,7 @@ export namespace Twinning::Kernel {
 		TIt &       thix,
 		TIt const & that
 	) -> TIt & {
-		thix.value %= that.value;
+		thix = thix % that;
 		return thix;
 	}
 
@@ -262,7 +330,7 @@ export namespace Twinning::Kernel {
 	inline constexpr auto operator ++(
 		TIt & thix
 	) -> TIt & {
-		++thix.value;
+		thix = thix + TIt{1};
 		return thix;
 	}
 
@@ -272,7 +340,7 @@ export namespace Twinning::Kernel {
 	inline constexpr auto operator --(
 		TIt & thix
 	) -> TIt & {
-		--thix.value;
+		thix = thix - TIt{1};
 		return thix;
 	}
 
@@ -285,7 +353,9 @@ export namespace Twinning::Kernel {
 		TIt & thix,
 		int
 	) -> TIt {
-		return TIt{thix.value++};
+		auto result = thix;
+		thix = thix + TIt{1};
+		return result;
 	}
 
 	template <typename TIt> requires
@@ -295,7 +365,9 @@ export namespace Twinning::Kernel {
 		TIt & thix,
 		int
 	) -> TIt {
-		return TIt{thix.value--};
+		auto result = thix;
+		thix = thix - TIt{1};
+		return result;
 	}
 
 	// ----------------
@@ -306,7 +378,11 @@ export namespace Twinning::Kernel {
 	inline constexpr auto operator ~(
 		TIt const & thix
 	) -> TIt {
-		return TIt{static_cast<TIt::Value>(~thix.value)};
+		auto result = typename TIt::Value{0};
+		{
+			result = static_cast<TIt::Value>(~thix.value);
+		}
+		return TIt{result};
 	}
 
 	template <typename TIt> requires
@@ -316,7 +392,11 @@ export namespace Twinning::Kernel {
 		TIt const & thix,
 		TIt const & that
 	) -> TIt {
-		return TIt{static_cast<TIt::Value>(thix.value | that.value)};
+		auto result = typename TIt::Value{0};
+		{
+			result = static_cast<TIt::Value>(thix.value | that.value);
+		}
+		return TIt{result};
 	}
 
 	template <typename TIt> requires
@@ -326,7 +406,11 @@ export namespace Twinning::Kernel {
 		TIt const & thix,
 		TIt const & that
 	) -> TIt {
-		return TIt{static_cast<TIt::Value>(thix.value & that.value)};
+		auto result = typename TIt::Value{0};
+		{
+			result = static_cast<TIt::Value>(thix.value & that.value);
+		}
+		return TIt{result};
 	}
 
 	template <typename TIt> requires
@@ -336,7 +420,11 @@ export namespace Twinning::Kernel {
 		TIt const & thix,
 		TIt const & that
 	) -> TIt {
-		return TIt{static_cast<TIt::Value>(thix.value ^ that.value)};
+		auto result = typename TIt::Value{0};
+		{
+			result = static_cast<TIt::Value>(thix.value ^ that.value);
+		}
+		return TIt{result};
 	}
 
 	template <typename TIt, typename TSize> requires
@@ -345,9 +433,13 @@ export namespace Twinning::Kernel {
 		&& (IsSizeBox<TSize>)
 	inline constexpr auto operator <<(
 		TIt const &   thix,
-		TSize const & size
+		TSize const & that
 	) -> TIt {
-		return TIt{static_cast<TIt::Value>(thix.value << size.value)};
+		auto result = typename TIt::Value{0};
+		if (that < make_box<TSize>(sizeof(TIt) * 8zu)) {
+			result = static_cast<TIt::Value>(thix.value << that.value);
+		}
+		return TIt{result};
 	}
 
 	template <typename TIt, typename TSize> requires
@@ -356,9 +448,13 @@ export namespace Twinning::Kernel {
 		&& (IsSizeBox<TSize>)
 	inline constexpr auto operator >>(
 		TIt const &   thix,
-		TSize const & size
+		TSize const & that
 	) -> TIt {
-		return TIt{static_cast<TIt::Value>(thix.value >> size.value)};
+		auto result = typename TIt::Value{0};
+		if (that < make_box<TSize>(sizeof(TIt) * 8zu)) {
+			result = static_cast<TIt::Value>(thix.value >> that.value);
+		}
+		return TIt{result};
 	}
 
 	// ----------------
@@ -370,7 +466,7 @@ export namespace Twinning::Kernel {
 		TIt &       thix,
 		TIt const & that
 	) -> TIt & {
-		thix.value |= that.value;
+		thix = thix | that;
 		return thix;
 	}
 
@@ -381,7 +477,7 @@ export namespace Twinning::Kernel {
 		TIt &       thix,
 		TIt const & that
 	) -> TIt & {
-		thix.value &= that.value;
+		thix = thix & that;
 		return thix;
 	}
 
@@ -392,7 +488,7 @@ export namespace Twinning::Kernel {
 		TIt &       thix,
 		TIt const & that
 	) -> TIt & {
-		thix.value ^= that.value;
+		thix = thix ^ that;
 		return thix;
 	}
 
@@ -402,9 +498,9 @@ export namespace Twinning::Kernel {
 		&& (IsSizeBox<TSize>)
 	inline constexpr auto operator <<=(
 		TIt &         thix,
-		TSize const & size
+		TSize const & that
 	) -> TIt & {
-		thix.value <<= size.value;
+		thix = thix << that;
 		return thix;
 	}
 
@@ -414,9 +510,9 @@ export namespace Twinning::Kernel {
 		&& (IsSizeBox<TSize>)
 	inline constexpr auto operator >>=(
 		TIt &         thix,
-		TSize const & size
+		TSize const & that
 	) -> TIt & {
-		thix.value >>= size.value;
+		thix = thix >> that;
 		return thix;
 	}
 
@@ -454,7 +550,7 @@ export namespace Twinning::Kernel {
 
 	#pragma endregion
 
-	#pragma region regular type
+	#pragma region regular
 
 	M_simple_derived_class(Integer, IntegerS64, IntegerS64);
 
@@ -580,27 +676,87 @@ export namespace Twinning::Kernel {
 
 	#pragma endregion
 
-	#pragma region constant
+	#pragma region utility
 
 	template <typename TIt> requires
 		CategoryConstraint<IsPureInstance<TIt>>
-		&& (IsNumberBox<TIt>)
-	inline constexpr auto k_number_minimum = TIt{std::numeric_limits<typename TIt::Value>::min()};
+		&& (IsUnsignedIntegerBox<TIt>)
+	inline constexpr auto unchecked_number_add(
+		TIt const & thix,
+		TIt const & that
+	) -> TIt {
+		return TIt{static_cast<TIt::Value>(thix.value + that.value)};
+	}
 
 	template <typename TIt> requires
 		CategoryConstraint<IsPureInstance<TIt>>
-		&& (IsNumberBox<TIt>)
-	inline constexpr auto k_number_maximum = TIt{std::numeric_limits<typename TIt::Value>::max()};
+		&& (IsUnsignedIntegerBox<TIt>)
+	inline constexpr auto unchecked_number_subtract(
+		TIt const & thix,
+		TIt const & that
+	) -> TIt {
+		return TIt{static_cast<TIt::Value>(thix.value - that.value)};
+	}
+
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsUnsignedIntegerBox<TIt>)
+	inline constexpr auto unchecked_number_multiply(
+		TIt const & thix,
+		TIt const & that
+	) -> TIt {
+		return TIt{static_cast<TIt::Value>(thix.value * that.value)};
+	}
 
 	// ----------------
 
 	template <typename TIt> requires
 		CategoryConstraint<IsPureInstance<TIt>>
-	inline constexpr auto k_type_size = Size{make_box<Size>(sizeof(TIt))};
+		&& (IsNumberBox<TIt>)
+	inline constexpr auto minimum_number_of(
+	) -> TIt {
+		return TIt{std::numeric_limits<typename TIt::Value>::lowest()};
+	}
 
 	template <typename TIt> requires
 		CategoryConstraint<IsPureInstance<TIt>>
-	inline constexpr auto k_type_bit_count = Size{k_type_size<TIt> * 8_sz};
+		&& (IsNumberBox<TIt>)
+	inline constexpr auto maximum_number_of(
+	) -> TIt {
+		return TIt{std::numeric_limits<typename TIt::Value>::max()};
+	}
+
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsFloaterBox<TIt>)
+	inline constexpr auto infinity_number_of(
+	) -> TIt {
+		return TIt{std::numeric_limits<typename TIt::Value>::infinity()};
+	}
+
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+		&& (IsFloaterBox<TIt>)
+	inline constexpr auto invalid_number_of(
+	) -> TIt {
+		return TIt{std::numeric_limits<typename TIt::Value>::quiet_NaN()};
+	}
+
+	// ----------------
+
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+	inline constexpr auto type_byte_size_of(
+	) -> Size {
+		return Size{sizeof(TIt)};
+	}
+
+	template <typename TIt> requires
+		CategoryConstraint<IsPureInstance<TIt>>
+	inline constexpr auto type_bit_size_of(
+	) -> Size {
+		return Size{sizeof(TIt) * 8};
+	}
 
 	#pragma endregion
 

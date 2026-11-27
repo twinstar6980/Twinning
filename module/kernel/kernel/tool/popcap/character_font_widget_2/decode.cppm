@@ -7,14 +7,14 @@ import twinning.kernel.utility;
 import twinning.kernel.tool.popcap.character_font_widget_2.version;
 import twinning.kernel.tool.popcap.character_font_widget_2.definition;
 import twinning.kernel.tool.popcap.character_font_widget_2.common;
-import twinning.kernel.tool.common.byte_stream;
+import twinning.kernel.tool.common.binary_stream;
 
 export namespace Twinning::Kernel::Tool::Popcap::CharacterFontWidget2 {
 
 	template <auto t_version> requires (check_version(t_version))
 	struct Decode :
 		Common<t_version>,
-		CommonByteStreamExchangeForInput {
+		CommonBinaryStreamExchangeForInput {
 
 		using Common = Common<t_version>;
 
@@ -23,7 +23,7 @@ export namespace Twinning::Kernel::Tool::Popcap::CharacterFontWidget2 {
 		// ----------------
 
 		inline static auto exchange_character_item(
-			InputByteStreamView &       data,
+			InputBinaryStreamView &     data,
 			Definition::CharacterItem & value
 		) -> Void {
 			exchange_unicode_fixed<Character16>(data, value.index);
@@ -32,7 +32,7 @@ export namespace Twinning::Kernel::Tool::Popcap::CharacterFontWidget2 {
 		}
 
 		inline static auto exchange_font_kerning(
-			InputByteStreamView &     data,
+			InputBinaryStreamView &   data,
 			Definition::FontKerning & value
 		) -> Void {
 			exchange_integer_fixed<IntegerU16>(data, value.offset);
@@ -41,7 +41,7 @@ export namespace Twinning::Kernel::Tool::Popcap::CharacterFontWidget2 {
 		}
 
 		inline static auto exchange_font_character(
-			InputByteStreamView &       data,
+			InputBinaryStreamView &     data,
 			Definition::FontCharacter & value
 		) -> Void {
 			exchange_unicode_fixed<Character16>(data, value.index);
@@ -59,7 +59,7 @@ export namespace Twinning::Kernel::Tool::Popcap::CharacterFontWidget2 {
 		}
 
 		inline static auto exchange_font_layer(
-			InputByteStreamView &   data,
+			InputBinaryStreamView & data,
 			Definition::FontLayer & value
 		) -> Void {
 			exchange_string_block<IntegerU32>(data, value.name);
@@ -93,7 +93,7 @@ export namespace Twinning::Kernel::Tool::Popcap::CharacterFontWidget2 {
 		}
 
 		inline static auto exchange_font_widget(
-			InputByteStreamView &    data,
+			InputBinaryStreamView &  data,
 			Definition::FontWidget & value
 		) -> Void {
 			exchange_integer_fixed<IntegerS32>(data, value.ascent);
@@ -117,7 +117,7 @@ export namespace Twinning::Kernel::Tool::Popcap::CharacterFontWidget2 {
 		// ----------------
 
 		inline static auto process_whole(
-			InputByteStreamView &    data,
+			InputBinaryStreamView &  data,
 			Definition::FontWidget & definition
 		) -> Void {
 			exchange_font_widget(data, definition);
@@ -127,10 +127,10 @@ export namespace Twinning::Kernel::Tool::Popcap::CharacterFontWidget2 {
 		// ----------------
 
 		inline static auto process(
-			InputByteStreamView &    data_,
+			InputBinaryStreamView &  data_,
 			Definition::FontWidget & definition
 		) -> Void {
-			M_use_zps_of(data);
+			M_use_split_stream_of(data);
 			restruct(definition);
 			return process_whole(data, definition);
 		}

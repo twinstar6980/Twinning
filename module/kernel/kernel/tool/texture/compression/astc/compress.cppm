@@ -19,7 +19,7 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Astc {
 		// ----------------
 
 		inline static auto process_image(
-			OutputByteStreamView &           data,
+			OutputBinaryStreamView &         data,
 			Image::ConstantImageView const & image,
 			Generation const &               generation,
 			Image::ImageSize const &         block_size,
@@ -39,10 +39,10 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Astc {
 				),
 			};
 			if (generation == Generation::Constant::v0()) {
-				auto ripe_data_size = block_count * k_block_bit_count / k_type_bit_count<Byte>;
+				auto ripe_data_size = block_count * k_block_bit_count / type_bit_size_of<Byte>();
 				assert_test(ripe_data_size <= data.reserve());
-				auto raw_data = ByteArray{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
-				Encoding::Encode::process(as_left(OutputByteStreamView{raw_data.view()}), image, raw_format);
+				auto raw_data = Binary{image.size().area() * Encoding::Common::get_pixel_byte_count(raw_format)};
+				Encoding::Encode::process(as_left(OutputBinaryStreamView{raw_data.as_view()}), image, raw_format);
 				auto astc_error = Dependency::astc_encoder::astcenc_error{};
 				auto astc_config = Dependency::astc_encoder::astcenc_config{};
 				astc_error = Dependency::astc_encoder::astcenc_config_init(
@@ -58,7 +58,7 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Astc {
 				auto astc_context = ZPointer<Dependency::astc_encoder::astcenc_context>{};
 				astc_error = Dependency::astc_encoder::astcenc_context_alloc(&astc_config, 1, &astc_context, nullptr);
 				assert_test(astc_error == Dependency::astc_encoder::astcenc_error::ASTCENC_SUCCESS);
-				auto astc_image_data = unmake_pointer_unsafe<Void>(raw_data.begin());
+				auto astc_image_data = unmake_pointer_unsafe<Void>(raw_data.data());
 				auto astc_image = Dependency::astc_encoder::astcenc_image{
 					.dim_x = unmake_box<unsigned int>(image.size().width),
 					.dim_y = unmake_box<unsigned int>(image.size().height),
@@ -76,7 +76,7 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Astc {
 					astc_context,
 					&astc_image,
 					&astc_swizzle,
-					unmake_pointer_unsafe<std::uint8_t>(data.current_pointer()),
+					unmake_pointer_unsafe<std::uint8_t>(data.current()),
 					unmake_box<std::size_t>(ripe_data_size),
 					0
 				);
@@ -90,13 +90,13 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Astc {
 		// ----------------
 
 		inline static auto process(
-			OutputByteStreamView &           data_,
+			OutputBinaryStreamView &         data_,
 			Image::ConstantImageView const & image,
 			Generation const &               generation,
 			Image::ImageSize const &         block_size,
 			Integer const &                  quality
 		) -> Void {
-			M_use_zps_of(data);
+			M_use_split_stream_of(data);
 			return process_image(data, image, generation, block_size, quality);
 		}
 

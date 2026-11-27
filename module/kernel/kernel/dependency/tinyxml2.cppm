@@ -5,7 +5,7 @@ module;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Weverything"
 
-#include "dependency/tinyxml2/tinyxml2.h"
+#include "dependency/tinyxml2/origin/tinyxml2.h"
 
 #pragma clang diagnostic pop
 

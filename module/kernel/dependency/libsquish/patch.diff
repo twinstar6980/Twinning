@@ -1,0 +1,10 @@
+diff --git a/lib/include/squish/squish_export.h b/lib/include/squish/squish_export.h
+new file mode 100644
+index 0000000..61e4fc8
+--- /dev/null
++++ b/lib/include/squish/squish_export.h
+@@ -0,0 +1,4 @@
++// empty export definitions to be overidden by cmake
++#ifndef SQUISH_EXPORT
++#   define SQUISH_EXPORT
++#endif

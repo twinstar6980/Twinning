@@ -1,26 +1,65 @@
 import os
 import sys
 import re
+import contextlib
 import pathlib
 import glob
 import shutil
 import tempfile
 import subprocess
+import json
 import typing
 
 # ----------------
+
+def rs_create_finalizer_scope(
+) -> contextlib.ExitStack:
+	return contextlib.ExitStack()
+
+# ----------------
+
+def fs_path_parent(
+	target: str,
+) -> str:
+	return pathlib.Path(target).parent.__str__()
+
+def fs_path_name(
+	target: str,
+) -> str:
+	return pathlib.Path(target).name
+
+def fs_exist(
+	target: str,
+) -> bool:
+	return pathlib.Path(target).exists(follow_symlinks=False)
+
+def fs_exist_link(
+	target: str,
+) -> bool:
+	return pathlib.Path(target).is_symlink(follow_symlinks=False)
+
+def fs_exist_file(
+	target: str,
+) -> bool:
+	return pathlib.Path(target).is_file(follow_symlinks=False)
+
+def fs_exist_directory(
+	target: str,
+) -> bool:
+	return pathlib.Path(target).is_dir(follow_symlinks=False)
 
 def fs_copy(
 	target: str,
 	placement: str,
 	follow_link: bool = False,
 ) -> None:
-	if not pathlib.Path(target).exists():
+	if not fs_exist(target):
 		raise RuntimeError(f'invalid target \'{target}\'')
-	if pathlib.Path(placement).exists():
+	if fs_exist(placement):
 		fs_remove(placement)
-	if not pathlib.Path(placement).parent.exists():
-		fs_create_directory(f'{pathlib.Path(placement).parent}')
+	placement_parent = fs_path_parent(placement)
+	if not fs_exist_directory(placement_parent):
+		fs_create_directory(placement_parent)
 	if pathlib.Path(target).is_file():
 		shutil.copy(target, placement, follow_symlinks=follow_link)
 	if pathlib.Path(target).is_dir():
@@ -43,7 +82,7 @@ def fs_create_link(
 	referent: str,
 	is_directory: bool,
 ) -> None:
-	if pathlib.Path(target).exists():
+	if fs_exist(target):
 		fs_remove(target)
 	os.symlink(referent, target, is_directory)
 	return
@@ -66,14 +105,17 @@ def fs_create_directory(
 	os.makedirs(target, exist_ok=True)
 	return
 
-def fs_temporary(
-) -> tempfile.TemporaryDirectory[str]:
-	return tempfile.TemporaryDirectory()
-
 def fs_find(
 	pattern: str,
 ) -> list[str]:
-	return glob.glob(pattern)
+	return sorted(glob.glob(pattern))
+
+def fs_temporary(
+) -> tempfile.TemporaryDirectory[str]:
+	parent = project_locate_temporary()
+	if not fs_exist_directory(parent):
+		fs_create_directory(parent)
+	return tempfile.TemporaryDirectory(dir=parent)
 
 # ----------------
 
@@ -105,7 +147,8 @@ def ex_keystore_verify(
 	target: str,
 	password: str,
 ) -> bool:
-	with fs_temporary() as temporary:
+	with rs_create_finalizer_scope() as finalizer:
+		temporary = finalizer.enter_context(fs_temporary())
 		openssl_result, _, _ = sh_execute_command(temporary, [
 			'openssl',
 			'pkcs12',
@@ -119,7 +162,8 @@ def ex_keystore_query(
 	target: str,
 	password: str,
 ) -> tuple[str]:
-	with fs_temporary() as temporary:
+	with rs_create_finalizer_scope() as finalizer:
+		temporary = finalizer.enter_context(fs_temporary())
 		sh_execute_command(temporary, [
 			'openssl',
 			'pkcs12',
@@ -155,7 +199,8 @@ def ex_archive_pack_zip(
 	content: str,
 	root: str | None,
 ) -> None:
-	with fs_temporary() as temporary:
+	with rs_create_finalizer_scope() as finalizer:
+		temporary = finalizer.enter_context(fs_temporary())
 		fs_copy(
 			f'{content}',
 			f'{temporary}/content{'' if root == None else f'/{root}'}',
@@ -177,7 +222,8 @@ def ex_archive_unpack_zip(
 	content: str,
 	root: str | None,
 ) -> None:
-	with fs_temporary() as temporary:
+	with rs_create_finalizer_scope() as finalizer:
+		temporary = finalizer.enter_context(fs_temporary())
 		fs_copy(
 			f'{package}',
 			f'{temporary}/package.zip',
@@ -200,7 +246,8 @@ def ex_windows_sign(
 	keystore: tuple[str, str] | None,
 	type: str,
 ) -> None:
-	with fs_temporary() as temporary:
+	with rs_create_finalizer_scope() as finalizer:
+		temporary = finalizer.enter_context(fs_temporary())
 		if keystore == None:
 			return
 		keystore_file, keystore_password = keystore
@@ -249,7 +296,8 @@ def ex_windows_pack_msix(
 	package: str,
 	content: str,
 ) -> None:
-	with fs_temporary() as temporary:
+	with rs_create_finalizer_scope() as finalizer:
+		temporary = finalizer.enter_context(fs_temporary())
 		fs_copy(
 			f'{content}',
 			f'{temporary}/content',
@@ -272,7 +320,8 @@ def ex_windows_unpack_msix(
 	package: str,
 	content: str,
 ) -> None:
-	with fs_temporary() as temporary:
+	with rs_create_finalizer_scope() as finalizer:
+		temporary = finalizer.enter_context(fs_temporary())
 		fs_copy(
 			f'{package}',
 			f'{temporary}/package.msix',
@@ -293,7 +342,8 @@ def ex_windows_unpack_msix(
 def ex_windows_strip_executable(
 	executable: str,
 ) -> None:
-	with fs_temporary() as temporary:
+	with rs_create_finalizer_scope() as finalizer:
+		temporary = finalizer.enter_context(fs_temporary())
 		fs_copy(
 			f'{executable}',
 			f'{temporary}/executable.bin',
@@ -314,7 +364,8 @@ def ex_windows_import_manifest(
 	manifest: str,
 	resource_identifier: int,
 ) -> None:
-	with fs_temporary() as temporary:
+	with rs_create_finalizer_scope() as finalizer:
+		temporary = finalizer.enter_context(fs_temporary())
 		fs_copy(
 			f'{executable}',
 			f'{temporary}/executable.bin',
@@ -338,7 +389,8 @@ def ex_windows_import_manifest(
 def ex_windows_create_pri_resource(
 	package: str,
 ) -> None:
-	with fs_temporary() as temporary:
+	with rs_create_finalizer_scope() as finalizer:
+		temporary = finalizer.enter_context(fs_temporary())
 		sh_execute_command(temporary, [
 			'makepri',
 			'createconfig',
@@ -362,7 +414,8 @@ def ex_linux_pack_appimage(
 	package: str,
 	content: str,
 ) -> None:
-	with fs_temporary() as temporary:
+	with rs_create_finalizer_scope() as finalizer:
+		temporary = finalizer.enter_context(fs_temporary())
 		fs_copy(
 			f'{content}',
 			f'{temporary}/content.AppDir',
@@ -386,7 +439,8 @@ def ex_macintosh_sign(
 	keystore: tuple[str, str] | None,
 	type: str,
 ) -> None:
-	with fs_temporary() as temporary:
+	with rs_create_finalizer_scope() as finalizer:
+		temporary = finalizer.enter_context(fs_temporary())
 		keystore_name = '-'
 		keychain_file = f'{temporary}/temporary.keychain'
 		keychain_password = 'temporary'
@@ -398,6 +452,13 @@ def ex_macintosh_sign(
 				'-p', f'{keychain_password}',
 				f'{keychain_file}',
 			])
+			finalizer.callback(lambda:
+				sh_execute_command(temporary, [
+					'security',
+					'delete-keychain',
+					f'{keychain_file}',
+				]
+			))
 			sh_execute_command(temporary, [
 				'security',
 				'import',
@@ -464,7 +525,7 @@ def ex_macintosh_sign(
 				'--entitlements', f':{actual_entitlement_file}',
 				f'{content_item}',
 			], ensure_ok=False)
-			if not pathlib.Path(actual_entitlement_file).exists():
+			if not fs_exist_file(actual_entitlement_file):
 				actual_entitlement_file = default_entitlement_file
 			sh_execute_command(temporary, [
 				'codesign',
@@ -473,12 +534,6 @@ def ex_macintosh_sign(
 				'--entitlements', f'{actual_entitlement_file}',
 				'--force',
 				f'{content_item}',
-			])
-		if keystore != None:
-			sh_execute_command(temporary, [
-				'security',
-				'delete-keychain',
-				f'{keychain_file}',
 			])
 		fs_copy(
 			f'{temporary}/target',
@@ -491,7 +546,8 @@ def ex_macintosh_pack_dmg(
 	content: str,
 	name: str,
 ) -> None:
-	with fs_temporary() as temporary:
+	with rs_create_finalizer_scope() as finalizer:
+		temporary = finalizer.enter_context(fs_temporary())
 		fs_copy(
 			f'{content}',
 			f'{temporary}/content/{name}.app',
@@ -524,7 +580,8 @@ def ex_android_sign(
 	type: str,
 	signature_version: tuple[bool, bool, bool],
 ) -> None:
-	with fs_temporary() as temporary:
+	with rs_create_finalizer_scope() as finalizer:
+		temporary = finalizer.enter_context(fs_temporary())
 		if keystore == None:
 			return
 		keystore_file, keystore_password = keystore
@@ -598,6 +655,11 @@ def project_locate_local(
 ) -> str:
 	return f'{project_locate_root('.local')}{'' if name is None else f'/{name}'}'
 
+def project_locate_temporary(
+	name: str | None = None,
+) -> str:
+	return f'{project_locate_local('temporary')}{'' if name is None else f'/{name}'}'
+
 def project_locate_distribution(
 	name: str | None = None,
 ) -> str:
@@ -612,6 +674,61 @@ def project_locate_keystore(
 	if not ex_keystore_verify(file, password):
 		raise RuntimeError('invaild keystore password')
 	return (file, password)
+
+# ----------------
+
+def project_fetch_cpp_dependency(
+	location: str,
+) -> None:
+	with rs_create_finalizer_scope() as finalizer:
+		temporary = finalizer.enter_context(fs_temporary())
+		print(f'fetch \'{fs_path_name(location)}\' ...')
+		origin_directory = f'{location}/origin'
+		manifest_file = f'{location}/manifest.json'
+		patch_file = f'{location}/patch.diff'
+		if fs_exist_directory(origin_directory):
+			print(f'pass')
+			return
+		if not fs_exist_file(manifest_file):
+			raise RuntimeError(f'could not found package manifest')
+		if not fs_exist_file(patch_file):
+			raise RuntimeError(f'could not found package patch')
+		manifest = json.loads(fs_read_file(manifest_file))
+		repository = manifest.get('repository')
+		reference = manifest.get('reference')
+		if repository == None:
+			raise RuntimeError(f'invalid package repository')
+		if reference == None:
+			raise RuntimeError(f'invalid package manifest')
+		sh_execute_command(temporary, [
+			'git',
+			'clone',
+			f'{repository}',
+			'.',
+		])
+		sh_execute_command(temporary, [
+			'git',
+			'checkout',
+			f'{reference}',
+		])
+		sh_execute_command(temporary, [
+			'git',
+			'apply',
+			'--allow-empty',
+			f'{patch_file}',
+		])
+		fs_copy(temporary, origin_directory)
+		print(f'done')
+	return
+
+def project_fetch_cpp_dependency_directory(
+	location: str,
+) -> None:
+	for item in fs_find(f'{location}/*'):
+		if not fs_exist_directory(item):
+			continue
+		project_fetch_cpp_dependency(item)
+	return
 
 # ----------------
 
@@ -655,8 +772,9 @@ def project_build_module(
 	builder: typing.Callable[[str, tuple[str, str] | None, str, str], tuple[str, str] | None],
 	platform: str,
 ) -> None:
-	with fs_temporary() as temporary:
-		name = pathlib.Path(path).parent.name
+	with rs_create_finalizer_scope() as finalizer:
+		temporary = finalizer.enter_context(fs_temporary())
+		name = fs_path_name(fs_path_parent(path))
 		distribution = builder(
 			project_locate_module(name),
 			project_locate_keystore(),
@@ -678,7 +796,8 @@ def project_build_bundle(
 	builder: typing.Callable[[str, str, str, tuple[str, str] | None, str, str], tuple[str, str] | None],
 	platform: str,
 ) -> None:
-	with fs_temporary() as temporary:
+	with rs_create_finalizer_scope() as finalizer:
+		temporary = finalizer.enter_context(fs_temporary())
 		distribution = builder(
 			project_locate_root(),
 			project_locate_local(),

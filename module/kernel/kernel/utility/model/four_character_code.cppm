@@ -6,7 +6,7 @@ export module twinning.kernel.utility.model.four_character_code;
 import twinning.kernel.utility.builtin;
 import twinning.kernel.utility.trait;
 import twinning.kernel.utility.box;
-import twinning.kernel.utility.exception.utility;
+import twinning.kernel.utility.exception;
 import twinning.kernel.utility.string.string;
 import twinning.kernel.utility.memory.bitwise;
 

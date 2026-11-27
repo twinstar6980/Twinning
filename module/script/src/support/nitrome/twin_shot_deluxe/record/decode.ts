@@ -3,7 +3,7 @@ namespace Twinning.Script.Support.Nitrome.TwinShotDeluxe.Record.Decode {
 	// #region utility
 
 	function process_whole(
-		data: ByteStreamView,
+		data: BinaryStreamView,
 	): Record<string, any> {
 		let definition = {} as Record<string, any>;
 		let property_count = Number(data.u32());
@@ -31,7 +31,7 @@ namespace Twinning.Script.Support.Nitrome.TwinShotDeluxe.Record.Decode {
 	// ----------------
 
 	export function process(
-		data: ByteStreamView,
+		data: BinaryStreamView,
 	): Record<string, any> {
 		return process_whole(data);
 	}
@@ -43,7 +43,7 @@ namespace Twinning.Script.Support.Nitrome.TwinShotDeluxe.Record.Decode {
 		definition_file: StoragePath,
 	): void {
 		let data = StorageHelper.read_file_data(data_file);
-		let definition = process(new ByteStreamView(data.view().value));
+		let definition = process(new BinaryStreamView(new DataView(data.view().value)));
 		JsonHelper.encode_file(definition_file, definition);
 		return;
 	}

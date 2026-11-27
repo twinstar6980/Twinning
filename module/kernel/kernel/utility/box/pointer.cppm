@@ -5,6 +5,7 @@ module;
 export module twinning.kernel.utility.box.pointer;
 import twinning.kernel.utility.builtin;
 import twinning.kernel.utility.trait;
+import twinning.kernel.utility.exception;
 import twinning.kernel.utility.box.base;
 import twinning.kernel.utility.box.number;
 
@@ -35,7 +36,10 @@ export namespace Twinning::Kernel {
 		// ----------------
 
 		constexpr PointerBox(
-		) = default;
+		) :
+			BaseBox{} {
+			return;
+		}
 
 		constexpr PointerBox(
 			PointerBox const & that
@@ -98,6 +102,7 @@ export namespace Twinning::Kernel {
 			CategoryConstraint<IsInstance<TTargetObject>>
 		constexpr auto dereference(
 		) const -> TTargetObject & {
+			assert_test(thiz.value != nullptr);
 			return *static_cast<ZPointer<TTargetObject>>(thiz.value);
 		}
 
@@ -106,6 +111,7 @@ export namespace Twinning::Kernel {
 		constexpr auto dereference(
 			Size const & index
 		) const -> TTargetObject & {
+			assert_test(thiz.value != nullptr);
 			return *static_cast<ZPointer<TTargetObject>>(thiz.value + index.value);
 		}
 
@@ -179,6 +185,7 @@ export namespace Twinning::Kernel {
 	template <typename TIt> requires
 		CategoryConstraint<IsPureInstance<TIt>>
 		&& (IsPointerBox<TIt>)
+		&& (IsInstance<typename TIt::Target>)
 	inline constexpr auto operator +(
 		TIt const &  thix,
 		Size const & size
@@ -189,6 +196,7 @@ export namespace Twinning::Kernel {
 	template <typename TIt> requires
 		CategoryConstraint<IsPureInstance<TIt>>
 		&& (IsPointerBox<TIt>)
+		&& (IsInstance<typename TIt::Target>)
 	inline constexpr auto operator -(
 		TIt const &  thix,
 		Size const & size
@@ -201,22 +209,24 @@ export namespace Twinning::Kernel {
 	template <typename TIt> requires
 		CategoryConstraint<IsPureInstance<TIt>>
 		&& (IsPointerBox<TIt>)
+		&& (IsInstance<typename TIt::Target>)
 	inline constexpr auto operator +=(
 		TIt &        thix,
 		Size const & size
 	) -> TIt & {
-		thix.value += size;
+		thix.value += size.value;
 		return thix;
 	}
 
 	template <typename TIt> requires
 		CategoryConstraint<IsPureInstance<TIt>>
 		&& (IsPointerBox<TIt>)
+		&& (IsInstance<typename TIt::Target>)
 	inline constexpr auto operator -=(
 		TIt &        thix,
 		Size const & size
 	) -> TIt & {
-		thix.value -= size;
+		thix.value -= size.value;
 		return thix;
 	}
 
@@ -225,6 +235,7 @@ export namespace Twinning::Kernel {
 	template <typename TIt> requires
 		CategoryConstraint<IsPureInstance<TIt>>
 		&& (IsPointerBox<TIt>)
+		&& (IsInstance<typename TIt::Target>)
 	inline constexpr auto operator ++(
 		TIt & thix
 	) -> TIt & {
@@ -235,6 +246,7 @@ export namespace Twinning::Kernel {
 	template <typename TIt> requires
 		CategoryConstraint<IsPureInstance<TIt>>
 		&& (IsPointerBox<TIt>)
+		&& (IsInstance<typename TIt::Target>)
 	inline constexpr auto operator --(
 		TIt & thix
 	) -> TIt & {
@@ -247,6 +259,7 @@ export namespace Twinning::Kernel {
 	template <typename TIt> requires
 		CategoryConstraint<IsPureInstance<TIt>>
 		&& (IsPointerBox<TIt>)
+		&& (IsInstance<typename TIt::Target>)
 	inline constexpr auto operator ++(
 		TIt & thix,
 		int
@@ -257,6 +270,7 @@ export namespace Twinning::Kernel {
 	template <typename TIt> requires
 		CategoryConstraint<IsPureInstance<TIt>>
 		&& (IsPointerBox<TIt>)
+		&& (IsInstance<typename TIt::Target>)
 	inline constexpr auto operator --(
 		TIt & thix,
 		int
@@ -269,6 +283,7 @@ export namespace Twinning::Kernel {
 	template <typename TIt> requires
 		CategoryConstraint<IsPureInstance<TIt>>
 		&& (IsPointerBox<TIt>)
+		&& (IsInstance<typename TIt::Target>)
 	inline constexpr auto operator -(
 		TIt const & thix,
 		TIt const & that
@@ -367,6 +382,14 @@ export namespace Twinning::Kernel {
 	template <typename TTarget> requires
 		AutomaticConstraint
 	using Pointer = PointerBox<TTarget>;
+
+	template <typename TTarget> requires
+		AutomaticConstraint
+	using VariablePointer = Pointer<TTarget>;
+
+	template <typename TTarget> requires
+		AutomaticConstraint
+	using ConstantPointer = Pointer<TTarget const>;
 
 	#pragma endregion
 

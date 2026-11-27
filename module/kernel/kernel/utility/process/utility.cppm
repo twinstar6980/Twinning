@@ -14,23 +14,22 @@ export module twinning.kernel.utility.process.utility;
 import twinning.kernel.utility.builtin;
 import twinning.kernel.utility.trait;
 import twinning.kernel.utility.box;
-import twinning.kernel.utility.exception.utility;
+import twinning.kernel.utility.exception;
 import twinning.kernel.utility.string.string;
 import twinning.kernel.utility.storage.path;
 import twinning.kernel.utility.storage.utility;
-import twinning.kernel.utility.range.number_range;
-import twinning.kernel.utility.string.character_type;
-import twinning.kernel.utility.container.list.list;
+import twinning.kernel.utility.range.integer_range;
+import twinning.kernel.utility.string.utility;
 import twinning.kernel.utility.container.array.array;
-import twinning.kernel.utility.container.map.map;
+import twinning.kernel.utility.container.list;
+import twinning.kernel.utility.container.map;
 import twinning.kernel.utility.string.basic_string;
 import twinning.kernel.utility.string.basic_string_view;
-import twinning.kernel.utility.container.optional.optional;
-import twinning.kernel.utility.container.optional.null_optional;
+import twinning.kernel.utility.container.optional;
 import twinning.kernel.utility.range.algorithm;
 import twinning.kernel.utility.miscellaneous.finalizer;
 import twinning.kernel.utility.miscellaneous.system_native_string;
-import twinning.kernel.utility.miscellaneous.byte_series.container;
+import twinning.kernel.utility.binary.binary;
 import twinning.kernel.dependency.system.win32;
 import twinning.kernel.dependency.system.posix;
 
@@ -48,30 +47,32 @@ export namespace Twinning::Kernel::Process {
 			nullptr
 		);
 		assert_test(state_d != 0);
-		auto buffer = BasicString<CharacterW>{make_box<Size>(state_d)};
+		auto buffer = BasicString<CharacterW>{};
+		buffer.allocate(make_box<Size>(state_d));
 		state_d = Dependency::system::win32::$GetCurrentDirectoryW(
 			unmake_box<Dependency::system::win32::$DWORD>(buffer.capacity()),
-			unmake_pointer_unsafe<Dependency::system::win32::$WCHAR>(buffer.begin())
+			unmake_pointer_unsafe<Dependency::system::win32::$WCHAR>(buffer.data())
 		);
 		assert_test(state_d != 0);
 		assert_test(state_d == unmake_box<Dependency::system::win32::$DWORD>(buffer.capacity() - 1_sz));
-		buffer.set_size(buffer.capacity() - 1_sz);
+		buffer.resize(buffer.capacity() - 1_sz);
 		target.parse(SystemNativeString::from_native(buffer));
 		#endif
 		#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
-		auto buffer = BasicString<CharacterN>{256_sz};
+		auto buffer = BasicString<CharacterN>{};
+		buffer.allocate(256_sz);
 		while (k_true) {
 			auto current_result = Dependency::system::posix::$getcwd(
-				unmake_pointer_unsafe<char>(buffer.begin()),
+				unmake_pointer_unsafe<char>(buffer.data()),
 				unmake_box<std::size_t>(buffer.capacity())
 			);
 			if (current_result != nullptr) {
 				break;
 			}
 			assert_test(Dependency::system::posix::$errno == Dependency::system::posix::$ERANGE);
-			buffer.expand(buffer.capacity());
+			buffer.allocate(buffer.capacity() * 2_sz);
 		}
-		buffer.set_size(null_terminated_string_size_of(buffer.begin()));
+		buffer.resize(compute_null_terminated_string_length(buffer.data(), buffer.capacity()));
 		target.parse(SystemNativeString::from_native(buffer));
 		#endif
 		return target;
@@ -84,7 +85,7 @@ export namespace Twinning::Kernel::Process {
 		auto state_b = Dependency::system::win32::$BOOL{};
 		auto string_raw = Dependency::system::win32::$GetEnvironmentStringsW();
 		assert_test(string_raw != nullptr);
-		auto string_pointer_raw_finalizer = make_finalizer(
+		auto _ = make_finalizer(
 			[&] {
 				state_b = Dependency::system::win32::$FreeEnvironmentStringsW(string_raw);
 				assert_test(state_b != Dependency::system::win32::$FALSE);
@@ -92,7 +93,7 @@ export namespace Twinning::Kernel::Process {
 		);
 		for (auto element_raw = string_raw; *element_raw != L'\0'; ++element_raw) {
 			auto element_pointer = make_pointer_unsafe<CharacterW>(element_raw);
-			auto element_view = ConstantBasicStringView<CharacterW>{element_pointer, null_terminated_string_size_of(element_pointer)};
+			auto element_view = make_string_view_from_indeterminate(element_pointer, maximum_number_of<Size>());
 			result_list.append(SystemNativeString::from_native(element_view));
 			element_raw += unmake_box<std::size_t>(element_view.size());
 		}
@@ -100,7 +101,7 @@ export namespace Twinning::Kernel::Process {
 		#if defined M_system_linux || defined M_system_macintosh || defined M_system_android || defined M_system_iphone
 		for (auto element_raw = Dependency::system::posix::$environ; *element_raw != nullptr; ++element_raw) {
 			auto element_pointer = make_pointer_unsafe<CharacterN>(*element_raw);
-			auto element_view = ConstantBasicStringView<CharacterN>{element_pointer, null_terminated_string_size_of(element_pointer)};
+			auto element_view = make_string_view_from_indeterminate(element_pointer, maximum_number_of<Size>());
 			result_list.append(SystemNativeString::from_native(element_view));
 		}
 		#endif
@@ -134,9 +135,9 @@ export namespace Twinning::Kernel::Process {
 		assert_test(Storage::exist_file(input));
 		assert_test(Storage::exist_file(output));
 		assert_test(Storage::exist_file(error));
-		auto input_handle = Pointer<Void>{};
-		auto output_handle = Pointer<Void>{};
-		auto error_handle = Pointer<Void>{};
+		auto input_handle = std::intptr_t{-1};
+		auto output_handle = std::intptr_t{-1};
+		auto error_handle = std::intptr_t{-1};
 		auto input_handle_finalizer = Storage::Detail::open_file(input_handle, input, k_false, k_true, k_false);
 		auto output_handle_finalizer = Storage::Detail::open_file(output_handle, output, k_false, k_false, k_true);
 		auto error_handle_finalizer = Storage::Detail::open_file(error_handle, error, k_false, k_false, k_true);
@@ -155,21 +156,20 @@ export namespace Twinning::Kernel::Process {
 			)
 		);
 		for (auto & element : environment) {
-			environment_string.append_list(element.key + "="_sv + element.value);
+			environment_string.append_range(element.key + "="_sv + element.value);
 			environment_string.append('\0'_c);
 		}
 		auto startup_information = Dependency::system::win32::$STARTUPINFOEXW{};
 		startup_information.StartupInfo.cb = sizeof(Dependency::system::win32::$STARTUPINFOEXW);
 		startup_information.StartupInfo.dwFlags = Dependency::system::win32::$STARTF_USESTDHANDLES;
-		startup_information.StartupInfo.hStdInput = static_cast<Dependency::system::win32::$HANDLE>(input_handle.value);
-		startup_information.StartupInfo.hStdOutput = static_cast<Dependency::system::win32::$HANDLE>(output_handle.value);
-		startup_information.StartupInfo.hStdError = static_cast<Dependency::system::win32::$HANDLE>(error_handle.value);
+		startup_information.StartupInfo.hStdInput = reinterpret_cast<Dependency::system::win32::$HANDLE>(input_handle);
+		startup_information.StartupInfo.hStdOutput = reinterpret_cast<Dependency::system::win32::$HANDLE>(output_handle);
+		startup_information.StartupInfo.hStdError = reinterpret_cast<Dependency::system::win32::$HANDLE>(error_handle);
 		auto startup_attribute_list_size = Dependency::system::win32::$SIZE_T{};
-		auto startup_attribute_list_data = ByteArray{};
 		state_b = Dependency::system::win32::$InitializeProcThreadAttributeList(nullptr, 1, 0, &startup_attribute_list_size);
 		assert_test(state_b == Dependency::system::win32::$FALSE);
-		startup_attribute_list_data.allocate(make_box<Size>(startup_attribute_list_size));
-		startup_information.lpAttributeList = unmake_pointer_unsafe<AsUnmakeReference<decltype(*Dependency::system::win32::$LPPROC_THREAD_ATTRIBUTE_LIST{})>>(startup_attribute_list_data.begin());
+		auto startup_attribute_list_data = Binary{make_box<Size>(startup_attribute_list_size)};
+		startup_information.lpAttributeList = unmake_pointer_unsafe<AsUnmakeReference<decltype(*Dependency::system::win32::$LPPROC_THREAD_ATTRIBUTE_LIST{})>>(startup_attribute_list_data.data());
 		state_b = Dependency::system::win32::$InitializeProcThreadAttributeList(startup_information.lpAttributeList, 1, 0, &startup_attribute_list_size);
 		assert_test(state_b != Dependency::system::win32::$FALSE);
 		auto startup_attribute_list_finalizer = make_finalizer(
@@ -178,12 +178,12 @@ export namespace Twinning::Kernel::Process {
 				startup_attribute_list_data.reset();
 			}
 		);
-		auto inherit_handle_list = make_array<Dependency::system::win32::$HANDLE>(
+		auto inherit_handle_array = make_array<Dependency::system::win32::$HANDLE>(
 			startup_information.StartupInfo.hStdInput,
 			startup_information.StartupInfo.hStdOutput,
 			startup_information.StartupInfo.hStdError
 		);
-		for (auto & inherit_handle : inherit_handle_list) {
+		for (auto & inherit_handle : inherit_handle_array) {
 			state_b = Dependency::system::win32::$SetHandleInformation(
 				inherit_handle,
 				Dependency::system::win32::$HANDLE_FLAG_INHERIT,
@@ -195,22 +195,22 @@ export namespace Twinning::Kernel::Process {
 			startup_information.lpAttributeList,
 			0,
 			Dependency::system::win32::$PROC_THREAD_ATTRIBUTE_HANDLE_LIST,
-			unmake_pointer(inherit_handle_list.begin()),
-			unmake_box<std::size_t>(inherit_handle_list.size()) * sizeof(Dependency::system::win32::$HANDLE),
+			unmake_pointer(inherit_handle_array.data()),
+			unmake_box<std::size_t>(inherit_handle_array.size()) * sizeof(Dependency::system::win32::$HANDLE),
 			nullptr,
 			nullptr
 		);
 		assert_test(state_b != Dependency::system::win32::$FALSE);
 		auto process_information = Dependency::system::win32::$PROCESS_INFORMATION{};
 		state_b = Dependency::system::win32::$CreateProcessW(
-			unmake_pointer_unsafe<wchar_t>(SystemNativeString::to_native(program.emit_native(), true).begin()),
-			unmake_pointer_unsafe<wchar_t>(SystemNativeString::to_native(command, true).begin()),
+			unmake_pointer_unsafe<wchar_t>(SystemNativeString::to_native(program.emit_native(), true).data()),
+			unmake_pointer_unsafe<wchar_t>(SystemNativeString::to_native(command, true).data()),
 			nullptr,
 			nullptr,
 			Dependency::system::win32::$TRUE,
 			Dependency::system::win32::$CREATE_UNICODE_ENVIRONMENT | Dependency::system::win32::$CREATE_NO_WINDOW | Dependency::system::win32::$EXTENDED_STARTUPINFO_PRESENT,
-			unmake_pointer_unsafe<wchar_t>(SystemNativeString::to_native(environment_string, false).begin()),
-			unmake_pointer_unsafe<wchar_t>(SystemNativeString::to_native(workspace.emit_native(), true).begin()),
+			unmake_pointer_unsafe<wchar_t>(SystemNativeString::to_native(environment_string, false).data()),
+			unmake_pointer_unsafe<wchar_t>(SystemNativeString::to_native(workspace.emit_native(), true).data()),
 			reinterpret_cast<Dependency::system::win32::$STARTUPINFOW *>(&startup_information),
 			&process_information
 		);
@@ -250,48 +250,46 @@ export namespace Twinning::Kernel::Process {
 		for (auto & element : argument) {
 			argument_string.append(SystemNativeString::to_native(element, true));
 		}
-		auto argument_string_list = List<char *>{};
-		argument_string_list.allocate(argument_string.size() + 1_sz);
-		for (auto & element : argument_string) {
-			argument_string_list.append(unmake_pointer_unsafe<char>(element.begin()));
+		auto argument_string_pointer = Array<char *>{argument_string.size() + 1_sz};
+		for (auto & index : SizeRange{argument_string.size()}) {
+			argument_string_pointer[index] = unmake_pointer_unsafe<char>(argument_string[index].data());
 		}
-		argument_string_list.append(nullptr);
+		argument_string_pointer[argument_string.size()] = nullptr;
 		auto environment_string = List<BasicString<CharacterN>>{};
 		environment_string.allocate(environment.size());
 		for (auto & element : environment) {
 			environment_string.append(SystemNativeString::to_native(element.key + "="_sv + element.value, true));
 		}
-		auto environment_string_list = List<char *>{};
-		environment_string_list.allocate(environment_string.size() + 1_sz);
-		for (auto & element : environment_string) {
-			environment_string_list.append(unmake_pointer_unsafe<char>(element.begin()));
+		auto environment_string_pointer = Array<char *>{environment_string.size() + 1_sz};
+		for (auto & index : SizeRange{environment_string.size()}) {
+			environment_string_pointer[index] = unmake_pointer_unsafe<char>(environment_string[index].data());
 		}
-		environment_string_list.append(nullptr);
+		environment_string_pointer[environment_string.size()] = nullptr;
 		auto workspace_string = SystemNativeString::to_native(workspace.emit_native(), true);
 		auto process_identifier = Dependency::system::posix::$fork();
 		assert_test(process_identifier != -1);
 		if (process_identifier == 0) {
 			try {
-				state_i = Dependency::system::posix::$chdir(unmake_pointer_unsafe<char>(workspace_string.begin()));
+				state_i = Dependency::system::posix::$chdir(unmake_pointer_unsafe<char>(workspace_string.data()));
 				assert_test(state_i != -1);
-				state_i = Dependency::system::posix::$dup2(static_cast<int>(reinterpret_cast<std::intptr_t>(input_handle.value)), Dependency::system::posix::$STDIN_FILENO);
+				state_i = Dependency::system::posix::$dup2(static_cast<int>(input_handle), Dependency::system::posix::$STDIN_FILENO);
 				assert_test(state_i != -1);
-				state_i = Dependency::system::posix::$dup2(static_cast<int>(reinterpret_cast<std::intptr_t>(output_handle.value)), Dependency::system::posix::$STDOUT_FILENO);
+				state_i = Dependency::system::posix::$dup2(static_cast<int>(output_handle), Dependency::system::posix::$STDOUT_FILENO);
 				assert_test(state_i != -1);
-				state_i = Dependency::system::posix::$dup2(static_cast<int>(reinterpret_cast<std::intptr_t>(error_handle.value)), Dependency::system::posix::$STDERR_FILENO);
+				state_i = Dependency::system::posix::$dup2(static_cast<int>(error_handle), Dependency::system::posix::$STDERR_FILENO);
 				assert_test(state_i != -1);
 				input_handle_finalizer.dispose();
 				output_handle_finalizer.dispose();
 				error_handle_finalizer.dispose();
 				Dependency::system::posix::$execve(
-					unmake_pointer_unsafe<char>(program_string.begin()),
-					unmake_pointer_unsafe<char *>(argument_string_list.begin()),
-					unmake_pointer_unsafe<char *>(environment_string_list.begin())
+					unmake_pointer_unsafe<char>(program_string.data()),
+					unmake_pointer_unsafe<char *>(argument_string_pointer.data()),
+					unmake_pointer_unsafe<char *>(environment_string_pointer.data())
 				);
 			}
 			catch (...) {
+				Dependency::system::posix::$_exit(127);
 			}
-			Dependency::system::posix::$_exit(127);
 		}
 		input_handle_finalizer.dispose();
 		output_handle_finalizer.dispose();

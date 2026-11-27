@@ -12,8 +12,8 @@ import twinning.kernel.tool.data.compression.deflate.common;
 import twinning.kernel.tool.data.compression.deflate.uncompress;
 import twinning.kernel.tool.data.compression.bzip2.common;
 import twinning.kernel.tool.data.compression.bzip2.uncompress;
-import twinning.kernel.tool.data.compression.lzma.common;
-import twinning.kernel.tool.data.compression.lzma.uncompress;
+import twinning.kernel.tool.data.compression.lzma1.common;
+import twinning.kernel.tool.data.compression.lzma1.uncompress;
 
 export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 
@@ -28,9 +28,9 @@ export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 		// ----------------
 
 		inline static auto process_package(
-			InputByteStreamView &  data,
-			Definition::Package &  definition,
-			Optional<Path> const & resource_directory
+			InputBinaryStreamView & data,
+			Definition::Package &   definition,
+			Optional<Path> const &  resource_directory
 		) -> Void {
 			data.read_constant(Structure::k_magic_marker);
 			auto information_structure = Structure::Information<t_version>{};
@@ -40,16 +40,16 @@ export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 				assert_test(information_structure.archive_setting.version == cast_box<Structure::VersionNumber>(t_version.number));
 				for (auto & element : information_structure.resource_file) {
 					auto string = ConstantStringView{};
-					StringParser::read_string_until(unsafe_cast<InputCharacterStreamView>(data), string, CharacterType::k_null);
-					unsafe_cast<InputCharacterStreamView>(data).read_constant(CharacterType::k_null);
+					StringUtility::read_string_until(unsafe_cast<InputStringStreamView>(data), string, StringUtility::k_null_character);
+					unsafe_cast<InputStringStreamView>(data).read_constant(StringUtility::k_null_character);
 					element = string;
 				}
 				information_structure.resource_directory.allocate_full(cast_box<Size>(information_structure.archive_setting.resource_directory_count));
 				information_structure.resource_directory[1_ix] = ""_sv;
-				for (auto & element : information_structure.resource_directory.tail(information_structure.resource_directory.size() - 1_sz)) {
+				for (auto & element : Range::slice_tail(information_structure.resource_directory, information_structure.resource_directory.size() - 1_sz)) {
 					auto string = ConstantStringView{};
-					StringParser::read_string_until(unsafe_cast<InputCharacterStreamView>(data), string, CharacterType::k_null);
-					unsafe_cast<InputCharacterStreamView>(data).read_constant(CharacterType::k_null);
+					StringUtility::read_string_until(unsafe_cast<InputStringStreamView>(data), string, StringUtility::k_null_character);
+					unsafe_cast<InputStringStreamView>(data).read_constant(StringUtility::k_null_character);
 					element = string;
 				}
 				data.read(information_structure.resource_information, cast_box<Size>(information_structure.archive_setting.resource_file_count));
@@ -65,13 +65,13 @@ export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 				resource_definition.path = Path{information_structure.resource_directory[cast_box<Size>(resource_information_structure.directory_index)]}.push(Path{information_structure.resource_file[resource_index]});
 				assert_test(resource_definition.path.type() == Storage::PathType::Constant::detached());
 				resource_definition.chunk.allocate_full(resource_information_structure.chunk_index.size());
-				auto chunk_data_list = Array<ByteArray>{resource_information_structure.chunk_index.size()};
+				auto chunk_data_list = List<Binary>{resource_information_structure.chunk_index.size()};
 				for (auto & chunk_index : SizeRange{resource_information_structure.chunk_index.size()}) {
 					auto & chunk_information_structure = information_structure.chunk_information[cast_box<Size>(resource_information_structure.chunk_index[chunk_index])];
 					auto & chunk_definition = resource_definition.chunk[chunk_index];
 					auto & chunk_data = chunk_data_list[chunk_index];
 					data.set_position(cast_box<Size>(chunk_information_structure.offset));
-					chunk_data.allocate(cast_box<Size>(chunk_information_structure.size_uncompressed));
+					chunk_data.allocate_full(cast_box<Size>(chunk_information_structure.size_uncompressed));
 					auto chunk_size_compressed = cast_box<Size>(chunk_information_structure.size_compressed);
 					auto chunk_flag = BitSet<Structure::ChunkFlag<t_version>::k_count>{};
 					chunk_flag.from_integer(cast_box<typename BitSet<Structure::ChunkFlag<t_version>::k_count>::BoundedInteger>(chunk_information_structure.flag));
@@ -92,9 +92,9 @@ export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 						chunk_ok = k_true;
 						assert_test(chunk_size_compressed == chunk_data.size());
 						chunk_definition.flag = "zlib"_s;
-						auto chunk_stream = OutputByteStreamView{chunk_data};
+						auto chunk_stream = like_binary_stream<StreamMode::Constant::output()>(data, chunk_data);
 						data.forward(10_sz); // NOTE: EXPLAIN: skip gzip header
-						Data::Compression::Deflate::Uncompress::process(chunk_stream, data, 15_i, Data::Compression::Deflate::WrapperType::Constant::none());
+						Data::Compression::Deflate::Uncompress::process(chunk_stream, data, Data::Compression::Deflate::Container::Constant::none(), 15_i);
 						assert_test(chunk_stream.full());
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<t_version>::bzip2)) {
@@ -102,8 +102,8 @@ export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 						chunk_ok = k_true;
 						assert_test(chunk_size_compressed == chunk_data.size());
 						chunk_definition.flag = "bzip2"_s;
-						auto chunk_stream = OutputByteStreamView{chunk_data};
-						Data::Compression::Bzip2::Uncompress::process(chunk_stream, data, k_false);
+						auto chunk_stream = like_binary_stream<StreamMode::Constant::output()>(data, chunk_data);
+						Data::Compression::Bzip2::Uncompress::process(chunk_stream, data, Data::Compression::Bzip2::Container::Constant::none(), k_false);
 						assert_test(chunk_stream.full());
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<t_version>::mp3)) {
@@ -128,15 +128,15 @@ export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 						chunk_ok = k_true;
 						assert_test(chunk_size_compressed == chunk_data.size());
 						chunk_definition.flag = "copy_coded"_s;
-						Range::assign_from(chunk_data, data.forward_view(chunk_data.size()));
+						Range::assign_from(chunk_data, data.split_forward(chunk_data.size()).view());
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<t_version>::lzma)) {
 						assert_test(!chunk_ok);
 						chunk_ok = k_true;
 						assert_test(chunk_size_compressed == chunk_data.size());
 						chunk_definition.flag = "lzma"_s;
-						auto chunk_stream = OutputByteStreamView{chunk_data};
-						Data::Compression::Lzma::Uncompress::process(chunk_stream, data);
+						auto chunk_stream = like_binary_stream<StreamMode::Constant::output()>(data, chunk_data);
+						Data::Compression::Lzma1::Uncompress::process(chunk_stream, data, Data::Compression::Lzma1::Container::Constant::alone());
 						assert_test(chunk_stream.full());
 					}
 					if (chunk_flag.get(Structure::ChunkFlag<t_version>::random_access)) {
@@ -147,7 +147,7 @@ export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 					assert_test(chunk_ok);
 					package_data_end_position = Math::maximum(package_data_end_position, data.position());
 				}
-				assert_test(!chunk_data_list.empty() && Range::all_of(chunk_data_list.tail(chunk_data_list.size() - 1_sz), [&](auto & element) -> auto { return element == chunk_data_list.first(); }));
+				assert_test(!chunk_data_list.empty() && Range::all_of(Range::slice_tail(chunk_data_list, chunk_data_list.size() - 1_sz), [&](auto & element) -> auto { return element == chunk_data_list.first(); }));
 				if (resource_directory.has()) {
 					auto resource_path = resource_directory.get().push(resource_definition.path);
 					if (!Storage::exist_file(resource_path)) {
@@ -164,11 +164,11 @@ export namespace Twinning::Kernel::Tool::Marmalade::Dzip {
 		// ----------------
 
 		inline static auto process(
-			InputByteStreamView &  data_,
-			Definition::Package &  definition,
-			Optional<Path> const & resource_directory
+			InputBinaryStreamView & data_,
+			Definition::Package &   definition,
+			Optional<Path> const &  resource_directory
 		) -> Void {
-			M_use_zps_of(data);
+			M_use_split_stream_of(data);
 			restruct(definition);
 			return process_package(data, definition, resource_directory);
 		}

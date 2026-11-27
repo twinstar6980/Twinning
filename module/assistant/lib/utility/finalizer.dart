@@ -33,3 +33,33 @@ class Finalizer {
   // #endregion
 
 }
+
+// ----------------
+
+Future<TResult> withFinalizerScope<TResult>(
+  Future<TResult> Function(List<Future<Void> Function()> finalizer) action,
+) async {
+  var finalizer = <Future<Void> Function()>[];
+  try {
+    return await action(finalizer);
+  }
+  finally {
+    for (var finalizerAction in finalizer.reversed) {
+      await finalizerAction();
+    }
+  }
+}
+
+TResult withFinalizerScopeSync<TResult>(
+  TResult Function(List<Void Function()> finalizer) action,
+) {
+  var finalizer = <Void Function()>[];
+  try {
+    return action(finalizer);
+  }
+  finally {
+    for (var finalizerAction in finalizer.reversed) {
+      finalizerAction();
+    }
+  }
+}

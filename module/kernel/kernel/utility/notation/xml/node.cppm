@@ -6,10 +6,10 @@ export module twinning.kernel.utility.notation.xml.node;
 import twinning.kernel.utility.builtin;
 import twinning.kernel.utility.trait;
 import twinning.kernel.utility.box;
-import twinning.kernel.utility.exception.utility;
-import twinning.kernel.utility.container.variant.enumerable_variant;
-import twinning.kernel.utility.container.list.list;
-import twinning.kernel.utility.container.map.map;
+import twinning.kernel.utility.exception;
+import twinning.kernel.utility.container.enumerable_variant;
+import twinning.kernel.utility.container.list;
+import twinning.kernel.utility.container.map;
 import twinning.kernel.utility.string.string;
 
 export namespace Twinning::Kernel::Notation::Xml {
@@ -20,7 +20,18 @@ export namespace Twinning::Kernel::Notation::Xml {
 
 	#pragma endregion
 
-	#pragma region sub type
+	#pragma region type
+
+	M_enumeration(
+		M_wrap(NodeType),
+		M_wrap(
+			element,
+			text,
+			comment,
+		),
+	);
+
+	// ----------------
 
 	struct Element {
 
@@ -69,19 +80,6 @@ export namespace Twinning::Kernel::Notation::Xml {
 
 	// ----------------
 
-	M_enumeration(
-		M_wrap(NodeType),
-		M_wrap(
-			element,
-			text,
-			comment,
-		),
-	);
-
-	#pragma endregion
-
-	#pragma region type
-
 	class Node :
 		public EnumerableVariant<NodeType, Element, Text, Comment> {
 
@@ -95,7 +93,10 @@ export namespace Twinning::Kernel::Notation::Xml {
 		// ----------------
 
 		Node(
-		) = default;
+		) :
+			EnumerableVariant{} {
+			return;
+		}
 
 		Node(
 			Node const & that

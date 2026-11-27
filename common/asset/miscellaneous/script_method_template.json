@@ -1,0 +1,4259 @@
+{
+	"method": [
+		{
+			"identifier": "common.utility",
+			"icon": "handyman",
+			"item": [
+				{
+					"identifier": "common.utility.update_global_setting",
+					"icon": "settings",
+					"preset": [
+						{
+							"name": "Binary Stream Endian - Little",
+							"argument": {
+								"data": "{\"binary_stream_endian\":\"little\"}",
+							},
+						},
+						{
+							"name": "Binary Stream Endian - Big",
+							"argument": {
+								"data": "{\"binary_stream_endian\":\"big\"}",
+							},
+						},
+						null,
+						{
+							"name": "JSON Format - Trailing",
+							"argument": {
+								"data": "{\"json_format_disable_array_trailing_comma\":false,\"json_format_disable_object_trailing_comma\":false}",
+							},
+						},
+						{
+							"name": "JSON Format - Compatible",
+							"argument": {
+								"data": "{\"json_format_disable_array_trailing_comma\":true,\"json_format_disable_object_trailing_comma\":true}",
+							},
+						},
+						null,
+						{
+							"name": "Language - English",
+							"argument": {
+								"data": "{\"language\":\"English\"}",
+							},
+						},
+						{
+							"name": "Language - Chinese",
+							"argument": {
+								"data": "{\"language\":\"Chinese\"}",
+							},
+						},
+						{
+							"name": "Language - Vietnamese",
+							"argument": {
+								"data": "{\"language\":\"Vietnamese\"}",
+							},
+						},
+						null,
+						{
+							"name": "Executor Name Filter - Enabled",
+							"argument": {
+								"data": "{\"executor_typical_method_disable_name_filter\":false}",
+							},
+						},
+						{
+							"name": "Executor Name Filter - Disabled",
+							"argument": {
+								"data": "{\"executor_typical_method_disable_name_filter\":true}",
+							},
+						},
+					],
+				},
+				{
+					"identifier": "common.utility.run_embedded_script",
+					"icon": "extension",
+					"preset": [
+						{
+							"name": "ScriptConsole",
+							"argument": {
+								"target_name": "ScriptConsole",
+							},
+						},
+						{
+							"name": "CompareLanguageFile",
+							"argument": {
+								"target_name": "CompareLanguageFile",
+							},
+						},
+						{
+							"name": "ComputeWwiseShortIdentifier",
+							"argument": {
+								"target_name": "ComputeWwiseShortIdentifier",
+							},
+						},
+						{
+							"name": "ExtractRsbFromPvz2cnApkDirectory",
+							"argument": {
+								"target_name": "ExtractRsbFromPvz2cnApkDirectory",
+							},
+						},
+						{
+							"name": "DecodeRtonLenient",
+							"argument": {
+								"target_name": "DecodeRtonLenient",
+							},
+						},
+						{
+							"name": "UnpackRsbLenient",
+							"argument": {
+								"target_name": "UnpackRsbLenient",
+							},
+						},
+						{
+							"name": "GenerateAssistantConfiguration",
+							"argument": {
+								"target_name": "GenerateAssistantConfiguration",
+							},
+						},
+					],
+				},
+				{
+					"identifier": "common.utility.run_custom_script",
+					"icon": "code",
+					"preset": [
+						{
+							"name": "Normal",
+							"argument": {
+								"is_module": false,
+							},
+						},
+						{
+							"name": "Module",
+							"argument": {
+								"is_module": true,
+							},
+						},
+					],
+				},
+			],
+		},
+		{
+			"identifier": "data.hashing",
+			"icon": "draft",
+			"item": [
+				{
+					"identifier": "data.hashing.fnv.hash",
+					"icon": "check_box",
+					"preset": [
+						{
+							"name": "V0-32",
+							"argument": {
+								"mode": "v0",
+								"length": 32,
+							},
+						},
+						{
+							"name": "V0-64",
+							"argument": {
+								"mode": "v0",
+								"length": 64,
+							},
+						},
+						{
+							"name": "V1-32",
+							"argument": {
+								"mode": "v1",
+								"length": 32,
+							},
+						},
+						{
+							"name": "V1-64",
+							"argument": {
+								"mode": "v1",
+								"length": 64,
+							},
+						},
+						{
+							"name": "V1A-32",
+							"argument": {
+								"mode": "v1a",
+								"length": 32,
+							},
+						},
+						{
+							"name": "V1A-64",
+							"argument": {
+								"mode": "v1a",
+								"length": 64,
+							},
+						},
+					],
+				},
+				{
+					"identifier": "data.hashing.crc.hash",
+					"icon": "check_box",
+					"preset": [
+						{
+							"name": "Standard-32",
+							"argument": {
+								"mode": "standard",
+								"length": 32,
+							},
+						},
+						{
+							"name": "Castagnoli-32",
+							"argument": {
+								"mode": "castagnoli",
+								"length": 32,
+							},
+						},
+					],
+				},
+				{
+					"identifier": "data.hashing.adler.hash",
+					"icon": "check_box",
+					"preset": [
+						{
+							"name": "Standard-32",
+							"argument": {
+								"mode": "standard",
+								"length": 32,
+							},
+						},
+					],
+				},
+				{
+					"identifier": "data.hashing.md.hash",
+					"icon": "check_box",
+					"preset": [
+						{
+							"name": "V2-128",
+							"argument": {
+								"mode": "v2",
+								"length": 128,
+							},
+						},
+						{
+							"name": "V4-128",
+							"argument": {
+								"mode": "v4",
+								"length": 128,
+							},
+						},
+						{
+							"name": "V5-128",
+							"argument": {
+								"mode": "v5",
+								"length": 128,
+							},
+						},
+					],
+				},
+				{
+					"identifier": "data.hashing.sha.hash",
+					"icon": "check_box",
+					"preset": [
+						{
+							"name": "V1-160",
+							"argument": {
+								"mode": "v1",
+								"length": 160,
+							},
+						},
+						{
+							"name": "V2-224",
+							"argument": {
+								"mode": "v2",
+								"length": 224,
+							},
+						},
+						{
+							"name": "V2-256",
+							"argument": {
+								"mode": "v2",
+								"length": 256,
+							},
+						},
+						{
+							"name": "V2-384",
+							"argument": {
+								"mode": "v2",
+								"length": 384,
+							},
+						},
+						{
+							"name": "V2-512",
+							"argument": {
+								"mode": "v2",
+								"length": 512,
+							},
+						},
+						{
+							"name": "V3-224",
+							"argument": {
+								"mode": "v3",
+								"length": 224,
+							},
+						},
+						{
+							"name": "V3-256",
+							"argument": {
+								"mode": "v3",
+								"length": 256,
+							},
+						},
+						{
+							"name": "V3-384",
+							"argument": {
+								"mode": "v3",
+								"length": 384,
+							},
+						},
+						{
+							"name": "V3-512",
+							"argument": {
+								"mode": "v3",
+								"length": 512,
+							},
+						},
+					],
+				},
+			],
+		},
+		{
+			"identifier": "data.encoding",
+			"icon": "draft",
+			"item": [
+				{
+					"identifier": "data.encoding.base.encode",
+					"icon": "skip_next",
+					"preset": [
+						{
+							"name": "V16-STD",
+							"argument": {
+								"mode": "v16_std",
+							},
+						},
+						{
+							"name": "V32-STD",
+							"argument": {
+								"mode": "v32_std",
+							},
+						},
+						{
+							"name": "V32-HEX",
+							"argument": {
+								"mode": "v32_hex",
+							},
+						},
+						{
+							"name": "V64-STD",
+							"argument": {
+								"mode": "v64_std",
+							},
+						},
+						{
+							"name": "V64-URL",
+							"argument": {
+								"mode": "v64_url",
+							},
+						},
+					],
+				},
+				{
+					"identifier": "data.encoding.base.decode",
+					"icon": "skip_previous",
+					"preset": [
+						{
+							"name": "V16-STD",
+							"argument": {
+								"mode": "v16_std",
+							},
+						},
+						{
+							"name": "V32-STD",
+							"argument": {
+								"mode": "v32_std",
+							},
+						},
+						{
+							"name": "V32-HEX",
+							"argument": {
+								"mode": "v32_hex",
+							},
+						},
+						{
+							"name": "V64-STD",
+							"argument": {
+								"mode": "v64_std",
+							},
+						},
+						{
+							"name": "V64-URL",
+							"argument": {
+								"mode": "v64_url",
+							},
+						},
+					],
+				},
+			],
+		},
+		{
+			"identifier": "data.encryption",
+			"icon": "draft",
+			"item": [
+				{
+					"identifier": "data.encryption.exor.encrypt",
+					"icon": "lock",
+					"preset": [
+					],
+				},
+				{
+					"identifier": "data.encryption.rijndael.encrypt",
+					"icon": "lock",
+					"preset": [
+					],
+				},
+				{
+					"identifier": "data.encryption.rijndael.decrypt",
+					"icon": "key",
+					"preset": [
+					],
+				},
+			],
+		},
+		{
+			"identifier": "data.compression",
+			"icon": "draft",
+			"item": [
+				{
+					"identifier": "data.compression.deflate.compress",
+					"icon": "close_fullscreen",
+					"preset": [
+						{
+							"name": "None",
+							"argument": {
+								"container": "none",
+							},
+						},
+						{
+							"name": "Zlib",
+							"argument": {
+								"container": "zlib",
+							},
+						},
+						{
+							"name": "Gzip",
+							"argument": {
+								"container": "gzip",
+							},
+						},
+					],
+				},
+				{
+					"identifier": "data.compression.deflate.uncompress",
+					"icon": "open_in_full",
+					"preset": [
+						{
+							"name": "None",
+							"argument": {
+								"container": "none",
+							},
+						},
+						{
+							"name": "Zlib",
+							"argument": {
+								"container": "zlib",
+							},
+						},
+						{
+							"name": "Gzip",
+							"argument": {
+								"container": "gzip",
+							},
+						},
+					],
+				},
+				{
+					"identifier": "data.compression.bzip2.compress",
+					"icon": "close_fullscreen",
+					"preset": [
+						{
+							"name": "None",
+							"argument": {
+								"container": "none",
+							},
+						},
+					],
+				},
+				{
+					"identifier": "data.compression.bzip2.uncompress",
+					"icon": "open_in_full",
+					"preset": [
+						{
+							"name": "None",
+							"argument": {
+								"container": "none",
+							},
+						},
+					],
+				},
+				{
+					"identifier": "data.compression.lzma1.compress",
+					"icon": "close_fullscreen",
+					"preset": [
+						{
+							"name": "Alone",
+							"argument": {
+								"container": "alone",
+							},
+						},
+					],
+				},
+				{
+					"identifier": "data.compression.lzma1.uncompress",
+					"icon": "open_in_full",
+					"preset": [
+						{
+							"name": "Alone",
+							"argument": {
+								"container": "alone",
+							},
+						},
+					],
+				},
+				{
+					"identifier": "data.compression.lzma2.compress",
+					"icon": "close_fullscreen",
+					"preset": [
+						{
+							"name": "XZ",
+							"argument": {
+								"container": "xz",
+							},
+						},
+					],
+				},
+				{
+					"identifier": "data.compression.lzma2.uncompress",
+					"icon": "open_in_full",
+					"preset": [
+						{
+							"name": "XZ",
+							"argument": {
+								"container": "xz",
+							},
+						},
+					],
+				},
+				{
+					"identifier": "data.compression.lz4.compress",
+					"icon": "close_fullscreen",
+					"preset": [
+						{
+							"name": "None",
+							"argument": {
+								"container": "none",
+							},
+						},
+					],
+				},
+				{
+					"identifier": "data.compression.lz4.uncompress",
+					"icon": "open_in_full",
+					"preset": [
+						{
+							"name": "None",
+							"argument": {
+								"container": "none",
+							},
+						},
+					],
+				},
+				{
+					"identifier": "data.compression.lzo.compress",
+					"icon": "close_fullscreen",
+					"preset": [
+						{
+							"name": "None",
+							"argument": {
+								"container": "none",
+							},
+						},
+					],
+				},
+				{
+					"identifier": "data.compression.lzo.uncompress",
+					"icon": "open_in_full",
+					"preset": [
+						{
+							"name": "None",
+							"argument": {
+								"container": "none",
+							},
+						},
+					],
+				},
+				{
+					"identifier": "data.compression.brotli.compress",
+					"icon": "close_fullscreen",
+					"preset": [
+						{
+							"name": "None",
+							"argument": {
+								"container": "none",
+							},
+						},
+					],
+				},
+				{
+					"identifier": "data.compression.brotli.uncompress",
+					"icon": "open_in_full",
+					"preset": [
+						{
+							"name": "None",
+							"argument": {
+								"container": "none",
+							},
+						},
+					],
+				},
+				{
+					"identifier": "data.compression.snappy.compress",
+					"icon": "close_fullscreen",
+					"preset": [
+						{
+							"name": "None",
+							"argument": {
+								"container": "none",
+							},
+						},
+					],
+				},
+				{
+					"identifier": "data.compression.snappy.uncompress",
+					"icon": "open_in_full",
+					"preset": [
+						{
+							"name": "None",
+							"argument": {
+								"container": "none",
+							},
+						},
+					],
+				},
+				{
+					"identifier": "data.compression.zstd.compress",
+					"icon": "close_fullscreen",
+					"preset": [
+						{
+							"name": "None",
+							"argument": {
+								"container": "none",
+							},
+						},
+					],
+				},
+				{
+					"identifier": "data.compression.zstd.uncompress",
+					"icon": "open_in_full",
+					"preset": [
+						{
+							"name": "None",
+							"argument": {
+								"container": "none",
+							},
+						},
+					],
+				},
+			],
+		},
+		{
+			"identifier": "data.differentiation",
+			"icon": "draft",
+			"item": [
+				{
+					"identifier": "data.differentiation.vcdiff.encode",
+					"icon": "skip_next",
+					"preset": [
+					],
+				},
+				{
+					"identifier": "data.differentiation.vcdiff.decode",
+					"icon": "skip_previous",
+					"preset": [
+					],
+				},
+			],
+		},
+		{
+			"identifier": "notation.json",
+			"icon": "description",
+			"item": [
+				{
+					"identifier": "notation.json.format",
+					"icon": "format_list_bulleted",
+					"preset": [
+						{
+							"name": "Enable Trailing Comma | Enable Line Breaking",
+							"argument": {
+								"disable_array_trailing_comma": false,
+								"disable_array_line_breaking": false,
+								"disable_object_trailing_comma": false,
+								"disable_object_line_breaking": false,
+							},
+						},
+						{
+							"name": "Enable Trailing Comma | Disable Line Breaking",
+							"argument": {
+								"disable_array_trailing_comma": false,
+								"disable_array_line_breaking": true,
+								"disable_object_trailing_comma": false,
+								"disable_object_line_breaking": true,
+							},
+						},
+						null,
+						{
+							"name": "Disable Trailing Comma | Enable Line Breaking",
+							"argument": {
+								"disable_array_trailing_comma": true,
+								"disable_array_line_breaking": false,
+								"disable_object_trailing_comma": true,
+								"disable_object_line_breaking": false,
+							},
+						},
+						{
+							"name": "Disable Trailing Comma | Disable Line Breaking",
+							"argument": {
+								"disable_array_trailing_comma": true,
+								"disable_array_line_breaking": true,
+								"disable_object_trailing_comma": true,
+								"disable_object_line_breaking": true,
+							},
+						},
+					],
+				},
+			],
+		},
+		{
+			"identifier": "notation.xml",
+			"icon": "description",
+			"item": [
+				{
+					"identifier": "notation.xml.format",
+					"icon": "format_list_bulleted",
+					"preset": [
+					],
+				},
+			],
+		},
+		{
+			"identifier": "texture.transformation",
+			"icon": "imagesmode",
+			"item": [
+				{
+					"identifier": "texture.transformation.filling.encode",
+					"icon": "format_color_fill",
+					"preset": [
+						{
+							"name": "Opacity",
+							"argument": {
+								"fill_red": -1,
+								"fill_green": -1,
+								"fill_blue": -1,
+								"fill_alpha": 255,
+							},
+						},
+					],
+				},
+				{
+					"identifier": "texture.transformation.flipping.encode",
+					"icon": "settings_backup_restore",
+					"preset": [
+						{
+							"name": "Horizontal",
+							"argument": {
+								"flip_horizontal": true,
+								"flip_vertical": false,
+							},
+						},
+						{
+							"name": "Vertical",
+							"argument": {
+								"flip_horizontal": false,
+								"flip_vertical": true,
+							},
+						},
+						{
+							"name": "Both",
+							"argument": {
+								"flip_horizontal": true,
+								"flip_vertical": true,
+							},
+						},
+					],
+				},
+				{
+					"identifier": "texture.transformation.rotating.encode",
+					"icon": "rotate_90_degrees_cw",
+					"preset": [
+						{
+							"name": "90",
+							"argument": {
+								"rotate_90": true,
+								"rotate_180": false,
+							},
+						},
+						{
+							"name": "180",
+							"argument": {
+								"rotate_90": false,
+								"rotate_180": true,
+							},
+						},
+						{
+							"name": "270",
+							"argument": {
+								"rotate_90": true,
+								"rotate_180": true,
+							},
+						},
+					],
+				},
+				{
+					"identifier": "texture.transformation.scaling.encode",
+					"icon": "branding_watermark",
+					"preset": [
+					],
+				},
+				{
+					"identifier": "texture.transformation.scaling.encode_rate",
+					"icon": "branding_watermark",
+					"preset": [
+						{
+							"name": "÷ 2",
+							"argument": {
+								"target_rate": 0.5,
+							},
+						},
+						{
+							"name": "× 2",
+							"argument": {
+								"target_rate": 2.0,
+							},
+						},
+					],
+				},
+				{
+					"identifier": "texture.transformation.tiling.encode",
+					"icon": "view_module",
+					"preset": [
+						{
+							"name": "32x32",
+							"argument": {
+								"tile_width": 32,
+								"tile_height": 32,
+							},
+						},
+					],
+				},
+				{
+					"identifier": "texture.transformation.tiling.decode",
+					"icon": "grid_3x3_off",
+					"preset": [
+						{
+							"name": "32x32",
+							"argument": {
+								"tile_width": 32,
+								"tile_height": 32,
+							},
+						},
+					],
+				},
+				{
+					"identifier": "texture.transformation.interleaving.encode",
+					"icon": "fit_page",
+					"preset": [
+					],
+				},
+				{
+					"identifier": "texture.transformation.interleaving.decode",
+					"icon": "fit_page_width",
+					"preset": [
+					],
+				},
+				{
+					"identifier": "texture.transformation.premultiplying.encode",
+					"icon": "texture_add",
+					"preset": [
+					],
+				},
+				{
+					"identifier": "texture.transformation.premultiplying.decode",
+					"icon": "texture_minus",
+					"preset": [
+					],
+				},
+			],
+		},
+		{
+			"identifier": "texture.encoding",
+			"icon": "imagesmode",
+			"item": [
+				{
+					"identifier": "texture.encoding.encode",
+					"icon": "skip_next",
+					"preset": [
+						{
+							"name": "A-8",
+							"argument": {
+								"format": "l,alpha:8",
+							},
+						},
+						null,
+						{
+							"name": "RGB-332",
+							"argument": {
+								"format": "l,red:3,green:3,blue:2",
+							},
+						},
+						{
+							"name": "RGB-565",
+							"argument": {
+								"format": "l,red:5,green:6,blue:5",
+							},
+						},
+						{
+							"name": "RGB-888",
+							"argument": {
+								"format": "l,red:8,green:8,blue:8",
+							},
+						},
+						null,
+						{
+							"name": "RGBA-5551",
+							"argument": {
+								"format": "l,red:5,green:5,blue:5,alpha:1",
+							},
+						},
+						{
+							"name": "RGBA-4444",
+							"argument": {
+								"format": "l,red:4,green:4,blue:4,alpha:4",
+							},
+						},
+						{
+							"name": "RGBA-8888",
+							"argument": {
+								"format": "l,red:8,green:8,blue:8,alpha:8",
+							},
+						},
+						null,
+						{
+							"name": "ARGB-1555",
+							"argument": {
+								"format": "l,alpha:1,red:5,green:5,blue:5",
+							},
+						},
+						{
+							"name": "ARGB-4444",
+							"argument": {
+								"format": "l,alpha:4,red:4,green:4,blue:4",
+							},
+						},
+						{
+							"name": "ARGB-8888",
+							"argument": {
+								"format": "l,alpha:8,red:8,green:8,blue:8",
+							},
+						},
+						null,
+						{
+							"name": "L-8",
+							"argument": {
+								"format": "l,luminance:8",
+							},
+						},
+						null,
+						{
+							"name": "LA-44",
+							"argument": {
+								"format": "l,luminance:4,alpha:4",
+							},
+						},
+						{
+							"name": "LA-88",
+							"argument": {
+								"format": "l,luminance:8,alpha:8",
+							},
+						},
+						null,
+						{
+							"name": "AL-44",
+							"argument": {
+								"format": "l,alpha:4,luminance:4",
+							},
+						},
+						{
+							"name": "AL-88",
+							"argument": {
+								"format": "l,alpha:8,luminance:8",
+							},
+						},
+						null,
+						{
+							"name": "RGB-888-BE",
+							"argument": {
+								"format": "b,red:8,green:8,blue:8",
+							},
+						},
+						{
+							"name": "RGBA-8888-BE",
+							"argument": {
+								"format": "b,red:8,green:8,blue:8,alpha:8",
+							},
+						},
+					],
+				},
+				{
+					"identifier": "texture.encoding.decode",
+					"icon": "skip_previous",
+					"preset": [
+						{
+							"name": "A-8",
+							"argument": {
+								"format": "l,alpha:8",
+							},
+						},
+						null,
+						{
+							"name": "RGB-332",
+							"argument": {
+								"format": "l,red:3,green:3,blue:2",
+							},
+						},
+						{
+							"name": "RGB-565",
+							"argument": {
+								"format": "l,red:5,green:6,blue:5",
+							},
+						},
+						{
+							"name": "RGB-888",
+							"argument": {
+								"format": "l,red:8,green:8,blue:8",
+							},
+						},
+						null,
+						{
+							"name": "RGBA-5551",
+							"argument": {
+								"format": "l,red:5,green:5,blue:5,alpha:1",
+							},
+						},
+						{
+							"name": "RGBA-4444",
+							"argument": {
+								"format": "l,red:4,green:4,blue:4,alpha:4",
+							},
+						},
+						{
+							"name": "RGBA-8888",
+							"argument": {
+								"format": "l,red:8,green:8,blue:8,alpha:8",
+							},
+						},
+						null,
+						{
+							"name": "ARGB-1555",
+							"argument": {
+								"format": "l,alpha:1,red:5,green:5,blue:5",
+							},
+						},
+						{
+							"name": "ARGB-4444",
+							"argument": {
+								"format": "l,alpha:4,red:4,green:4,blue:4",
+							},
+						},
+						{
+							"name": "ARGB-8888",
+							"argument": {
+								"format": "l,alpha:8,red:8,green:8,blue:8",
+							},
+						},
+						null,
+						{
+							"name": "L-8",
+							"argument": {
+								"format": "l,luminance:8",
+							},
+						},
+						null,
+						{
+							"name": "LA-44",
+							"argument": {
+								"format": "l,luminance:4,alpha:4",
+							},
+						},
+						{
+							"name": "LA-88",
+							"argument": {
+								"format": "l,luminance:8,alpha:8",
+							},
+						},
+						null,
+						{
+							"name": "AL-44",
+							"argument": {
+								"format": "l,alpha:4,luminance:4",
+							},
+						},
+						{
+							"name": "AL-88",
+							"argument": {
+								"format": "l,alpha:8,luminance:8",
+							},
+						},
+						null,
+						{
+							"name": "RGB-888-BE",
+							"argument": {
+								"format": "b,red:8,green:8,blue:8",
+							},
+						},
+						{
+							"name": "RGBA-8888-BE",
+							"argument": {
+								"format": "b,red:8,green:8,blue:8,alpha:8",
+							},
+						},
+					],
+				},
+			],
+		},
+		{
+			"identifier": "texture.compression",
+			"icon": "imagesmode",
+			"item": [
+				{
+					"identifier": "texture.compression.compress",
+					"icon": "close_fullscreen",
+					"preset": [
+						{
+							"name": "RGB-DXTC1",
+							"argument": {
+								"format": "rgb_dxtc1",
+							},
+						},
+						{
+							"name": "RGBA-DXTC1",
+							"argument": {
+								"format": "rgba_dxtc1",
+							},
+						},
+						{
+							"name": "RGBA-DXTC3",
+							"argument": {
+								"format": "rgba_dxtc3",
+							},
+						},
+						{
+							"name": "RGBA-DXTC3-P",
+							"argument": {
+								"format": "rgba_dxtc3_p",
+							},
+						},
+						{
+							"name": "RGBA-DXTC5",
+							"argument": {
+								"format": "rgba_dxtc5",
+							},
+						},
+						{
+							"name": "RGBA-DXTC5-P",
+							"argument": {
+								"format": "rgba_dxtc5_p",
+							},
+						},
+						null,
+						{
+							"name": "RGB-PVRTC1-4BPP",
+							"argument": {
+								"format": "rgb_pvrtc1_4bpp",
+							},
+						},
+						{
+							"name": "RGBA-PVRTC1-4BPP",
+							"argument": {
+								"format": "rgba_pvrtc1_4bpp",
+							},
+						},
+						null,
+						{
+							"name": "RGB-ETC1",
+							"argument": {
+								"format": "rgb_etc1",
+							},
+						},
+						{
+							"name": "RGB-ETC2",
+							"argument": {
+								"format": "rgb_etc2",
+							},
+						},
+						{
+							"name": "RGBA-ETC2-EAC",
+							"argument": {
+								"format": "rgba_etc2_eac",
+							},
+						},
+						{
+							"name": "R-EAC",
+							"argument": {
+								"format": "r_eac",
+							},
+						},
+						{
+							"name": "RG-EAC",
+							"argument": {
+								"format": "rg_eac",
+							},
+						},
+						null,
+						{
+							"name": "RGBA-ASTC-4x4",
+							"argument": {
+								"format": "rgba_astc_4x4",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-5x4",
+							"argument": {
+								"format": "rgba_astc_5x4",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-5x5",
+							"argument": {
+								"format": "rgba_astc_5x5",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-6x5",
+							"argument": {
+								"format": "rgba_astc_6x5",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-6x6",
+							"argument": {
+								"format": "rgba_astc_6x6",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-8x5",
+							"argument": {
+								"format": "rgba_astc_8x5",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-8x6",
+							"argument": {
+								"format": "rgba_astc_8x6",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-8x8",
+							"argument": {
+								"format": "rgba_astc_8x8",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-10x5",
+							"argument": {
+								"format": "rgba_astc_10x5",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-10x6",
+							"argument": {
+								"format": "rgba_astc_10x6",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-10x8",
+							"argument": {
+								"format": "rgba_astc_10x8",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-10x10",
+							"argument": {
+								"format": "rgba_astc_10x10",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-12x10",
+							"argument": {
+								"format": "rgba_astc_12x10",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-12x12",
+							"argument": {
+								"format": "rgba_astc_12x12",
+							},
+						},
+					],
+				},
+				{
+					"identifier": "texture.compression.uncompress",
+					"icon": "open_in_full",
+					"preset": [
+						{
+							"name": "RGB-DXTC1",
+							"argument": {
+								"format": "rgb_dxtc1",
+							},
+						},
+						{
+							"name": "RGBA-DXTC1",
+							"argument": {
+								"format": "rgba_dxtc1",
+							},
+						},
+						{
+							"name": "RGBA-DXTC3",
+							"argument": {
+								"format": "rgba_dxtc3",
+							},
+						},
+						{
+							"name": "RGBA-DXTC3-P",
+							"argument": {
+								"format": "rgba_dxtc3_p",
+							},
+						},
+						{
+							"name": "RGBA-DXTC5",
+							"argument": {
+								"format": "rgba_dxtc5",
+							},
+						},
+						{
+							"name": "RGBA-DXTC5-P",
+							"argument": {
+								"format": "rgba_dxtc5_p",
+							},
+						},
+						null,
+						{
+							"name": "RGB-PVRTC1-4BPP",
+							"argument": {
+								"format": "rgb_pvrtc1_4bpp",
+							},
+						},
+						{
+							"name": "RGBA-PVRTC1-4BPP",
+							"argument": {
+								"format": "rgba_pvrtc1_4bpp",
+							},
+						},
+						null,
+						{
+							"name": "RGB-ETC1",
+							"argument": {
+								"format": "rgb_etc1",
+							},
+						},
+						{
+							"name": "RGB-ETC2",
+							"argument": {
+								"format": "rgb_etc2",
+							},
+						},
+						{
+							"name": "RGBA-ETC2-EAC",
+							"argument": {
+								"format": "rgba_etc2_eac",
+							},
+						},
+						{
+							"name": "R-EAC",
+							"argument": {
+								"format": "r_eac",
+							},
+						},
+						{
+							"name": "RG-EAC",
+							"argument": {
+								"format": "rg_eac",
+							},
+						},
+						null,
+						{
+							"name": "RGBA-ASTC-4x4",
+							"argument": {
+								"format": "rgba_astc_4x4",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-5x4",
+							"argument": {
+								"format": "rgba_astc_5x4",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-5x5",
+							"argument": {
+								"format": "rgba_astc_5x5",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-6x5",
+							"argument": {
+								"format": "rgba_astc_6x5",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-6x6",
+							"argument": {
+								"format": "rgba_astc_6x6",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-8x5",
+							"argument": {
+								"format": "rgba_astc_8x5",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-8x6",
+							"argument": {
+								"format": "rgba_astc_8x6",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-8x8",
+							"argument": {
+								"format": "rgba_astc_8x8",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-10x5",
+							"argument": {
+								"format": "rgba_astc_10x5",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-10x6",
+							"argument": {
+								"format": "rgba_astc_10x6",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-10x8",
+							"argument": {
+								"format": "rgba_astc_10x8",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-10x10",
+							"argument": {
+								"format": "rgba_astc_10x10",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-12x10",
+							"argument": {
+								"format": "rgba_astc_12x10",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-12x12",
+							"argument": {
+								"format": "rgba_astc_12x12",
+							},
+						},
+					],
+				},
+			],
+		},
+		{
+			"identifier": "texture.atlas",
+			"icon": "imagesmode",
+			"item": [
+				{
+					"identifier": "texture.atlas.pack",
+					"icon": "inventory_2",
+					"preset": [
+					],
+				},
+				{
+					"identifier": "texture.atlas.unpack",
+					"icon": "orders",
+					"preset": [
+					],
+				},
+				{
+					"identifier": "texture.atlas.pack_automatic",
+					"icon": "inventory_2",
+					"preset": [
+					],
+				},
+			],
+		},
+		{
+			"identifier": "wwise.media",
+			"icon": "genres",
+			"item": [
+				{
+					"identifier": "wwise.media.encode",
+					"icon": "skip_next",
+					"preset": [
+						{
+							"name": "PCM",
+							"argument": {
+								"format": "pcm",
+							},
+						},
+						{
+							"name": "ADPCM",
+							"argument": {
+								"format": "adpcm",
+							},
+						},
+						{
+							"name": "Vorbis",
+							"argument": {
+								"format": "vorbis",
+							},
+						},
+						{
+							"name": "AAC",
+							"argument": {
+								"format": "aac",
+							},
+						},
+						{
+							"name": "Opus",
+							"argument": {
+								"format": "opus",
+							},
+						},
+						{
+							"name": "WEMOpus",
+							"argument": {
+								"format": "wemopus",
+							},
+						},
+					],
+				},
+				{
+					"identifier": "wwise.media.decode",
+					"icon": "skip_previous",
+					"preset": [
+					],
+				},
+			],
+		},
+		{
+			"identifier": "wwise.sound_bank",
+			"icon": "genres",
+			"item": [
+				{
+					"identifier": "wwise.sound_bank.encode",
+					"icon": "skip_next",
+					"preset": [
+						{
+							"name": "72",
+							"argument": {
+								"version_number": 72,
+							},
+						},
+						{
+							"name": "88",
+							"argument": {
+								"version_number": 88,
+							},
+						},
+						{
+							"name": "112",
+							"argument": {
+								"version_number": 112,
+							},
+						},
+						{
+							"name": "113",
+							"argument": {
+								"version_number": 113,
+							},
+						},
+						{
+							"name": "118",
+							"argument": {
+								"version_number": 118,
+							},
+						},
+						{
+							"name": "120",
+							"argument": {
+								"version_number": 120,
+							},
+						},
+						{
+							"name": "125",
+							"argument": {
+								"version_number": 125,
+							},
+						},
+						{
+							"name": "128",
+							"argument": {
+								"version_number": 128,
+							},
+						},
+						{
+							"name": "132",
+							"argument": {
+								"version_number": 132,
+							},
+						},
+						{
+							"name": "134",
+							"argument": {
+								"version_number": 134,
+							},
+						},
+						{
+							"name": "135",
+							"argument": {
+								"version_number": 135,
+							},
+						},
+						{
+							"name": "140",
+							"argument": {
+								"version_number": 140,
+							},
+						},
+						{
+							"name": "145",
+							"argument": {
+								"version_number": 145,
+							},
+						},
+						{
+							"name": "150",
+							"argument": {
+								"version_number": 150,
+							},
+						},
+					],
+				},
+				{
+					"identifier": "wwise.sound_bank.decode",
+					"icon": "skip_previous",
+					"preset": [
+						{
+							"name": "72",
+							"argument": {
+								"version_number": 72,
+							},
+						},
+						{
+							"name": "88",
+							"argument": {
+								"version_number": 88,
+							},
+						},
+						{
+							"name": "112",
+							"argument": {
+								"version_number": 112,
+							},
+						},
+						{
+							"name": "113",
+							"argument": {
+								"version_number": 113,
+							},
+						},
+						{
+							"name": "118",
+							"argument": {
+								"version_number": 118,
+							},
+						},
+						{
+							"name": "120",
+							"argument": {
+								"version_number": 120,
+							},
+						},
+						{
+							"name": "125",
+							"argument": {
+								"version_number": 125,
+							},
+						},
+						{
+							"name": "128",
+							"argument": {
+								"version_number": 128,
+							},
+						},
+						{
+							"name": "132",
+							"argument": {
+								"version_number": 132,
+							},
+						},
+						{
+							"name": "134",
+							"argument": {
+								"version_number": 134,
+							},
+						},
+						{
+							"name": "135",
+							"argument": {
+								"version_number": 135,
+							},
+						},
+						{
+							"name": "140",
+							"argument": {
+								"version_number": 140,
+							},
+						},
+						{
+							"name": "145",
+							"argument": {
+								"version_number": 145,
+							},
+						},
+						{
+							"name": "150",
+							"argument": {
+								"version_number": 150,
+							},
+						},
+					],
+				},
+			],
+		},
+		{
+			"identifier": "marmalade.dzip",
+			"icon": "deployed_code",
+			"item": [
+				{
+					"identifier": "marmalade.dzip.pack",
+					"icon": "inventory_2",
+					"preset": [
+						{
+							"name": "0",
+							"argument": {
+								"version_number": 0,
+							},
+						},
+					],
+				},
+				{
+					"identifier": "marmalade.dzip.unpack",
+					"icon": "orders",
+					"preset": [
+						{
+							"name": "0",
+							"argument": {
+								"version_number": 0,
+							},
+						},
+					],
+				},
+				{
+					"identifier": "marmalade.dzip.pack_automatic",
+					"icon": "inventory_2",
+					"preset": [
+						{
+							"name": "0",
+							"argument": {
+								"version_number": 0,
+							},
+						},
+					],
+				},
+			],
+		},
+		{
+			"identifier": "popcap.zlib",
+			"icon": "folder_zip",
+			"item": [
+				{
+					"identifier": "popcap.zlib.compress",
+					"icon": "close_fullscreen",
+					"preset": [
+						{
+							"name": "32",
+							"argument": {
+								"version_variant_64": false,
+							},
+						},
+						{
+							"name": "64",
+							"argument": {
+								"version_variant_64": true,
+							},
+						},
+					],
+				},
+				{
+					"identifier": "popcap.zlib.uncompress",
+					"icon": "open_in_full",
+					"preset": [
+						{
+							"name": "32",
+							"argument": {
+								"version_variant_64": false,
+							},
+						},
+						{
+							"name": "64",
+							"argument": {
+								"version_variant_64": true,
+							},
+						},
+					],
+				},
+			],
+		},
+		{
+			"identifier": "popcap.crypt_data",
+			"icon": "folder_zip",
+			"item": [
+				{
+					"identifier": "popcap.crypt_data.encrypt",
+					"icon": "lock",
+					"preset": [
+					],
+				},
+				{
+					"identifier": "popcap.crypt_data.decrypt",
+					"icon": "key",
+					"preset": [
+					],
+				},
+			],
+		},
+		{
+			"identifier": "popcap.reflection_object_notation",
+			"icon": "description",
+			"item": [
+				{
+					"identifier": "popcap.reflection_object_notation.encode",
+					"icon": "skip_next",
+					"preset": [
+						{
+							"name": "1 | E-ASCII",
+							"argument": {
+								"version_number": 1,
+								"version_native_string_encoding_use_utf8": false,
+							},
+						},
+						{
+							"name": "1 | UTF-8",
+							"argument": {
+								"version_number": 1,
+								"version_native_string_encoding_use_utf8": true,
+							},
+						},
+					],
+				},
+				{
+					"identifier": "popcap.reflection_object_notation.decode",
+					"icon": "skip_previous",
+					"preset": [
+						{
+							"name": "1 | E-ASCII",
+							"argument": {
+								"version_number": 1,
+								"version_native_string_encoding_use_utf8": false,
+							},
+						},
+						{
+							"name": "1 | UTF-8",
+							"argument": {
+								"version_number": 1,
+								"version_native_string_encoding_use_utf8": true,
+							},
+						},
+					],
+				},
+				{
+					"identifier": "popcap.reflection_object_notation.encrypt",
+					"icon": "lock",
+					"preset": [
+					],
+				},
+				{
+					"identifier": "popcap.reflection_object_notation.decrypt",
+					"icon": "key",
+					"preset": [
+					],
+				},
+				{
+					"identifier": "popcap.reflection_object_notation.encode_cipher",
+					"icon": "skip_next",
+					"preset": [
+						{
+							"name": "1 | E-ASCII",
+							"argument": {
+								"version_number": 1,
+								"version_native_string_encoding_use_utf8": false,
+							},
+						},
+						{
+							"name": "1 | UTF-8",
+							"argument": {
+								"version_number": 1,
+								"version_native_string_encoding_use_utf8": true,
+							},
+						},
+					],
+				},
+				{
+					"identifier": "popcap.reflection_object_notation.decode_cipher",
+					"icon": "skip_previous",
+					"preset": [
+						{
+							"name": "1 | E-ASCII",
+							"argument": {
+								"version_number": 1,
+								"version_native_string_encoding_use_utf8": false,
+							},
+						},
+						{
+							"name": "1 | UTF-8",
+							"argument": {
+								"version_number": 1,
+								"version_native_string_encoding_use_utf8": true,
+							},
+						},
+					],
+				},
+			],
+		},
+		{
+			"identifier": "popcap.texture",
+			"icon": "imagesmode",
+			"item": [
+				{
+					"identifier": "popcap.texture.encode",
+					"icon": "skip_next",
+					"preset": [
+						{
+							"name": "RGBA-8888",
+							"argument": {
+								"format": "rgba_8888_o",
+							},
+						},
+						{
+							"name": "ARGB-8888",
+							"argument": {
+								"format": "argb_8888",
+							},
+						},
+						null,
+						{
+							"name": "RGBA-4444",
+							"argument": {
+								"format": "rgba_4444",
+							},
+						},
+						{
+							"name": "RGBA-565",
+							"argument": {
+								"format": "rgb_565",
+							},
+						},
+						{
+							"name": "RGBA-5551",
+							"argument": {
+								"format": "rgba_5551",
+							},
+						},
+						null,
+						{
+							"name": "RGBA-4444-T",
+							"argument": {
+								"format": "rgba_4444_tiled",
+							},
+						},
+						{
+							"name": "RGBA-565-T",
+							"argument": {
+								"format": "rgb_565_tiled",
+							},
+						},
+						{
+							"name": "RGBA-5551-T",
+							"argument": {
+								"format": "rgba_5551_tiled",
+							},
+						},
+						null,
+						{
+							"name": "RGBA-PVRTC1-4",
+							"argument": {
+								"format": "rgba_pvrtc1_4bpp",
+							},
+						},
+						{
+							"name": "RGB-PVRTC1-4 + A-8",
+							"argument": {
+								"format": "rgb_pvrtc1_4bpp_a_8",
+							},
+						},
+						null,
+						{
+							"name": "RGB-ETC1 + A-8",
+							"argument": {
+								"format": "rgb_etc1_a_8",
+							},
+						},
+						{
+							"name": "RGB-ETC1 + A-P",
+							"argument": {
+								"format": "rgb_etc1_a_palette",
+							},
+						},
+						null,
+						{
+							"name": "RGBA-ASTC-4x4",
+							"argument": {
+								"format": "rgba_astc_4x4",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-5x5",
+							"argument": {
+								"format": "rgba_astc_5x5",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-6x6",
+							"argument": {
+								"format": "rgba_astc_6x6",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-8x8",
+							"argument": {
+								"format": "rgba_astc_8x8",
+							},
+						},
+					],
+				},
+				{
+					"identifier": "popcap.texture.decode",
+					"icon": "skip_previous",
+					"preset": [
+						{
+							"name": "RGBA-8888",
+							"argument": {
+								"format": "rgba_8888_o",
+							},
+						},
+						{
+							"name": "ARGB-8888",
+							"argument": {
+								"format": "argb_8888",
+							},
+						},
+						null,
+						{
+							"name": "RGBA-4444",
+							"argument": {
+								"format": "rgba_4444",
+							},
+						},
+						{
+							"name": "RGBA-565",
+							"argument": {
+								"format": "rgb_565",
+							},
+						},
+						{
+							"name": "RGBA-5551",
+							"argument": {
+								"format": "rgba_5551",
+							},
+						},
+						null,
+						{
+							"name": "RGBA-4444-T",
+							"argument": {
+								"format": "rgba_4444_tiled",
+							},
+						},
+						{
+							"name": "RGBA-565-T",
+							"argument": {
+								"format": "rgb_565_tiled",
+							},
+						},
+						{
+							"name": "RGBA-5551-T",
+							"argument": {
+								"format": "rgba_5551_tiled",
+							},
+						},
+						null,
+						{
+							"name": "RGBA-PVRTC1-4",
+							"argument": {
+								"format": "rgba_pvrtc1_4bpp",
+							},
+						},
+						{
+							"name": "RGB-PVRTC1-4 + A-8",
+							"argument": {
+								"format": "rgb_pvrtc1_4bpp_a_8",
+							},
+						},
+						null,
+						{
+							"name": "RGB-ETC1 + A-8",
+							"argument": {
+								"format": "rgb_etc1_a_8",
+							},
+						},
+						{
+							"name": "RGB-ETC1 + A-P",
+							"argument": {
+								"format": "rgb_etc1_a_palette",
+							},
+						},
+						null,
+						{
+							"name": "RGBA-ASTC-4x4",
+							"argument": {
+								"format": "rgba_astc_4x4",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-5x5",
+							"argument": {
+								"format": "rgba_astc_5x5",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-6x6",
+							"argument": {
+								"format": "rgba_astc_6x6",
+							},
+						},
+						{
+							"name": "RGBA-ASTC-8x8",
+							"argument": {
+								"format": "rgba_astc_8x8",
+							},
+						},
+					],
+				},
+			],
+		},
+		{
+			"identifier": "popcap.u_texture",
+			"icon": "imagesmode",
+			"item": [
+				{
+					"identifier": "popcap.u_texture.encode",
+					"icon": "skip_next",
+					"preset": [
+						{
+							"name": "Original | RGBA-8888",
+							"argument": {
+								"version_compress_texture_data": false,
+								"format": "rgba_8888_o",
+							},
+						},
+						{
+							"name": "Original | RGBA-4444",
+							"argument": {
+								"version_compress_texture_data": false,
+								"format": "rgba_4444",
+							},
+						},
+						{
+							"name": "Original | RGBA-5551",
+							"argument": {
+								"version_compress_texture_data": false,
+								"format": "rgba_5551",
+							},
+						},
+						{
+							"name": "Original | RGB-565",
+							"argument": {
+								"version_compress_texture_data": false,
+								"format": "rgb_565",
+							},
+						},
+						null,
+						{
+							"name": "Compressed | RGBA-8888",
+							"argument": {
+								"version_compress_texture_data": true,
+								"format": "rgba_8888_o",
+							},
+						},
+						{
+							"name": "Compressed | RGBA-4444",
+							"argument": {
+								"version_compress_texture_data": true,
+								"format": "rgba_4444",
+							},
+						},
+						{
+							"name": "Compressed | RGBA-5551",
+							"argument": {
+								"version_compress_texture_data": true,
+								"format": "rgba_5551",
+							},
+						},
+						{
+							"name": "Compressed | RGB-565",
+							"argument": {
+								"version_compress_texture_data": true,
+								"format": "rgb_565",
+							},
+						},
+					],
+				},
+				{
+					"identifier": "popcap.u_texture.decode",
+					"icon": "skip_previous",
+					"preset": [
+						{
+							"name": "Original | RGBA-8888",
+							"argument": {
+								"version_compress_texture_data": false,
+								"format": "rgba_8888_o",
+							},
+						},
+						{
+							"name": "Original | RGBA-4444",
+							"argument": {
+								"version_compress_texture_data": false,
+								"format": "rgba_4444",
+							},
+						},
+						{
+							"name": "Original | RGBA-5551",
+							"argument": {
+								"version_compress_texture_data": false,
+								"format": "rgba_5551",
+							},
+						},
+						{
+							"name": "Original | RGB-565",
+							"argument": {
+								"version_compress_texture_data": false,
+								"format": "rgb_565",
+							},
+						},
+						null,
+						{
+							"name": "Compressed | RGBA-8888",
+							"argument": {
+								"version_compress_texture_data": true,
+								"format": "rgba_8888_o",
+							},
+						},
+						{
+							"name": "Compressed | RGBA-4444",
+							"argument": {
+								"version_compress_texture_data": true,
+								"format": "rgba_4444",
+							},
+						},
+						{
+							"name": "Compressed | RGBA-5551",
+							"argument": {
+								"version_compress_texture_data": true,
+								"format": "rgba_5551",
+							},
+						},
+						{
+							"name": "Compressed | RGB-565",
+							"argument": {
+								"version_compress_texture_data": true,
+								"format": "rgb_565",
+							},
+						},
+					],
+				},
+			],
+		},
+		{
+			"identifier": "popcap.sexy_texture",
+			"icon": "imagesmode",
+			"item": [
+				{
+					"identifier": "popcap.sexy_texture.encode",
+					"icon": "skip_next",
+					"preset": [
+						{
+							"name": "0 | Original | ARGB-8888",
+							"argument": {
+								"version_number": 0,
+								"compress_texture_data": false,
+								"format": "argb_8888",
+							},
+						},
+						{
+							"name": "0 | Original | ARGB-4444",
+							"argument": {
+								"version_number": 0,
+								"compress_texture_data": false,
+								"format": "argb_4444",
+							},
+						},
+						{
+							"name": "0 | Original | ARGB-1555",
+							"argument": {
+								"version_number": 0,
+								"compress_texture_data": false,
+								"format": "argb_1555",
+							},
+						},
+						{
+							"name": "0 | Original | RGB-565",
+							"argument": {
+								"version_number": 0,
+								"compress_texture_data": false,
+								"format": "rgb_565",
+							},
+						},
+						{
+							"name": "0 | Original | RGBA-8888",
+							"argument": {
+								"version_number": 0,
+								"compress_texture_data": false,
+								"format": "rgba_8888_o",
+							},
+						},
+						{
+							"name": "0 | Original | RGBA-4444",
+							"argument": {
+								"version_number": 0,
+								"compress_texture_data": false,
+								"format": "rgba_4444",
+							},
+						},
+						{
+							"name": "0 | Original | RGBA-5551",
+							"argument": {
+								"version_number": 0,
+								"compress_texture_data": false,
+								"format": "rgba_5551",
+							},
+						},
+						{
+							"name": "0 | Original | LA-88",
+							"argument": {
+								"version_number": 0,
+								"compress_texture_data": false,
+								"format": "la_88",
+							},
+						},
+						null,
+						{
+							"name": "0 | Compressed | ARGB-8888",
+							"argument": {
+								"version_number": 0,
+								"compress_texture_data": true,
+								"format": "argb_8888",
+							},
+						},
+						{
+							"name": "0 | Compressed | ARGB-4444",
+							"argument": {
+								"version_number": 0,
+								"compress_texture_data": true,
+								"format": "argb_4444",
+							},
+						},
+						{
+							"name": "0 | Compressed | ARGB-1555",
+							"argument": {
+								"version_number": 0,
+								"compress_texture_data": true,
+								"format": "argb_1555",
+							},
+						},
+						{
+							"name": "0 | Compressed | RGB-565",
+							"argument": {
+								"version_number": 0,
+								"compress_texture_data": true,
+								"format": "rgb_565",
+							},
+						},
+						{
+							"name": "0 | Compressed | RGBA-8888",
+							"argument": {
+								"version_number": 0,
+								"compress_texture_data": true,
+								"format": "rgba_8888_o",
+							},
+						},
+						{
+							"name": "0 | Compressed | RGBA-4444",
+							"argument": {
+								"version_number": 0,
+								"compress_texture_data": true,
+								"format": "rgba_4444",
+							},
+						},
+						{
+							"name": "0 | Compressed | RGBA-5551",
+							"argument": {
+								"version_number": 0,
+								"compress_texture_data": true,
+								"format": "rgba_5551",
+							},
+						},
+						{
+							"name": "0 | Compressed | LA-88",
+							"argument": {
+								"version_number": 0,
+								"compress_texture_data": true,
+								"format": "la_88",
+							},
+						},
+					],
+				},
+				{
+					"identifier": "popcap.sexy_texture.decode",
+					"icon": "skip_previous",
+					"preset": [
+						{
+							"name": "0 | Original | ARGB-8888",
+							"argument": {
+								"version_number": 0,
+								"compress_texture_data": false,
+								"format": "argb_8888",
+							},
+						},
+						{
+							"name": "0 | Original | ARGB-4444",
+							"argument": {
+								"version_number": 0,
+								"compress_texture_data": false,
+								"format": "argb_4444",
+							},
+						},
+						{
+							"name": "0 | Original | ARGB-1555",
+							"argument": {
+								"version_number": 0,
+								"compress_texture_data": false,
+								"format": "argb_1555",
+							},
+						},
+						{
+							"name": "0 | Original | RGB-565",
+							"argument": {
+								"version_number": 0,
+								"compress_texture_data": false,
+								"format": "rgb_565",
+							},
+						},
+						{
+							"name": "0 | Original | RGBA-8888",
+							"argument": {
+								"version_number": 0,
+								"compress_texture_data": false,
+								"format": "rgba_8888_o",
+							},
+						},
+						{
+							"name": "0 | Original | RGBA-4444",
+							"argument": {
+								"version_number": 0,
+								"compress_texture_data": false,
+								"format": "rgba_4444",
+							},
+						},
+						{
+							"name": "0 | Original | RGBA-5551",
+							"argument": {
+								"version_number": 0,
+								"compress_texture_data": false,
+								"format": "rgba_5551",
+							},
+						},
+						{
+							"name": "0 | Original | LA-88",
+							"argument": {
+								"version_number": 0,
+								"compress_texture_data": false,
+								"format": "la_88",
+							},
+						},
+						null,
+						{
+							"name": "0 | Compressed | ARGB-8888",
+							"argument": {
+								"version_number": 0,
+								"compress_texture_data": true,
+								"format": "argb_8888",
+							},
+						},
+						{
+							"name": "0 | Compressed | ARGB-4444",
+							"argument": {
+								"version_number": 0,
+								"compress_texture_data": true,
+								"format": "argb_4444",
+							},
+						},
+						{
+							"name": "0 | Compressed | ARGB-1555",
+							"argument": {
+								"version_number": 0,
+								"compress_texture_data": true,
+								"format": "argb_1555",
+							},
+						},
+						{
+							"name": "0 | Compressed | RGB-565",
+							"argument": {
+								"version_number": 0,
+								"compress_texture_data": true,
+								"format": "rgb_565",
+							},
+						},
+						{
+							"name": "0 | Compressed | RGBA-8888",
+							"argument": {
+								"version_number": 0,
+								"compress_texture_data": true,
+								"format": "rgba_8888_o",
+							},
+						},
+						{
+							"name": "0 | Compressed | RGBA-4444",
+							"argument": {
+								"version_number": 0,
+								"compress_texture_data": true,
+								"format": "rgba_4444",
+							},
+						},
+						{
+							"name": "0 | Compressed | RGBA-5551",
+							"argument": {
+								"version_number": 0,
+								"compress_texture_data": true,
+								"format": "rgba_5551",
+							},
+						},
+						{
+							"name": "0 | Compressed | LA-88",
+							"argument": {
+								"version_number": 0,
+								"compress_texture_data": true,
+								"format": "la_88",
+							},
+						},
+					],
+				},
+			],
+		},
+		{
+			"identifier": "popcap.animation",
+			"icon": "thread_unread",
+			"item": [
+				{
+					"identifier": "popcap.animation.encode",
+					"icon": "skip_next",
+					"preset": [
+						{
+							"name": "1",
+							"argument": {
+								"version_number": 1,
+							},
+						},
+						{
+							"name": "2",
+							"argument": {
+								"version_number": 2,
+							},
+						},
+						{
+							"name": "3",
+							"argument": {
+								"version_number": 3,
+							},
+						},
+						{
+							"name": "4",
+							"argument": {
+								"version_number": 4,
+							},
+						},
+						{
+							"name": "5",
+							"argument": {
+								"version_number": 5,
+							},
+						},
+						{
+							"name": "6",
+							"argument": {
+								"version_number": 6,
+							},
+						},
+					],
+				},
+				{
+					"identifier": "popcap.animation.decode",
+					"icon": "skip_previous",
+					"preset": [
+						{
+							"name": "1",
+							"argument": {
+								"version_number": 1,
+							},
+						},
+						{
+							"name": "2",
+							"argument": {
+								"version_number": 2,
+							},
+						},
+						{
+							"name": "3",
+							"argument": {
+								"version_number": 3,
+							},
+						},
+						{
+							"name": "4",
+							"argument": {
+								"version_number": 4,
+							},
+						},
+						{
+							"name": "5",
+							"argument": {
+								"version_number": 5,
+							},
+						},
+						{
+							"name": "6",
+							"argument": {
+								"version_number": 6,
+							},
+						},
+					],
+				},
+				{
+					"identifier": "popcap.animation.convert.flash.from",
+					"icon": "swipe_right_alt",
+					"preset": [
+						{
+							"name": "1",
+							"argument": {
+								"version_number": 1,
+							},
+						},
+						{
+							"name": "2",
+							"argument": {
+								"version_number": 2,
+							},
+						},
+						{
+							"name": "3",
+							"argument": {
+								"version_number": 3,
+							},
+						},
+						{
+							"name": "4",
+							"argument": {
+								"version_number": 4,
+							},
+						},
+						{
+							"name": "5",
+							"argument": {
+								"version_number": 5,
+							},
+						},
+						{
+							"name": "6",
+							"argument": {
+								"version_number": 6,
+							},
+						},
+					],
+				},
+				{
+					"identifier": "popcap.animation.convert.flash.to",
+					"icon": "swipe_left_alt",
+					"preset": [
+						{
+							"name": "1",
+							"argument": {
+								"version_number": 1,
+							},
+						},
+						{
+							"name": "2",
+							"argument": {
+								"version_number": 2,
+							},
+						},
+						{
+							"name": "3",
+							"argument": {
+								"version_number": 3,
+							},
+						},
+						{
+							"name": "4",
+							"argument": {
+								"version_number": 4,
+							},
+						},
+						{
+							"name": "5",
+							"argument": {
+								"version_number": 5,
+							},
+						},
+						{
+							"name": "6",
+							"argument": {
+								"version_number": 6,
+							},
+						},
+					],
+				},
+				{
+					"identifier": "popcap.animation.convert.flash.resize",
+					"icon": "branding_watermark",
+					"preset": [
+						{
+							"name": "384",
+							"argument": {
+								"resolution": 384,
+							},
+						},
+						{
+							"name": "768",
+							"argument": {
+								"resolution": 768,
+							},
+						},
+						{
+							"name": "1536",
+							"argument": {
+								"resolution": 1536,
+							},
+						},
+						null,
+						{
+							"name": "640",
+							"argument": {
+								"resolution": 640,
+							},
+						},
+						{
+							"name": "1280",
+							"argument": {
+								"resolution": 1280,
+							},
+						},
+					],
+				},
+				{
+					"identifier": "popcap.animation.convert.flash.link_media",
+					"icon": "link",
+					"preset": [
+					],
+				},
+			],
+		},
+		{
+			"identifier": "popcap.re_animation",
+			"icon": "thread_unread",
+			"item": [
+				{
+					"identifier": "popcap.re_animation.encode",
+					"icon": "skip_next",
+					"preset": [
+						{
+							"name": "Desktop | 32",
+							"argument": {
+								"version_platform": "desktop",
+								"version_variant_64": false,
+							},
+						},
+						{
+							"name": "Mobile | 32",
+							"argument": {
+								"version_platform": "mobile",
+								"version_variant_64": false,
+							},
+						},
+						{
+							"name": "Mobile | 64",
+							"argument": {
+								"version_platform": "mobile",
+								"version_variant_64": true,
+							},
+						},
+						{
+							"name": "Television | 32",
+							"argument": {
+								"version_platform": "television",
+								"version_variant_64": false,
+							},
+						},
+					],
+				},
+				{
+					"identifier": "popcap.re_animation.decode",
+					"icon": "skip_previous",
+					"preset": [
+						{
+							"name": "Desktop | 32",
+							"argument": {
+								"version_platform": "desktop",
+								"version_variant_64": false,
+							},
+						},
+						{
+							"name": "Mobile | 32",
+							"argument": {
+								"version_platform": "mobile",
+								"version_variant_64": false,
+							},
+						},
+						{
+							"name": "Mobile | 64",
+							"argument": {
+								"version_platform": "mobile",
+								"version_variant_64": true,
+							},
+						},
+						{
+							"name": "Television | 32",
+							"argument": {
+								"version_platform": "television",
+								"version_variant_64": false,
+							},
+						},
+					],
+				},
+			],
+		},
+		{
+			"identifier": "popcap.particle",
+			"icon": "motion_blur",
+			"item": [
+				{
+					"identifier": "popcap.particle.encode",
+					"icon": "skip_next",
+					"preset": [
+						{
+							"name": "Desktop | 32",
+							"argument": {
+								"version_platform": "desktop",
+								"version_variant_64": false,
+							},
+						},
+						{
+							"name": "Mobile | 32",
+							"argument": {
+								"version_platform": "mobile",
+								"version_variant_64": false,
+							},
+						},
+						{
+							"name": "Mobile | 64",
+							"argument": {
+								"version_platform": "mobile",
+								"version_variant_64": true,
+							},
+						},
+						{
+							"name": "Television | 32",
+							"argument": {
+								"version_platform": "television",
+								"version_variant_64": false,
+							},
+						},
+					],
+				},
+				{
+					"identifier": "popcap.particle.decode",
+					"icon": "skip_previous",
+					"preset": [
+						{
+							"name": "Desktop | 32",
+							"argument": {
+								"version_platform": "desktop",
+								"version_variant_64": false,
+							},
+						},
+						{
+							"name": "Mobile | 32",
+							"argument": {
+								"version_platform": "mobile",
+								"version_variant_64": false,
+							},
+						},
+						{
+							"name": "Mobile | 64",
+							"argument": {
+								"version_platform": "mobile",
+								"version_variant_64": true,
+							},
+						},
+						{
+							"name": "Television | 32",
+							"argument": {
+								"version_platform": "television",
+								"version_variant_64": false,
+							},
+						},
+					],
+				},
+			],
+		},
+		{
+			"identifier": "popcap.trail",
+			"icon": "motion_blur",
+			"item": [
+				{
+					"identifier": "popcap.trail.encode",
+					"icon": "skip_next",
+					"preset": [
+						{
+							"name": "Desktop | 32",
+							"argument": {
+								"version_platform": "desktop",
+								"version_variant_64": false,
+							},
+						},
+						{
+							"name": "Mobile | 32",
+							"argument": {
+								"version_platform": "mobile",
+								"version_variant_64": false,
+							},
+						},
+						{
+							"name": "Mobile | 64",
+							"argument": {
+								"version_platform": "mobile",
+								"version_variant_64": true,
+							},
+						},
+						{
+							"name": "Television | 32",
+							"argument": {
+								"version_platform": "television",
+								"version_variant_64": false,
+							},
+						},
+					],
+				},
+				{
+					"identifier": "popcap.trail.decode",
+					"icon": "skip_previous",
+					"preset": [
+						{
+							"name": "Desktop | 32",
+							"argument": {
+								"version_platform": "desktop",
+								"version_variant_64": false,
+							},
+						},
+						{
+							"name": "Mobile | 32",
+							"argument": {
+								"version_platform": "mobile",
+								"version_variant_64": false,
+							},
+						},
+						{
+							"name": "Mobile | 64",
+							"argument": {
+								"version_platform": "mobile",
+								"version_variant_64": true,
+							},
+						},
+						{
+							"name": "Television | 32",
+							"argument": {
+								"version_platform": "television",
+								"version_variant_64": false,
+							},
+						},
+					],
+				},
+			],
+		},
+		{
+			"identifier": "popcap.particle_effect",
+			"icon": "motion_blur",
+			"item": [
+				{
+					"identifier": "popcap.particle_effect.encode",
+					"icon": "skip_next",
+					"preset": [
+						{
+							"name": "1",
+							"argument": {
+								"version_number": 1,
+							},
+						},
+					],
+				},
+				{
+					"identifier": "popcap.particle_effect.decode",
+					"icon": "skip_previous",
+					"preset": [
+						{
+							"name": "1",
+							"argument": {
+								"version_number": 1,
+							},
+						},
+					],
+				},
+			],
+		},
+		{
+			"identifier": "popcap.render_effect",
+			"icon": "motion_blur",
+			"item": [
+				{
+					"identifier": "popcap.render_effect.encode",
+					"icon": "skip_next",
+					"preset": [
+						{
+							"name": "1 | 1",
+							"argument": {
+								"version_number": 1,
+								"version_variant": 1,
+							},
+						},
+						{
+							"name": "1 | 2",
+							"argument": {
+								"version_number": 1,
+								"version_variant": 2,
+							},
+						},
+						{
+							"name": "1 | 3",
+							"argument": {
+								"version_number": 1,
+								"version_variant": 3,
+							},
+						},
+					],
+				},
+				{
+					"identifier": "popcap.render_effect.decode",
+					"icon": "skip_previous",
+					"preset": [
+						{
+							"name": "1 | 1",
+							"argument": {
+								"version_number": 1,
+								"version_variant": 1,
+							},
+						},
+						{
+							"name": "1 | 2",
+							"argument": {
+								"version_number": 1,
+								"version_variant": 2,
+							},
+						},
+						{
+							"name": "1 | 3",
+							"argument": {
+								"version_number": 1,
+								"version_variant": 3,
+							},
+						},
+					],
+				},
+			],
+		},
+		{
+			"identifier": "popcap.character_font_widget_2",
+			"icon": "custom_typography",
+			"item": [
+				{
+					"identifier": "popcap.character_font_widget_2.encode",
+					"icon": "skip_next",
+					"preset": [
+					],
+				},
+				{
+					"identifier": "popcap.character_font_widget_2.decode",
+					"icon": "skip_previous",
+					"preset": [
+					],
+				},
+			],
+		},
+		{
+			"identifier": "popcap.package",
+			"icon": "deployed_code",
+			"item": [
+				{
+					"identifier": "popcap.package.pack",
+					"icon": "inventory_2",
+					"preset": [
+						{
+							"name": "0 | Original",
+							"argument": {
+								"version_number": 0,
+								"version_compress_resource_data": false,
+							},
+						},
+						{
+							"name": "0 | Compressed",
+							"argument": {
+								"version_number": 0,
+								"version_compress_resource_data": true,
+							},
+						},
+					],
+				},
+				{
+					"identifier": "popcap.package.unpack",
+					"icon": "orders",
+					"preset": [
+						{
+							"name": "0 | Original",
+							"argument": {
+								"version_number": 0,
+								"version_compress_resource_data": false,
+							},
+						},
+						{
+							"name": "0 | Compressed",
+							"argument": {
+								"version_number": 0,
+								"version_compress_resource_data": true,
+							},
+						},
+					],
+				},
+				{
+					"identifier": "popcap.package.pack_automatic",
+					"icon": "inventory_2",
+					"preset": [
+						{
+							"name": "0 | Original",
+							"argument": {
+								"version_number": 0,
+								"version_compress_resource_data": false,
+							},
+						},
+						{
+							"name": "0 | Compressed",
+							"argument": {
+								"version_number": 0,
+								"version_compress_resource_data": true,
+							},
+						},
+					],
+				},
+				{
+					"identifier": "popcap.package.encrypt",
+					"icon": "lock",
+					"preset": [
+					],
+				},
+			],
+		},
+		{
+			"identifier": "popcap.resource_stream_group",
+			"icon": "deployed_code",
+			"item": [
+				{
+					"identifier": "popcap.resource_stream_group.pack",
+					"icon": "inventory_2",
+					"preset": [
+						{
+							"name": "1",
+							"argument": {
+								"version_number": 1,
+							},
+						},
+						{
+							"name": "3",
+							"argument": {
+								"version_number": 3,
+							},
+						},
+						{
+							"name": "4",
+							"argument": {
+								"version_number": 4,
+							},
+						},
+					],
+				},
+				{
+					"identifier": "popcap.resource_stream_group.unpack",
+					"icon": "orders",
+					"preset": [
+						{
+							"name": "1",
+							"argument": {
+								"version_number": 1,
+							},
+						},
+						{
+							"name": "3",
+							"argument": {
+								"version_number": 3,
+							},
+						},
+						{
+							"name": "4",
+							"argument": {
+								"version_number": 4,
+							},
+						},
+					],
+				},
+			],
+		},
+		{
+			"identifier": "popcap.resource_stream_bundle",
+			"icon": "deployed_code",
+			"item": [
+				{
+					"identifier": "popcap.resource_stream_bundle.pack",
+					"icon": "inventory_2",
+					"preset": [
+						{
+							"name": "1 | 0",
+							"argument": {
+								"version_number": 1,
+								"version_extended_texture_information_for_pvz2cn": 0,
+							},
+						},
+						{
+							"name": "3 | 0",
+							"argument": {
+								"version_number": 3,
+								"version_extended_texture_information_for_pvz2cn": 0,
+							},
+						},
+						{
+							"name": "4 | 0",
+							"argument": {
+								"version_number": 4,
+								"version_extended_texture_information_for_pvz2cn": 0,
+							},
+						},
+						null,
+						{
+							"name": "4 | 1",
+							"argument": {
+								"version_number": 4,
+								"version_extended_texture_information_for_pvz2cn": 1,
+							},
+						},
+						{
+							"name": "4 | 2",
+							"argument": {
+								"version_number": 4,
+								"version_extended_texture_information_for_pvz2cn": 2,
+							},
+						},
+						{
+							"name": "4 | 3",
+							"argument": {
+								"version_number": 4,
+								"version_extended_texture_information_for_pvz2cn": 3,
+							},
+						},
+					],
+				},
+				{
+					"identifier": "popcap.resource_stream_bundle.unpack",
+					"icon": "orders",
+					"preset": [
+						{
+							"name": "1 | 0",
+							"argument": {
+								"version_number": 1,
+								"version_extended_texture_information_for_pvz2cn": 0,
+							},
+						},
+						{
+							"name": "3 | 0",
+							"argument": {
+								"version_number": 3,
+								"version_extended_texture_information_for_pvz2cn": 0,
+							},
+						},
+						{
+							"name": "4 | 0",
+							"argument": {
+								"version_number": 4,
+								"version_extended_texture_information_for_pvz2cn": 0,
+							},
+						},
+						null,
+						{
+							"name": "4 | 1",
+							"argument": {
+								"version_number": 4,
+								"version_extended_texture_information_for_pvz2cn": 1,
+							},
+						},
+						{
+							"name": "4 | 2",
+							"argument": {
+								"version_number": 4,
+								"version_extended_texture_information_for_pvz2cn": 2,
+							},
+						},
+						{
+							"name": "4 | 3",
+							"argument": {
+								"version_number": 4,
+								"version_extended_texture_information_for_pvz2cn": 3,
+							},
+						},
+					],
+				},
+				{
+					"identifier": "popcap.resource_stream_bundle.resource_convert",
+					"icon": "lightning_stand",
+					"preset": [
+						{
+							"name": "Recase Path",
+							"argument": {
+								"option_recase_path": true,
+								"option_rton": false,
+								"option_ptx": false,
+								"option_pam": false,
+								"option_bnk": false,
+								"option_wem": false,
+							},
+						},
+						null,
+						{
+							"name": "RTON | 1 | E-ASCII | Plain",
+							"argument": {
+								"option_recase_path": false,
+								"option_rton": true,
+								"option_rton_version_number": 1,
+								"option_rton_version_native_string_encoding_use_utf8": false,
+								"option_rton_crypt": false,
+								"option_ptx": false,
+								"option_pam": false,
+								"option_bnk": false,
+								"option_wem": false,
+							},
+						},
+						{
+							"name": "RTON | 1 | E-ASCII | Cipher",
+							"argument": {
+								"option_recase_path": false,
+								"option_rton": true,
+								"option_rton_version_number": 1,
+								"option_rton_version_native_string_encoding_use_utf8": false,
+								"option_rton_crypt": true,
+								"option_ptx": false,
+								"option_pam": false,
+								"option_bnk": false,
+								"option_wem": false,
+							},
+						},
+						{
+							"name": "RTON | 1 | UTF-8 | Plain",
+							"argument": {
+								"option_recase_path": false,
+								"option_rton": true,
+								"option_rton_version_number": 1,
+								"option_rton_version_native_string_encoding_use_utf8": true,
+								"option_rton_crypt": false,
+								"option_ptx": false,
+								"option_pam": false,
+								"option_bnk": false,
+								"option_wem": false,
+							},
+						},
+						{
+							"name": "RTON | 1 | UTF-8 | Cipher",
+							"argument": {
+								"option_recase_path": false,
+								"option_rton": true,
+								"option_rton_version_number": 1,
+								"option_rton_version_native_string_encoding_use_utf8": true,
+								"option_rton_crypt": true,
+								"option_ptx": false,
+								"option_pam": false,
+								"option_bnk": false,
+								"option_wem": false,
+							},
+						},
+						null,
+						{
+							"name": "PTX | Atlas",
+							"argument": {
+								"option_recase_path": false,
+								"option_rton": false,
+								"option_ptx": true,
+								"option_ptx_atlas": true,
+								"option_ptx_atlas_resize": true,
+								"option_ptx_sprite": false,
+								"option_pam": false,
+								"option_bnk": false,
+								"option_wem": false,
+							},
+						},
+						{
+							"name": "PTX | Sprite",
+							"argument": {
+								"option_recase_path": false,
+								"option_rton": false,
+								"option_ptx": true,
+								"option_ptx_atlas": false,
+								"option_ptx_atlas_resize": true,
+								"option_ptx_sprite": true,
+								"option_pam": false,
+								"option_bnk": false,
+								"option_wem": false,
+							},
+						},
+						{
+							"name": "PTX | Atlas + Sprite",
+							"argument": {
+								"option_recase_path": false,
+								"option_rton": false,
+								"option_ptx": true,
+								"option_ptx_atlas": true,
+								"option_ptx_atlas_resize": true,
+								"option_ptx_sprite": true,
+								"option_pam": false,
+								"option_bnk": false,
+								"option_wem": false,
+							},
+						},
+						null,
+						{
+							"name": "PAM | 6 | JSON",
+							"argument": {
+								"option_recase_path": false,
+								"option_rton": false,
+								"option_ptx": false,
+								"option_pam": true,
+								"option_pam_version_number": 6,
+								"option_pam_json": true,
+								"option_pam_flash": false,
+								"option_bnk": false,
+								"option_wem": false,
+							},
+						},
+						{
+							"name": "PAM | 6 | Flash",
+							"argument": {
+								"option_recase_path": false,
+								"option_rton": false,
+								"option_ptx": false,
+								"option_pam": true,
+								"option_pam_version_number": 6,
+								"option_pam_json": false,
+								"option_pam_flash": true,
+								"option_bnk": false,
+								"option_wem": false,
+							},
+						},
+						{
+							"name": "PAM | 6 | JSON + Flash",
+							"argument": {
+								"option_recase_path": false,
+								"option_rton": false,
+								"option_ptx": false,
+								"option_pam": true,
+								"option_pam_version_number": 6,
+								"option_pam_json": true,
+								"option_pam_flash": true,
+								"option_bnk": false,
+								"option_wem": false,
+							},
+						},
+						null,
+						{
+							"name": "BNK | 72",
+							"argument": {
+								"option_recase_path": false,
+								"option_rton": false,
+								"option_ptx": false,
+								"option_pam": false,
+								"option_bnk": true,
+								"option_bnk_version_number": 72,
+								"option_wem": false,
+							},
+						},
+						{
+							"name": "BNK | 88",
+							"argument": {
+								"option_recase_path": false,
+								"option_rton": false,
+								"option_ptx": false,
+								"option_pam": false,
+								"option_bnk": true,
+								"option_bnk_version_number": 88,
+								"option_wem": false,
+							},
+						},
+						{
+							"name": "BNK | 112",
+							"argument": {
+								"option_recase_path": false,
+								"option_rton": false,
+								"option_ptx": false,
+								"option_pam": false,
+								"option_bnk": true,
+								"option_bnk_version_number": 112,
+								"option_wem": false,
+							},
+						},
+						{
+							"name": "BNK | 140",
+							"argument": {
+								"option_recase_path": false,
+								"option_rton": false,
+								"option_ptx": false,
+								"option_pam": false,
+								"option_bnk": true,
+								"option_bnk_version_number": 140,
+								"option_wem": false,
+							},
+						},
+						null,
+						{
+							"name": "WEM",
+							"argument": {
+								"option_recase_path": false,
+								"option_rton": false,
+								"option_ptx": false,
+								"option_pam": false,
+								"option_bnk": false,
+								"option_wem": true,
+							},
+						},
+					],
+				},
+			],
+		},
+		{
+			"identifier": "popcap.resource_stream_bundle_patch",
+			"icon": "extension",
+			"item": [
+				{
+					"identifier": "popcap.resource_stream_bundle_patch.encode",
+					"icon": "skip_next",
+					"preset": [
+					],
+				},
+				{
+					"identifier": "popcap.resource_stream_bundle_patch.decode",
+					"icon": "skip_previous",
+					"preset": [
+					],
+				},
+			],
+		},
+		{
+			"identifier": "popcap.pvz2.text_table",
+			"icon": "description",
+			"item": [
+				{
+					"identifier": "popcap.pvz2.text_table.convert",
+					"icon": "repeat",
+					"preset": [
+						{
+							"name": "Text",
+							"argument": {
+								"destination_version": "text",
+							},
+						},
+						{
+							"name": "JSON Map",
+							"argument": {
+								"destination_version": "json_map",
+							},
+						},
+						{
+							"name": "JSON List",
+							"argument": {
+								"destination_version": "json_list",
+							},
+						},
+					],
+				},
+			],
+		},
+		{
+			"identifier": "popcap.pvz2.resource_manifest",
+			"icon": "description",
+			"item": [
+				{
+					"identifier": "popcap.pvz2.resource_manifest.new_type_object_notation.encode",
+					"icon": "skip_next",
+					"preset": [
+					],
+				},
+				{
+					"identifier": "popcap.pvz2.resource_manifest.new_type_object_notation.decode",
+					"icon": "skip_previous",
+					"preset": [
+					],
+				},
+				{
+					"identifier": "popcap.pvz2.resource_manifest.regular.from",
+					"icon": "swipe_right_alt",
+					"preset": [
+					],
+				},
+				{
+					"identifier": "popcap.pvz2.resource_manifest.regular.to",
+					"icon": "swipe_left_alt",
+					"preset": [
+						{
+							"name": "String Path",
+							"argument": {
+								"use_array_style_path": false,
+							},
+						},
+						{
+							"name": "Array Path",
+							"argument": {
+								"use_array_style_path": true,
+							},
+						},
+					],
+				},
+			],
+		},
+		{
+			"identifier": "popcap.pvz2.package_project",
+			"icon": "deployed_code",
+			"item": [
+				{
+					"identifier": "popcap.pvz2.package_project.transpile",
+					"icon": "repeat",
+					"preset": [
+						{
+							"name": "Generalize",
+							"argument": {
+								"option_generalize_rton": true,
+								"option_generalize_ptx": true,
+								"option_generalize_pam": true,
+								"option_generalize_wem": true,
+								"option_specialize_rton": false,
+								"option_specialize_ptx": false,
+								"option_specialize_pam": false,
+								"option_specialize_wem": false,
+							},
+						},
+						{
+							"name": "Generalize | RTON",
+							"argument": {
+								"option_generalize_rton": true,
+								"option_generalize_ptx": false,
+								"option_generalize_pam": false,
+								"option_generalize_wem": false,
+								"option_specialize_rton": false,
+								"option_specialize_ptx": false,
+								"option_specialize_pam": false,
+								"option_specialize_wem": false,
+							},
+						},
+						{
+							"name": "Generalize | PTX",
+							"argument": {
+								"option_generalize_rton": false,
+								"option_generalize_ptx": true,
+								"option_generalize_pam": false,
+								"option_generalize_wem": false,
+								"option_specialize_rton": false,
+								"option_specialize_ptx": false,
+								"option_specialize_pam": false,
+								"option_specialize_wem": false,
+							},
+						},
+						{
+							"name": "Generalize | PAM",
+							"argument": {
+								"option_generalize_rton": false,
+								"option_generalize_ptx": false,
+								"option_generalize_pam": true,
+								"option_generalize_wem": false,
+								"option_specialize_rton": false,
+								"option_specialize_ptx": false,
+								"option_specialize_pam": false,
+								"option_specialize_wem": false,
+							},
+						},
+						{
+							"name": "Generalize | WEM",
+							"argument": {
+								"option_generalize_rton": false,
+								"option_generalize_ptx": false,
+								"option_generalize_pam": false,
+								"option_generalize_wem": true,
+								"option_specialize_rton": false,
+								"option_specialize_ptx": false,
+								"option_specialize_pam": false,
+								"option_specialize_wem": false,
+							},
+						},
+						null,
+						{
+							"name": "Specialize",
+							"argument": {
+								"option_generalize_rton": false,
+								"option_generalize_ptx": false,
+								"option_generalize_pam": false,
+								"option_generalize_wem": false,
+								"option_specialize_rton": true,
+								"option_specialize_ptx": true,
+								"option_specialize_pam": true,
+								"option_specialize_wem": true,
+							},
+						},
+						{
+							"name": "Specialize | RTON",
+							"argument": {
+								"option_generalize_rton": false,
+								"option_generalize_ptx": false,
+								"option_generalize_pam": false,
+								"option_generalize_wem": false,
+								"option_specialize_rton": true,
+								"option_specialize_ptx": false,
+								"option_specialize_pam": false,
+								"option_specialize_wem": false,
+							},
+						},
+						{
+							"name": "Specialize | PTX",
+							"argument": {
+								"option_generalize_rton": false,
+								"option_generalize_ptx": false,
+								"option_generalize_pam": false,
+								"option_generalize_wem": false,
+								"option_specialize_rton": false,
+								"option_specialize_ptx": true,
+								"option_specialize_pam": false,
+								"option_specialize_wem": false,
+							},
+						},
+						{
+							"name": "Specialize | PAM",
+							"argument": {
+								"option_generalize_rton": false,
+								"option_generalize_ptx": false,
+								"option_generalize_pam": false,
+								"option_generalize_wem": false,
+								"option_specialize_rton": false,
+								"option_specialize_ptx": false,
+								"option_specialize_pam": true,
+								"option_specialize_wem": false,
+							},
+						},
+						{
+							"name": "Specialize | WEM",
+							"argument": {
+								"option_generalize_rton": false,
+								"option_generalize_ptx": false,
+								"option_generalize_pam": false,
+								"option_generalize_wem": false,
+								"option_specialize_rton": false,
+								"option_specialize_ptx": false,
+								"option_specialize_pam": false,
+								"option_specialize_wem": true,
+							},
+						},
+					],
+				},
+				{
+					"identifier": "popcap.pvz2.package_project.compile",
+					"icon": "sound_sampler",
+					"preset": [
+					],
+				},
+				{
+					"identifier": "popcap.pvz2.package_project.link",
+					"icon": "linked_services",
+					"preset": [
+						{
+							"name": "Legacy",
+							"argument": {
+								"remake_manifest": false,
+							},
+						},
+						{
+							"name": "Remake",
+							"argument": {
+								"remake_manifest": true,
+							},
+						},
+					],
+				},
+				{
+					"identifier": "popcap.pvz2.package_project.parse",
+					"icon": "barcode_reader",
+					"preset": [
+						{
+							"name": "1 | 0",
+							"argument": {
+								"package_version_number": 1,
+								"package_version_extended_texture_information_for_pvz2cn": 0,
+							},
+						},
+						{
+							"name": "3 | 0",
+							"argument": {
+								"package_version_number": 3,
+								"package_version_extended_texture_information_for_pvz2cn": 0,
+							},
+						},
+						{
+							"name": "4 | 0",
+							"argument": {
+								"package_version_number": 4,
+								"package_version_extended_texture_information_for_pvz2cn": 0,
+							},
+						},
+						null,
+						{
+							"name": "4 | 1",
+							"argument": {
+								"package_version_number": 4,
+								"package_version_extended_texture_information_for_pvz2cn": 1,
+							},
+						},
+						{
+							"name": "4 | 2",
+							"argument": {
+								"package_version_number": 4,
+								"package_version_extended_texture_information_for_pvz2cn": 2,
+							},
+						},
+						{
+							"name": "4 | 3",
+							"argument": {
+								"package_version_number": 4,
+								"package_version_extended_texture_information_for_pvz2cn": 3,
+							},
+						},
+					],
+				},
+			],
+		},
+		{
+			"identifier": "popcap.pvz2.remote_project",
+			"icon": "cloud",
+			"item": [
+				{
+					"identifier": "popcap.pvz2.remote_project.execute",
+					"icon": "sound_sampler",
+					"preset": [
+						{
+							"name": "Launch",
+							"argument": {
+								"action": "launch",
+							},
+						},
+						null,
+						{
+							"name": "Check",
+							"argument": {
+								"action": "check",
+							},
+						},
+						null,
+						{
+							"name": "Clear Main Package",
+							"argument": {
+								"action": "clear",
+								"target": "main_package",
+							},
+						},
+						{
+							"name": "Clear Content Delivery",
+							"argument": {
+								"action": "clear",
+								"target": "content_delivery",
+							},
+						},
+						{
+							"name": "Clear Local Profile",
+							"argument": {
+								"action": "clear",
+								"target": "local_profile",
+							},
+						},
+						{
+							"name": "Clear Player Profile",
+							"argument": {
+								"action": "clear",
+								"target": "player_profile",
+							},
+						},
+						null,
+						{
+							"name": "Pull Main Package",
+							"argument": {
+								"action": "pull",
+								"target": "main_package",
+							},
+						},
+						{
+							"name": "Pull Content Delivery",
+							"argument": {
+								"action": "pull",
+								"target": "content_delivery",
+							},
+						},
+						{
+							"name": "Pull Local Profile",
+							"argument": {
+								"action": "pull",
+								"target": "local_profile",
+							},
+						},
+						{
+							"name": "Pull Player Profile",
+							"argument": {
+								"action": "pull",
+								"target": "player_profile",
+							},
+						},
+						null,
+						{
+							"name": "Push Main Package",
+							"argument": {
+								"action": "push",
+								"target": "main_package",
+							},
+						},
+						{
+							"name": "Push Content Delivery",
+							"argument": {
+								"action": "push",
+								"target": "content_delivery",
+							},
+						},
+						{
+							"name": "Push Local Profile",
+							"argument": {
+								"action": "push",
+								"target": "local_profile",
+							},
+						},
+						{
+							"name": "Push Player Profile",
+							"argument": {
+								"action": "push",
+								"target": "player_profile",
+							},
+						},
+					],
+				},
+			],
+		},
+		{
+			"identifier": "kairosoft.game",
+			"icon": "sports_esports",
+			"item": [
+				{
+					"identifier": "kairosoft.game.program.modify",
+					"icon": "build",
+					"preset": [
+						{
+							"name": "Disable Record Encryption",
+							"argument": {
+								"disable_record_encryption": true,
+								"enable_debug_mode": false,
+							},
+						},
+						{
+							"name": "Enable Debug Mode",
+							"argument": {
+								"disable_record_encryption": false,
+								"enable_debug_mode": true,
+							},
+						},
+						null,
+						{
+							"name": "None",
+							"argument": {
+								"disable_record_encryption": false,
+								"enable_debug_mode": false,
+							},
+						},
+						{
+							"name": "Both",
+							"argument": {
+								"disable_record_encryption": true,
+								"enable_debug_mode": true,
+							},
+						},
+					],
+				},
+				{
+					"identifier": "kairosoft.game.record.encrypt",
+					"icon": "lock_open",
+					"preset": [
+					],
+				},
+			],
+		},
+		{
+			"identifier": "nitrome.twin_shot_deluxe",
+			"icon": "sports_esports",
+			"item": [
+				{
+					"identifier": "nitrome.twin_shot_deluxe.record.encode",
+					"icon": "skip_next",
+					"preset": [
+					],
+				},
+				{
+					"identifier": "nitrome.twin_shot_deluxe.record.decode",
+					"icon": "skip_previous",
+					"preset": [
+					],
+				},
+			],
+		},
+		{
+			"identifier": "developer.utility",
+			"icon": "frame_bug",
+			"item": [
+				{
+					"identifier": "developer.utility.keystore.generate",
+					"icon": "license",
+					"preset": [
+					],
+				},
+				{
+					"identifier": "developer.utility.keystore.query",
+					"icon": "fact_check",
+					"preset": [
+					],
+				},
+				{
+					"identifier": "developer.utility.windows.sign_program",
+					"icon": "approval",
+					"preset": [
+						{
+							"name": "PE",
+							"argument": {
+								"type": "pe",
+							},
+						},
+						{
+							"name": "MSIX",
+							"argument": {
+								"type": "msix",
+							},
+						},
+					],
+				},
+				{
+					"identifier": "developer.utility.windows.pack_program",
+					"icon": "package_2",
+					"preset": [
+						{
+							"name": "MSIX",
+							"argument": {
+								"type": "msix",
+							},
+						},
+					],
+				},
+				{
+					"identifier": "developer.utility.windows.import_manifest",
+					"icon": "download",
+					"preset": [
+					],
+				},
+				{
+					"identifier": "developer.utility.windows.export_manifest",
+					"icon": "upload",
+					"preset": [
+					],
+				},
+				{
+					"identifier": "developer.utility.windows.create_pri_resource",
+					"icon": "library_books",
+					"preset": [
+					],
+				},
+				{
+					"identifier": "developer.utility.linux.sign_program",
+					"icon": "approval",
+					"preset": [
+						{
+							"name": "ELF",
+							"argument": {
+								"type": "elf",
+							},
+						},
+					],
+				},
+				{
+					"identifier": "developer.utility.linux.pack_program",
+					"icon": "package_2",
+					"preset": [
+						{
+							"name": "APPIMAGE",
+							"argument": {
+								"type": "appimage",
+							},
+						},
+					],
+				},
+				{
+					"identifier": "developer.utility.macintosh.sign_program",
+					"icon": "approval",
+					"preset": [
+						{
+							"name": "MACHO",
+							"argument": {
+								"type": "macho",
+							},
+						},
+						{
+							"name": "APP",
+							"argument": {
+								"type": "app",
+							},
+						},
+					],
+				},
+				{
+					"identifier": "developer.utility.macintosh.pack_program",
+					"icon": "package_2",
+					"preset": [
+						{
+							"name": "DMG",
+							"argument": {
+								"type": "dmg",
+							},
+						},
+					],
+				},
+				{
+					"identifier": "developer.utility.android.sign_program",
+					"icon": "approval",
+					"preset": [
+						{
+							"name": "APK",
+							"argument": {
+								"type": "apk",
+							},
+						},
+						{
+							"name": "APKS",
+							"argument": {
+								"type": "apks",
+							},
+						},
+					],
+				},
+				{
+					"identifier": "developer.utility.android.pack_program",
+					"icon": "package_2",
+					"preset": [
+						{
+							"name": "APK",
+							"argument": {
+								"type": "apk",
+							},
+						},
+						{
+							"name": "APKS",
+							"argument": {
+								"type": "apks",
+							},
+						},
+					],
+				},
+				{
+					"identifier": "developer.utility.android.align_package",
+					"icon": "align_justify_space_even",
+					"preset": [
+						{
+							"name": "APK",
+							"argument": {
+								"type": "apk",
+							},
+						},
+						{
+							"name": "APKS",
+							"argument": {
+								"type": "apks",
+							},
+						},
+					],
+				},
+				{
+					"identifier": "developer.utility.iphone.sign_program",
+					"icon": "approval",
+					"preset": [
+						{
+							"name": "MACHO",
+							"argument": {
+								"type": "macho",
+							},
+						},
+						{
+							"name": "APP",
+							"argument": {
+								"type": "app",
+							},
+						},
+					],
+				},
+				{
+					"identifier": "developer.utility.iphone.pack_program",
+					"icon": "package_2",
+					"preset": [
+						{
+							"name": "IPA",
+							"argument": {
+								"type": "ipa",
+							},
+						},
+					],
+				},
+			],
+		},
+	],
+}

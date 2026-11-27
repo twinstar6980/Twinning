@@ -1,4 +1,5 @@
 import '/common.dart';
+import '/utility/finalizer.dart';
 import '/utility/convert_helper.dart';
 import '/bridge/data.dart';
 import '/bridge/proxy.dart';
@@ -15,7 +16,7 @@ import 'package:async/async.dart' as lib;
 
 class Launcher {
 
-  // #region function
+  // #region utility
 
   static Future<List<String>> launch(
     Client       client,
@@ -25,49 +26,64 @@ class Launcher {
   ) async {
     var subWorker = (
       lib.SendPort sendPort,
-    ) async {
+    ) async => withFinalizerScope((finalizer) async {
       var portMessage = null as List<Object?>?;
       var receivePort = lib.ReceivePort();
+      finalizer.add(() async {
+        receivePort.close();
+      });
       var streamQueue = lib.StreamQueue<Object?>(receivePort);
+      finalizer.add(() async {
+        await streamQueue.cancel(immediate: true);
+      });
       sendPort.send(receivePort.sendPort);
       portMessage = (await streamQueue.next)!.as<List<Object?>>();
-      var callbackProxy = (
-        ExecutorProxy callbackProxy,
-        MessageProxy  argumentProxy,
-        MessageProxy  resultProxy,
-      ) {
-        var state = lib.calloc<lib.Bool>();
-        state.value = false;
-        var exceptionProxy = MessageProxy();
-        var argument = lib.calloc<Message>();
-        var result = lib.calloc<Message>();
-        var exception = lib.calloc<Message>();
-        MessageProxy.construct(argument, argumentProxy);
-        sendPort.send([state, argument, result, exception]);
-        while (!state.value) {
-          lib.sleep(.new(milliseconds: 10));
-        }
-        resultProxy.value = MessageProxy.parse(result).value;
-        exceptionProxy.value = MessageProxy.parse(exception).value;
-        MessageProxy.destruct(argument);
-        MessageProxy.destruct(result);
-        MessageProxy.destruct(exception);
-        lib.calloc.free(argument);
-        lib.calloc.free(result);
-        lib.calloc.free(exception);
-        lib.calloc.free(state);
-        if (!exceptionProxy.value.isEmpty) {
-          throw exceptionProxy.value.first;
-        }
-        return null as Void;
-      };
       var service = portMessage[0]!.as<Service>();
       var script = portMessage[1]!.as<String>();
       var argument = portMessage[2]!.as<List<String>>();
       var result = null as List<String>?;
       var exception = null as ({Object exception, StackTrace stack})?;
       try {
-        var executorCallback = ExecutorProxy.of(callbackProxy);
+        var executorCallback = ExecutorProxy.of((
+          ExecutorProxy callbackProxy,
+          MessageProxy  argumentProxy,
+          MessageProxy  resultProxy,
+        ) => withFinalizerScopeSync((finalizer) {
+          var exceptionProxy = MessageProxy();
+          var state = lib.Pointer<lib.Bool>.fromAddress(0);
+          var argument = lib.Pointer<Message>.fromAddress(0);
+          var result = lib.Pointer<Message>.fromAddress(0);
+          var exception = lib.Pointer<Message>.fromAddress(0);
+          state = lib.calloc<lib.Bool>();
+          argument = lib.calloc<Message>();
+          result = lib.calloc<Message>();
+          exception = lib.calloc<Message>();
+          finalizer.add(() {
+            lib.calloc.free(state);
+            lib.calloc.free(argument);
+            lib.calloc.free(result);
+            lib.calloc.free(exception);
+          });
+          state.value = false;
+          MessageProxy.construct(argument, argumentProxy);
+          finalizer.add(() {
+            MessageProxy.destruct(argument);
+          });
+          sendPort.send([state, argument, result, exception]);
+          while (!state.value) {
+            lib.sleep(.new(milliseconds: 10));
+          }
+          finalizer.add(() {
+            MessageProxy.destruct(result);
+            MessageProxy.destruct(exception);
+          });
+          resultProxy.value = MessageProxy.parse(result).value;
+          exceptionProxy.value = MessageProxy.parse(exception).value;
+          if (!exceptionProxy.value.isEmpty) {
+            throw exceptionProxy.value.first;
+          }
+          return null as Void;
+        }));
         var executorArgument = MessageProxy.of(['execute', script, ...argument]);
         var executorResult = MessageProxy();
         ExecutorProxy.parse(service.executor).value(executorCallback, executorArgument, executorResult);
@@ -76,22 +92,32 @@ class Launcher {
       catch (e, s) {
         exception = (exception: e, stack: s);
       }
-      await streamQueue.cancel(immediate: true);
-      receivePort.close();
       sendPort.send(null);
       sendPort.send([result, exception]);
       return;
-    };
+    });
     var mainWorker = (
-    ) async {
+    ) async => await withFinalizerScope((finalizer) async {
       var portMessage = null as List<Object?>?;
       var receivePort = lib.ReceivePort();
+      finalizer.add(() async {
+        receivePort.close();
+      });
       var streamQueue = lib.StreamQueue<Object?>(receivePort);
+      finalizer.add(() async {
+        await streamQueue.cancel(immediate: true);
+      });
       var isolate = await lib.Isolate.spawn(subWorker, receivePort.sendPort);
+      finalizer.add(() async {
+        isolate.kill(priority: lib.Isolate.immediate);
+      });
       var sendPort = await streamQueue.next as lib.SendPort;
       var result = null as List<String>?;
       var exception = null as ({Object exception, StackTrace stack})?;
       await client.start();
+      finalizer.add(() async {
+        await client.finish();
+      });
       sendPort.send([library.symbol(), script, argument]);
       while (await streamQueue.hasNext) {
         portMessage = (await streamQueue.next)?.as<List<Object?>>();
@@ -118,15 +144,11 @@ class Launcher {
           callbackState.value = true;
         }
       }
-      await client.finish();
-      await streamQueue.cancel(immediate: true);
-      receivePort.close();
-      isolate.kill(priority: lib.Isolate.immediate);
       if (exception != null) {
         Error.throwWithStackTrace(exception.exception, exception.stack);
       }
       return result!;
-    };
+    });
     return await mainWorker();
   }
 

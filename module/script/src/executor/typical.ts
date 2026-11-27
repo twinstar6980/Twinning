@@ -8,6 +8,8 @@ namespace Twinning.Script.Executor {
 		Value: TValue;
 		Representation: TRepresentation;
 		identifier: TIdentifier;
+		type: string;
+		option: null | Array<any>;
 		stringify: (value: TValue) => string;
 		parse: (representation: TRepresentation) => TValue;
 		automatic: (argument: any) => null | TValue;
@@ -22,10 +24,10 @@ namespace Twinning.Script.Executor {
 
 	// ----------------
 
-	export type TypicalMethod<TIdentifier extends string, TArgument extends Array<TypicalArgument<string, any, any>>, TBatchArgument extends Array<TypicalBatchArgument<string>>, TWorkerStore extends Record<string, any>> = {
+	export type TypicalMethod<TArgument extends Array<TypicalArgument<string, any, any>>, TBatchArgument extends Array<TypicalBatchArgument<string>>, TWorkerStore extends Record<string, any>> = {
 		Argument: {[TElement in TArgument[number]as TElement['identifier']]: TElement['Value']};
 		ArgumentRepresentation: {[TElement in TArgument[number]as TElement['identifier']]: TElement['Representation']};
-		identifier: TIdentifier;
+		identifier: [string, string];
 		filter: null | ['any' | 'file' | 'directory', RegExp];
 		argument: TArgument;
 		batch: null | TBatchArgument;
@@ -62,6 +64,8 @@ namespace Twinning.Script.Executor {
 			Value: undefined!,
 			Representation: undefined!,
 			identifier: proto.identifier,
+			type: 'boolean',
+			option: null,
 			stringify: (value) => ConvertHelper.make_boolean_to_string_of_confirmation_character(value),
 			parse: (representation) => representation,
 			automatic: (argument) => proto.automatic === null ? null : proto.automatic(argument),
@@ -84,6 +88,8 @@ namespace Twinning.Script.Executor {
 			Value: undefined!,
 			Representation: undefined!,
 			identifier: proto.identifier,
+			type: 'integer',
+			option: proto.option,
 			stringify: (value) => ConvertHelper.make_integer_to_string(value),
 			parse: (representation) => representation,
 			automatic: (argument) => proto.automatic === null ? null : proto.automatic(argument),
@@ -106,6 +112,8 @@ namespace Twinning.Script.Executor {
 			Value: undefined!,
 			Representation: undefined!,
 			identifier: proto.identifier,
+			type: 'floater',
+			option: proto.option,
 			stringify: (value) => ConvertHelper.make_floater_to_string(value),
 			parse: (representation) => representation,
 			automatic: (argument) => proto.automatic === null ? null : proto.automatic(argument),
@@ -128,6 +136,8 @@ namespace Twinning.Script.Executor {
 			Value: undefined!,
 			Representation: undefined!,
 			identifier: proto.identifier,
+			type: 'string',
+			option: proto.option,
 			stringify: (value) => value,
 			parse: (representation) => representation,
 			automatic: (argument) => proto.automatic === null ? null : proto.automatic(argument),
@@ -150,6 +160,8 @@ namespace Twinning.Script.Executor {
 			Value: undefined!,
 			Representation: undefined!,
 			identifier: proto.identifier,
+			type: 'size',
+			option: proto.option,
 			stringify: (value) => value.emit(),
 			parse: (representation) => new StorageSize(representation),
 			automatic: (argument) => proto.automatic === null ? null : proto.automatic(argument),
@@ -172,6 +184,8 @@ namespace Twinning.Script.Executor {
 			Value: undefined!,
 			Representation: undefined!,
 			identifier: proto.identifier,
+			type: 'path',
+			option: null,
 			stringify: (value) => value.emit(),
 			parse: (representation) => new StoragePath(representation),
 			automatic: (argument) => proto.automatic === null ? null : proto.automatic(argument),
@@ -195,6 +209,8 @@ namespace Twinning.Script.Executor {
 			Value: undefined!,
 			Representation: undefined!,
 			identifier: proto.identifier,
+			type: 'path',
+			option: null,
 			stringify: (value) => value.emit(),
 			parse: (representation) => new StoragePath(representation),
 			automatic: (argument) => proto.automatic === null ? null : proto.automatic(argument),
@@ -207,19 +223,19 @@ namespace Twinning.Script.Executor {
 
 	// ----------------
 
-	export function typical_method<TIdentifier extends string, TArgument extends Array<any>, TBatchArgument extends Array<TypicalBatchArgument<string>>, TWorkerStore extends Record<string, any>>(
+	export function typical_method<TArgument extends Array<any>, TBatchArgument extends Array<TypicalBatchArgument<string>>, TWorkerStore extends Record<string, any>>(
 		proto: {
-			identifier: TIdentifier;
+			identifier: string;
 			filter: null | ['any' | 'file' | 'directory', RegExp];
 			argument: TArgument;
 			batch: null | TBatchArgument;
 			worker: (argument: {[TElement in TArgument[number]as TElement['identifier']]: TElement['Value']}, store: TWorkerStore) => void;
 		},
-	): TypicalMethod<TIdentifier, TArgument, TBatchArgument, TWorkerStore> {
+	): TypicalMethod<TArgument, TBatchArgument, TWorkerStore> {
 		return {
 			Argument: undefined!,
 			ArgumentRepresentation: undefined!,
-			identifier: proto.identifier,
+			identifier: ['', proto.identifier],
 			filter: proto.filter === null ? null : proto.filter,
 			argument: proto.argument,
 			batch: proto.batch,
@@ -245,10 +261,10 @@ namespace Twinning.Script.Executor {
 		let all_item = StorageHelper.list_directory(parent, null, true, false, filter[0] === 'any' || filter[0] === 'file', filter[0] === 'any' || filter[0] === 'directory');
 		let valid_item = g_typical_method_disable_name_filter ? all_item : all_item.filter((value) => (filter[1].test(value.name()!)));
 		let failed_item = [] as Array<StoragePath>;
-		let progress = new TextGenerator.Progress('fraction', false, 40, valid_item.length);
+		let progress = 0;
 		for (let item of valid_item) {
-			progress.increase();
-			Console.information(`${progress}`, [item.emit()]);
+			progress++;
+			Console.information(`${ConvertHelper.make_progress_text('fraction', false, 40, valid_item.length, progress)}`, [item.emit()]);
 			try {
 				worker(item);
 			}
@@ -297,13 +313,13 @@ namespace Twinning.Script.Executor {
 		return input(initial);
 	}
 
-	export function convert_typical_method<TIdentifier extends string, TArgument extends Array<TypicalArgument<string, any, any>>, TBatchArgument extends Array<TypicalBatchArgument<string>>, TWorkerStore extends Record<string, any>>(
-		proto: TypicalMethod<TIdentifier, TArgument, TBatchArgument, TWorkerStore>,
+	export function convert_typical_method<TArgument extends Array<TypicalArgument<string, any, any>>, TBatchArgument extends Array<TypicalBatchArgument<string>>, TWorkerStore extends Record<string, any>>(
+		proto: TypicalMethod<TArgument, TBatchArgument, TWorkerStore>,
 		batch: boolean,
 	): Method<typeof proto.ArgumentRepresentation> {
 		return {
-			identifier: `${proto.identifier}${!batch ? '' : '!batch'}`,
-			name: () => (`${!batch ? '' : '[*] '}${los(`executor.implementation:${proto.identifier}`)}`),
+			identifier: `${proto.identifier[0]}.${proto.identifier[1]}${!batch ? '' : '!batch'}`,
+			name: () => (`${!batch ? '' : '[*] '}${los(`executor.implementation:${proto.identifier[0]}`)} - ${los(`executor.implementation:${proto.identifier[0]}.${proto.identifier[1]}`)}`),
 			worker: (original_argument: Record<string, any>) => {
 				let interrupted = false;
 				let actual_argument = {} as Record<string, any>;
@@ -314,7 +330,7 @@ namespace Twinning.Script.Executor {
 						argument = batch_argument;
 					}
 					let argument_value = request_typical_argument(
-						`${batch_argument === undefined ? '' : '[*] '}${los(`executor.implementation:${proto.identifier}:${argument.identifier}`)}`,
+						`${batch_argument === undefined ? '' : '[*] '}${los(`executor.implementation:${proto.identifier[0]}.${proto.identifier[1]}:${argument.identifier}`)}`,
 						original_argument[argument.identifier],
 						argument.stringify,
 						argument.parse,
@@ -397,14 +413,16 @@ namespace Twinning.Script.Executor {
 
 	// ----------------
 
+	export let g_typical_method_proto: Record<string, Array<TypicalMethod<any, any, any>>> = {};
+
 	export function push_typical_method(
 		group_identifier: string,
-		group: Array<TypicalMethod<string, any, any, any>>,
+		group: Array<TypicalMethod<any, any, any>>,
 	): void {
 		let group_configuration = g_typical_method_configuration[group_identifier];
 		for (let item of group) {
-			let item_configuration = group_configuration[item.identifier];
-			item.identifier = `${group_identifier}.${item.identifier}`;
+			item.identifier[0] = group_identifier;
+			let item_configuration = group_configuration[item.identifier[1]];
 			{
 				if (item.filter !== null) {
 					assert_test(item_configuration.filter !== null);
@@ -425,6 +443,7 @@ namespace Twinning.Script.Executor {
 			g_method.push(convert_typical_method(item, false));
 			g_method_batch.push(item.batch === null ? null : convert_typical_method(item, true));
 		}
+		g_typical_method_proto[group_identifier] = group;
 		return;
 	}
 

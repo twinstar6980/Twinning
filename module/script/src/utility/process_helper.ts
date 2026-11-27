@@ -89,12 +89,12 @@ namespace Twinning.Script.ProcessHelper {
 		if (KernelX.is_windows) {
 			path_extension_list.push('.exe');
 			if (allow_interpreted) {
-				path_extension_list.push('.sh', '.ps1', '.cmd', '.bat', 'py', 'jar');
+				path_extension_list.push('.sh', '.ps1', '.cmd', '.bat', '.py', '.jar');
 			}
 		}
 		if (KernelX.is_linux || KernelX.is_macintosh || KernelX.is_android || KernelX.is_iphone) {
 			if (allow_interpreted) {
-				path_extension_list.push('.sh', '.ps1', 'py', 'jar');
+				path_extension_list.push('.sh', '.ps1', '.py', '.jar');
 			}
 		}
 		for (let path_extension of path_extension_list) {
@@ -146,7 +146,7 @@ namespace Twinning.Script.ProcessHelper {
 		}
 		if (style === 'sh') {
 			destination = source;
-			destination = destination.replaceAll(/[ \t\n\r'"|<>&;()*?\[\]$#\\]/g, `\\$&`);
+			destination = destination.replaceAll(/[ \t\n\r'"`|<>&;()*?\[\]$#!\\]/g, `\\$&`);
 		}
 		if (style === 'pwsh') {
 			destination = source;
@@ -317,6 +317,7 @@ namespace Twinning.Script.ProcessHelper {
 		let termux_error_code_file = temporary_directory.join('err');
 		let termux_error_message_file = temporary_directory.join('errmsg');
 		while (!StorageHelper.exist_file(termux_error_code_file)) {
+			TerminateHelper.mark();
 			Kernel.Miscellaneous.Thread.sleep(Kernel.Size.value(200n));
 		}
 		let get_content = (path: StoragePath): string => ConvertHelper.normalize_string_line_feed(StorageHelper.read_file_text(path));

@@ -62,9 +62,9 @@ namespace Twinning.Script.Executor.Implementation.Popcap.Trail {
 						item_mapper: (argument: {}, value) => ConvertHelper.replace_path_name(value, /(\.trail\.json)?$/i, '.trail.compiled'),
 					}),
 				],
-				worker: ({definition_file, data_file, version_platform, version_variant_64, buffer_size}, store: {buffer: Kernel.ByteArray}) => {
+				worker: ({definition_file, data_file, version_platform, version_variant_64, buffer_size}, store: {buffer: Kernel.Binary}) => {
 					if (store.buffer === undefined) {
-						store.buffer = Kernel.ByteArray.allocate(Kernel.Size.value(buffer_size.value()));
+						store.buffer = Kernel.Binary.allocate(Kernel.Size.value(buffer_size.value()));
 					}
 					KernelX.Tool.Popcap.Trail.encode_fs(data_file, definition_file, {platform: version_platform as any, variant_64: version_variant_64}, store.buffer.view());
 					return;

@@ -1,6 +1,7 @@
 import '/common.dart';
 import '/module.dart';
 import '/utility/wrapper.dart';
+import '/utility/storage_size.dart';
 import '/utility/convert_helper.dart';
 import '/utility/miscellaneous_helper.dart';
 import '/widget/export.dart';
@@ -345,24 +346,24 @@ class _SizeArgumentBar extends StatelessWidget {
                 : BoxContainer.of(
                   constraints: .tightFor(width: 24, height: 24),
                   align: .center,
-                  child: StyledText.inherit(['B', 'K', 'M', 'G'][this.value.value!.exponent]),
+                  child: StyledText.inherit(this.value.value!.value.exponent().name.toUpperCase()),
                 ),
               onPressed: (context) async {
-                var value = await StyledMenuExtension.show<Integer>(context, StyledMenu.standard(
+                var value = await StyledMenuExtension.show<StorageSizeExponent>(context, StyledMenu.standard(
                   position: .under,
-                  content: ['B', 'K', 'M', 'G'].mapIndexed((index, value) => StyledMenuItem.standard(
-                    value: index,
-                    content: StyledText.inherit(tooltip: true, value),
+                  content: StorageSizeExponent.values.mapIndexed((index, value) => StyledMenuItem.standard(
+                    value: value,
+                    content: StyledText.inherit(tooltip: true, value.name.toUpperCase()),
                   )),
                 ));
                 if (value != null) {
-                  this.value.value = .new(this.value.value?.count ?? 1.0, value);
+                  this.value.value = .new(.by(this.value.value?.value.count() ?? 1.0, value));
                   await refreshState(setState);
                 }
               },
             ),
           ],
-          value: this.value.value == null ? '' : this.value.value!.count.selfLet((it) => ConvertHelper.makeFloaterToString(it)),
+          value: this.value.value == null ? '' : this.value.value!.value.count().selfLet((it) => ConvertHelper.makeFloaterToString(it)),
           onChanged: (context, value) async {
             if (value.isEmpty) {
               this.value.value = null;
@@ -370,7 +371,7 @@ class _SizeArgumentBar extends StatelessWidget {
             else {
               var parsedCount = Floater.tryParse(value);
               if (parsedCount != null && parsedCount.isFinite && parsedCount >= 0.0) {
-                this.value.value = .new(parsedCount, this.value.value?.exponent ?? 2);
+                this.value.value = .new(.by(parsedCount, this.value.value?.value.exponent() ?? .m));
               }
             }
             await refreshState(setState);
@@ -427,7 +428,7 @@ class _PathArgumentBar extends StatelessWidget {
               },
             ),
           ],
-          value: this.value.value == null ? '' : this.value.value!.content.selfLet((it) => it.emit()),
+          value: this.value.value == null ? '' : this.value.value!.value.selfLet((it) => it.emit()),
           onChanged: (context, value) async {
             if (value.isEmpty) {
               this.value.value = null;

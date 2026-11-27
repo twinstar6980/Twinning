@@ -10,35 +10,19 @@
 
 	* [xmake 3.1](https://xmake.io/#/)
 
-	* [LLVM 22.1 (LLVM-MinGW-ucrt 20260616)](https://github.com/mstorsjo/llvm-mingw) for `Windows`
+	* [LLVM 23.1 (LLVM-MinGW-ucrt-20260908)](https://github.com/mstorsjo/llvm-mingw) for `Windows`
 
-	* [LLVM 22.1](https://llvm.org/) for `Linux`
+	* [LLVM 23.1](https://llvm.org/) for `Linux`
 
-	* [LLVM 22.1 (SDK 26.5)](https://llvm.org/) for `Macintosh`
+	* [LLVM 23.1 (SDK 26.5)](https://llvm.org/) for `Macintosh`
 
-	* [LLVM 21.0 (NDK 29.0)](https://developer.android.com/ndk/downloads) for `Android`
+	* [LLVM 21.0 (NDK 30.0)](https://developer.android.com/ndk/downloads) for `Android`
 
-	* [LLVM 22.1 (SDK 26.5)](https://llvm.org/) for `Iphone`
+	* [LLVM 23.1 (SDK 26.5)](https://llvm.org/) for `Iphone`
 
 ## 第三方库使用
 
-|                                 库                                 |        用途         |
-|:------------------------------------------------------------------:|:-------------------:|
-|       [mscharconv 1.2.3](https://github.com/iboB/mscharconv)       |    charconv 支持    |
-|     [tinyxml2 11.0.0](https://github.com/leethomason/tinyxml2)     |      XML 读写       |
-|    [cpp_md5_lib ?](https://github.com/tiankonguse/cpp-md5-lib)     |    MD5 哈希计算     |
-|                          [Rijndael ?](#)                           | Rijndael 加密与解密 |
-|            [zlib 1.3.2](https://github.com/madler/zlib)            |   ZLib 压缩与解压   |
-|            [bzip2 1.0.8](https://sourceware.org/bzip2/)            |  BZip2 压缩与解压   |
-|             [lzma 26.02](https://github.com/ip7z/7zip)             |   Lzma 压缩与解压   |
-|     [open_vcdiff 0.8.4](https://github.com/google/open-vcdiff)     |   VCDiff 差异分析   |
-|            [avir 3.1](https://github.com/avaneev/avir)             |      图像缩放       |
-|   [libsquish 1.15.1.4](https://github.com/oblivioncth/libsquish)   |   DXTC 压缩与解压   |
-|  [PVRTCCompressor ?](https://github.com/brenwill/PVRTCCompressor)  |  PVRTC 压缩与解压   |
-|          [etcpak 2.1](https://github.com/wolfpld/etcpak)           |   ETC 压缩与解压    |
-| [astc_encoder 5.7.0](https://github.com/ARM-software/astc-encoder) |   ASTC 压缩与解压   |
-|        [libpng 1.6.58](https://github.com/pnggroup/libpng)         |      PNG 读写       |
-|     [quickjs_ng 0.16.1](https://github.com/quickjs-ng/quickjs)     |       JS 引擎       |
+参见 [dependency](./dependency) 。
 
 ## 说明
 
@@ -55,17 +39,3 @@
 * 关于构建
 
 	* 本项目无法通过 GCC 与高版本 MSVC（17.11.5|19.41.34123+）的编译，这是由于 GCC 与 MSVC 在处理几处较为复杂的代码（特别是模板与模块）时出现了 BUG 。
-
-* 对第三方库的说明
-
-  本项目对引用的第三方库做出了少许修改，如下：
-
-	* `cpp_md5_lib`：暴露所需的接口。
-
-	* `Rijndael`：修正非标准代码，避免符号冲突。
-
-	* `open_vcdiff`：修正非标准代码。
-
-	* `etcpak`：移除不需要的依赖，禁用一些调试代码。
-
-  > 任何修改都会以 `// TwinStar: insert|remove|change` 做出标示。

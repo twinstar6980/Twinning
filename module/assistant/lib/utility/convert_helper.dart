@@ -1,6 +1,7 @@
 import '/common.dart';
 import 'dart:async' as lib;
 import 'dart:typed_data' as lib;
+import 'dart:math' as lib;
 import 'dart:ui' as lib;
 import 'package:decimal/decimal.dart' as lib;
 import 'package:stack_trace/stack_trace.dart' as lib;
@@ -62,6 +63,14 @@ class ConvertHelper {
     };
   }
 
+  static Boolean parseBooleanFromString(
+    String text,
+  ) {
+    return .parse(text);
+  }
+
+  // ----------------
+
   static String makeBooleanToStringOfConfirmationCharacter(
     Boolean value,
   ) {
@@ -81,6 +90,12 @@ class ConvertHelper {
     return '${value}';
   }
 
+  static Integer parseIntegerFromString(
+    String text,
+  ) {
+    return .parse(text);
+  }
+
   // #endregion
 
   // #region floater
@@ -88,8 +103,46 @@ class ConvertHelper {
   static String makeFloaterToString(
     Floater value,
   ) {
-    var valueDecimal = lib.Decimal.parse(value.toString());
-    return '${valueDecimal}${(!valueDecimal.isInteger ? '' : '.0')}';
+    var text = '';
+    do {
+      if (value.isNaN) {
+        text += 'NaN';
+        break;
+      }
+      if (value.isInfinite) {
+        if (value < 0.0) {
+          text += '-';
+        }
+        text += 'Inf';
+        break;
+      }
+      var valueDecimal = lib.Decimal.parse(value.toString());
+      text += '${valueDecimal}';
+      if (valueDecimal.isInteger) {
+        text += '.0';
+      }
+    }
+    while (false);
+    return text;
+  }
+
+  static Floater parseFloaterFromString(
+    String  text,
+  ) {
+    var value = 0.0;
+    do {
+      if (text == 'NaN') {
+        value = Floater.nan;
+        break;
+      }
+      if (text == 'Inf' || text == '+Inf' || text == '-Inf') {
+        value = text == '-Inf' ? -Floater.infinity : Floater.infinity;
+        break;
+      }
+      value = Floater.parse(text);
+    }
+    while (false);
+    return value;
   }
 
   // #endregion
@@ -198,6 +251,32 @@ class ConvertHelper {
     DateTime value,
   ) {
     return '${(value.year % 100).toString().padLeft(2, '0')}-${value.month.toString().padLeft(2, '0')}-${value.day.toString().padLeft(2, '0')}_${value.hour.toString().padLeft(2, '0')}-${value.minute.toString().padLeft(2, '0')}-${value.second.toString().padLeft(2, '0')}_${value.millisecond.toString().padLeft(3, '0')}';
+  }
+
+  // #endregion
+
+  // #region color
+
+  static String makeColorToString(
+    lib.Color value,
+    Boolean   withAlpha,
+  ) {
+    var text = value.toARGB32().toRadixString(16).padLeft(8, '0');
+    if (!withAlpha) {
+      text = text.substring(2);
+    }
+    return text;
+  }
+
+  static lib.Color parseColorFromString(
+    String  text,
+    Boolean withAlpha,
+  ) {
+    var value = lib.Color(Integer.tryParse(text.substring(text.length - lib.min(8, text.length)), radix: 16) ?? 0x00000000);
+    if (!withAlpha) {
+      value = value.withValues(alpha: 0.0);
+    }
+    return value;
   }
 
   // #endregion

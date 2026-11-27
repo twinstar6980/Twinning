@@ -30,8 +30,8 @@ export namespace Twinning::Kernel::Tool::Texture::Transformation::Tiling {
 				for (auto & tile_index_x : SizeRange{tile_count_x}) {
 					for (auto & tile_y : SizeRange{tile_size.height}) {
 						for (auto & tile_x : SizeRange{tile_size.width}) {
-							auto & raw_pixel = raw[tile_index_y * tile_size.height + tile_y][tile_index_x * tile_size.width + tile_x];
-							auto & ripe_pixel = ripe[raw_y][raw_x];
+							auto & raw_pixel = raw[tile_index_x * tile_size.width + tile_x, tile_index_y * tile_size.height + tile_y];
+							auto & ripe_pixel = ripe[raw_x, raw_y];
 							raw_pixel = ripe_pixel;
 							raw_x += 1_sz;
 							if (raw_x == ripe.size().width) {

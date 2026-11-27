@@ -9,7 +9,7 @@ namespace Twinning.Script.JsonHelper {
 		disable_array_line_breaking: boolean = KernelX.Tool.Data.Serialization.Json.g_format.disable_array_line_breaking,
 		disable_object_trailing_comma: boolean = KernelX.Tool.Data.Serialization.Json.g_format.disable_object_trailing_comma,
 		disable_object_line_breaking: boolean = KernelX.Tool.Data.Serialization.Json.g_format.disable_object_line_breaking,
-		data_buffer: Kernel.CharacterListView = Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(KernelX.g_common_buffer.view()),
+		data_buffer: Kernel.StringView = Kernel.Miscellaneous.cast_BinaryView_to_StringView(KernelX.g_common_buffer.view()),
 	): ArrayBuffer {
 		return KernelX.Tool.Data.Serialization.Json.encode(Kernel.Notation.Json.Value.value<TValue>(value), disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking, data_buffer);
 	}
@@ -28,7 +28,7 @@ namespace Twinning.Script.JsonHelper {
 		disable_array_line_breaking: boolean = KernelX.Tool.Data.Serialization.Json.g_format.disable_array_line_breaking,
 		disable_object_trailing_comma: boolean = KernelX.Tool.Data.Serialization.Json.g_format.disable_object_trailing_comma,
 		disable_object_line_breaking: boolean = KernelX.Tool.Data.Serialization.Json.g_format.disable_object_line_breaking,
-		data_buffer: Kernel.CharacterListView = Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(KernelX.g_common_buffer.view()),
+		data_buffer: Kernel.StringView = Kernel.Miscellaneous.cast_BinaryView_to_StringView(KernelX.g_common_buffer.view()),
 	): string {
 		return KernelX.Tool.Data.Serialization.Json.encode_s(Kernel.Notation.Json.Value.value<TValue>(value), disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking, data_buffer);
 	}
@@ -48,7 +48,7 @@ namespace Twinning.Script.JsonHelper {
 		disable_array_line_breaking: boolean = KernelX.Tool.Data.Serialization.Json.g_format.disable_array_line_breaking,
 		disable_object_trailing_comma: boolean = KernelX.Tool.Data.Serialization.Json.g_format.disable_object_trailing_comma,
 		disable_object_line_breaking: boolean = KernelX.Tool.Data.Serialization.Json.g_format.disable_object_line_breaking,
-		data_buffer: Kernel.CharacterListView = Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(KernelX.g_common_buffer.view()),
+		data_buffer: Kernel.StringView = Kernel.Miscellaneous.cast_BinaryView_to_StringView(KernelX.g_common_buffer.view()),
 	): void {
 		return KernelX.Tool.Data.Serialization.Json.encode_fs(path, Kernel.Notation.Json.Value.value<TValue>(value), disable_array_trailing_comma, disable_array_line_breaking, disable_object_trailing_comma, disable_object_line_breaking, data_buffer);
 	}

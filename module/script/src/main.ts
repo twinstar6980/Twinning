@@ -171,9 +171,9 @@ namespace Twinning.Script {
 			name: string,
 		): any {
 			let script_path = Kernel.Path.value(path);
-			let script = Kernel.ByteArray.allocate(Kernel.Storage.size_file(script_path));
-			Kernel.Storage.read_file(script_path, Kernel.Size.value(0n), script.view());
-			return Kernel.Miscellaneous.g_context.evaluate(Kernel.Miscellaneous.cast_ByteListView_to_CharacterListView(script.view()), Kernel.String.value(name), Kernel.Boolean.value(false));
+			let script_data = Kernel.Binary.allocate(Kernel.Storage.size_file(script_path));
+			Kernel.Storage.read_file(script_path, Kernel.Size.value(0n), script_data.view());
+			return Kernel.Miscellaneous.g_context.evaluate(Kernel.Miscellaneous.cast_BinaryView_to_StringView(script_data.view()), Kernel.String.value(name), Kernel.Boolean.value(false));
 		}
 
 		// ----------------
@@ -204,13 +204,11 @@ namespace Twinning.Script {
 			`utility/timer`,
 			`utility/convert_helper`,
 			`utility/check_helper`,
-			`utility/text_generator`,
 			`utility/virtual_terminal_sequence`,
 			`utility/command_line_reader`,
 			`utility/json_helper`,
 			`utility/xml_helper`,
-			`utility/byte_list_view`,
-			`utility/byte_stream_view`,
+			`utility/binary_stream_view`,
 			`utility/kernel_x`,
 			`utility/shell`,
 			`utility/thread_manager`,
@@ -309,6 +307,7 @@ namespace Twinning.Script {
 			`executable/extract_rsb_from_pvz2cn_apk_directory`,
 			`executable/decode_rton_lenient`,
 			`executable/unpack_rsb_lenient`,
+			`executable/generate_assistant_configuration`,
 			`runner/runner`,
 			`setting`,
 		];

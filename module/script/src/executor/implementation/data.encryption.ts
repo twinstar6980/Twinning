@@ -120,8 +120,8 @@ namespace Twinning.Script.Executor.Implementation.Data.Encryption {
 					}),
 				],
 				worker: ({raw_file, ripe_file, mode, block_size, key, initialization_vector}, store: {}) => {
-					let key_data = Kernel.Miscellaneous.cast_moveable_String_to_ByteArray(Kernel.String.value(key));
-					let initialization_vector_data = Kernel.Miscellaneous.cast_moveable_String_to_ByteArray(Kernel.String.value(initialization_vector));
+					let key_data = Kernel.Miscellaneous.cast_moveable_String_to_Binary(Kernel.String.value(key));
+					let initialization_vector_data = Kernel.Miscellaneous.cast_moveable_String_to_Binary(Kernel.String.value(initialization_vector));
 					KernelX.Tool.Data.Encryption.Rijndael.encrypt_fs(raw_file, ripe_file, mode as any, block_size as any, key_data.view(), initialization_vector_data.view());
 					return;
 				},
@@ -192,8 +192,8 @@ namespace Twinning.Script.Executor.Implementation.Data.Encryption {
 					}),
 				],
 				worker: ({ripe_file, raw_file, mode, block_size, key, initialization_vector}, store: {}) => {
-					let key_data = Kernel.Miscellaneous.cast_moveable_String_to_ByteArray(Kernel.String.value(key));
-					let initialization_vector_data = Kernel.Miscellaneous.cast_moveable_String_to_ByteArray(Kernel.String.value(initialization_vector));
+					let key_data = Kernel.Miscellaneous.cast_moveable_String_to_Binary(Kernel.String.value(key));
+					let initialization_vector_data = Kernel.Miscellaneous.cast_moveable_String_to_Binary(Kernel.String.value(initialization_vector));
 					KernelX.Tool.Data.Encryption.Rijndael.decrypt_fs(raw_file, ripe_file, mode as any, block_size as any, key_data.view(), initialization_vector_data.view());
 					return;
 				},

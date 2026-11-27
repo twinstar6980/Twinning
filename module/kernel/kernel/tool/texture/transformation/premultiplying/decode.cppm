@@ -38,8 +38,8 @@ export namespace Twinning::Kernel::Tool::Texture::Transformation::Premultiplying
 			assert_test(raw.size() == ripe.size());
 			for (auto & y : SizeRange{raw.size().height}) {
 				for (auto & x : SizeRange{raw.size().width}) {
-					auto & raw_pixel = raw[y][x];
-					auto & ripe_pixel = ripe[y][x];
+					auto & raw_pixel = raw[x, y];
+					auto & ripe_pixel = ripe[x, y];
 					raw_pixel.red = compute_value(ripe_pixel.red, ripe_pixel.alpha);
 					raw_pixel.green = compute_value(ripe_pixel.green, ripe_pixel.alpha);
 					raw_pixel.blue = compute_value(ripe_pixel.blue, ripe_pixel.alpha);

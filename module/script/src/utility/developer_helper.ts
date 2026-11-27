@@ -355,7 +355,7 @@ namespace Twinning.Script.DeveloperHelper {
 				return !StorageHelper.exist_directory(path)
 					? []
 					: StorageHelper.list_directory(path, 1n, false, false, false, true)
-						.filter((it) => it.extension()?.toLowerCase() === extension)
+						.filter((it) => ConvertHelper.check_path_extension(it, [extension], true))
 						.map((it) => path.push(it));
 			};
 			content_list.push(...search_embedded(temporary_target.join('Frameworks'), 'framework'));
@@ -443,7 +443,7 @@ namespace Twinning.Script.DeveloperHelper {
 		if (type === 'apks') {
 			let temporary_content_directory = temporary_directory.join(`content`);
 			archive_content_list = archive_list(temporary_target)
-				.filter((it) => it.extension()?.toLowerCase() === 'apk')
+				.filter((it) => ConvertHelper.check_path_extension(it, ['apk'], true))
 				.map((it) => ({
 					location: it,
 					placement: temporary_content_directory.push(it),
@@ -502,7 +502,7 @@ namespace Twinning.Script.DeveloperHelper {
 		if (type === 'apks') {
 			let temporary_content_directory = temporary_directory.join(`content`);
 			archive_content_list = archive_list(temporary_package_file)
-				.filter((it) => it.extension()?.toLowerCase() === 'apk')
+				.filter((it) => ConvertHelper.check_path_extension(it, ['apk'], true))
 				.map((it) => ({
 					location: it,
 					placement: temporary_content_directory.push(it),
@@ -547,7 +547,7 @@ namespace Twinning.Script.DeveloperHelper {
 		keystore: Keystore,
 		type: MacintoshSignatureType,
 	): void {
-		return iphone_sign_program(target, keystore, type);
+		return macintosh_sign_program(target, keystore, type);
 	}
 
 	// ----------------

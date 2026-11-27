@@ -8,10 +8,10 @@
 
 * 要求
 
-	* [Node.js 26.4](https://nodejs.org/)
+	* [Node.js 26.12](https://nodejs.org/)
 
 ## 第三方库使用
 
-> 参见 [package.json](./package.json) 。
+参见 [package.json](./package.json) 。
 
 ## 说明

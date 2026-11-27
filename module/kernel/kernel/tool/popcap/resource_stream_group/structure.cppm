@@ -168,11 +168,11 @@ export namespace Twinning::Kernel {
 
 	template <auto t_version> requires
 		AutomaticConstraint
-	struct ByteStreamAdapter<Tool::Popcap::ResourceStreamGroup::Structure::ResourceInformation<t_version>> {
+	struct BasicBinaryStreamAdapter<Byte, Tool::Popcap::ResourceStreamGroup::Structure::ResourceInformation<t_version>> {
 
-		using ThisInput = InputByteStreamView;
+		using ThisInput = InputBinaryStreamView;
 
-		using ThisOutput = OutputByteStreamView;
+		using ThisOutput = OutputBinaryStreamView;
 
 		using That = Tool::Popcap::ResourceStreamGroup::Structure::ResourceInformation<t_version>;
 
@@ -183,12 +183,12 @@ export namespace Twinning::Kernel {
 		) -> Size {
 			using namespace Tool::Popcap::ResourceStreamGroup::Structure;
 			auto size = 0_sz;
-			size += bs_size(up_cast<ResourceBasicInformation<t_version>>(that));
+			size += binary_size_of(up_cast<ResourceBasicInformation<t_version>>(that));
 			if (that.type == ResourceTypeFlag<t_version>::general) {
-				size += bs_size(that.additional.template get<GeneralResourceAdditionalInformation<t_version>>());
+				size += binary_size_of(that.additional.template get<GeneralResourceAdditionalInformation<t_version>>());
 			}
 			else if (that.type == ResourceTypeFlag<t_version>::texture) {
-				size += bs_size(that.additional.template get<TextureResourceAdditionalInformation<t_version>>());
+				size += binary_size_of(that.additional.template get<TextureResourceAdditionalInformation<t_version>>());
 			}
 			else {
 				assert_fail(R"(that.type == /* valid */)");

@@ -6,13 +6,13 @@ export module twinning.kernel.utility.math.number_variant;
 import twinning.kernel.utility.builtin;
 import twinning.kernel.utility.trait;
 import twinning.kernel.utility.box;
-import twinning.kernel.utility.exception.utility;
-import twinning.kernel.utility.container.variant.variant;
-import twinning.kernel.utility.container.variant.enumerable_variant;
+import twinning.kernel.utility.exception;
+import twinning.kernel.utility.container.variant;
+import twinning.kernel.utility.container.enumerable_variant;
 
 export namespace Twinning::Kernel {
 
-	#pragma region sub type
+	#pragma region type
 
 	M_enumeration(
 		M_wrap(NumberVariantType),
@@ -22,9 +22,7 @@ export namespace Twinning::Kernel {
 		),
 	);
 
-	#pragma endregion
-
-	#pragma region type
+	// ----------------
 
 	class NumberVariant :
 		public EnumerableVariant<NumberVariantType, Integer, Floater> {
@@ -39,7 +37,10 @@ export namespace Twinning::Kernel {
 		// ----------------
 
 		constexpr NumberVariant(
-		) = default;
+		) :
+			EnumerableVariant{} {
+			return;
+		}
 
 		constexpr NumberVariant(
 			NumberVariant const & that

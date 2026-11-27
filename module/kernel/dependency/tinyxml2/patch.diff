@@ -1,0 +1,13 @@
+diff --git a/tinyxml2.h b/tinyxml2.h
+index 8179f57..f853dc1 100644
+--- a/tinyxml2.h
++++ b/tinyxml2.h
+@@ -70,7 +70,7 @@ distribution.
+ #       define TINYXML2_LIB
+ #   endif
+ #elif __GNUC__ >= 4
+-#   define TINYXML2_LIB __attribute__((visibility("default")))
++#   define TINYXML2_LIB
+ #else
+ #   define TINYXML2_LIB
+ #endif

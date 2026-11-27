@@ -8,11 +8,11 @@
 
 * 要求
 
-	* [Flutter 3.47](https://docs.flutter.dev/get-started/install)
+	* [Flutter 3.50](https://docs.flutter.dev/get-started/install)
 
 ## 第三方库使用
 
-> 参见 [pubspec.yaml](./pubspec.yaml) 。
+参见 [pubspec.yaml](./pubspec.yaml) 。
 
 ## 说明
 

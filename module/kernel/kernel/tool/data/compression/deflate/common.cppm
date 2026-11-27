@@ -8,6 +8,15 @@ import twinning.kernel.utility;
 export namespace Twinning::Kernel::Tool::Data::Compression::Deflate {
 
 	M_enumeration(
+		M_wrap(Container),
+		M_wrap(
+			none,
+			zlib,
+			gzip,
+		),
+	);
+
+	M_enumeration(
 		M_wrap(StrategyMode),
 		M_wrap(
 			default_mode,
@@ -15,15 +24,6 @@ export namespace Twinning::Kernel::Tool::Data::Compression::Deflate {
 			huffman_only,
 			rle,
 			fixed,
-		),
-	);
-
-	M_enumeration(
-		M_wrap(WrapperType),
-		M_wrap(
-			none,
-			zlib,
-			gzip,
 		),
 	);
 

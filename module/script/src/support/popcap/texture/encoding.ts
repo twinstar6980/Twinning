@@ -333,7 +333,7 @@ namespace Twinning.Script.Support.Popcap.Texture.Encoding {
 	// #region utility
 
 	export function encode(
-		data: Kernel.OutputByteStreamView,
+		data: Kernel.OutputBinaryStreamView,
 		image: Kernel.Image.ConstantImageView,
 		format: Format,
 		option: EncodeOption,
@@ -392,10 +392,10 @@ namespace Twinning.Script.Support.Popcap.Texture.Encoding {
 	}
 
 	export function decode(
-		data: Kernel.InputByteStreamView,
+		data: Kernel.InputBinaryStreamView,
 		image: Kernel.Image.VariableImageView,
 		format: Format,
-		fill_dummy: Boolean,
+		fill_dummy: boolean,
 	): void {
 		switch (format) {
 			case 'rgba_8888_o':
@@ -475,10 +475,10 @@ namespace Twinning.Script.Support.Popcap.Texture.Encoding {
 			};
 		}
 		let data_size = compute_data_size(image_size, format, option);
-		let data = Kernel.ByteArray.allocate(Kernel.Size.value(data_size));
-		let data_stream = Kernel.ByteStreamView.watch(data.view());
+		let data = Kernel.Binary.allocate(Kernel.Size.value(data_size));
+		let data_stream = Kernel.BinaryStreamView.watch(data.view());
 		encode(data_stream, image_view, format, option);
-		StorageHelper.write_file_data(data_file, data_stream.stream_view());
+		StorageHelper.write_file_data(data_file, data_stream.split_stream().view());
 		return;
 	}
 
@@ -489,7 +489,7 @@ namespace Twinning.Script.Support.Popcap.Texture.Encoding {
 		format: Format,
 	): void {
 		let data = StorageHelper.read_file_data(data_file);
-		let data_stream = Kernel.ByteStreamView.watch(data.view());
+		let data_stream = Kernel.BinaryStreamView.watch(data.view());
 		let image_size_padded = compute_padded_image_size(image_size, format);
 		let image = Kernel.Image.Image.allocate(Kernel.Image.ImageSize.value(image_size_padded));
 		let image_view = image.view();

@@ -28,9 +28,9 @@ export namespace Twinning::Kernel::Tool::Popcap::Zlib {
 		// ----------------
 
 		inline static auto process_whole(
-			OutputByteStreamView & raw,
-			InputByteStreamView &  ripe,
-			Integer const &        window_exponent
+			OutputBinaryStreamView & raw,
+			InputBinaryStreamView &  ripe,
+			Integer const &          window_exponent
 		) -> Void {
 			ripe.read_constant(k_magic_marker);
 			if constexpr (check_version(t_version, {true})) {
@@ -38,7 +38,7 @@ export namespace Twinning::Kernel::Tool::Popcap::Zlib {
 			}
 			auto header = Header{};
 			ripe.read(header);
-			Data::Compression::Deflate::Uncompress::process(raw, ripe, window_exponent, Data::Compression::Deflate::WrapperType::Constant::zlib());
+			Data::Compression::Deflate::Uncompress::process(raw, ripe, Data::Compression::Deflate::Container::Constant::zlib(), window_exponent);
 			assert_test(raw.position() == cast_box<Size>(header.raw_size));
 			return;
 		}
@@ -46,17 +46,16 @@ export namespace Twinning::Kernel::Tool::Popcap::Zlib {
 		// ----------------
 
 		inline static auto estimate_whole(
-			Size &                       raw_size,
-			ConstantByteListView const & ripe
+			Size &                  raw_size,
+			InputBinaryStreamView & ripe
 		) -> Void {
 			raw_size = 0_sz;
-			auto ripe_stream = InputByteStreamView{ripe};
-			ripe_stream.read_constant(k_magic_marker);
+			ripe.read_constant(k_magic_marker);
 			if constexpr (check_version(t_version, {true})) {
-				ripe_stream.read_constant(0x00000000_iu32);
+				ripe.read_constant(0x00000000_iu32);
 			}
 			auto header = Header{};
-			ripe_stream.read(header);
+			ripe.read(header);
 			raw_size += cast_box<Size>(header.raw_size);
 			return;
 		}
@@ -64,20 +63,21 @@ export namespace Twinning::Kernel::Tool::Popcap::Zlib {
 		// ----------------
 
 		inline static auto process(
-			OutputByteStreamView & raw_,
-			InputByteStreamView &  ripe_,
-			Integer const &        window_exponent
+			OutputBinaryStreamView & raw_,
+			InputBinaryStreamView &  ripe_,
+			Integer const &          window_exponent
 		) -> Void {
-			M_use_zps_of(raw);
-			M_use_zps_of(ripe);
+			M_use_split_stream_of(raw);
+			M_use_split_stream_of(ripe);
 			return process_whole(raw, ripe, window_exponent);
 		}
 
 		inline static auto estimate(
-			Size &                       raw_size,
-			ConstantByteListView const & ripe
+			Size &                  raw_size,
+			InputBinaryStreamView & ripe_
 		) -> Void {
 			restruct(raw_size);
+			M_use_split_stream_of(ripe);
 			return estimate_whole(raw_size, ripe);
 		}
 

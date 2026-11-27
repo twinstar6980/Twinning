@@ -1,16 +1,12 @@
--- tinyxml2
--- 11.0.0 9148bdf719e997d1f474be6bcc7943881046dba1
--- https://github.com/leethomason/tinyxml2
-
 target('dependency.tinyxml2', function()
 	set_group('source/dependency')
 	set_kind('static')
 	add_headerfiles(
-		'tinyxml2.h',
+		'origin/tinyxml2.h',
 		{ install = false }
 	)
 	add_files(
-		'tinyxml2.cpp',
+		'origin/tinyxml2.cpp',
 		{}
 	)
 	add_includedirs(

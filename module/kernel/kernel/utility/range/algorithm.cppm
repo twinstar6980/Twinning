@@ -6,16 +6,15 @@ export module twinning.kernel.utility.range.algorithm;
 import twinning.kernel.utility.builtin;
 import twinning.kernel.utility.trait;
 import twinning.kernel.utility.box;
-import twinning.kernel.utility.exception.utility;
-import twinning.kernel.utility.container.optional.optional;
-import twinning.kernel.utility.container.optional.null_optional;
+import twinning.kernel.utility.exception;
+import twinning.kernel.utility.container.optional;
 import twinning.kernel.utility.range.generic_range;
-import twinning.kernel.utility.range.number_range;
+import twinning.kernel.utility.range.integer_range;
 import twinning.kernel.utility.math.utility;
 
 export namespace Twinning::Kernel::Range {
 
-	#pragma region size
+	#pragma region slice
 
 	namespace Detail {
 
@@ -51,9 +50,47 @@ export namespace Twinning::Kernel::Range {
 			return cast_box<Size>(range.end() - range.begin());
 		}
 		else {
-			static_assert(k_static_assert_fail<TRange>);
-			assert_fail("");
+			static_assert(false);
 		}
+	}
+
+	// ----------------
+
+	template <typename TRange> requires
+		CategoryConstraint<IsValid<TRange>>
+		&& (IsRange<AsPure<TRange>>)
+	inline constexpr auto slice(
+		TRange &&    range,
+		Size const & begin,
+		Size const & count
+	) -> GenericRange<decltype(range.begin())> {
+		auto size = Range::size(range);
+		assert_test(begin + count <= size);
+		return make_range(range.begin() + begin, range.begin() + (begin + count));
+	}
+
+	template <typename TRange> requires
+		CategoryConstraint<IsValid<TRange>>
+		&& (IsRange<AsPure<TRange>>)
+	inline constexpr auto slice_head(
+		TRange &&    range,
+		Size const & count
+	) -> GenericRange<decltype(range.begin())> {
+		auto size = Range::size(range);
+		assert_test(count <= size);
+		return slice(range, 0_sz, count);
+	}
+
+	template <typename TRange> requires
+		CategoryConstraint<IsValid<TRange>>
+		&& (IsRange<AsPure<TRange>>)
+	inline constexpr auto slice_tail(
+		TRange &&    range,
+		Size const & count
+	) -> GenericRange<decltype(range.begin())> {
+		auto size = Range::size(range);
+		assert_test(count <= size);
+		return slice(range, size - count, count);
 	}
 
 	#pragma endregion
@@ -296,7 +333,7 @@ export namespace Twinning::Kernel::Range {
 			++current;
 			++index;
 		}
-		return k_null_optional;
+		return make_optional_null<Size>();
 	}
 
 	template <typename TRange, typename TFinder> requires
@@ -317,7 +354,7 @@ export namespace Twinning::Kernel::Range {
 			++current;
 			++index;
 		}
-		return k_null_optional;
+		return make_optional_null<Size>();
 	}
 
 	// ----------------

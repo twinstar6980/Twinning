@@ -19,7 +19,7 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Pvrtc {
 		// ----------------
 
 		inline static auto process_image(
-			OutputByteStreamView &           data,
+			OutputBinaryStreamView &         data,
 			Image::ConstantImageView const & image,
 			Generation const &               generation,
 			Image::ImageSize const &         block_size,
@@ -37,7 +37,7 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Pvrtc {
 				}
 				else {
 					if (!with_alpha) {
-						auto ripe_data_size = block_count * k_block_bit_count_4 / k_type_bit_count<Byte>;
+						auto ripe_data_size = block_count * k_block_bit_count_4 / type_bit_size_of<Byte>();
 						assert_test(ripe_data_size <= data.reserve());
 						auto pvrtc_image = Dependency::PVRTCCompressor::RgbBitmap{unmake_box<int>(image.size().width), unmake_box<int>(image.size().height)};
 						auto raw_format = Encoding::Format{
@@ -48,16 +48,16 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Pvrtc {
 								make_tuple_of(Encoding::Channel::Constant::blue(), 8_sz)
 							),
 						};
-						auto raw_data = to_byte_view(VariableListView<Dependency::PVRTCCompressor::ColorRgb<unsigned char>>{make_pointer(pvrtc_image.GetData()), image.size().area()});
-						Encoding::Encode::process(as_left(OutputByteStreamView{raw_data}), image, raw_format);
+						auto raw_data = to_binary_view(VariableArrayView<Dependency::PVRTCCompressor::ColorRgb<unsigned char>>{make_pointer(pvrtc_image.GetData()), image.size().area()});
+						Encoding::Encode::process(as_left(OutputBinaryStreamView{raw_data}), image, raw_format);
 						Dependency::PVRTCCompressor::PvrTcEncoder::EncodeRgb4Bpp(
-							unmake_pointer_unsafe<void>(data.current_pointer()),
+							unmake_pointer_unsafe<void>(data.current()),
 							pvrtc_image
 						);
 						data.forward(ripe_data_size);
 					}
 					else {
-						auto ripe_data_size = block_count * k_block_bit_count_4 / k_type_bit_count<Byte>;
+						auto ripe_data_size = block_count * k_block_bit_count_4 / type_bit_size_of<Byte>();
 						assert_test(ripe_data_size <= data.reserve());
 						auto pvrtc_image = Dependency::PVRTCCompressor::RgbaBitmap{unmake_box<int>(image.size().width), unmake_box<int>(image.size().height)};
 						auto raw_format = Encoding::Format{
@@ -69,10 +69,10 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Pvrtc {
 								make_tuple_of(Encoding::Channel::Constant::blue(), 8_sz)
 							),
 						};
-						auto raw_data = to_byte_view(VariableListView<Dependency::PVRTCCompressor::ColorRgba<unsigned char>>{make_pointer(pvrtc_image.GetData()), image.size().area()});
-						Encoding::Encode::process(as_left(OutputByteStreamView{raw_data}), image, raw_format);
+						auto raw_data = to_binary_view(VariableArrayView<Dependency::PVRTCCompressor::ColorRgba<unsigned char>>{make_pointer(pvrtc_image.GetData()), image.size().area()});
+						Encoding::Encode::process(as_left(OutputBinaryStreamView{raw_data}), image, raw_format);
 						Dependency::PVRTCCompressor::PvrTcEncoder::EncodeRgba4Bpp(
-							unmake_pointer_unsafe<void>(data.current_pointer()),
+							unmake_pointer_unsafe<void>(data.current()),
 							pvrtc_image
 						);
 						data.forward(ripe_data_size);
@@ -88,14 +88,14 @@ export namespace Twinning::Kernel::Tool::Texture::Compression::Pvrtc {
 		// ----------------
 
 		inline static auto process(
-			OutputByteStreamView &           data_,
+			OutputBinaryStreamView &         data_,
 			Image::ConstantImageView const & image,
 			Generation const &               generation,
 			Image::ImageSize const &         block_size,
 			Boolean const &                  use_bpp4,
 			Boolean const &                  with_alpha
 		) -> Void {
-			M_use_zps_of(data);
+			M_use_split_stream_of(data);
 			return process_image(data, image, generation, block_size, use_bpp4, with_alpha);
 		}
 

@@ -1,5 +1,3 @@
--- shell
-
 target('shell', function()
 	set_group('source')
 	set_kind('binary')

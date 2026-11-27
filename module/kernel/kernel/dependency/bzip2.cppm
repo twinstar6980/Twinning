@@ -5,7 +5,7 @@ module;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Weverything"
 
-#include "dependency/bzip2/bzlib.h"
+#include "dependency/bzip2/origin/bzlib.h"
 
 #pragma clang diagnostic pop
 

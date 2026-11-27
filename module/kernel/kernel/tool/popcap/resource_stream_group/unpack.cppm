@@ -25,9 +25,9 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 		// ----------------
 
 		inline static auto process_package(
-			InputByteStreamView &  data,
-			Definition::Package &  definition,
-			Optional<Path> const & resource_directory
+			InputBinaryStreamView & data,
+			Definition::Package &   definition,
+			Optional<Path> const &  resource_directory
 		) -> Void {
 			data.read_constant(Structure::k_magic_marker);
 			data.read_constant(cast_box<Structure::VersionNumber>(t_version.number));
@@ -40,13 +40,13 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 				if constexpr (check_version(t_version, {3})) {
 					assert_test(information_structure.header.unknown_1 == 0_iu32);
 				}
-				CompiledMapData::decode(information_structure.resource_information, as_left(InputByteStreamView{data.sub_view(cast_box<Size>(information_structure.header.resource_information_section_offset), cast_box<Size>(information_structure.header.resource_information_section_size))}));
+				CompiledMapData::decode(information_structure.resource_information, as_left(data.split_sub(cast_box<Size>(information_structure.header.resource_information_section_offset), cast_box<Size>(information_structure.header.resource_information_section_size))));
 			}
 			definition.compression = packet_compression_from_data(information_structure.header.resource_data_section_compression);
 			definition.resource.allocate_full(information_structure.resource_information.size());
-			auto resource_data_section_container = ByteArray{};
+			auto resource_data_section_container = Binary{};
 			for (auto & current_resource_type : make_static_array<ResourceType>(ResourceType::Constant::general(), ResourceType::Constant::texture())) {
-				auto resource_data_section_view = ConstantByteListView{};
+				auto resource_data_section_view = ConstantBinaryView{};
 				auto resource_data_section_offset = Size{};
 				auto resource_data_section_size = Size{};
 				auto resource_data_section_size_original = Size{};
@@ -68,18 +68,15 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 					}
 					default: throw UnreachableException{};
 				}
-				auto resource_data_section_view_stored = data.sub_view(resource_data_section_offset, resource_data_section_size);
+				auto resource_data_section_view_stored = data.split_sub(resource_data_section_offset, resource_data_section_size);
 				if (!compress_resource_data_section) {
-					resource_data_section_view = resource_data_section_view_stored;
+					resource_data_section_view = resource_data_section_view_stored.view();
 				}
 				else {
-					if (resource_data_section_container.size() < resource_data_section_size_original) {
-						resource_data_section_container.allocate(resource_data_section_size_original);
-					}
-					resource_data_section_view = resource_data_section_container.head(resource_data_section_size_original);
 					if (resource_data_section_size_original != 0_sz) {
-						Data::Compression::Deflate::Uncompress::process(as_left(OutputByteStreamView{resource_data_section_container.head(resource_data_section_size_original)}), as_left(InputByteStreamView{resource_data_section_view_stored}), 15_i, Data::Compression::Deflate::WrapperType::Constant::zlib());
+						Data::Compression::Deflate::Uncompress::process(as_left(like_binary_stream<StreamMode::Constant::output()>(data, use_binary_buffer(resource_data_section_container, resource_data_section_size_original))), resource_data_section_view_stored, Data::Compression::Deflate::Container::Constant::zlib(), 15_i);
 					}
+					resource_data_section_view = use_binary_buffer(resource_data_section_container, resource_data_section_size_original);
 				}
 				for (auto & resource_index : SizeRange{information_structure.resource_information.size()}) {
 					auto & resource_information_structure = information_structure.resource_information.at(resource_index);
@@ -136,11 +133,11 @@ export namespace Twinning::Kernel::Tool::Popcap::ResourceStreamGroup {
 		// ----------------
 
 		inline static auto process(
-			InputByteStreamView &  data_,
-			Definition::Package &  definition,
-			Optional<Path> const & resource_directory
+			InputBinaryStreamView & data_,
+			Definition::Package &   definition,
+			Optional<Path> const &  resource_directory
 		) -> Void {
-			M_use_zps_of(data);
+			M_use_split_stream_of(data);
 			restruct(definition);
 			return process_package(data, definition, resource_directory);
 		}
